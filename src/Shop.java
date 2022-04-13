@@ -9,4 +9,21 @@ public class Shop {
     DiscountPolicy discountPolicy;
     ProductsSupplyService supplyService;
     PaymentService paymentService;
+
+    //use case - receive info of a shop
+    public String receiveInfo(){throw new UnsupportedOperationException();} // TODO - check if returned value is indeed String
+
+    //use case - Stock management
+    public void editItem(Item item){throw new UnsupportedOperationException();};
+    public void deleteItem(Item item){throw new UnsupportedOperationException();}
+    public void addItem(Item item){throw new UnsupportedOperationException();}
+
+    //use case - Change shop's policy
+    public void setDiscountPolicy(DiscountPolicy discountPolicy) {
+        this.discountPolicy = discountPolicy;
+    }
+
+    public void setPurchasePolicy(PurchasePolicy purchasePolicy) {
+        this.purchasePolicy = purchasePolicy;
+    }
 }

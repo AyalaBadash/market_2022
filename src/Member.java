@@ -1,4 +1,4 @@
-public class Subscriber {
+public class Member {
     String ID;
     String name;
     String password;
