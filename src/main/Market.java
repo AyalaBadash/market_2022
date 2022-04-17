@@ -19,6 +19,15 @@ public class Market {
             return new Market(null);
         else return instance;
     }
+    //TODO - add exception class
+    public boolean register(String name , String password , String validatedPassword,List<Pair<String,String>> securityQuestions) throws Exception
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public void addSecurity(){
+
+    }
 
 
 
