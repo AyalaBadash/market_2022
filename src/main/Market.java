@@ -20,9 +20,20 @@ public class Market {
         else return instance;
     }
     //TODO - add exception class
-    public boolean register(String name , String password , String validatedPassword,List<Pair<String,String>> securityQuestions) throws Exception
+    public void register(String name , String password , String validatedPassword,List<Pair<String,String>> securityQuestions) throws Exception
     {
-        throw new UnsupportedOperationException();
+        try {
+            Security security = Security.getInstance();
+            security.validateRegister(name, password, validatedPassword, securityQuestions);
+            MemberController mc = MemberController.getInstance();
+            mc.createMember(name);
+            security.addNewMember(name,password,securityQuestions);
+
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
     public void addSecurity(){
