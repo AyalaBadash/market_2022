@@ -8,7 +8,7 @@ public class ConfigReader {
     public Properties prop;
 
     private ConfigReader(){
-        String configFilePath = "src/config.properties";
+        String configFilePath = "src/resources/config.properties";
         try {
             FileInputStream propsInput = new FileInputStream(configFilePath);
             this.prop = new Properties();

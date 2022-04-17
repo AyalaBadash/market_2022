@@ -2,7 +2,10 @@ package test.Bridge;
 
 import main.*;
 
+import java.util.List;
+
 public class Proxy implements SystemBridge {
+
     @Override
     public Market initMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
         return null;
@@ -44,12 +47,12 @@ public class Proxy implements SystemBridge {
     }
 
     @Override
-    public boolean register(String userName, String userPassword, String[] userAdditionalQueries, String[] userAdditionalAnswers) {
+    public boolean register(String userName, String userPassword, List<String> userAdditionalQueries, List<String> userAdditionalAnswers) {
         return false;
     }
 
     @Override
-    public Visitor memberLogin(String userName, String userPassword, String[] userAdditionalAnswers) {
+    public Visitor memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers) {
         return null;
     }
 
@@ -104,7 +107,7 @@ public class Proxy implements SystemBridge {
     }
 
     @Override
-    public String changeMemberAdditionalQueries(String pass, String[] newQueries, String answers) {
+    public String changeMemberAdditionalQueries(String pass, List<String> newQueries, String answers) {
         return null;
     }
 
@@ -184,8 +187,8 @@ public class Proxy implements SystemBridge {
     }
 
     @Override
-    public String[] getAllShopMessages(Shop shop) {
-        return new String[0];
+    public List<String> getAllShopMessages(Shop shop) {
+        return null;
     }
 
     @Override
@@ -204,8 +207,8 @@ public class Proxy implements SystemBridge {
     }
 
     @Override
-    public String[] getSystemMessages() {
-        return new String[0];
+    public List<String> getSystemMessages() {
+        return null;
     }
 
     @Override

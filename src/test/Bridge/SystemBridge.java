@@ -2,6 +2,8 @@ package test.Bridge;
 
 import main.*;
 
+import java.util.List;
+
 public interface SystemBridge {
     // System Use Cases
     public Market initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
@@ -24,9 +26,9 @@ public interface SystemBridge {
     public void exitSystem();
 
     public boolean register(String userName, String userPassword,
-                            String[] userAdditionalQueries, String[] userAdditionalAnswers);
+                            List<String> userAdditionalQueries, List<String> userAdditionalAnswers);
 
-    public Visitor memberLogin(String userName, String userPassword, String[] userAdditionalAnswers);
+    public Visitor memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers);
 
 
     // Member Use cases
@@ -50,7 +52,7 @@ public interface SystemBridge {
 
     public String changeMemberPassword(String oldPass, String newPass);
 
-    public String changeMemberAdditionalQueries(String pass, String[] newQueries, String answers);
+    public String changeMemberAdditionalQueries(String pass, List<String> newQueries, String answers);
 
     // Shop Owner
     public void removeItem(Item item, int amount, Shop shop);
@@ -84,7 +86,7 @@ public interface SystemBridge {
 
     public String getShopEmployeesInfo(Shop shop);
 
-    public String[] getAllShopMessages(Shop shop);
+    public List<String> getAllShopMessages(Shop shop);
 
     public String getShopPurchaseHistory(Shop shop);
 
@@ -93,7 +95,7 @@ public interface SystemBridge {
 
     public void removeMember(Member member);
 
-    public String[] getSystemMessages();
+    public List<String> getSystemMessages();
 
     public void replayToMessage(Member member, String answer);
 
