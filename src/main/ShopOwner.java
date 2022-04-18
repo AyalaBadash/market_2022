@@ -20,5 +20,7 @@ public class ShopOwner implements BuyerState {
         throw new UnsupportedOperationException();
     }
 
-
+    public boolean isFounder() {
+        return isFounder;
+    }
 }
