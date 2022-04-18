@@ -44,6 +44,14 @@ public class Shop {
         return itemMap;
     }
 
+    public HashMap<String, Member> getShopOwners() {
+        return shopOwners;
+    }
+
+    public HashMap<String, Member> getShopManagers() {
+        return shopManagers;
+    }
+
     //use case - Change shop's policy
     public void setDiscountPolicy(DiscountPolicy discountPolicy) {
         this.discountPolicy = discountPolicy;
