@@ -2,7 +2,7 @@ package main;
 
 public class ShopOwner implements BuyerState {
     boolean isFounder;
-    Shop shop; // TODO- check if it neeeds to be here and if so , maybe as a list?
+    Shop shop; // TODO- check if it needs to be here and if so , maybe as a list?
 
     //use case - shop owner appointment
     public boolean appointOwner(){throw new UnsupportedOperationException();}
@@ -20,5 +20,8 @@ public class ShopOwner implements BuyerState {
         throw new UnsupportedOperationException();
     }
 
+    public boolean isFounder() {
+        return isFounder;
+    }
 
 }

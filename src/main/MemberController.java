@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class MemberController {
     Map<String,Member> members;
+    Member currentLoggedIn;
     private static MemberController instance;
     public static MemberController getInstance() {
         if (instance == null)
@@ -13,6 +14,10 @@ public class MemberController {
     }
     private MemberController(){
         members = new HashMap<>();
+    }
+
+    public Member getCurrentLoggedIn() {
+        return currentLoggedIn;
     }
 
     public boolean collectDebt(){

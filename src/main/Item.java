@@ -1,12 +1,17 @@
 package main;
 
 public class Item {
-    String ID;
-    String name;
-    double weight;
-    double price;
+    private String ID;
+    private String name;
+    private double weight;
+    private double price;
     public Item(String ID,String name,double weight,double price){
         this.ID=ID;
+        this.name=name;
+        this.price=price;
+        this.weight=weight;
+    }
+    public Item(String name,double weight,double price){
         this.name=name;
         this.price=price;
         this.weight=weight;
@@ -42,5 +47,10 @@ public class Item {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Name:" + this.name + " \tPrice:" + this.price;
     }
 }
