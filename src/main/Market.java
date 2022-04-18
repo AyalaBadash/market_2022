@@ -8,7 +8,7 @@ public class Market {
     SystemManager manager;
     Map<String,String> items1; // <itemID,ShopID>
     Map<String, List<String>> items2; // <name ,List<itemID>>
-    //public main.Market(){}
+    Map<String,Shop> shops;
     public boolean collectDebt(){
         throw new UnsupportedOperationException();
     }
@@ -41,6 +41,7 @@ public class Market {
 
     }
 
-
-
+    public Map<String, Shop> getShops() {
+        return shops;
+    }
 }
