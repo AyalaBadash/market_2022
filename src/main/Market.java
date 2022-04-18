@@ -9,6 +9,7 @@ public class Market {
     Map<String,String> items1; // <itemID,ShopID>
     Map<String, List<String>> items2; // <name ,List<itemID>>
     Map<String,Shop> shops;
+    Map<String,Shop> closedShops;
     public boolean collectDebt(){
         throw new UnsupportedOperationException();
     }
