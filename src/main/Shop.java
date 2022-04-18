@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Shop {
+public class Shop  {
     private String ShopName;
     private Map<String,Item> itemMap; //<ItemID,main.Item>
 
@@ -59,5 +59,61 @@ public class Shop {
 
     public void setPurchasePolicy(PurchasePolicy purchasePolicy) {
         this.purchasePolicy = purchasePolicy;
+    }
+
+    public String getShopName() {
+        return ShopName;
+    }
+
+    public void setShopName(String shopName) {
+        ShopName = shopName;
+    }
+
+    public Map<String, Item> getItemMap() {
+        return itemMap;
+    }
+
+    public void setItemMap(Map<String, Item> itemMap) {
+        this.itemMap = itemMap;
+    }
+
+    public List<String> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<String> employees) {
+        this.employees = employees;
+    }
+
+    public void setShopOwners(HashMap<String, Member> shopOwners) {
+        this.shopOwners = shopOwners;
+    }
+
+    public void setShopManagers(HashMap<String, Member> shopManagers) {
+        this.shopManagers = shopManagers;
+    }
+
+    public PurchasePolicy getPurchasePolicy() {
+        return purchasePolicy;
+    }
+
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
+    }
+
+    public ProductsSupplyService getSupplyService() {
+        return supplyService;
+    }
+
+    public void setSupplyService(ProductsSupplyService supplyService) {
+        this.supplyService = supplyService;
+    }
+
+    public PaymentService getPaymentService() {
+        return paymentService;
+    }
+
+    public void setPaymentService(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
 }

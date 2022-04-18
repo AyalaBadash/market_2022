@@ -1,6 +1,6 @@
 package main;
 
-public class Item {
+public class Item implements IHistory{
     private String ID;
     private String name;
     private double weight;
@@ -52,5 +52,10 @@ public class Item {
     @Override
     public String toString() {
         return "Name:" + this.name + " \tPrice:" + this.price;
+    }
+
+    @Override
+    public String getReview() {
+        return this.getName();
     }
 }
