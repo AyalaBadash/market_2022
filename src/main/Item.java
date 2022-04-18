@@ -1,10 +1,10 @@
 package main;
 
 public class Item {
-    String ID;
-    String name;
-    double weight;
-    double price;
+    private String ID;
+    private String name;
+    private double weight;
+    private double price;
     public Item(String ID,String name,double weight,double price){
         this.ID=ID;
         this.name=name;

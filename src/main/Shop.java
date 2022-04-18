@@ -1,24 +1,46 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Shop {
-    String ShopID;
-    Map<String,Item> itemMap; //<ItemID,main.Item>
-    List<String> employees;
-    PurchasePolicy purchasePolicy;
-    DiscountPolicy discountPolicy;
-    ProductsSupplyService supplyService;
-    PaymentService paymentService;
+    private String ShopName;
+    private Map<String,Item> itemMap; //<ItemID,main.Item>
+
+    private List<String> employees;
+    //TODO - check which way is preferred
+    private HashMap<String , Member> shopOwners;
+    private HashMap<String , Member> shopManagers;
+    
+    private PurchasePolicy purchasePolicy;
+    private DiscountPolicy discountPolicy;
+    private ProductsSupplyService supplyService;
+    private PaymentService paymentService;
+
+    public Shop(String name){
+        this.ShopName = name;
+        itemMap = new HashMap<>();
+        employees = new ArrayList<>();
+    }
 
     //use case - receive info of a shop
     public String receiveInfo(){throw new UnsupportedOperationException();} // TODO - check if returned value is indeed String
 
     //use case - Stock management
-    public void editItem(Item item){throw new UnsupportedOperationException();};
-    public void deleteItem(Item item){throw new UnsupportedOperationException();}
-    public void addItem(Item item){throw new UnsupportedOperationException();}
+    public void editItem(Item item){
+        itemMap.put(item.getName(),item);
+    };
+    public void deleteItem(Item item){
+        itemMap.remove(item.getName());
+    }
+    public void addItem(Item item){
+        itemMap.put(item.getName(),item);
+    }
+    public Map<String , Item> displayItems(){
+        return itemMap;
+    }
 
     //use case - Change shop's policy
     public void setDiscountPolicy(DiscountPolicy discountPolicy) {
