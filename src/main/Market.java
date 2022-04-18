@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class Market {
     //TODO :need to change Map's names
+    SystemManager manager;
     Map<String,String> items1; // <itemID,ShopID>
     Map<String, List<String>> items2; // <name ,List<itemID>>
     //public main.Market(){}

@@ -13,7 +13,7 @@ public class Shop {
     //TODO - check which way is preferred
     private HashMap<String , Member> shopOwners;
     private HashMap<String , Member> shopManagers;
-    
+
     private PurchasePolicy purchasePolicy;
     private DiscountPolicy discountPolicy;
     private ProductsSupplyService supplyService;
@@ -35,10 +35,12 @@ public class Shop {
     public void deleteItem(Item item){
         itemMap.remove(item.getName());
     }
-    public void addItem(Item item){
+    public void addItem(Item item) throws Exception{
+        if (!itemMap.containsKey(item.getName()))
         itemMap.put(item.getName(),item);
+        else throw new Exception();
     }
-    public Map<String , Item> displayItems(){
+    public Map<String , Item> getItems(){
         return itemMap;
     }
 

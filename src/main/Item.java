@@ -11,6 +11,11 @@ public class Item {
         this.price=price;
         this.weight=weight;
     }
+    public Item(String name,double weight,double price){
+        this.name=name;
+        this.price=price;
+        this.weight=weight;
+    }
 
     public double getPrice() {
         return price;
@@ -42,5 +47,10 @@ public class Item {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Name:" + this.name + " \tPrice:" + this.price;
     }
 }
