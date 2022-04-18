@@ -1,15 +1,163 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MarketController {
     Map<String,Shop> shops;
+    MemberController mc;
+
+    public MarketController(){
+        mc = MemberController.getInstance();
+        shops=new HashMap<>();
+    }
 
     public boolean collectDebt(){
         throw new UnsupportedOperationException();
     }
     public boolean supplyProducts(){throw new UnsupportedOperationException();}
 
+    //Should come after login / entering the market
+    public void displayMenuForMember(){
+        List<Shop> shopMemberOwn = findShopByOwner(mc.getCurrentLoggedIn().getName());
+        List<Shop> shopMemberManage = findShopByManager(mc.getCurrentLoggedIn().getName());
+        if (shopMemberOwn.isEmpty() && shopMemberManage.isEmpty()) // display only buyer menu
+        {
+            System.out.println("1.Actions as buyer \n" +
+                    "2.Exit");
+            int choice = 0;
+            switch (choice) {
+                case 1: {
+                    displayBuyerMenu();
+                    break;
+                }
+                case 2: {
+                    exit();
+                    break;
+                }
+                default:
+                    System.out.println("Wrong input");
+            }
+        }
+        else if (!shopMemberOwn.isEmpty() && shopMemberManage.isEmpty()) // display buyer and owner
+        {
+            System.out.println("1.Actions as buyer \n" +
+                    "2.Actions as owner\n" +
+                    "3.Exit");
+            int choice = 0;
+            switch (choice) {
+                case 1: {
+                    displayBuyerMenu();
+                    break;
+                }
+                case 2: {
+                    displayOwnerMenu(shopMemberOwn);
+                    break;
+                }
+                case 3:{
+                    exit();
+                    break;
+                }
+                default:
+                    System.out.println("Wrong input");
+            }
+        }
+        else if(shopMemberOwn.isEmpty() && !shopMemberManage.isEmpty()) // display buyer and manager
+        {
+            System.out.println("1.Actions as buyer \n" +
+                    "2.Actions as manager\n" +
+                    "3.Exit");
+            int choice = 0;
+            switch (choice) {
+                case 1: {
+                    displayBuyerMenu();
+                    break;
+                }
+                case 2: {
+                    displayManagerMenu(shopMemberManage);
+                    break;
+                }
+                case 3:{
+                    exit();
+                    break;
+                }
+                default:
+                    System.out.println("Wrong input");
+            }
+        }
+        else //display all - buyer owner manager
+        {
+            System.out.println("1.Actions as buyer \n" +
+                    "2.Actions as owner\n" +
+                    "3.Actions as manager\n" +
+                    "4.Exit");
+            int choice = 0;
+            switch (choice) {
+                case 1: {
+                    displayBuyerMenu();
+                    break;
+                }
+                case 2: {
+                    displayOwnerMenu(shopMemberOwn);
+                    break;
+                }
+                case 3:
+                {
+                    displayManagerMenu(shopMemberManage);
+                }
+                case 4:{
+                    exit();
+                    break;
+                }
+                default:
+                    System.out.println("Wrong input");
+            }
+        }
+
+
+        displayBuyerMenu();
+        exit();
+    }
+
+    private List<Shop> findShopByManager(String name) {
+        List<Shop> managedShops = new ArrayList<>();
+        for (Map.Entry<String,Shop> entry:shops.entrySet())
+        {
+            Map<String, Member> shopManagers = entry.getValue().getShopManagers();
+            if (shopManagers.containsKey(name))
+                managedShops.add(entry.getValue());
+        }
+        return managedShops;
+    }
+
+    private List<Shop> findShopByOwner(String name) {
+        List<Shop> ownedShops = new ArrayList<>();
+        for (Map.Entry<String,Shop> entry:shops.entrySet())
+        {
+            Map<String, Member> shopOwners = entry.getValue().getShopOwners();
+            if (shopOwners.containsKey(name))
+                ownedShops.add(entry.getValue());
+        }
+        return ownedShops;
+    }
+
+    private void displayBuyerMenu() {
+
+    }
+
+    private void displayOwnerMenu(List<Shop> shopsOwned) {
+
+    }
+
+    private void displayManagerMenu(List<Shop> shopsManaged) {
+
+    }
+
+    private void exit() {
+
+    }
 
 
     // use case - stock management
@@ -34,7 +182,7 @@ public class MarketController {
                 while (!added) {
                     try {
                         shop.addItem(toAdd);
-                        added = false;
+                        added = true;
                     } catch (Exception e) { //TODO - add exception for name taken
                         System.out.println("Name is taken - please insert other name:");
                         String newName = "";
