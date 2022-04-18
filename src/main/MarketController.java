@@ -7,12 +7,12 @@ import java.util.Map;
 
 public class MarketController {
     Market market;
-    Map<String,Shop> shops; // TODO - check if we need shops here or inside market
     MemberController mc;
 
     public MarketController(){
         mc = MemberController.getInstance();
-        shops=new HashMap<>();
+        market = Market.getInstance();
+
     }
 
     public boolean collectDebt(){
@@ -161,7 +161,7 @@ public class MarketController {
 
     private List<Shop> findShopByManager(String name) {
         List<Shop> managedShops = new ArrayList<>();
-        for (Map.Entry<String,Shop> entry:shops.entrySet())
+        for (Map.Entry<String,Shop> entry: market.getShops().entrySet())
         {
             Map<String, Member> shopManagers = entry.getValue().getShopManagers();
             if (shopManagers.containsKey(name))
@@ -172,7 +172,7 @@ public class MarketController {
 
     private List<Shop> findShopByOwner(String name) {
         List<Shop> ownedShops = new ArrayList<>();
-        for (Map.Entry<String,Shop> entry:shops.entrySet())
+        for (Map.Entry<String,Shop> entry:market.getShops().entrySet())
         {
             Map<String, Member> shopOwners = entry.getValue().getShopOwners();
             if (shopOwners.containsKey(name))
