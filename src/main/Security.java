@@ -48,4 +48,11 @@ public class Security {
         nameAndPasswords.put(name,password);
         nameAndQuestions.put(name,securityQuestions);
     }
+
+    public List<Pair<String, String>> validateLogin(String name, String password) throws Exception {
+        if (!password.equals(nameAndPasswords.get(name)))
+            throw new Exception();
+        return nameAndQuestions.get(name);
+
+    }
 }

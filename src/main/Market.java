@@ -37,6 +37,13 @@ public class Market {
         }
     }
 
+    public List<Pair<String, String>> login(String name, String pass) throws Exception
+    {
+        Security security = Security.getInstance();
+        return security.validateLogin(name, pass);
+
+    }
+
     public void addSecurity(){
 
     }
