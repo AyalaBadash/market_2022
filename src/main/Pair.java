@@ -1,8 +1,8 @@
 package main;
 
 public class Pair<F,S> {
-    F first;
-    S second;
+    private F first;
+    private S second;
 
     public F getFirst() {
         return first;

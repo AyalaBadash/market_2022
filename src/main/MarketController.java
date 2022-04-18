@@ -7,18 +7,56 @@ import java.util.Map;
 
 public class MarketController {
     Market market;
+    Map<String,Shop> shops;
     MemberController mc;
 
     public MarketController(){
         mc = MemberController.getInstance();
         market = Market.getInstance();
-
+        shops=new HashMap<>();
     }
 
     public boolean collectDebt(){
         throw new UnsupportedOperationException();
     }
     public boolean supplyProducts(){throw new UnsupportedOperationException();}
+
+    public void displayInitialMenu(){
+        System.out.println("1.Login\n" +
+                "2.Register\n" +
+                "3.Continue as a visitor");
+        int choice = 0;
+        switch (choice){
+            case 1:
+                System.out.println("Enter name:\n");
+                String name = " ";
+                System.out.println("Enter password\n");
+                String password = "";
+                try {
+                    List<Pair<String, String>> questionsAndAnswers= market.login(name,password);
+                    if (!questionsAndAnswers.isEmpty())
+                    {
+                        validateSecurityQuestions(questionsAndAnswers);
+                    }
+                    displayMenuForMember();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+        }
+    }
+
+    private void validateSecurityQuestions(List<Pair<String, String>> questionsAndAnswers) throws Exception {
+        System.out.println("Get ready to answer some security questions...");
+        for (Pair<String,String> pair:questionsAndAnswers)
+        {
+            System.out.println("\n");
+            System.out.println(pair.getFirst()+"\n");
+            System.out.println("Your answer:");
+            String ans = ""; // TODO - user's input
+            if (!ans.equals(pair.getSecond()))
+                throw new Exception();
+        }
+    }
 
     //Should come after login / entering the market
     public void displayMenuForMember(){

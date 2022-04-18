@@ -20,6 +20,10 @@ public class MemberController {
         return currentLoggedIn;
     }
 
+    public void login(){
+
+    }
+
     public boolean collectDebt(){
         throw new UnsupportedOperationException();
     }
