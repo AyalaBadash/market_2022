@@ -1,10 +1,10 @@
-package main;
+package main.users;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MemberController {
-    Map<String,Member> members;
+    Map<String, Member> members;
     Member currentLoggedIn;
     private static MemberController instance;
     public static MemberController getInstance() {

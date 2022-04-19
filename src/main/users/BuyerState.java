@@ -1,4 +1,4 @@
-package main;
+package main.users;
 
 public interface BuyerState {
 }

@@ -1,8 +1,8 @@
 package test.AcceptanceTest;
 
 import main.Market;
-import main.PaymentService;
-import main.ProductsSupplyService;
+import main.services.PaymentService;
+import main.services.ProductsSupplyService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -66,10 +66,10 @@ public class SystemAcceptanceTest extends AcceptanceTest {
         Assertions.assertFalse(null);
     }
 
-    @Test
-    @DisplayName("Payment test")
-    public void paymentTest(){
-        Assertions.fail();
-    }
+//    @Test
+//    @DisplayName("Payment test")
+//    public void paymentTest(){
+//        Assertions.fail();
+//    }
 
 }
