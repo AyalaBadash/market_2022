@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class MarketController {
     Market market;
     Map<String,Shop> shops; // TODO - check if we need shops here or inside market
     MemberController mc;
+    Scanner scan;
 
     public MarketController(){
         mc = MemberController.getInstance();
         shops=new HashMap<>();
+        scan= new Scanner(System.in);
     }
 
     public boolean collectDebt(){
@@ -41,6 +44,18 @@ public class MarketController {
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
+                break;
+            case 3:
+                //when the shopper is visitor, just display the market.
+                try {
+
+                    displayMenuForVisitor();
+                }
+                catch (Exception e ){
+
+                    System.out.println("Error occured: "+ e.getMessage());
+                }
+
         }
     }
 
@@ -107,6 +122,7 @@ public class MarketController {
             System.out.println("1.Actions as buyer \n" +
                     "2.Actions as manager\n" +
                     "3.Exit");
+            //Bar: implemented stdin object from Scanner class named 'scan'.
             int choice = 0;
             switch (choice) {
                 case 1: {
@@ -157,6 +173,40 @@ public class MarketController {
 
         displayBuyerMenu();
         exit();
+    }
+
+    //entering the market
+    public void displayMenuForVisitor() {
+
+        System.out.println("1.Actions as buyer \n" +
+                "2.Exit");
+        String ch = scan.next();
+        //handle illegal input.
+        while (tryParse(ch) == null || (tryParse(ch)<=0 | tryParse(ch)>=3)) {
+            System.out.println("Please type legal input:");
+            ch = scan.next();
+        }
+        int choice = tryParse(ch);
+        switch (choice) {
+            case 1: {
+                displayBuyerMenu();
+                break;
+            }
+            case 2: {
+                exit();
+                break;
+            }
+
+        }
+
+    }
+
+    private Integer tryParse(String ch) {
+        try {
+            return Integer.parseInt(ch);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     private List<Shop> findShopByManager(String name) {
