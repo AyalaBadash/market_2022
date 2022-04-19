@@ -193,7 +193,7 @@ public class MarketController {
                 break;
             }
             case 2: {
-                exit();
+                System.out.println("Exiting...\n\n");
                 break;
             }
 
