@@ -22,6 +22,7 @@ public class Market {
         else return instance;
     }
     //TODO - add exception class
+    // Bar: implemented exception class named MarketException
     public void register(String name , String password , String validatedPassword,List<Pair<String,String>> securityQuestions) throws Exception
     {
         try {
