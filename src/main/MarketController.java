@@ -1,5 +1,8 @@
 package main;
 
+import main.users.Member;
+import main.users.MemberController;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

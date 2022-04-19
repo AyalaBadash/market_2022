@@ -1,4 +1,7 @@
-package main;
+package main.users;
+
+import main.Item;
+import main.ShoppingCart;
 
 public class Visitor {
 
@@ -31,7 +34,7 @@ public class Visitor {
     public void getShopInfo(String shopID){throw new UnsupportedOperationException();} // TODO - maybe shopID needs to be main.Shop name
 
     //use case - Save items in shopping cart
-    public void addToShoppingCart(Item item,int amount,String shopID) // TODO - think if shopID needed here and if so from where we are getting it
+    public void addToShoppingCart(Item item, int amount, String shopID) // TODO - think if shopID needed here and if so from where we are getting it
     {throw new UnsupportedOperationException();}
 
     //use case - Show shopping cart

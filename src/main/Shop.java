@@ -1,5 +1,10 @@
 package main;
 
+import main.discountPolicy.DiscountPolicy;
+import main.services.PaymentService;
+import main.services.ProductsSupplyService;
+import main.users.Member;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
