@@ -4,8 +4,11 @@ import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
 
 public class ShopOwnerAppointment extends Appointment {
-    public ShopOwnerAppointment(Member appointed, Member appoint, Shop relatedShop) {
+    private boolean isShopFounder;
+    public ShopOwnerAppointment(Member appointed, Member appoint, Shop relatedShop,
+                                boolean isShopFounder) {
         super(appointed, appoint, relatedShop);
+        this.isShopFounder = isShopFounder;
 
     }
 
@@ -19,5 +22,7 @@ public class ShopOwnerAppointment extends Appointment {
         return true;
     }
 
-
+    public boolean isShopFounder() {
+        return isShopFounder;
+    }
 }

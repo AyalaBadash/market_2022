@@ -1,6 +1,6 @@
 package test.UnitTests;
 
-public class ShoppingCartUnitTest {
+public class ShoppingCartUnitTest extends mainTest {
 
 
 }

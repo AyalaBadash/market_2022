@@ -1,7 +1,7 @@
 package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
-import main.businessLayer.users.ShopFounder;
+import main.businessLayer.users.Member;
 
 
 import java.util.HashMap;
@@ -14,16 +14,14 @@ public class Shop {
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, Appointment> employees;     //<name, appointment>
     private Map<Item, Integer> itemsCurrentAmount;
-    private ShopFounder shopFounder;
     private boolean closed;
 
 
-    public Shop(String name , ShopFounder shopFounder) {
+    public Shop(String name) {
         this.shopName = name;
         itemMap = new HashMap<>();
         employees = new HashMap<>();
         itemsCurrentAmount = new HashMap<>();
-        this.shopFounder = shopFounder;
         this.closed = false;
 
     }
@@ -32,7 +30,7 @@ public class Shop {
     //use case - receive info of a shop
     public String receiveInfo(String userName) throws Exception {
         if (isClosed()) {
-            for (Map.Entry<String,Appointment> appointment : employees.entrySet()) {
+            for (Map.Entry<String, Appointment> appointment : employees.entrySet()) {
                 if (appointment.getValue().getAppointed().getName().equals(userName)) {
                     break;
                 }
@@ -42,7 +40,7 @@ public class Shop {
         return "shop: " + shopName;
     }
 
-    public void editManagerPermission(String superVisorName, String managerName, Appointment appointment){
+    public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) {
 
         throw new UnsupportedOperationException();
     }
@@ -66,17 +64,18 @@ public class Shop {
         else throw new Exception();
     }
 
-    public int getItemCurrentAmount(Item item){
+    public int getItemCurrentAmount(Item item) {
         throw new UnsupportedOperationException();
     }
-    public void setItemAmount(Item item, int amount){
+
+    public void setItemAmount(Item item, int amount) {
         throw new UnsupportedOperationException();
     }
 
 
     public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
         if (isClosed()) {
-            for (Map.Entry<String,Appointment> appointment : employees.entrySet()) {
+            for (Map.Entry<String, Appointment> appointment : employees.entrySet()) {
                 if (appointment.getValue().getAppointed().getName().equals(userName)) {
                     break;
                 }
@@ -91,18 +90,20 @@ public class Shop {
 
     }
 
-    public List<Item> getAllItemsByPrice(int minPrice, int maxPrice){
-        throw new UnsupportedOperationException();
-    }
-    public int calculateBasket(ShoppingBasket basket){
-        throw new UnsupportedOperationException();
-    }
-    // TODO need to calculate again - if doesn't match - exception
-    public int buyBasket(int expectedAmount){
+    public List<Item> getAllItemsByPrice(int minPrice, int maxPrice) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean isShopOwner(String memberName){
+    public int calculateBasket(ShoppingBasket basket) {
+        throw new UnsupportedOperationException();
+    }
+
+    // TODO need to calculate again - if doesn't match - exception
+    public int buyBasket(int expectedAmount) {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isShopOwner(String memberName) {
         throw new UnsupportedOperationException();
     }
 
@@ -110,7 +111,8 @@ public class Shop {
         return closed;
     }
 
-    public List<Item> getAllItems(){
+    //TODO returns all items, doesn't matter amount
+    public List<Item> getAllItems() {
         throw new UnsupportedOperationException();
     }
 
@@ -118,11 +120,12 @@ public class Shop {
         return shopName;
     }
 
-    public ShopFounder getShopFounder() {
-        return shopFounder;
-    }
 
     public Map<String, Appointment> getEmployees() {
         return employees;
+    }
+
+    public Member getShopFounder() {
+        throw new UnsupportedOperationException();
     }
 }

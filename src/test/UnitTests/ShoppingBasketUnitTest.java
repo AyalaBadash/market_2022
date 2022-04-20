@@ -1,4 +1,4 @@
 package test.UnitTests;
 
-public class ShoppingBasketUnitTest {
+public class ShoppingBasketUnitTest  extends mainTest{
 }

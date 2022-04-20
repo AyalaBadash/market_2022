@@ -66,15 +66,6 @@ public class Proxy implements IService {
         return null;
     }
 
-    @Override
-    public ResponseT<List<ItemFacade>> filterItemByItemRank(int minItemRank) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<ItemFacade>> filterItemByShopRank(int minShopRank) {
-        return null;
-    }
 
     @Override
     public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category) {
@@ -133,6 +124,16 @@ public class Proxy implements IService {
 
     @Override
     public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName) {
+        return null;
+    }
+
+    @Override
+    public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName) {
+        return null;
+    }
+
+    @Override
+    public Response setItemCurrentAmount(ItemFacade item, int amount, String shopName) {
         return null;
     }
 

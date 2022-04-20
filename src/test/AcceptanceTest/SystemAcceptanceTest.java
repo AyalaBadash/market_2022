@@ -11,8 +11,8 @@ public class SystemAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach
     public void beforeRun(){
-        paymentService =  new PaymentService();
-        supplyService =  new ProductsSupplyService();
+//        paymentService =  new PaymentService();
+//        supplyService =  new ProductsSupplyService();
     }
 
 //    @Test

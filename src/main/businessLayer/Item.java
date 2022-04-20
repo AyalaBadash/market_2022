@@ -16,17 +16,25 @@ public class Item implements IHistory {
     private Integer ID;
     private String name;
     private double price;
+    private String info;
     private Category category;
     private List<String> keywords;
     // TODO ID must be generated in market
-    public Item(Integer ID, String name, double price) {
+    public Item(Integer ID, String name, double price, String info) {
         this.ID = ID;
         this.name = name;
         this.price = price;
         keywords = new ArrayList<>();
+        this.info = info;
     }
 
+    public String getInfo() {
+        return info;
+    }
 
+    public void setInfo(String info) {
+        this.info = info;
+    }
 
     public double getPrice() {
         return price;

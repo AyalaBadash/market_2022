@@ -1,5 +1,5 @@
 package test.UnitTests;
 
-public class DiscountPolicyUnitTest {
+public class DiscountPolicyUnitTest extends mainTest{
 
 }
