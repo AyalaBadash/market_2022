@@ -1,19 +1,15 @@
 package test.AcceptanceTest;
 
-import main.MarketController;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import resources.ConfigReader;
 import test.Bridge.Proxy;
-import test.Bridge.SystemBridge;
-
-import java.util.ArrayList;
+import main.serviceLayer.Iservice;
 
 // TODO need to check if really acceptance shouldn't know the system objects,
 //  if so, should create new objects
 
 public class AcceptanceTest {
-    static SystemBridge bridge;
+    static Iservice bridge;
     static ConfigReader configReader = ConfigReader.getInstance();
     protected String userName;
     protected String userPassword;
@@ -40,6 +36,6 @@ public class AcceptanceTest {
 
     public void createValidUser(){
         bridge.guestLogin();
-        bridge.register(userName, userPassword, new ArrayList<String>(), new ArrayList<String>());
+//        bridge.register(userName, userPassword, new ArrayList<String>(), new ArrayList<String>());
     }
 }
