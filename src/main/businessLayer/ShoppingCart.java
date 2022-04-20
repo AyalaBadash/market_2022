@@ -25,8 +25,8 @@ public class ShoppingCart implements IHistory {
                 continue;
             }
             // TODO need to make sure all items in cart is bought
-            review.append(String.format("Basket for %s:\n%s",shop.getShopName() , basket.getReview()));
-            review.append(String.format("Overall Cart Price: %f", calculate());
+            review.append(String.format("Basket for %s:\n%s\n",shop.getShopName() , basket.getReview()));
+            review.append(String.format("Overall Cart Price: %f", currentPrice));
 
         }
         return review;
