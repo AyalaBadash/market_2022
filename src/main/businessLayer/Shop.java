@@ -128,4 +128,9 @@ public class Shop {
     public Member getShopFounder() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Shop && ((Shop) obj).getShopName().equals(this.shopName);
+    }
 }

@@ -2,10 +2,18 @@ package main.businessLayer;
 
 import main.IHistory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ShoppingCart implements IHistory {
-    Map<Shop,ShoppingBasket> cart; // <Shop ,basket for the shop>
+    private Map<Shop,ShoppingBasket> cart; // <Shop ,basket for the shop>
+    private double currentPrice;
+
+
+    public ShoppingCart(){
+        this.currentPrice = -1;
+        this.cart = new HashMap<>();
+    }
 
     @Override
     public StringBuilder getReview() {

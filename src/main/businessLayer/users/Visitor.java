@@ -1,6 +1,7 @@
 package main.businessLayer.users;
 
 import main.businessLayer.Item;
+import main.businessLayer.Shop;
 import main.businessLayer.ShoppingCart;
 
 public class Visitor {
@@ -73,5 +74,8 @@ public class Visitor {
         this.cart = cart;
     }
 
-
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Visitor && ((Visitor) obj).getName().equals(this.name);
+    }
 }
