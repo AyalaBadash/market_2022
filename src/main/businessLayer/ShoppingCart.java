@@ -8,7 +8,7 @@ public class ShoppingCart implements IHistory {
     Map<Shop,ShoppingBasket> cart; // <Shop ,basket for the shop>
 
     @Override
-    public String getReview() {
+    public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()){
             Shop shop = shopToBasket.getKey();
@@ -16,11 +16,13 @@ public class ShoppingCart implements IHistory {
             if (basket.isEmpty()){
                 continue;
             }
-            // TODO implement
+            review.append(basket.getReview());
+            // TODO need to see if can prevent calculating twice
+            review.append()
 //            review.append(String.format("Basket for shop %s:\n", shop.getShopName()));
             review.append(String.format("%s\n",basket.getReview()));
         }
-        return review.toString();
+        return review;
     }
 
     public void addItem(Shop shop , Item item, int amount){

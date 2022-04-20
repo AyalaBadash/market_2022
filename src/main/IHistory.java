@@ -1,5 +1,5 @@
 package main;
 
 public interface IHistory {
-    public String getReview();
+    public StringBuilder getReview();
 }
