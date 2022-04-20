@@ -1,6 +1,8 @@
 package main.businessLayer;
 
-public class Item {
+import main.IHistory;
+
+public class Item  implements IHistory {
 
     public enum Category {
         fruit,

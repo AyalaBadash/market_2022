@@ -1,9 +1,11 @@
 package main.businessLayer;
 
+import main.IHistory;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShoppingBasket implements IHistory{
+public class ShoppingBasket implements IHistory {
     Map<Item,Double> items;//<Item,quantity>
     public ShoppingBasket()
     {

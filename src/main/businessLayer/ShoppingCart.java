@@ -1,5 +1,7 @@
 package main.businessLayer;
 
+import main.IHistory;
+
 import java.util.Map;
 
 public class ShoppingCart implements IHistory {
@@ -14,7 +16,8 @@ public class ShoppingCart implements IHistory {
             if (basket.isEmpty()){
                 continue;
             }
-            review.append(String.format("Basket for shop %s:\n", shop.getShopName()));
+            // TODO implement
+//            review.append(String.format("Basket for shop %s:\n", shop.getShopName()));
             review.append(String.format("%s\n",basket.getReview()));
         }
         return review.toString();
