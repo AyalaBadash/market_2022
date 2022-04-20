@@ -1,5 +1,6 @@
 package main;
 
+import main.businessLayer.MarketException;
 import main.businessLayer.Shop;
 
 import java.util.ArrayList;
@@ -23,8 +24,13 @@ public class History {
         return instance;
     }
     // TODO need to implement here
-    public void closeShop(Shop closedShop){
-        throw new UnsupportedOperationException("method has not been implemented");
+    public synchronized void closeShop(Shop closedShop) throws MarketException {
+        for (Shop shop : closedShops){
+            if (shop.getShopName().equals(closedShop.getShopName())){
+                throw new MarketException("Shop: " + closedShop.getShopName() + " is already closed and cannot be closed again!");
+            }
+        }
+        this.closedShops.add(closedShop);
     }
 
     public void addPurchaseHistory(String purchaseReview, Shop shop){
