@@ -28,4 +28,13 @@ public class ShoppingBasket implements IHistory {
     public boolean isEmpty(){
         return this.items == null || this.items.isEmpty();
     }
+
+    public void addItem(Item item, int amount){
+        // TODO implement
+    }
+    public void removeItem(Item item, int amount){
+
+    }
+
+
 }

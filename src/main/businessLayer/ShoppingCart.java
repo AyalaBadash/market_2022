@@ -22,4 +22,19 @@ public class ShoppingCart implements IHistory {
         }
         return review.toString();
     }
+
+    public void addItem(Shop shop , Item item, int amount){
+        throw new UnsupportedOperationException();
+    }
+    public void removeItem(Shop shop , Item item, int amount){
+        throw new UnsupportedOperationException();
+    }
+
+    public void calculate(){
+        throw new UnsupportedOperationException();
+    }
+
+
+
+
 }

@@ -4,12 +4,15 @@ import main.businessLayer.Item;
 import main.businessLayer.ShoppingCart;
 
 public class Visitor {
-
+    // TODO must be unique
+    private String name;
     private Member member;
     private ShoppingCart cart;
 
-    public Visitor(){
-
+    public Visitor(String name, Member member, ShoppingCart cart) {
+        this.name = name;
+        this.member = member;
+        this.cart = cart;
     }
 
     //use case - Register
@@ -42,7 +45,33 @@ public class Visitor {
 
     //use case - Acquisition
     public boolean purchase(){throw new UnsupportedOperationException();
-    //cleanShoppingCart();
+        //cleanShoppingCart();
     }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public ShoppingCart getCart() {
+        return cart;
+    }
+
+    public void setCart(ShoppingCart cart) {
+        this.cart = cart;
+    }
+
 
 }

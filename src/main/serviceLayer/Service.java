@@ -1,33 +1,36 @@
 package main.serviceLayer;
 
 import main.businessLayer.Item;
-import main.businessLayer.services.PaymentService;
-import main.businessLayer.services.ProductsSupplyService;
+import main.businessLayer.ExternalServices.PaymentService;
+import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.serviceLayer.FacadeObjects.*;
 import resources.Address;
 import resources.PaymentMethod;
 
 import java.util.List;
 
-public class Service implements Iservice {
+public class Service implements IService {
     private static Service service = null;
     MarketService marketService;
     PurchaseService purchaseService;
     UserService userService;
 
-    private Service(){
-        marketService = MarketService.getInstance ();
-        purchaseService = PurchaseService.getInstance ();
-        userService = UserService.getInstance ();
+    private Service() {
+        marketService = MarketService.getInstance();
+        purchaseService = PurchaseService.getInstance();
+        userService = UserService.getInstance();
     }
 
-    public synchronized static Service getInstance(){
+    public synchronized static Service getInstance() {
         if (service == null)
-            service = new Service ();
-        return  service;
+            service = new Service();
+        return service;
     }
+
     @Override
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
+    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
+                               String userName, String password) {
+        // TODO need to create a user and add as system manager
         return null;
     }
 
@@ -78,16 +81,6 @@ public class Service implements Iservice {
 
     @Override
     public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<ItemFacade>> filterItemByItemRank(int minItemRank) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<ItemFacade>> filterItemByShopRank(int minShopRank) {
         return null;
     }
 
@@ -152,6 +145,16 @@ public class Service implements Iservice {
     }
 
     @Override
+    public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName) {
+        return null;
+    }
+
+    @Override
+    public Response setItemCurrentAmount(ItemFacade item, int amount, String shopName) {
+        return null;
+    }
+
+    @Override
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
         return null;
     }
@@ -182,7 +185,8 @@ public class Service implements Iservice {
     }
 
     @Override
-    public Response editShopManagerPermissions(String shopOwnerName, ShopManagerAppointmentFacade updatedAppointment) {
+    public Response editShopManagerPermissions(String shopOwnerName,
+                                               ShopManagerAppointmentFacade updatedAppointment) {
         return null;
     }
 
@@ -202,17 +206,17 @@ public class Service implements Iservice {
     }
 
     @Override
-    public ResponseT<String> getAllSystemPurchaseHistory() {
+    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName) {
         return null;
     }
 
     @Override
-    public ResponseT<String> getHistoryByShop() {
+    public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName) {
         return null;
     }
 
     @Override
-    public ResponseT<String> getHistoryByMember() {
+    public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
         return null;
     }
 }

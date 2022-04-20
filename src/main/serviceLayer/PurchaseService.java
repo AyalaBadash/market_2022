@@ -1,5 +1,6 @@
 package main.serviceLayer;
 
+import main.businessLayer.Market;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 import main.serviceLayer.FacadeObjects.Response;
 import main.serviceLayer.FacadeObjects.ResponseT;
@@ -8,15 +9,19 @@ import resources.Address;
 import resources.PaymentMethod;
 
 public class PurchaseService {
-
+    private Market market;
     private static PurchaseService purchaseService = null;
-    private PurchaseService(){
+
+    private PurchaseService() {
+        market = Market.getInstance();
     }
-    public synchronized static PurchaseService getInstance(){
+
+    public synchronized static PurchaseService getInstance() {
         if (purchaseService == null)
-            purchaseService = new PurchaseService ();
+            purchaseService = new PurchaseService();
         return purchaseService;
     }
+
     public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName, String visitorName) {
         return null;
     }
@@ -37,7 +42,8 @@ public class PurchaseService {
     }
 
 
-    public Response buyShoppingCart(String visitorName, int expectedPrice, PaymentMethod paymentMethod, Address address) {
+    public Response buyShoppingCart(String visitorName, int expectedPrice,
+                                    PaymentMethod paymentMethod, Address address) {
         return null;
     }
 }

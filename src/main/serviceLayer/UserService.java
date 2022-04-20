@@ -1,18 +1,24 @@
 package main.serviceLayer;
 
+import main.businessLayer.Market;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.List;
 
 public class UserService {
     private static UserService userService = null;
-    private UserService(){
+    private Market market;
+
+    private UserService() {
+        market = Market.getInstance();
     }
-    public synchronized static UserService getInstance(){
+
+    public synchronized static UserService getInstance() {
         if (userService == null)
-            userService = new UserService ();
+            userService = new UserService();
         return userService;
     }
+
     public ResponseT<VisitorFacade> guestLogin() {
         return null;
     }
@@ -40,6 +46,7 @@ public class UserService {
 
 
     public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
+
         return null;
     }
 
@@ -64,7 +71,8 @@ public class UserService {
     }
 
 
-    public Response editShopManagerPermissions(String shopOwnerName, ShopManagerAppointmentFacade updatedAppointment) {
+    public Response editShopManagerPermissions(String shopOwnerName,
+                                               ShopManagerAppointmentFacade updatedAppointment) {
         return null;
     }
 }

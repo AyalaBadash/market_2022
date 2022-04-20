@@ -1,104 +1,128 @@
 package main.businessLayer;
 
-import main.businessLayer.discountPolicy.DiscountPolicy;
-import main.businessLayer.services.PaymentService;
-import main.businessLayer.services.ProductsSupplyService;
-import main.businessLayer.users.Member;
+import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.users.ShopFounder;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Shop {
+    // TODO must be unique
     private String shopName;
-    private Map<String,Item> itemMap; //<ItemID,main.businessLayer.Item>
-
-    private List<String> employees;
-    //TODO - check which way is preferred
-    private HashMap<String , Member> shopOwners;
-    private HashMap<String , Member> shopManagers;
-
+    private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
+    private Map<String, Appointment> employees;     //<name, appointment>
+    private Map<Item, Integer> itemsCurrentAmount;
+    private ShopFounder shopFounder;
     private boolean closed;
 
-    private List<PurchasePolicy> purchasePolicyList;
-    private List<DiscountPolicy> discountPolicyList;
-    private ProductsSupplyService supplyService;
-    private PaymentService paymentService;
 
-    public Shop(String name){
+    public Shop(String name , ShopFounder shopFounder) {
         this.shopName = name;
         itemMap = new HashMap<>();
-        employees = new ArrayList<>();
-        purchasePolicyList = new ArrayList<>();
-        discountPolicyList = new ArrayList<>();
-        closed = false;
+        employees = new HashMap<>();
+        itemsCurrentAmount = new HashMap<>();
+        this.shopFounder = shopFounder;
+        this.closed = false;
+
+    }
+
+
+    //use case - receive info of a shop
+    public String receiveInfo(String userName) throws Exception {
+        if (isClosed()) {
+            for (Map.Entry<String,Appointment> appointment : employees.entrySet()) {
+                if (appointment.getValue().getAppointed().getName().equals(userName)) {
+                    break;
+                }
+                throw new Exception("only owners and managers of the shop can view it's information");
+            }
+        }
+        return "shop: " + shopName;
+    }
+
+    public void editManagerPermission(String superVisorName, String managerName, Appointment appointment){
+
+        throw new UnsupportedOperationException();
+    }
+
+
+    //use case - Stock management
+    // TODO if key value changed, need to inform all relevant like users
+    public void editItem(Item item) {
+        itemMap.put(item.getID(), item);
+    }
+
+    ;
+
+    public void deleteItem(Item item) {
+        itemMap.remove(item.getName());
+    }
+
+    public void addItem(Item item) throws Exception {
+        if (!itemMap.containsKey(item.getName()))
+            itemMap.put(item.getID(), item);
+        else throw new Exception();
+    }
+
+    public int getItemCurrentAmount(Item item){
+        throw new UnsupportedOperationException();
+    }
+    public void setItemAmount(Item item, int amount){
+        throw new UnsupportedOperationException();
+    }
+
+
+    public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
+        if (isClosed()) {
+            for (Map.Entry<String,Appointment> appointment : employees.entrySet()) {
+                if (appointment.getValue().getAppointed().getName().equals(userName)) {
+                    break;
+                }
+                throw new Exception("only owners and managers of the shop can view it's information");
+            }
+        }
+        if (!itemMap.containsKey(itemId)) {
+            throw new Exception("no such item in shop");
+        } else {
+            return itemMap.get(itemId);
+        }
+
+    }
+
+    public List<Item> getAllItemsByPrice(int minPrice, int maxPrice){
+        throw new UnsupportedOperationException();
+    }
+    public int calculateBasket(ShoppingBasket basket){
+        throw new UnsupportedOperationException();
+    }
+    // TODO need to calculate again - if doesn't match - exception
+    public int buyBasket(int expectedAmount){
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isShopOwner(String memberName){
+        throw new UnsupportedOperationException();
     }
 
     public boolean isClosed() {
         return closed;
     }
 
-    //use case - receive info of a shop
-    public String receiveInfo(String userId) throws Exception {
-        if (isClosed() && (!shopManagers.containsKey(userId) & !shopOwners.containsKey(userId)))
-            throw new Exception("only owners and managers of the shop can view it's information");
-        return "shop: "+shopName;
-    } // TODO - check if returned value is indeed String and complete
-
-    //use case - Stock management
-    public void editItem(Item item){
-        itemMap.put(item.getName(),item);
-    };
-    public void deleteItem(Item item){
-        itemMap.remove(item.getName());
-    }
-    public void addItem(Item item) throws Exception{
-        if (!itemMap.containsKey(item.getName()))
-        itemMap.put(item.getName(),item);
-        else throw new Exception();
-    }
-    public Map<String , Item> getItems(){
-        return itemMap;
+    public List<Item> getAllItems(){
+        throw new UnsupportedOperationException();
     }
 
-    public HashMap<String, Member> getShopOwners() {
-        return shopOwners;
+    public String getShopName() {
+        return shopName;
     }
 
-    public HashMap<String, Member> getShopManagers() {
-        return shopManagers;
+    public ShopFounder getShopFounder() {
+        return shopFounder;
     }
 
-    //use case - Change shop's policy
-//    public void setDiscountPolicy(DiscountPolicy discountPolicy) {
-//        this.discountPolicy = discountPolicy;
-//    }
-//
-//    public void setPurchasePolicy(PurchasePolicy purchasePolicy) {
-//        this.purchasePolicy = purchasePolicy;
-//    }
-
-    public String receiveInfoAboutItem(String itemId, String userId) throws Exception {
-        if (isClosed() && (!shopManagers.containsKey(userId) & !shopOwners.containsKey(userId)))
-            throw new Exception("only owners and managers of the shop can view it's information");
-        String toReturn;
-        if (!itemMap.containsKey(itemId))
-            throw new Exception("no such item in shop");
-
-        else{
-            toReturn = itemMap.get(itemId).toString();
-            for (PurchasePolicy purPolicy : purchasePolicyList){
-                if (purPolicy.itemExistInPolicy(itemId)){
-                    toReturn+=purPolicy.getInfo();
-                }
-            }
-            for (DiscountPolicy disPolicy : discountPolicyList){
-                if (disPolicy.itemExistInPolicy(itemId)){
-                    toReturn+=disPolicy.getInfo();
-                }
-            }
-        }
-        return toReturn;
+    public Map<String, Appointment> getEmployees() {
+        return employees;
     }
 }

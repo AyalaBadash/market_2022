@@ -1,19 +1,24 @@
 package main.serviceLayer;
 
 import main.businessLayer.Item;
-import main.businessLayer.services.PaymentService;
-import main.businessLayer.services.ProductsSupplyService;
+import main.businessLayer.ExternalServices.PaymentService;
+import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.Market;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.List;
 
 public class MarketService {
     private static MarketService marketService = null;
-    private MarketService(){
+    private Market market;
+
+    private MarketService() {
+        market = Market.getInstance();
     }
-    public synchronized static MarketService getInstance(){
+
+    public synchronized static MarketService getInstance() {
         if (marketService == null)
-            marketService = new MarketService ();
+            marketService = new MarketService();
         return marketService;
     }
 
@@ -21,6 +26,13 @@ public class MarketService {
         return null;
     }
 
+
+    // TODO returns only open shops
+
+    /**
+     *
+     * @return only open shops
+     */
     public ResponseT<List<ShopFacade>> getAllShops() {
         return null;
     }
@@ -45,18 +57,11 @@ public class MarketService {
         return null;
     }
 
-    public ResponseT<List<ItemFacade>> filterItemByItemRank(int minItemRank) {
-        return null;
-    }
-
-    public ResponseT<List<ItemFacade>> filterItemByShopRank(int minShopRank) {
-        return null;
-    }
-
     public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category) {
         return null;
     }
 
+    // TODO validate visitor is a member
     public Response openNewShop(String visitorName, String shopName) {
         return null;
     }
@@ -65,7 +70,7 @@ public class MarketService {
         return null;
     }
 
-
+    // TODO need to check users are updated
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
         return null;
     }
@@ -75,7 +80,10 @@ public class MarketService {
         return null;
     }
 
-
+    public Response setItemCurrentAmount(ItemFacade item,int amount, String shopName){
+        return null;
+    }
+    // TODO need to check users are updated
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
         return null;
     }
@@ -84,6 +92,7 @@ public class MarketService {
         return null;
     }
 
+    public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName){return null;}
 
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
         return null;
@@ -95,17 +104,17 @@ public class MarketService {
     }
 
 
-    public ResponseT<String> getAllSystemPurchaseHistory() {
+    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName) {
         return null;
     }
 
 
-    public ResponseT<String> getHistoryByShop() {
+    public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName) {
         return null;
     }
 
 
-    public ResponseT<String> getHistoryByMember() {
+    public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
         return null;
     }
 }

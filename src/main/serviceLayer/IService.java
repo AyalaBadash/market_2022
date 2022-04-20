@@ -1,15 +1,15 @@
 package main.serviceLayer;
 
 import main.businessLayer.*;
-import main.businessLayer.services.PaymentService;
-import main.businessLayer.services.ProductsSupplyService;
+import main.businessLayer.ExternalServices.PaymentService;
+import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.serviceLayer.FacadeObjects.*;
 import resources.Address;
 import resources.PaymentMethod;
 
 import java.util.List;
 
-public interface Iservice {
+public interface IService {
     //  ************************** System UseCases *******************************//
 
     /**
@@ -90,18 +90,6 @@ public interface Iservice {
      * @return
      */
     public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice);
-
-    /**
-     * @param minItemRank
-     * @return
-     */
-    public ResponseT<List<ItemFacade>> filterItemByItemRank(int minItemRank);
-
-    /**
-     * @param minShopRank
-     * @return
-     */
-    public ResponseT<List<ItemFacade>> filterItemByShopRank(int minShopRank);
 
     /**
      * @param category
@@ -215,6 +203,23 @@ public interface Iservice {
     public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName);
 
     /**
+     *
+     * @param item
+     * @param shopName
+     * @return items current amount in the shop
+     */
+    public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName);
+
+    /**
+     *
+     * @param item
+     * @param amount
+     * @param shopName
+     * @return sets item current amount in shop
+     */
+    public Response setItemCurrentAmount(ItemFacade item,int amount, String shopName);
+
+    /**
      * if the change is in a unique key then after changing need to update all uses like shopping cart
      *
      * @param shopOwnerName
@@ -266,7 +271,8 @@ public interface Iservice {
      * @param updatedAppointment
      * @return
      */
-    public Response editShopManagerPermissions(String shopOwnerName, ShopManagerAppointmentFacade updatedAppointment);
+    public Response editShopManagerPermissions(String shopOwnerName,
+                                               ShopManagerAppointmentFacade updatedAppointment);
 
     /**
      * need to update all shop employees
@@ -301,16 +307,16 @@ public interface Iservice {
     /**
      * @return Market purchase history
      */
-    public ResponseT<String> getAllSystemPurchaseHistory();
+    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName);
 
 
     /**
      * @return Shop purchase history
      */
-    public ResponseT<String> getHistoryByShop();
+    public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName);
 
     /**
      * @return Member purchase history
      */
-    public ResponseT<String> getHistoryByMember();
+    public ResponseT<String> getHistoryByMember(String SystemManagerName, String shopName);
 }

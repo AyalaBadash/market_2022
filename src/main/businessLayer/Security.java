@@ -1,58 +1,70 @@
 package main.businessLayer;
 
+import resources.Pair;
+
 import java.util.HashMap;
 import java.util.List;
 
 public class Security {
-    //TODO - implement as singleton
-    private HashMap<String,String> nameAndPasswords;
-    private HashMap<String, List<Pair<String,String>>> nameAndQuestions;
+    private HashMap<String, LoginCard> namesToLoginInfo;
+
     private static Security instance;
 
-    private Security(){
-        this.nameAndPasswords = new HashMap<>();
-        this.nameAndQuestions = new HashMap<>();
+    private Security() {
+        this.namesToLoginInfo =  new HashMap<>();
     }
+
     public static Security getInstance() {
         if (instance == null)
             return new Security();
         else return instance;
     }
 
-
-
-    public boolean collectDebt(){
-        throw new UnsupportedOperationException();
-    }
-    public boolean supplyProducts(){throw new UnsupportedOperationException();}
-
-    public void validateRegister(String name, String password, String validatedPassword,
-                                 List<Pair<String, String>> securityQuestions) throws Exception {
-        validateRegisterPassword(password,validatedPassword);
+    public void validateRegister(String name, String password,
+                                 List<String> questions,List<String> answers) throws Exception {
+        validateRegisterPassword(password);
         validateName(name);
+        validateQuestions(questions, answers);
 
 
     }
-
-    private void validateName(String name) throws Exception{
-        if(nameAndPasswords.containsKey(name)|| name == null || name.equals(""))
+    // TODO need to document all exceptions
+    private void validateQuestions(List<String> questions, List<String> answers) throws Exception {
+        if (questions.size() != answers.size())
             throw new Exception();
     }
 
-    private void validateRegisterPassword(String password, String validatedPassword) throws Exception {
-        if (!password.equals(validatedPassword))
+    private void validateName(String name) throws Exception {
+        if (namesToLoginInfo.containsKey(name) || name == null || name.equals(""))
             throw new Exception();
     }
-    public void addNewMember(String name,String password,List<Pair<String,String>> securityQuestions)
-    {
-        nameAndPasswords.put(name,password);
-        nameAndQuestions.put(name,securityQuestions);
+
+    private void validateRegisterPassword(String password) throws Exception {
+
     }
 
-    public List<Pair<String, String>> validateLogin(String name, String password) throws Exception {
-        if (!password.equals(nameAndPasswords.get(name)))
+    public void addNewMember(String name, String password, List<String> questions,
+                             List<String> answers) {
+        LoginCard card = new LoginCard(name, password,questions, answers);
+        this.namesToLoginInfo.put(name, card);
+    }
+    public List<String> getQuestionsByName(String name){
+        return this.namesToLoginInfo.get(name).getQuestions();
+    }
+
+    // TODO question to answer must be corresponding sorted
+    public boolean validateLogin(String name, String password,
+                                                    List<String> questions, List<String> answers) throws Exception {
+        LoginCard loginCard = namesToLoginInfo.get(name);
+        if (!password.equals(loginCard.getPassword()))
             throw new Exception();
-        return nameAndQuestions.get(name);
-
+        for (int i =0; i< questions.size(); i++){
+            if (loginCard.getQandA().get(questions.get(i)).equals(answers.get(i))){
+                throw new Exception();
+            }
+        }
+        return true;
     }
+
+
 }

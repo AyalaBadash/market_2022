@@ -1,5 +1,7 @@
 package main;
 
+import main.businessLayer.Shop;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

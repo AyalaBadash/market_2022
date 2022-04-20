@@ -1,12 +1,8 @@
 package test.AcceptanceTest;
 
-import main.businessLayer.Market;
-import main.businessLayer.services.PaymentService;
-import main.businessLayer.services.ProductsSupplyService;
-import org.junit.jupiter.api.Assertions;
+import main.businessLayer.ExternalServices.PaymentService;
+import main.businessLayer.ExternalServices.ProductsSupplyService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 public class SystemAcceptanceTest extends AcceptanceTest {
     PaymentService paymentService ;

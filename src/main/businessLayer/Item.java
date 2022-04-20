@@ -2,39 +2,38 @@ package main.businessLayer;
 
 import main.IHistory;
 
-public class Item  implements IHistory {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Item implements IHistory {
 
     public enum Category {
         fruit,
         meat,
         //TODO complete
     }
-    private String ID;
+
+    private Integer ID;
     private String name;
-    private double weight;
     private double price;
     private Category category;
-    public Item(String ID,String name,double weight,double price){
-        this.ID=ID;
-        this.name=name;
-        this.price=price;
-        this.weight=weight;
+    private List<String> keywords;
+    // TODO ID must be generated in market
+    public Item(Integer ID, String name, double price) {
+        this.ID = ID;
+        this.name = name;
+        this.price = price;
+        keywords = new ArrayList<>();
     }
-    public Item(String name,double weight,double price){
-        this.name=name;
-        this.price=price;
-        this.weight=weight;
-    }
+
+
 
     public double getPrice() {
         return price;
     }
 
-    public double getWeight() {
-        return weight;
-    }
 
-    public String getID() {
+    public Integer getID() {
         return ID;
     }
 
@@ -46,25 +45,30 @@ public class Item  implements IHistory {
         this.price = price;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
 
-    public void setID(String ID) {
-        this.ID = ID;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
     @Override
-    public String toString() {
-        return "Name:" + this.name + " \tPrice:" + this.price;
-    }
-
-    @Override
+    //TODO need to re-implement
     public String getReview() {
         return this.getName();
     }
+
+    public void addKeyword(String keyword){
+        throw new UnsupportedOperationException();
+    }
+    public void removeKeyword(String keyword){
+        throw new UnsupportedOperationException();
+    }
+    public Category getCategory() {
+        return category;
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
 }

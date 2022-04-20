@@ -1,22 +1,16 @@
 package test.Bridge;
 
 import main.businessLayer.Item;
-import main.businessLayer.Market;
-import main.businessLayer.PurchasePolicy;
-import main.businessLayer.Shop;
-import main.businessLayer.discountPolicy.DiscountPolicy;
-import main.businessLayer.services.PaymentService;
-import main.businessLayer.services.ProductsSupplyService;
-import main.businessLayer.users.Member;
-import main.businessLayer.users.Visitor;
+import main.businessLayer.ExternalServices.PaymentService;
+import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.serviceLayer.FacadeObjects.*;
-import main.serviceLayer.Iservice;
+import main.serviceLayer.IService;
 import resources.Address;
 import resources.PaymentMethod;
 
 import java.util.List;
 
-public class Proxy implements Iservice {
+public class Proxy implements IService {
     @Override
     public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
         return null;
@@ -173,7 +167,8 @@ public class Proxy implements Iservice {
     }
 
     @Override
-    public Response editShopManagerPermissions(String shopOwnerName, ShopManagerAppointmentFacade updatedAppointment) {
+    public Response editShopManagerPermissions(String shopOwnerName,
+                                               ShopManagerAppointmentFacade updatedAppointment) {
         return null;
     }
 
@@ -193,17 +188,19 @@ public class Proxy implements Iservice {
     }
 
     @Override
-    public ResponseT<String> getAllSystemPurchaseHistory() {
+    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName) {
         return null;
     }
 
     @Override
-    public ResponseT<String> getHistoryByShop() {
+    public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName) {
         return null;
     }
 
     @Override
-    public ResponseT<String> getHistoryByMember() {
+    public ResponseT<String> getHistoryByMember(String SystemManagerName, String shopName) {
         return null;
     }
+
+
 }
