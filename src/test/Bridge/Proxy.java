@@ -23,16 +23,6 @@ public class Proxy implements Iservice {
     }
 
     @Override
-    public ResponseT<Boolean> makePayment(String accountDetails) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<Boolean> makeSupply(String packageDetails, String userDetails) {
-        return null;
-    }
-
-    @Override
     public ResponseT<VisitorFacade> guestLogin() {
         return null;
     }
