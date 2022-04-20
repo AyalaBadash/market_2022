@@ -1,11 +1,16 @@
 package test.Bridge;
 
-import main.*;
-import main.discountPolicy.DiscountPolicy;
-import main.services.PaymentService;
-import main.services.ProductsSupplyService;
-import main.users.Member;
-import main.users.Visitor;
+import main.businessLayer.Item;
+import main.businessLayer.Market;
+import main.businessLayer.PurchasePolicy;
+import main.businessLayer.Shop;
+import main.businessLayer.discountPolicy.DiscountPolicy;
+import main.businessLayer.services.PaymentService;
+import main.businessLayer.services.ProductsSupplyService;
+import main.businessLayer.users.Member;
+import main.businessLayer.users.Visitor;
+import main.serviceLayer.FacadeObjects.ItemFacade;
+import main.serviceLayer.FacadeObjects.ShopFacade;
 
 import java.util.List;
 
@@ -16,15 +21,6 @@ public class Proxy implements SystemBridge {
         return null;
     }
 
-    @Override
-    public boolean changePaymentService(PaymentService newPaymentService) {
-        return false;
-    }
-
-    @Override
-    public boolean changeSupplyService(ProductsSupplyService newSupplyServ) {
-        return false;
-    }
 
     @Override
     public boolean makePayment(String accountDetails) {
@@ -36,10 +32,6 @@ public class Proxy implements SystemBridge {
         return false;
     }
 
-    @Override
-    public String getAllGatheredNotifications(String userName, String userPassword) {
-        return null;
-    }
 
     @Override
     public Visitor guestLogin() {
@@ -52,9 +44,15 @@ public class Proxy implements SystemBridge {
     }
 
     @Override
-    public boolean register(String userName, String userPassword, List<String> userAdditionalQueries, List<String> userAdditionalAnswers) {
+    public boolean register(String userName, String userPassword) {
         return false;
     }
+
+    @Override
+    public boolean addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers) {
+        return false;
+    }
+
 
     @Override
     public Visitor memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers) {
@@ -63,6 +61,26 @@ public class Proxy implements SystemBridge {
 
     @Override
     public Visitor logout() {
+        return null;
+    }
+
+    @Override
+    public List<ShopFacade> getAllShops() {
+        return null;
+    }
+
+    @Override
+    public List<ItemFacade> getAllItemsByShop(ShopFacade shop) {
+        return null;
+    }
+
+    @Override
+    public ItemFacade searchProductByName(String name) {
+        return null;
+    }
+
+    @Override
+    public ItemFacade searchProductByKeyword(String keyWord) {
         return null;
     }
 

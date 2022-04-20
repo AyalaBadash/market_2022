@@ -1,43 +1,92 @@
 package test.Bridge;
 
-import main.*;
-import main.discountPolicy.DiscountPolicy;
-import main.services.PaymentService;
-import main.services.ProductsSupplyService;
-import main.users.Member;
-import main.users.Visitor;
+import main.businessLayer.Item;
+import main.businessLayer.Market;
+import main.businessLayer.PurchasePolicy;
+import main.businessLayer.Shop;
+import main.businessLayer.discountPolicy.DiscountPolicy;
+import main.businessLayer.services.PaymentService;
+import main.businessLayer.services.ProductsSupplyService;
+import main.businessLayer.users.Member;
+import main.businessLayer.users.Visitor;
+import main.serviceLayer.FacadeObjects.*;
 
 import java.util.List;
 
 public interface SystemBridge {
-    // System Use Cases
-    public Market initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
-                             String userName, String password);
+    //     System UseCases
+    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
+                                                         String userName, String password);
 
-    public boolean changePaymentService(PaymentService newPaymentService);
+//    public boolean changePaymentService(PaymentService newPaymentService);
 
-    public boolean changeSupplyService(ProductsSupplyService newSupplyServ);
+//    public boolean changeSupplyService(ProductsSupplyService newSupplyServ);
 
-    public boolean makePayment(String accountDetails);
+    public ResponseT<Boolean> makePayment(String accountDetails);
 
-    public boolean makeSupply(String packageDetails, String userDetails);
+    public ResponseT<Boolean> makeSupply(String packageDetails, String userDetails);
 
-    public String getAllGatheredNotifications(String userName, String userPassword);
-    //TODO need to understand how to implement service for live notifications
+//    public String getAllGatheredNotifications(String userName, String userPassword);
 
     // Visitor Use cases
-    public Visitor guestLogin();
 
-    public void exitSystem();
+    /**
+     * generates a unique name (temporary)
+     * example -visitor123
+     * @return
+     */
+    public ResponseT<VisitorFacade> guestLogin();
 
-    public boolean register(String userName, String userPassword,
-                            List<String> userAdditionalQueries, List<String> userAdditionalAnswers);
+    /**
+     * if not a member - deletes from data
+     */
+    public Response exitSystem(String visitorName);
 
-    public Visitor memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers);
+    public ResponseT<Boolean> register(String userName, String userPassword);
+
+    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers,
+                                    MemberFacade member);
 
 
+    public ResponseT<List<ShopFacade>> getAllShops();
+
+    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop);
+
+    public ResponseT<ItemFacade> searchProductByName(String name);
+
+    public ResponseT<ItemFacade> searchProductByCategory(Item.Category category);
+
+    public ResponseT<ItemFacade> searchProductByKeyword(String keyWord);
+
+
+    public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice);
+
+    public ResponseT<List<ItemFacade>> filterItemByItemRank(int minItemRank);
+
+    public ResponseT<List<ItemFacade>> filterItemByShopRank(int minShopRank);
+
+    public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category);
+
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName,
+                                          String visitorName);
+
+    public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName);
+
+    public ResponseT<> editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName,
+                                                String visitorName);
+
+    /**
+     * need to delete the temporary VisitorName from data
+     * @param userName
+     * @param userPassword
+     * @param userAdditionalAnswers - empty list if no additional queries exist
+     * @return
+     */
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers,
+                                               String visitorName);
     // Member Use cases
-    public Visitor logout();
+
+    public Response logout();
 
     public void openNewShop();
 

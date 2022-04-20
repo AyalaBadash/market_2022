@@ -1,8 +1,8 @@
 package test.AcceptanceTest;
 
-import main.Market;
-import main.services.PaymentService;
-import main.services.ProductsSupplyService;
+import main.businessLayer.Market;
+import main.businessLayer.services.PaymentService;
+import main.businessLayer.services.ProductsSupplyService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

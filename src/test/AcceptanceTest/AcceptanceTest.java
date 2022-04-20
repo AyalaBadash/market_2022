@@ -1,7 +1,5 @@
 package test.AcceptanceTest;
 
-import main.MarketController;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import resources.ConfigReader;
 import test.Bridge.Proxy;
@@ -40,6 +38,6 @@ public class AcceptanceTest {
 
     public void createValidUser(){
         bridge.guestLogin();
-        bridge.register(userName, userPassword, new ArrayList<String>(), new ArrayList<String>());
+//        bridge.register(userName, userPassword, new ArrayList<String>(), new ArrayList<String>());
     }
 }
