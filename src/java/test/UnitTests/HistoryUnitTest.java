@@ -10,6 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.HashMap;
 
 @ExtendWith(MockitoExtension.class)
 public class HistoryUnitTest extends mainTest {
@@ -25,6 +28,11 @@ public class HistoryUnitTest extends mainTest {
     public void testEmptyPurchaseHistory() throws IllegalAccessException {
         Mockito.when(item.getName()).thenReturn("test1");
         Assertions.assertEquals("test1", item.getName());
+        HashMap<Item,Double> map = new HashMap<>();
+        map.put(item,0.0);
+        ReflectionTestUtils.setField(shoppingBasket,"items",map);
+        System.out.println(shoppingBasket.isEmpty());
     }
+
 
 }
