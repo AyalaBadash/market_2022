@@ -1,5 +1,8 @@
 package main;
 
+import main.users.MemberController;
+import main.users.SystemManager;
+
 import java.util.List;
 import java.util.Map;
 
@@ -52,5 +55,31 @@ public class Market {
 
     public Map<String, Shop> getShops() {
         return shops;
+    }
+
+    private String ReceiveInformationAboutShop(String user, String shop) throws Exception {
+        MemberController mc = MemberController.getInstance();
+        if (mc.getCurrentLoggedIn().getName() != user){
+            throw new Exception("user is not currently logged in");
+        }
+        else if (!shops.containsKey(shop)){
+            throw new Exception("shop does not exist");
+        }
+        else{
+            return shops.get(shop).receiveInfo(user);
+        }
+    }
+
+    private String ReceiveInformationAboutItemInShop(String user, String shop, String itemId) throws Exception {
+        MemberController mc = MemberController.getInstance();
+        if (mc.getCurrentLoggedIn().getName() != user){
+            throw new Exception("user is not currently logged in");
+        }
+        else if (!shops.containsKey(shop)){
+            throw new Exception("shop does not exist");
+        }
+        else{
+            return shops.get(shop).receiveInfoAboutItem(itemId, user);
+        }
     }
 }

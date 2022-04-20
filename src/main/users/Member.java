@@ -1,4 +1,6 @@
-package main;
+package main.users;
+
+import main.ShoppingCart;
 
 public class Member {
     private String name;

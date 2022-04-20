@@ -1,4 +1,4 @@
-package main;
+package main.services;
 
 public class PaymentService {
 }

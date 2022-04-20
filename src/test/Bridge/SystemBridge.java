@@ -1,6 +1,11 @@
 package test.Bridge;
 
 import main.*;
+import main.discountPolicy.DiscountPolicy;
+import main.services.PaymentService;
+import main.services.ProductsSupplyService;
+import main.users.Member;
+import main.users.Visitor;
 
 import java.util.List;
 

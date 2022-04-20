@@ -1,4 +1,6 @@
-package main;
+package main.discountPolicy;
+
+import main.ShoppingBasket;
 
 public class Condition {
 

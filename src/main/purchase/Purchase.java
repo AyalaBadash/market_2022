@@ -1,4 +1,4 @@
-package main;
+package main.purchase;
 
 public class Purchase {
 }

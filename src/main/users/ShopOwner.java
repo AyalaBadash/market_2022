@@ -1,4 +1,6 @@
-package main;
+package main.users;
+
+import main.Shop;
 
 public class ShopOwner implements BuyerState {
     boolean isFounder;
