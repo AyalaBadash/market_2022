@@ -1,0 +1,316 @@
+package main.serviceLayer;
+
+import main.businessLayer.*;
+import main.businessLayer.services.PaymentService;
+import main.businessLayer.services.ProductsSupplyService;
+import main.serviceLayer.FacadeObjects.*;
+import resources.Address;
+import resources.PaymentMethod;
+
+import java.util.List;
+
+public interface Iservice {
+    //  ************************** System UseCases *******************************//
+
+    /**
+     * @param paymentService
+     * @param supplyService
+     * @param userName
+     * @param password
+     * @return
+     */
+    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
+                               String userName, String password);
+
+
+    // ************************** Visitor Use cases ******************************//
+
+    /**
+     * generates a unique name (temporary)
+     * example -visitor123
+     *
+     * @return
+     */
+    public ResponseT<VisitorFacade> guestLogin();
+
+    /**
+     * if not a member - deletes from data
+     */
+    public Response exitSystem(String visitorName);
+
+    /**
+     * @param userName
+     * @param userPassword
+     * @return
+     */
+    public ResponseT<Boolean> register(String userName, String userPassword);
+
+    /**
+     * @param userAdditionalQueries
+     * @param userAdditionalAnswers
+     * @param member
+     * @return
+     */
+    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers,
+                                               MemberFacade member);
+
+
+    /**
+     * @return
+     */
+    public ResponseT<List<ShopFacade>> getAllShops();
+
+    /**
+     * @param shop
+     * @return
+     */
+    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop);
+
+    /**
+     * @param name
+     * @return
+     */
+    public ResponseT<ItemFacade> searchProductByName(String name);
+
+    /**
+     * @param category
+     * @return
+     */
+    public ResponseT<ItemFacade> searchProductByCategory(Item.Category category);
+
+    /**
+     * @param keyWord
+     * @return
+     */
+    public ResponseT<ItemFacade> searchProductByKeyword(String keyWord);
+
+    /**
+     * @param minPrice
+     * @param maxPrice
+     * @return
+     */
+    public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice);
+
+    /**
+     * @param minItemRank
+     * @return
+     */
+    public ResponseT<List<ItemFacade>> filterItemByItemRank(int minItemRank);
+
+    /**
+     * @param minShopRank
+     * @return
+     */
+    public ResponseT<List<ItemFacade>> filterItemByShopRank(int minShopRank);
+
+    /**
+     * @param category
+     * @return
+     */
+    public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category);
+
+    /**
+     * @param itemToInsert
+     * @param amount
+     * @param shopName
+     * @param visitorName
+     * @return
+     */
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName,
+                                          String visitorName);
+
+    /**
+     * @param visitorName
+     * @return
+     */
+    public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName);
+
+    /**
+     * @param amount
+     * @param itemFacade
+     * @param shopName
+     * @param visitorName
+     * @return
+     */
+    public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName,
+                                             String visitorName);
+
+    /**
+     * TODO add price (initial to -1) to shopping cart and update after calculating
+     *
+     * @param visitorName
+     * @return
+     */
+    public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName);
+
+    /**
+     * update if nothing changed and the buying is actually occurred shops for purchase history and items updating
+     *
+     * @param visitorName
+     * @param paymentMethod
+     * @param address
+     * @return
+     */
+    public Response buyShoppingCart(String visitorName, int expectedPrice, PaymentMethod paymentMethod, Address address);
+
+
+    /**
+     * need to delete the temporary VisitorName from data
+     *
+     * @param userName
+     * @param userPassword
+     * @param userAdditionalAnswers - empty list if no additional queries exist
+     * @return
+     */
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers,
+                                               String visitorName);
+
+
+    //************************* Member Use cases *************************************//
+
+    /**
+     * @param visitorName
+     * @return
+     */
+    public Response logout(String visitorName);
+
+    /**
+     * @param visitorName
+     * @param shopName
+     * @return
+     */
+    public Response openNewShop(String visitorName, String shopName);
+
+
+    // *********************** Shop Owner use cases *******************************//
+
+    /**
+     * !this method is not used for updating amount when buying a shopping cart!
+     *
+     * @param shopOwnerName
+     * @param item
+     * @param amount
+     * @param shopName
+     * @return
+     */
+    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName);
+
+    /**
+     * @param shopOwnerName
+     * @param item
+     * @param shopName
+     * @return
+     */
+    public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName);
+
+    /**
+     * need to check if the item is not already exist
+     *
+     * @param shopOwnerName
+     * @param item
+     * @param amount
+     * @param shopName
+     * @return
+     */
+    public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName);
+
+    /**
+     * if the change is in a unique key then after changing need to update all uses like shopping cart
+     *
+     * @param shopOwnerName
+     * @param updatedItem
+     * @param oldItem
+     * @param shopName
+     * @return
+     */
+    public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName);
+
+
+    /**
+     * needed to be implemented as Mira showed (shaked sent the relevant photo)
+     *
+     * @param shopOwnerName
+     * @param appointedShopOwner
+     * @param shopName
+     * @return
+     */
+    public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName);
+
+    /**
+     * initial to all permissions
+     *
+     * @param shopOwnerName
+     * @param appointedShopOwner
+     * @param shopName
+     */
+    public Response appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName);
+
+    /**
+     * @return managers and shop owners I appointed
+     */
+    public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName);
+
+    /**
+     * @return managers I appointed
+     */
+    public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName);
+
+    /**
+     * @return shop owners I appointed
+     */
+    public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName);
+
+
+    /**
+     * @param shopOwnerName
+     * @param updatedAppointment
+     * @return
+     */
+    public Response editShopManagerPermissions(String shopOwnerName, ShopManagerAppointmentFacade updatedAppointment);
+
+    /**
+     * need to update all shop employees
+     *
+     * @param shopOwnerName
+     * @param shopName
+     * @return
+     */
+    public Response closeShop(String shopOwnerName, String shopName);
+
+    // ************************** Shop Manager and Shop Owner use cases ********************************//
+
+    /**
+     * need to check permissions (shop owner or manager)
+     *
+     * @param shopManagerName
+     * @param shopName
+     * @return
+     */
+    public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName);
+
+    /**
+     * @param shopManagerName
+     * @param shopName
+     * @return
+     */
+    public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName);
+
+
+    // ************************** System Manager use cases ********************************//
+
+    /**
+     * @return Market purchase history
+     */
+    public ResponseT<String> getAllSystemPurchaseHistory();
+
+
+    /**
+     * @return Shop purchase history
+     */
+    public ResponseT<String> getHistoryByShop();
+
+    /**
+     * @return Member purchase history
+     */
+    public ResponseT<String> getHistoryByMember();
+}

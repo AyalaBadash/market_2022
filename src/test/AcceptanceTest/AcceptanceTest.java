@@ -3,15 +3,13 @@ package test.AcceptanceTest;
 import org.junit.jupiter.api.BeforeAll;
 import resources.ConfigReader;
 import test.Bridge.Proxy;
-import test.Bridge.SystemBridge;
-
-import java.util.ArrayList;
+import main.serviceLayer.Iservice;
 
 // TODO need to check if really acceptance shouldn't know the system objects,
 //  if so, should create new objects
 
 public class AcceptanceTest {
-    static SystemBridge bridge;
+    static Iservice bridge;
     static ConfigReader configReader = ConfigReader.getInstance();
     protected String userName;
     protected String userPassword;

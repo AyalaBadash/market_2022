@@ -1,34 +1,33 @@
-package test.Bridge;
+package main.serviceLayer;
 
 import main.businessLayer.Item;
-import main.businessLayer.Market;
-import main.businessLayer.PurchasePolicy;
-import main.businessLayer.Shop;
-import main.businessLayer.discountPolicy.DiscountPolicy;
 import main.businessLayer.services.PaymentService;
 import main.businessLayer.services.ProductsSupplyService;
-import main.businessLayer.users.Member;
-import main.businessLayer.users.Visitor;
 import main.serviceLayer.FacadeObjects.*;
-import main.serviceLayer.Iservice;
 import resources.Address;
 import resources.PaymentMethod;
 
 import java.util.List;
 
-public class Proxy implements Iservice {
+public class Service implements Iservice {
+    private static Service service = null;
+    MarketService marketService;
+    PurchaseService purchaseService;
+    UserService userService;
+
+    private Service(){
+        marketService = MarketService.getInstance ();
+        purchaseService = PurchaseService.getInstance ();
+        userService = UserService.getInstance ();
+    }
+
+    public synchronized static Service getInstance(){
+        if (service == null)
+            service = new Service ();
+        return  service;
+    }
     @Override
     public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<Boolean> makePayment(String accountDetails) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<Boolean> makeSupply(String packageDetails, String userDetails) {
         return null;
     }
 
