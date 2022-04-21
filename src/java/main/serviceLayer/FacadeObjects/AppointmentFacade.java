@@ -1,5 +1,7 @@
 package main.serviceLayer.FacadeObjects;
 
+import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
 
@@ -22,6 +24,7 @@ public abstract class AppointmentFacade {
     public Member getAppointed() {
         return appointed;
     }
+
 
     public void setAppointed(Member appointed) {
         this.appointed = appointed;
@@ -50,4 +53,6 @@ public abstract class AppointmentFacade {
     public void setPermissions(List<PermissionFacade> permissions) {
         this.permissions = permissions;
     }
+
+    public abstract AppointmentFacade toFacade(ShopManagerAppointment appointment);
 }

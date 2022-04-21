@@ -30,6 +30,7 @@ public abstract class Appointment {
         return permissions;
     }
 
+
     public Shop getRelatedShop() {
         return relatedShop;
     }
@@ -56,5 +57,6 @@ public abstract class Appointment {
 
     public abstract boolean isManager();
     public abstract boolean isOwner();
+
 
 }

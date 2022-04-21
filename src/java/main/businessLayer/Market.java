@@ -1,13 +1,19 @@
 package main.businessLayer;
 
+import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.users.Member;
 import main.businessLayer.users.UserController;
+import main.serviceLayer.FacadeObjects.AppointmentFacade;
+import main.serviceLayer.FacadeObjects.MemberFacade;
+import main.serviceLayer.FacadeObjects.ResponseT;
 import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,4 +181,33 @@ public class Market {
         nextItemID ++;
         return temp;
     }
+
+    public List<String> memberLogin(String userName, String userPassword, String visitorName) throws Exception{ //TODO -Check whick Exception
+        Security security = Security.getInstance();
+        List<String> questions = security.validatePassword(userName,userPassword);
+        return null;
+
+    }
+
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception {
+        Security security = Security.getInstance();
+        security.validateQuestions(userName,answers);
+        Member member =  userController.getMembers().get(userName);
+        List<Appointment> appointmentByMe = member.getAppointedByMe();
+        List<AppointmentFacade> appointmentFacadesByMe= new ArrayList<>();
+        for (Appointment appointment: appointmentByMe)
+        {
+            //appointmentFacadesByMe.add(null); // TODO -  Understand how to turn appointment to appointmentFacade
+        }
+        List<Appointment> appointments = member.getAppointedByMe();
+        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
+        for (Appointment appointment: appointments)
+        {
+            //appointmentsFacades.add(null);
+        }
+        userController.finishLogin(userName);
+        return new ResponseT<MemberFacade>(new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades));
+    }
+
+
 }

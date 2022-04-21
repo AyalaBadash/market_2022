@@ -26,6 +26,10 @@ public class UserController {
         String name = getNextUniqueName();
         throw new UnsupportedOperationException();
     }
+    public Member memberLogin(String userName, String userPassword){
+        return null;
+    }
+
 
     public void exitSystem(){
         throw new UnsupportedOperationException();
@@ -61,4 +65,9 @@ public class UserController {
         this.visitorsInMarket = visitorsInMarket;
     }
 
+    public Member finishLogin(String userName) {
+        Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
+        visitorsInMarket.put(userName,newVisitorMember);
+        return newVisitorMember.getMember();
+    }
 }

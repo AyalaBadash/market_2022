@@ -3,6 +3,7 @@ package test.Bridge;
 import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.users.Member;
 import main.serviceLayer.FacadeObjects.*;
 import main.serviceLayer.IService;
 import main.resources.Address;
@@ -98,7 +99,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers, String visitorName) {
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, String visitorName) {
         return null;
     }
 

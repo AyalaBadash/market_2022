@@ -147,10 +147,9 @@ public interface IService {
      *
      * @param userName
      * @param userPassword
-     * @param userAdditionalAnswers - empty list if no additional queries exist
      * @return
      */
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers,
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword,
                                                String visitorName);
 
 

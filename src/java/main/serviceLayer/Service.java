@@ -7,6 +7,7 @@ import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.PaymentMethod;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Service implements IService {
@@ -115,9 +116,33 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers, String visitorName) {
-        return null;
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, String visitorName) {
+        try {
+           ResponseT<List<String>> responseQs = userService.memberLogin(userName, userPassword, visitorName);
+            List<String> Qs = responseQs.getValue(); // TODO -  display Qs to user.
+            List<String> ans = new ArrayList<>(); //TODO users input
+            return validateSecurityQuestions(userName,ans);
+        }
+        catch (Exception e){
+            //TODO - What to do here
+            return null; //TODO change here
+        }
     }
+
+    private ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) {
+
+        try{
+            return userService.validateSecurityQuestions(userName,answers);
+        }
+        catch (Exception e)
+        {
+            //TODO
+            return null; //TODO change here
+        }
+
+    }
+
+
 
     @Override
     public Response logout(String visitorName) {
