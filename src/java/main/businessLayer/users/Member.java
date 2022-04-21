@@ -1,5 +1,6 @@
 package main.businessLayer.users;
 
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.ShoppingCart;
 import main.businessLayer.Appointment.Appointment;
 
@@ -56,4 +57,11 @@ public class Member {
     }
 
 
+    /**
+     * add an appointment which cur member is appointed (to myAppointments)
+     * @param appointment
+     */
+    public void addAppointment(ShopOwnerAppointment appointment) {
+        myAppointments.add ( appointment );
+    }
 }

@@ -1,8 +1,11 @@
 package main.businessLayer;
 
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.users.Member;
 import main.businessLayer.users.UserController;
+import main.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import main.resources.Address;
 import main.resources.Pair;
@@ -174,5 +177,21 @@ public class Market {
         int temp =  nextItemID;
         nextItemID ++;
         return temp;
+    }
+
+    public void openNewShop(String visitorName, String shopName) throws MarketException {
+        Member curMember;
+        if(userController.isMember(visitorName)){
+            curMember = userController.getMember (visitorName);
+            if(shops.get ( shopName ) == null) {
+                Shop shop = new Shop ( shopName );
+                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
+                shop.addEmployee(shopFounder);
+                shops.put ( shopName, shop );
+                curMember.addAppointment(shopFounder);
+            } else
+                throw new MarketException ( "Shop with the same shop name is already exists" );
+        } else
+            throw new MarketException ( "You are not a member. Only members can open a new shop in the market" );
     }
 }

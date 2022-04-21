@@ -4,6 +4,7 @@ import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.Market;
+import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.List;
@@ -63,7 +64,12 @@ public class MarketService {
 
     // TODO validate visitor is a member
     public Response openNewShop(String visitorName, String shopName) {
-        return null;
+        try{
+            market.openNewShop(visitorName, shopName);
+            return new Response (  );
+        }catch (MarketException marketException){
+            return new Response ( marketException.getMessage () );
+        }
     }
 
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
