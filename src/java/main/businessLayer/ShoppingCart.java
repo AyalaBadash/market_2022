@@ -13,8 +13,9 @@ public class ShoppingCart implements IHistory {
         this.cart = new HashMap<>();
     }
 
+    // TODO need to append visitor name when called
     @Override
-    public String getReview() {
+    public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()){
             Shop shop = shopToBasket.getKey();
@@ -22,11 +23,12 @@ public class ShoppingCart implements IHistory {
             if (basket.isEmpty()){
                 continue;
             }
-            // TODO implement
-//            review.append(String.format("Basket for shop %s:\n", shop.getShopName()));
-            review.append(String.format("%s\n",basket.getReview()));
+            // TODO need to make sure all items in cart is bought
+            review.append(String.format("Basket for %s:\n%s\n",shop.getShopName() , basket.getReview()));
+            review.append(String.format("Overall Cart Price: %f", currentPrice));
+
         }
-        return review.toString();
+        return review;
     }
 
     public void addItem(Shop shop , Item item, int amount){

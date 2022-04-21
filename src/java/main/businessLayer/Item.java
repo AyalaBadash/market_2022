@@ -68,8 +68,8 @@ public class Item implements IHistory {
 
     @Override
     //TODO need to re-implement
-    public String getReview() {
-        return this.getName();
+    public StringBuilder getReview() {
+        return new StringBuilder(this.getName());
     }
 
     public void addKeyword(String keyword){
