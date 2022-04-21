@@ -7,6 +7,7 @@ import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
+import main.serviceLayer.FacadeObjects.VisitorFacade;
 
 import java.util.HashMap;
 import java.util.List;
@@ -178,5 +179,9 @@ public class Market {
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         userController.exitSystem(visitorName);
+    }
+
+    public String memberLogout(String member) throws MarketException {
+        return userController.memberLogout(member);
     }
 }

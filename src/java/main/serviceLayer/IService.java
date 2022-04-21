@@ -160,7 +160,7 @@ public interface IService {
      * @param visitorName
      * @return
      */
-    public Response logout(String visitorName);
+    public ResponseT<VisitorFacade> logout(String visitorName);
 
     /**
      * @param visitorName

@@ -9,10 +9,10 @@ public class Visitor {
     private Member member;
     private ShoppingCart cart;
 
-    public Visitor(String name, Member member, ShoppingCart cart) {
+    public Visitor(String name) {
         this.name = name;
-        this.member = member;
-        this.cart = cart;
+        this.member = null;
+        this.cart = new ShoppingCart();
     }
 
     //use case - Register
