@@ -3,7 +3,9 @@ import main.businessLayer.Item;
 import main.businessLayer.Shop;
 import main.businessLayer.ShoppingBasket;
 import main.businessLayer.ShoppingCart;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +25,6 @@ public class HistoryUnitTest extends mainTest {
     Item item = Mockito.mock(Item.class);
     ShoppingCart shoppingCart;
     ShoppingBasket shoppingBasket = Mockito.mock(ShoppingBasket.class);
-
     @Test
     @DisplayName("History Unit Test - empty purchase")
     public void testEmptyPurchaseHistory() throws IllegalAccessException {
@@ -34,6 +35,8 @@ public class HistoryUnitTest extends mainTest {
         ReflectionTestUtils.setField(shoppingBasket,"items",map);
         System.out.println(shoppingBasket.isEmpty());
     }
+
+
 
 
 }
