@@ -73,7 +73,7 @@ public class Market {
     }
 
     public Shop getShopByName(String shopName){
-        throw new UnsupportedOperationException();
+        return shops.get ( shopName );
     }
 
 

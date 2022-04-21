@@ -105,7 +105,7 @@ public class Shop {
     }
 
     public boolean isShopOwner(String memberName) {
-        throw new UnsupportedOperationException();
+        return employees.get ( memberName ).isOwner ();
     }
 
     public boolean isClosed() {
