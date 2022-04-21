@@ -168,8 +168,13 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response editShopManagerPermissions(String shopOwnerName,
+    public Response editShopManagerPermissions(String shopOwnerName, String managerName, String relatedShop,
                                                ShopManagerAppointmentFacade updatedAppointment) {
+        return null;
+    }
+
+    @Override
+    public ResponseT getManagerPermission(String shopOwnerName, String managerName, String relatedShop){
         return null;
     }
 

@@ -2,10 +2,11 @@ package main.serviceLayer.FacadeObjects;
 
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Item;
+import main.businessLayer.Shop;
 
 import java.util.Map;
 
-public class ShopFacade {
+public class ShopFacade implements FacadeObject<Shop> {
 
     private String shopName;
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
@@ -60,5 +61,10 @@ public class ShopFacade {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+    }
+
+    @Override
+    public Shop toBusinessObject() {
+        return null;
     }
 }

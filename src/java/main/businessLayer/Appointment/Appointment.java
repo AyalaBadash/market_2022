@@ -23,6 +23,13 @@ public abstract class Appointment {
         addAllPermissions();
     }
 
+    public Appointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
+        this.appointed = appointed;
+        this.superVisor = superVisor;
+        this.relatedShop = relatedShop;
+        this.permissions = permissions;
+    }
+
     public void addAllPermissions(){
         permissions.add(new PurchaseHistoryPermission());
         permissions.add(new EmployeesPermission());

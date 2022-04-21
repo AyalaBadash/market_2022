@@ -185,9 +185,14 @@ public class Service implements IService {
     }
 
     @Override
-    public Response editShopManagerPermissions(String shopOwnerName,
+    public Response editShopManagerPermissions(String shopOwnerName,String managerName, String relatedShop,
                                                ShopManagerAppointmentFacade updatedAppointment) {
-        return null;
+        return this.userService.editShopManagerPermissions(shopOwnerName,managerName , relatedShop,updatedAppointment);
+    }
+
+    @Override
+    public ResponseT getManagerPermission(String shopOwnerName, String managerName, String relatedShop){
+        return this.userService.getManagerAppointment(shopOwnerName,managerName, relatedShop);
     }
 
     @Override

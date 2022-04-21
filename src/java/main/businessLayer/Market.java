@@ -1,14 +1,15 @@
 package main.businessLayer;
 
+import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.users.UserController;
+import main.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
 import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -179,5 +180,26 @@ public class Market {
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         userController.exitSystem(visitorName);
+    }
+
+    public Appointment getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) throws MarketException {
+        for (Map.Entry<String, Shop> shopEntry : this.shops.entrySet()){
+            Shop shop = shopEntry.getValue();
+            if (shop.getShopName().equals(relatedShop)){
+                return shop.getManagerAppointment(shopOwnerName,managerName);
+            }
+        }
+        throw new MarketException("shop couldn't be found");
+    }
+
+    public void editShopManagerPermissions(String shopOwnerName, String managerName, String relatedShop, Appointment updatedAppointment) throws MarketException {
+        for (Map.Entry<String, Shop> shopEntry : this.shops.entrySet()){
+            Shop shop = shopEntry.getValue();
+            if (shop.getShopName().equals(relatedShop)){
+                shop.editManagerPermission(shopOwnerName,managerName,updatedAppointment);
+                return;
+            }
+        }
+        throw new MarketException("shop couldn't be found");
     }
 }

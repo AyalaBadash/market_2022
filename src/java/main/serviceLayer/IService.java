@@ -271,8 +271,15 @@ public interface IService {
      * @param updatedAppointment
      * @return
      */
-    public Response editShopManagerPermissions(String shopOwnerName,
+    public Response editShopManagerPermissions(String shopOwnerName, String shopManagerName, String relatedShop,
                                                ShopManagerAppointmentFacade updatedAppointment);
+
+    /**
+     * @param shopOwnerName
+     * @param managerName
+     * @return
+     */
+    public ResponseT getManagerPermission(String shopOwnerName, String managerName, String relatedShop);
 
     /**
      * need to update all shop employees
