@@ -17,7 +17,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
 public class HistoryUnitTest extends mainTest {
 
     @Mock

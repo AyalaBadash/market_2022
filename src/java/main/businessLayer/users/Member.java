@@ -55,5 +55,8 @@ public class Member {
         this.myAppointments = myAppointments;
     }
 
+    public void addAppointmentByMe(Appointment app){ this.appointedByMe.add(app);}
+
+    public void addAppointmentToMe(Appointment app){ this.myAppointments.add(app);}
 
 }

@@ -40,7 +40,8 @@ public class ShoppingCart implements IHistory {
         throw new UnsupportedOperationException();
     }
 
+    public void editQuantity(int amount, Item itemFacade, String shopName){throw new UnsupportedOperationException();}
 
 
-
+    public int getItemQuantity(Item item) {throw new UnsupportedOperationException();}
 }

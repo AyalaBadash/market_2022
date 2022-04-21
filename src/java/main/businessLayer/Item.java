@@ -1,5 +1,7 @@
 package main.businessLayer;
 
+import main.serviceLayer.FacadeObjects.ItemFacade;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +24,17 @@ public class Item implements IHistory {
         this.ID = ID;
         this.name = name;
         this.price = price;
-        keywords = new ArrayList<>();
+        this.keywords = new ArrayList<>();
         this.info = info;
     }
 
+    public Item(ItemFacade it){
+        this.ID= it.getID();
+        this.name= it.getName();
+        this.price= it.getPrice();
+        this.keywords= it.getKeywords();
+        this.info= it.getInfo();
+    }
     public String getInfo() {
         return info;
     }
