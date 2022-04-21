@@ -61,4 +61,11 @@ public class UserController {
         this.visitorsInMarket = visitorsInMarket;
     }
 
+    public boolean isMember(String visitorName) {
+        return members.get ( visitorName ) != null;
+    }
+
+    public Member getMember(String visitorName) {
+        return members.get ( visitorName );
+    }
 }

@@ -1,11 +1,10 @@
 package test.UnitTests;
+
 import main.businessLayer.Item;
 import main.businessLayer.Shop;
 import main.businessLayer.ShoppingBasket;
 import main.businessLayer.ShoppingCart;
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,10 +13,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-
 import java.util.HashMap;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
 public class HistoryUnitTest extends mainTest {
 
     @Mock

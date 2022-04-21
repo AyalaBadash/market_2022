@@ -1,6 +1,7 @@
 package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.users.Member;
 
 
@@ -132,5 +133,15 @@ public class Shop {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Shop && ((Shop) obj).getShopName().equals(this.shopName);
+    }
+
+    public void addEmployee(ShopOwnerAppointment shopEmployee) throws MarketException {
+        String employeeName = shopEmployee.getAppointed ().getName ();
+        if(employees.get ( employeeName ) != null) {
+            Appointment employee = employees.get ( employeeName );
+            if (employee.isManager ( ) && shopEmployee.isManager ( ) || employee.isOwner () && shopEmployee.isOwner ())
+                throw new MarketException ( "this member is already employed in this shop in the same position" );
+        }
+        employees.put ( shopEmployee.getAppointed ().getName (), shopEmployee );
     }
 }

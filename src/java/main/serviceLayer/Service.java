@@ -126,7 +126,7 @@ public class Service implements IService {
 
     @Override
     public Response openNewShop(String visitorName, String shopName) {
-        return null;
+        return MarketService.getInstance ().openNewShop ( visitorName, shopName );
     }
 
     @Override
