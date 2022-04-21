@@ -6,8 +6,8 @@ import main.businessLayer.Appointment.Permissions.EmployeesPermission;
 import main.businessLayer.Appointment.Permissions.IPermission;
 import main.businessLayer.Appointment.Permissions.PurchaseHistoryPermission;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Appointment {
     private Member appointed;       //  the actual appointed member
@@ -19,7 +19,7 @@ public abstract class Appointment {
         this.appointed = appointed;
         this.superVisor = appoint;
         this.relatedShop = relatedShop;
-        permissions= new ArrayList<>();
+        permissions= new CopyOnWriteArrayList<>();
         addAllPermissions();
     }
 

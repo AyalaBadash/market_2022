@@ -1,19 +1,19 @@
 package main.businessLayer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LoginCard {
     private String name;
     private String password;
-    private HashMap<String, String> QandA;
+    private Map<String, String> QandA;
 
     public LoginCard(String name, String password, List<String> questions, List<String> answers) {
         this.name = name;
         this.password = password;
-        this.QandA =  new HashMap<>();
+        this.QandA =  new ConcurrentHashMap<>();
         if (questions.size() != answers.size()){
             throw new UnsupportedOperationException();
         }
@@ -23,7 +23,7 @@ public class LoginCard {
     }
 
     public List<String> getQuestions(){
-        List<String> questions =  new ArrayList<>();
+        List<String> questions =  new CopyOnWriteArrayList<>();
         for (Map.Entry<String, String> questionAndAnswers : QandA.entrySet()){
             questions.add(questionAndAnswers.getKey());
         }
@@ -46,7 +46,7 @@ public class LoginCard {
         return password;
     }
 
-    public HashMap<String, String> getQandA() {
+    public Map<String, String> getQandA() {
         return QandA;
     }
 

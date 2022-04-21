@@ -7,6 +7,7 @@ import main.businessLayer.users.Member;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Shop {
     // TODO must be unique
@@ -19,9 +20,9 @@ public class Shop {
 
     public Shop(String name) {
         this.shopName = name;
-        itemMap = new HashMap<>();
-        employees = new HashMap<>();
-        itemsCurrentAmount = new HashMap<>();
+        itemMap = new ConcurrentHashMap<>();
+        employees = new ConcurrentHashMap<>();
+        itemsCurrentAmount = new ConcurrentHashMap<>();
         this.closed = false;
 
     }

@@ -11,6 +11,7 @@ import main.resources.PaymentMethod;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Market {
     private UserController userController;
@@ -26,9 +27,9 @@ public class Market {
 
 
     private Market() {
-        this.shops = new HashMap();
-        this.allItemsInMarketToShop = new HashMap<>();
-        this.itemByName = new HashMap<>();
+        this.shops = new ConcurrentHashMap<>();
+        this.allItemsInMarketToShop = new ConcurrentHashMap<>();
+        this.itemByName = new ConcurrentHashMap<>();
         this.userController = UserController.getInstance();
         nextItemID = 1;
     }

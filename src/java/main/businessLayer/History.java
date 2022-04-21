@@ -1,7 +1,7 @@
 package main.businessLayer;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class History {
     private List<Shop> closedShops;
@@ -9,7 +9,7 @@ public class History {
     private static History instance;
 
     private History(){
-        this.closedShops = new ArrayList<>();
+        this.closedShops = new CopyOnWriteArrayList<>();
         this.overallHistory = new StringBuilder();
     }
 

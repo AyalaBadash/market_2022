@@ -9,8 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import java.util.ArrayList;
 
 public class AppointmentUnitTest {
 
@@ -23,13 +24,13 @@ public class AppointmentUnitTest {
     @DisplayName("ShoppingCart Unit Test - edit cart")
     public void editShoppingCart() throws IllegalAccessException {
         ShopManagerAppointment shopManagerAppointment = new ShopManagerAppointment(member1,member2,shop);
-        Mockito.when(member1.getMyAppointments()).thenReturn(new ArrayList<>());
-        Mockito.when(member1.getAppointedByMe()).thenReturn(new ArrayList<>());
+        Mockito.when(member1.getMyAppointments()).thenReturn(new CopyOnWriteArrayList<>());
+        Mockito.when(member1.getAppointedByMe()).thenReturn(new CopyOnWriteArrayList<>());
         Assertions.assertEquals(0,member1.getMyAppointments().size());
         Assertions.assertEquals(0,member2.getAppointedByMe().size());
         member2.addAppointmentByMe(shopManagerAppointment);
         member1.addAppointmentToMe(shopManagerAppointment);
-        ArrayList<Appointment> app= new ArrayList<>();
+        List<Appointment> app= new CopyOnWriteArrayList<>();
         app.add(shopManagerAppointment);
         Mockito.when(member1.getMyAppointments()).thenReturn(app);
         Mockito.when(member2.getAppointedByMe()).thenReturn(app);

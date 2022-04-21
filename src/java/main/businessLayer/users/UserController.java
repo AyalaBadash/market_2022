@@ -5,6 +5,7 @@ import main.businessLayer.MarketException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserController {
     private Map<String, Member> members;
@@ -19,8 +20,8 @@ public class UserController {
     }
 
     private UserController() {
-        members = new HashMap<>();
-        visitorsInMarket = new HashMap<>();
+        members = new ConcurrentHashMap<>();
+        visitorsInMarket = new ConcurrentHashMap<>();
         nextUniqueNumber = 1;
     }
 

@@ -2,6 +2,7 @@ package main.businessLayer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingCart implements IHistory {
     private Map<Shop,ShoppingBasket> cart; // <Shop ,basket for the shop>
@@ -10,7 +11,7 @@ public class ShoppingCart implements IHistory {
 
     public ShoppingCart(){
         this.currentPrice = -1;
-        this.cart = new HashMap<>();
+        this.cart = new ConcurrentHashMap<>();
     }
 
     // TODO need to append visitor name when called
