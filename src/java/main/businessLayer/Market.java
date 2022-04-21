@@ -79,7 +79,7 @@ public class Market {
 
 
     public boolean login(String name, String pass,
-                                            List<String> questions, List<String> answers) throws Exception {
+                         List<String> questions, List<String> answers) throws Exception {
         Security security = Security.getInstance();
         return security.validateLogin(name, pass, questions, answers);
 
@@ -95,10 +95,11 @@ public class Market {
 
     }
 
-    public ShoppingCartFacade calculateShoppingCart(){
+    public ShoppingCartFacade calculateShoppingCart() {
         return null;
     }
-    private int calculateShoppingCartPrice(){
+
+    private int calculateShoppingCartPrice() {
         throw new UnsupportedOperationException();
     }
 
@@ -174,9 +175,13 @@ public class Market {
     }
 
     public synchronized int getNextItemID() {
-        int temp =  nextItemID;
-        nextItemID ++;
+        int temp = nextItemID;
+        nextItemID++;
         return temp;
+    }
+
+    public void visitorExitSystem(String visitorName) throws MarketException {
+        userController.exitSystem(visitorName);
     }
 
     public void openNewShop(String visitorName, String shopName) throws MarketException {
