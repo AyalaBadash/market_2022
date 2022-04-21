@@ -1,6 +1,7 @@
 package main.serviceLayer;
 
 import main.businessLayer.Market;
+import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.List;
@@ -23,8 +24,13 @@ public class UserService {
         return null;
     }
 
-    public Response exitSystem(String visitorName) {
-        return null;
+    public Response exitSystem(String visitorName)  {
+        try{
+            this.market.visitorExitSystem(visitorName);
+            return new Response();
+        } catch (Exception e){
+            return new Response(e.getMessage());
+        }
     }
 
     public ResponseT<Boolean> register(String userName, String userPassword) {

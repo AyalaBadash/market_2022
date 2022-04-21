@@ -41,7 +41,7 @@ public class Service implements IService {
 
     @Override
     public Response exitSystem(String visitorName) {
-        return null;
+        return this.userService.exitSystem(visitorName);
     }
 
     @Override
