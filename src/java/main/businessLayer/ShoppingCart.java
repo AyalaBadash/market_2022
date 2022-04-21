@@ -13,6 +13,7 @@ public class ShoppingCart implements IHistory {
         this.cart = new HashMap<>();
     }
 
+    // TODO need to append visitor name when called
     @Override
     public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();

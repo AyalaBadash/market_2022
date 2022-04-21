@@ -20,8 +20,11 @@ public class History {
         return instance;
     }
     // TODO need to implement here
-    public void closeShop(Shop closedShop){
-        throw new UnsupportedOperationException("method has not been implemented");
+    public void closeShop(Shop closedShop) throws MarketException {
+        if (closedShop == null){
+            throw new MarketException("tried to close a null shop!");
+        }
+        closedShops.add(closedShop);
     }
 
     public void addPurchaseHistory(String purchaseReview, Shop shop){
