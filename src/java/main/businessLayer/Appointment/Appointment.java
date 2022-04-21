@@ -6,6 +6,7 @@ import main.businessLayer.Appointment.Permissions.EmployeesPermission;
 import main.businessLayer.Appointment.Permissions.IPermission;
 import main.businessLayer.Appointment.Permissions.PurchaseHistoryPermission;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Appointment {
@@ -18,6 +19,7 @@ public abstract class Appointment {
         this.appointed = appointed;
         this.superVisor = appoint;
         this.relatedShop = relatedShop;
+        permissions = new ArrayList<> (  );
         addAllPermissions();
     }
 
