@@ -3,13 +3,16 @@ package main.businessLayer;
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.users.Member;
 import main.businessLayer.users.UserController;
-import main.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
-import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
+import main.businessLayer.users.Visitor;
+import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
