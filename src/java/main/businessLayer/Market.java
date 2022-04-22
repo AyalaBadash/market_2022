@@ -1,19 +1,25 @@
 package main.businessLayer;
 
-import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.Appointment.*;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.users.Member;
-import main.businessLayer.users.UserController;
+import main.businessLayer.users.*;
+import main.serviceLayer.FacadeObjects.*;
 import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+
+
+
 
 public class Market {
     private UserController userController;

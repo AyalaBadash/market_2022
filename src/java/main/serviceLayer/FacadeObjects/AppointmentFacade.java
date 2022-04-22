@@ -1,7 +1,7 @@
 package main.serviceLayer.FacadeObjects;
 
 
-import main.businessLayer.Appointment.ShopManagerAppointment;
+import main.businessLayer.Appointment.*;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
 
