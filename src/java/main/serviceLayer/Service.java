@@ -112,8 +112,8 @@ public class Service implements IService {
     }
 
     @Override
-    public Response buyShoppingCart(String visitorName, int expectedPrice, PaymentMethod paymentMethod, Address address) {
-        return null;
+    public Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address) {
+        return this.purchaseService.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
     }
 
     @Override
