@@ -2,8 +2,9 @@ package main.serviceLayer.FacadeObjects;
 
 import main.businessLayer.History;
 import main.businessLayer.users.Member;
+import main.businessLayer.users.SystemManager;
 
-public class SystemManagerFacade {
+public class SystemManagerFacade implements FacadeObject<SystemManager> {
 
     private Member member;
     private History history;
@@ -27,5 +28,10 @@ public class SystemManagerFacade {
 
     public void setHistory(History history) {
         this.history = history;
+    }
+
+    @Override
+    public SystemManager toBusinessObject() {
+        return null;
     }
 }

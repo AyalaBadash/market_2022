@@ -4,7 +4,7 @@ import main.businessLayer.Item;
 
 import java.util.List;
 
-public class ItemFacade{
+public class ItemFacade implements FacadeObject<Item>{
     private String info;
     private Integer ID;
     private String name;
@@ -71,5 +71,11 @@ public class ItemFacade{
 
     public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
+    }
+
+    @Override
+    public Item toBusinessObject() {
+
+        return null;
     }
 }

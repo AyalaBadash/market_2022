@@ -1,10 +1,11 @@
 package main.serviceLayer.FacadeObjects;
 
 import main.businessLayer.ShoppingCart;
+import main.businessLayer.users.Member;
 
 import java.util.List;
 
-public class MemberFacade {
+public class MemberFacade implements FacadeObject<Member> {
     private String name;
     private ShoppingCart myCart;
     private List<AppointmentFacade> appointedByMe;
@@ -49,5 +50,10 @@ public class MemberFacade {
 
     public void setMyAppointments(List<AppointmentFacade> myAppointments) {
         this.myAppointments = myAppointments;
+    }
+
+    @Override
+    public Member toBusinessObject() {
+        return null;
     }
 }

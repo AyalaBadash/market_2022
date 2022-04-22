@@ -5,18 +5,15 @@ import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.users.Member;
 import main.businessLayer.users.UserController;
-import main.serviceLayer.FacadeObjects.AppointmentFacade;
-import main.serviceLayer.FacadeObjects.MemberFacade;
-import main.serviceLayer.FacadeObjects.ResponseT;
 import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Market {
     private UserController userController;
@@ -32,9 +29,9 @@ public class Market {
 
 
     private Market() {
-        this.shops = new HashMap();
-        this.allItemsInMarketToShop = new HashMap<>();
-        this.itemByName = new HashMap<>();
+        this.shops = new ConcurrentHashMap<>();
+        this.allItemsInMarketToShop = new ConcurrentHashMap<>();
+        this.itemByName = new ConcurrentHashMap<>();
         this.userController = UserController.getInstance();
         nextItemID = 1;
     }
@@ -75,14 +72,13 @@ public class Market {
 //        }
     }
 
-    public Shop getShopByName(String shopName){
+    public Shop getShopByName(String shopName) {
         throw new UnsupportedOperationException();
     }
 
 
-
     public boolean login(String name, String pass,
-                                            List<String> questions, List<String> answers) throws Exception {
+                         List<String> questions, List<String> answers) throws Exception {
         Security security = Security.getInstance();
         return security.validateLogin(name, pass, questions, answers);
 
@@ -98,10 +94,11 @@ public class Market {
 
     }
 
-    public ShoppingCartFacade calculateShoppingCart(){
+    public ShoppingCartFacade calculateShoppingCart() {
         return null;
     }
-    private int calculateShoppingCartPrice(){
+
+    private int calculateShoppingCartPrice() {
         throw new UnsupportedOperationException();
     }
 
@@ -177,8 +174,8 @@ public class Market {
     }
 
     public synchronized int getNextItemID() {
-        int temp =  nextItemID;
-        nextItemID ++;
+        int temp = nextItemID;
+        nextItemID++;
         return temp;
     }
 
@@ -210,4 +207,29 @@ public class Market {
     }
 
 
+
+    public void visitorExitSystem(String visitorName) throws MarketException {
+        userController.exitSystem(visitorName);
+    }
+
+    public Appointment getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) throws MarketException {
+        for (Map.Entry<String, Shop> shopEntry : this.shops.entrySet()){
+            Shop shop = shopEntry.getValue();
+            if (shop.getShopName().equals(relatedShop)){
+                return shop.getManagerAppointment(shopOwnerName,managerName);
+            }
+        }
+        throw new MarketException("shop couldn't be found");
+    }
+
+    public void editShopManagerPermissions(String shopOwnerName, String managerName, String relatedShop, Appointment updatedAppointment) throws MarketException {
+        for (Map.Entry<String, Shop> shopEntry : this.shops.entrySet()){
+            Shop shop = shopEntry.getValue();
+            if (shop.getShopName().equals(relatedShop)){
+                shop.editManagerPermission(shopOwnerName,managerName,updatedAppointment);
+                return;
+            }
+        }
+        throw new MarketException("shop couldn't be found");
+    }
 }

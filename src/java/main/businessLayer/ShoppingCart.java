@@ -2,6 +2,7 @@ package main.businessLayer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingCart implements IHistory {
     private Map<Shop,ShoppingBasket> cart; // <Shop ,basket for the shop>
@@ -10,11 +11,12 @@ public class ShoppingCart implements IHistory {
 
     public ShoppingCart(){
         this.currentPrice = -1;
-        this.cart = new HashMap<>();
+        this.cart = new ConcurrentHashMap<>();
     }
 
+    // TODO need to append visitor name when called
     @Override
-    public String getReview() {
+    public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()){
             Shop shop = shopToBasket.getKey();
@@ -22,11 +24,12 @@ public class ShoppingCart implements IHistory {
             if (basket.isEmpty()){
                 continue;
             }
-            // TODO implement
-//            review.append(String.format("Basket for shop %s:\n", shop.getShopName()));
-            review.append(String.format("%s\n",basket.getReview()));
+            // TODO need to make sure all items in cart is bought
+            review.append(String.format("Basket for %s:\n%s\n",shop.getShopName() , basket.getReview()));
+            review.append(String.format("Overall Cart Price: %f", currentPrice));
+
         }
-        return review.toString();
+        return review;
     }
 
     public void addItem(Shop shop , Item item, int amount){
@@ -40,7 +43,8 @@ public class ShoppingCart implements IHistory {
         throw new UnsupportedOperationException();
     }
 
+    public void editQuantity(int amount, Item itemFacade, String shopName){throw new UnsupportedOperationException();}
 
 
-
+    public int getItemQuantity(Item item) {throw new UnsupportedOperationException();}
 }

@@ -1,7 +1,7 @@
 package main.businessLayer;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class History {
     private List<Shop> closedShops;
@@ -9,7 +9,7 @@ public class History {
     private static History instance;
 
     private History(){
-        this.closedShops = new ArrayList<>();
+        this.closedShops = new CopyOnWriteArrayList<>();
         this.overallHistory = new StringBuilder();
     }
 
@@ -20,8 +20,11 @@ public class History {
         return instance;
     }
     // TODO need to implement here
-    public void closeShop(Shop closedShop){
-        throw new UnsupportedOperationException("method has not been implemented");
+    public void closeShop(Shop closedShop) throws MarketException {
+        if (closedShop == null){
+            throw new MarketException("tried to close a null shop!");
+        }
+        closedShops.add(closedShop);
     }
 
     public void addPurchaseHistory(String purchaseReview, Shop shop){

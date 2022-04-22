@@ -36,6 +36,6 @@ public class AcceptanceTest {
 
     public void createValidUser(){
         bridge.guestLogin();
-//        bridge.register(userName, userPassword, new ArrayList<String>(), new ArrayList<String>());
+//        bridge.register(userName, userPassword, new CopyOnWriteArrayList<String>(), new CopyOnWriteArrayList<String>());
     }
 }

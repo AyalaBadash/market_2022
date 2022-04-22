@@ -1,12 +1,15 @@
 package main.businessLayer.users;
 
 
+import main.businessLayer.MarketException;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserController {
     private Map<String, Member> members;
-    private Map<String,Visitor> visitorsInMarket;
+    private Map<String, Visitor> visitorsInMarket;
     private int nextUniqueNumber;
     private static UserController instance;
 
@@ -15,13 +18,14 @@ public class UserController {
             return new UserController();
         else return instance;
     }
-    private UserController(){
-        members = new HashMap<>();
-        visitorsInMarket = new HashMap<>();
+
+    private UserController() {
+        members = new ConcurrentHashMap<>();
+        visitorsInMarket = new ConcurrentHashMap<>();
         nextUniqueNumber = 1;
     }
 
-    public Visitor guestLogin(){
+    public Visitor guestLogin() {
         // TODO need to implement
         String name = getNextUniqueName();
         throw new UnsupportedOperationException();
@@ -31,20 +35,25 @@ public class UserController {
     }
 
 
-    public void exitSystem(){
-        throw new UnsupportedOperationException();
+    public void exitSystem(String visitorName) throws MarketException {
+        if (this.visitorsInMarket.containsKey(visitorName)) {
+            if (members.containsKey(visitorName)){
+//                visitorName = this.logout(visitorName).getName();
+            }
+            this.visitorsInMarket.remove(visitorName);
+        }
+        throw new MarketException(String.format("%s tried to exit system but never entered", visitorName));
     }
 
     public boolean register(String userName, String userPassword) {
-    throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
 
     }
-
 
 
     private synchronized String getNextUniqueName() {
         String name = "visitor" + nextUniqueNumber;
-        nextUniqueNumber ++;
+        nextUniqueNumber++;
         return name;
     }
 

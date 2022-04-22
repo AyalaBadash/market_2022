@@ -208,7 +208,7 @@ public class MarketController {
 //    }
 //
 //    private List<Shop> findShopByManager(String name) {
-//        List<Shop> managedShops = new ArrayList<>();
+//        List<Shop> managedShops = new CopyOnWriteArrayList<>();
 //        for (Map.Entry<String,Shop> entry:shops.entrySet())
 //        {
 //            Map<String, Member> shopManagers = entry.getValue().getShopManagers();
@@ -219,7 +219,7 @@ public class MarketController {
 //    }
 //
 //    private List<Shop> findShopByOwner(String name) {
-//        List<Shop> ownedShops = new ArrayList<>();
+//        List<Shop> ownedShops = new CopyOnWriteArrayList<>();
 //        for (Map.Entry<String,Shop> entry:shops.entrySet())
 //        {
 //            Map<String, Member> shopOwners = entry.getValue().getShopOwners();
@@ -456,7 +456,7 @@ public class MarketController {
 //    }
 //
 //    private List<Shop> findShopByManager(String name) {
-//        List<Shop> managedShops = new ArrayList<>();
+//        List<Shop> managedShops = new CopyOnWriteArrayList<>();
 //        for (Map.Entry<String,Shop> entry: market.getShops().entrySet())
 //        {
 //            Map<String, Member> shopManagers = entry.getValue().getShopManagers();
@@ -467,7 +467,7 @@ public class MarketController {
 //    }
 //
 //    private List<Shop> findShopByOwner(String name) {
-//        List<Shop> ownedShops = new ArrayList<>();
+//        List<Shop> ownedShops = new CopyOnWriteArrayList<>();
 //        for (Map.Entry<String,Shop> entry:market.getShops().entrySet())
 //        {
 //            Map<String, Member> shopOwners = entry.getValue().getShopOwners();

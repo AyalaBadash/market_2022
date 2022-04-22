@@ -1,6 +1,8 @@
 package main.serviceLayer.FacadeObjects;
 
-public class VisitorFacade {
+import main.businessLayer.users.Visitor;
+
+public class VisitorFacade implements FacadeObject<Visitor>{
     private String name;
     private MemberFacade member;
     private ShoppingCartFacade cart;
@@ -33,5 +35,10 @@ public class VisitorFacade {
 
     public void setCart(ShoppingCartFacade cart) {
         this.cart = cart;
+    }
+
+    @Override
+    public Visitor toBusinessObject() {
+        return null;
     }
 }

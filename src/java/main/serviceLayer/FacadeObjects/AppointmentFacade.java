@@ -1,16 +1,16 @@
 package main.serviceLayer.FacadeObjects;
 
-import main.businessLayer.Appointment.Appointment;
+
 import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
 
 import java.util.List;
 
-public abstract class AppointmentFacade {
-    private Member appointed;       //  the actual appointed member
-    private Member superVisor;      //  member appointedMe
-    private Shop relatedShop;
+public abstract class AppointmentFacade implements FacadeObject<Appointment> {
+    protected Member appointed;       //  the actual appointed member
+    protected Member superVisor;      //  member appointedMe
+    protected Shop relatedShop;
     List<PermissionFacade> permissions;
 
     public AppointmentFacade(Member appointed, Member superVisor, Shop relatedShop,
@@ -24,7 +24,6 @@ public abstract class AppointmentFacade {
     public Member getAppointed() {
         return appointed;
     }
-
 
     public void setAppointed(Member appointed) {
         this.appointed = appointed;

@@ -1,6 +1,8 @@
 package main.businessLayer;
 
-import java.util.ArrayList;
+import main.serviceLayer.FacadeObjects.ItemFacade;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.List;
 
 public class Item implements IHistory {
@@ -22,10 +24,17 @@ public class Item implements IHistory {
         this.ID = ID;
         this.name = name;
         this.price = price;
-        keywords = new ArrayList<>();
+        this.keywords = new CopyOnWriteArrayList<>();
         this.info = info;
     }
 
+    public Item(ItemFacade it){
+        this.ID= it.getID();
+        this.name= it.getName();
+        this.price= it.getPrice();
+        this.keywords= it.getKeywords();
+        this.info= it.getInfo();
+    }
     public String getInfo() {
         return info;
     }
@@ -59,8 +68,8 @@ public class Item implements IHistory {
 
     @Override
     //TODO need to re-implement
-    public String getReview() {
-        return this.getName();
+    public StringBuilder getReview() {
+        return new StringBuilder(this.getName());
     }
 
     public void addKeyword(String keyword){

@@ -1,14 +1,18 @@
 package main.businessLayer;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.*;
 
 public class Security {
-    private HashMap<String, LoginCard> namesToLoginInfo;
+    private Map<String, LoginCard> namesToLoginInfo;
 
     private static Security instance;
 
     private Security() {
-        this.namesToLoginInfo =  new HashMap<>();
+        this.namesToLoginInfo =  new ConcurrentHashMap<>();
     }
 
     public static Security getInstance() {

@@ -1,5 +1,8 @@
 package main.serviceLayer;
 
+import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.Appointment.ShopManagerAppointment;
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.Market;
 import main.serviceLayer.FacadeObjects.*;
 
@@ -24,7 +27,12 @@ public class UserService {
     }
 
     public Response exitSystem(String visitorName) {
-        return null;
+        try {
+            this.market.visitorExitSystem(visitorName);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
     }
 
     public ResponseT<Boolean> register(String userName, String userPassword) {
@@ -82,9 +90,27 @@ public class UserService {
     }
 
 
-    public Response editShopManagerPermissions(String shopOwnerName,
-                                               ShopManagerAppointmentFacade updatedAppointment) {
-        return null;
+    public Response editShopManagerPermissions(String shopOwnerName, String managerName,
+                                               String relatedShop, ShopManagerAppointmentFacade updatedAppointment) {
+        try{
+            this.market.editShopManagerPermissions(shopOwnerName, managerName, relatedShop,updatedAppointment.toBusinessObject());
+            return new Response();
+        }catch (Exception e){
+            return new Response(e.getMessage());
+        }
+    }
+
+    public ResponseT getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) {
+        try {
+            // TODO need to remove casting
+            Appointment appointment = (market.getManagerAppointment(shopOwnerName, managerName, relatedShop));
+            AppointmentFacade appointmentFacade = appointment.isManager() ?
+                    new ShopManagerAppointmentFacade((ShopManagerAppointment) appointment) :
+                     new ShopOwnerAppointmentFacade((ShopOwnerAppointment) appointment);
+            return new ResponseT<>(appointmentFacade);
+        }catch (Exception e){
+            return new ResponseT(e.getMessage());
+        }
     }
 
     public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception {

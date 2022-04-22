@@ -2,8 +2,12 @@ package main.serviceLayer.FacadeObjects;
 
 import main.businessLayer.Appointment.Permissions.IPermission;
 
-public class PermissionFacade {
+public class PermissionFacade implements FacadeObject<IPermission> {
+
     private String name;
+    public PermissionFacade(IPermission permission){
+        this.name = permission.getName();
+    }
 
     public PermissionFacade(String name) {
         this.name = name;
@@ -17,7 +21,11 @@ public class PermissionFacade {
         this.name = name;
     }
 
-    public PermissionFacade(IPermission perm){
-        this.name = perm.getName();
+
+
+
+    @Override
+    public IPermission toBusinessObject() {
+        return null;
     }
 }
