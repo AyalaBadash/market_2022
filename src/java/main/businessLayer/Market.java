@@ -245,6 +245,7 @@ public class Market {
         {
             shops.remove(shopName);
             removeClosedShopItemsFromMarket(shopToClose);
+            //TODO send Notification
             History history = History.getInstance();
             history.closeShop(shopToClose);
         }
