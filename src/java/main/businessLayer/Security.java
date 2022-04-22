@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 public class Security {
     private Map<String, LoginCard> namesToLoginInfo;
@@ -67,4 +68,31 @@ public class Security {
     }
 
 
+    public List<String> validatePassword(String userName, String userPassword) throws Exception { //TODO specify exceptions
+        if (!namesToLoginInfo.containsKey(userName))
+            throw new Exception("No such user name in the system");
+        if (!namesToLoginInfo.get(userName).getPassword().equals(userPassword))
+            throw new Exception("Password mismatch");
+        List<String> questions = new ArrayList<>();
+        LoginCard card = namesToLoginInfo.get(userName);
+        for (Map.Entry<String,String> entry : card.getQandA().entrySet())
+        {
+            questions.add(entry.getValue());
+        }
+        return questions;
+
+    }
+
+    public void validateQuestions(String userName, List<String> answers) throws Exception{
+        LoginCard card = namesToLoginInfo.get(userName);
+        Map<String, String> QsAndAns = card.getQandA();
+        if (answers.size()!=QsAndAns.size())
+            throw new Exception("Answers size different from questions size");
+        int index = 0;
+        for (Map.Entry<String,String> entry: QsAndAns.entrySet())
+        {
+            if(entry.getValue().equals(answers.get(index)))
+                index++;
+        }
+    }
 }

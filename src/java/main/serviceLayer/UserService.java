@@ -43,9 +43,20 @@ public class UserService {
         return null;
     }
 
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers, String visitorName) {
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) throws Exception {
+        List<String> securityQs = market.memberLogin(userName,userPassword,visitorName);
+        return new ResponseT<>(securityQs);
+        /*
+
+        MemberFacade memberFacade = new MemberFacade(member.getName(),member.getMyCart(),appointedByMeFacadeList,appointmentsFacadeList);
+    */
+    }
+
+    private ResponseT<List<String>> memberLoginGetQuestions(String memberName, String password)
+    {
         return null;
     }
+
 
 
     public Response logout(String visitorName) {
@@ -101,4 +112,9 @@ public class UserService {
             return new ResponseT(e.getMessage());
         }
     }
+
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception {
+        return market.validateSecurityQuestions(userName,answers);
+    }
+
 }
