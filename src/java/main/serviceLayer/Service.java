@@ -3,6 +3,7 @@ package main.serviceLayer;
 import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.PaymentMethod;
@@ -222,7 +223,14 @@ public class Service implements IService {
 
     @Override
     public Response closeShop(String shopOwnerName, String shopName) {
-        return null;
+        try {
+            return marketService.closeShop(shopOwnerName,shopName);
+
+        }
+        catch (MarketException e)
+        {
+            return null; //TODO change it
+        }
     }
 
     @Override

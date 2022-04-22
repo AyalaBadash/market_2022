@@ -4,6 +4,7 @@ import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.Market;
+import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.List;
@@ -88,8 +89,9 @@ public class MarketService {
         return null;
     }
 
-    public Response closeShop(String shopOwnerName, String shopName) {
-        return null;
+    public Response closeShop(String shopOwnerName, String shopName) throws MarketException {
+         market.closeShop(shopOwnerName,shopName);
+         return null;
     }
 
     public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName){return null;}

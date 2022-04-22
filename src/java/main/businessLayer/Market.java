@@ -238,4 +238,29 @@ public class Market {
         }
         throw new MarketException("shop couldn't be found");
     }
+
+    public void closeShop(String shopOwnerName, String shopName) throws MarketException {
+        Shop shopToClose = shops.get(shopName);
+        if (shopToClose.getShopFounder().getName().equals(shopOwnerName))
+        {
+            shops.remove(shopName);
+            removeClosedShopItemsFromMarket(shopToClose);
+            History history = History.getInstance();
+            history.closeShop(shopToClose);
+        }
+    }
+
+    private void removeClosedShopItemsFromMarket(Shop shopToClose) {
+        for (Map.Entry<Integer,String> entry:allItemsInMarketToShop.entrySet())
+        {
+            if (entry.getValue().equals(shopToClose.getShopName()))
+                allItemsInMarketToShop.remove(entry.getKey());
+        }
+        Map<Integer,Item> itemMap = shopToClose.getItemMap();
+        for (Map.Entry<Integer,Item> entry : itemMap.entrySet())
+        {
+            //Get list of items by the name . then delete by the specific ID
+            itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
+        }
+    }
 }
