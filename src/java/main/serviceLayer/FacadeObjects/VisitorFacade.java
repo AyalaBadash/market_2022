@@ -13,6 +13,12 @@ public class VisitorFacade implements FacadeObject<Visitor>{
         this.cart = cart;
     }
 
+    public VisitorFacade(Visitor visitor) {
+        this.name = visitor.getName();
+        this.member = new MemberFacade(visitor.getMember());
+        this.cart = new ShoppingCartFacade(visitor.getCart());
+    }
+
     public String getName() {
         return name;
     }

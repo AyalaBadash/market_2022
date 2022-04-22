@@ -2,7 +2,6 @@ package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.users.Member;
-import net.bytebuddy.implementation.bytecode.assign.TypeCasting;
 
 
 import java.util.List;
@@ -75,6 +74,11 @@ public class Shop {
     public int getItemCurrentAmount(Item item) {
         throw new UnsupportedOperationException();
     }
+
+    public Map<Item, Double> getItemsCurrentAmountMap() {
+        return itemsCurrentAmount;
+    }
+
 
     public void setItemAmount(Item item, int amount) {
         throw new UnsupportedOperationException();

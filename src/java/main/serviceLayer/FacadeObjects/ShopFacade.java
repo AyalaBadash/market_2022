@@ -4,6 +4,7 @@ import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Item;
 import main.businessLayer.Shop;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ShopFacade implements FacadeObject<Shop> {
@@ -11,16 +12,29 @@ public class ShopFacade implements FacadeObject<Shop> {
     private String shopName;
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, Appointment> employees;     //<name, appointment>
-    private Map<Item, Integer> itemsCurrentAmount;
+    private Map<ItemFacade, Double> itemsCurrentAmount;
     private boolean closed;
 
     public ShopFacade(String shopName, Map<Integer, Item> itemMap, Map<String,
-            Appointment> employees, Map<Item, Integer> itemsCurrentAmount, boolean closed) {
+            Appointment> employees, Map<ItemFacade, Double> itemsCurrentAmount, boolean closed) {
         this.shopName = shopName;
         this.itemMap = itemMap;
         this.employees = employees;
         this.itemsCurrentAmount = itemsCurrentAmount;
         this.closed = closed;
+    }
+
+    public ShopFacade(Shop fromShop) {
+        this.shopName = fromShop.getShopName();
+        this.itemMap = fromShop.getItemMap();
+        this.employees = fromShop.getEmployees();
+
+        this.itemsCurrentAmount = new HashMap<>();
+        for (Map.Entry<Item, Double> fromItems: fromShop.getItemsCurrentAmountMap().entrySet()){
+            ItemFacade toItem = new ItemFacade(fromItems.getKey());
+            itemsCurrentAmount.put(toItem, fromItems.getValue());
+        }
+        this.closed = fromShop.isClosed();
     }
 
     public String getShopName() {
@@ -47,12 +61,12 @@ public class ShopFacade implements FacadeObject<Shop> {
         this.employees = employees;
     }
 
-    public Map<Item, Integer> getItemsCurrentAmount() {
-        return itemsCurrentAmount;
+    public void setItemsCurrentAmount(Map<ItemFacade, Double> itemsCurrentAmount) {
+        this.itemsCurrentAmount = itemsCurrentAmount;
     }
 
-    public void setItemsCurrentAmount(Map<Item, Integer> itemsCurrentAmount) {
-        this.itemsCurrentAmount = itemsCurrentAmount;
+    public Map<ItemFacade, Double> getItemsCurrentAmount() {
+        return itemsCurrentAmount;
     }
 
     public boolean isClosed() {

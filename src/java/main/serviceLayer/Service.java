@@ -38,7 +38,7 @@ public class Service implements IService {
 
     @Override
     public ResponseT<VisitorFacade> guestLogin() {
-        return null;
+        return this.userService.guestLogin();
     }
 
     @Override

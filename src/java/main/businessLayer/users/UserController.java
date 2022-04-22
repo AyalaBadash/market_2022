@@ -2,6 +2,7 @@ package main.businessLayer.users;
 
 
 import main.businessLayer.MarketException;
+import main.businessLayer.ShoppingCart;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +16,8 @@ public class UserController {
 
     public synchronized static UserController getInstance() {
         if (instance == null)
-            return new UserController();
-        else return instance;
+            instance = new UserController();
+        return instance;
     }
 
     private UserController() {
@@ -25,10 +26,16 @@ public class UserController {
         nextUniqueNumber = 1;
     }
 
+    /**
+     *
+     * @return a new visitor with a unique name and null member
+     * getting unique name is the only sync code in this method
+     */
     public Visitor guestLogin() {
-        // TODO need to implement
         String name = getNextUniqueName();
-        throw new UnsupportedOperationException();
+        Visitor res = new Visitor(name,null,new ShoppingCart());
+        this.visitorsInMarket.put(res.getName(),res);
+        return res;
     }
     public Member memberLogin(String userName, String userPassword){
         return null;

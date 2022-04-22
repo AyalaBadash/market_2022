@@ -101,5 +101,7 @@ public class ShoppingCart implements IHistory {
         throw new UnsupportedOperationException();
     }
 
-
+    public Map<Shop, ShoppingBasket> getCart() {
+        return cart;
+    }
 }
