@@ -162,12 +162,13 @@ public class Service implements IService {
 
     @Override
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
-        return null;
+        return marketService.removeItemFromShop(shopOwnerName, item, shopName);
     }
 
     @Override
-    public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName) {
-        return null;
+    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+                                  List<String> keywords, int amount, String shopName) {
+        return marketService.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
     }
 
     @Override
@@ -257,4 +258,6 @@ public class Service implements IService {
     public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
         return null;
     }
+
+
 }

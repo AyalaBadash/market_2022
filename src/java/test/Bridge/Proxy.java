@@ -124,7 +124,8 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName) {
+    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+                                  List<String> keywords, int amount, String shopName) {
         return null;
     }
 
