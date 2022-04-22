@@ -58,9 +58,15 @@ public class UserService {
     }
 
 
-
-    public Response logout(String visitorName) {
-        return null;
+    public ResponseT<VisitorFacade> logout(String visitorName) {
+        ResponseT<VisitorFacade> toReturn;
+        try {
+            VisitorFacade visitorFacade = new VisitorFacade(market.memberLogout(visitorName) , null, null);
+            toReturn = new ResponseT<>(visitorFacade);
+        } catch (Exception e) {
+            toReturn = new ResponseT<>(e.getMessage());
+        }
+        return toReturn;
     }
 
 

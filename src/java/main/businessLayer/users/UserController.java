@@ -74,6 +74,19 @@ public class UserController {
         this.visitorsInMarket = visitorsInMarket;
     }
 
+    public String memberLogout(String member) throws MarketException {
+        if (!members.containsKey(member))
+            throw new MarketException("no such member");
+        else if (!visitorsInMarket.containsKey(member))
+            throw new MarketException("not currently visiting the shop");
+        else{
+            visitorsInMarket.remove(member);
+            String newVisitorName = getNextUniqueName();
+            Visitor newVisitor = new Visitor(newVisitorName);
+            visitorsInMarket.put(newVisitorName, newVisitor);
+            return newVisitorName;
+        }
+    }
     public Member finishLogin(String userName) {
         Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
         visitorsInMarket.put(userName,newVisitorMember);

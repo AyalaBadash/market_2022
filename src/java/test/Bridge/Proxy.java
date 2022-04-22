@@ -104,7 +104,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response logout(String visitorName) {
+    public ResponseT<VisitorFacade> logout(String visitorName) {
         return null;
     }
 

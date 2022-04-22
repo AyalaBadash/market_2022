@@ -146,8 +146,8 @@ public class Service implements IService {
 
 
     @Override
-    public Response logout(String visitorName) {
-        return null;
+    public ResponseT<VisitorFacade> logout(String visitorName) {
+        return userService.logout(visitorName);
     }
 
     @Override

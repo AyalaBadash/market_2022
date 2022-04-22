@@ -9,6 +9,12 @@ public class Visitor {
     private Member member;
     private ShoppingCart cart;
 
+    public Visitor(String name) {
+        this.name = name;
+        this.member = null;
+        this.cart = new ShoppingCart();
+    }
+
     public Visitor(String name, Member member, ShoppingCart cart) {
         this.name = name;
         this.member = member;

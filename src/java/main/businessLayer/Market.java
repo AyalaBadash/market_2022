@@ -4,9 +4,8 @@ import main.businessLayer.Appointment.*;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.users.Member;
-import main.businessLayer.users.*;
+import main.businessLayer.users.UserController;
 import main.serviceLayer.FacadeObjects.*;
-import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
@@ -319,5 +318,9 @@ public class Market {
             Item item = facadeItem.toBusinessObject();
             shop.setItemAmount(item,amount);
             return new Response();
+    }
+
+    public String memberLogout(String member) throws MarketException {
+        return userController.memberLogout(member);
     }
 }
