@@ -101,6 +101,10 @@ public class Shop {
         throw new UnsupportedOperationException();
     }
 
+    public Map<Integer, Item> getItemMap() {
+        return itemMap;
+    }
+
     public int calculateBasket(ShoppingBasket basket) {
         throw new UnsupportedOperationException();
     }
