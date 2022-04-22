@@ -1,5 +1,7 @@
 package main.serviceLayer.FacadeObjects;
 
+import main.businessLayer.Appointment.ShopManagerAppointment;
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.ShoppingCart;
 import main.businessLayer.users.Member;
 
@@ -18,6 +20,19 @@ public class MemberFacade implements FacadeObject<Member> {
         this.myCart = myCart;
         this.appointedByMe = appointedByMe;
         this.myAppointments = myAppointments;
+    }
+
+    public MemberFacade(Member member) {
+        this.name = member.getName();
+        this.myCart = member.getMyCart();
+        this.appointedByMe = member.getAppointedByMe().stream().map((appointment ->
+                appointment.isManager() ?
+                        new ShopManagerAppointmentFacade((ShopManagerAppointment) appointment) :
+                        new ShopOwnerAppointmentFacade((ShopOwnerAppointment) appointment))).toList();
+        this.myAppointments = member.getMyAppointments().stream().map((appointment ->
+                appointment.isManager() ?
+                        new ShopManagerAppointmentFacade((ShopManagerAppointment) appointment) :
+                        new ShopOwnerAppointmentFacade((ShopOwnerAppointment) appointment))).toList();
     }
 
     public String getName() {

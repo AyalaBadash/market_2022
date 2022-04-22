@@ -17,6 +17,7 @@ public class ShopManagerAppointmentFacade extends AppointmentFacade {
         super(appointed, superVisor, relatedShop, permissions);
     }
 
+    // TODO delete here
     @Override
     public AppointmentFacade toFacade(ShopManagerAppointment appointment) {
         List<IPermission> list = appointment.getPermissions();

@@ -360,4 +360,8 @@ public class Market {
         }
         return responseT;
     }
+
+    public Visitor guestLogin() {
+        return userController.guestLogin();
+    }
 }

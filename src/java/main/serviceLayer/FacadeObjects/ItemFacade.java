@@ -25,6 +25,16 @@ public class ItemFacade implements FacadeObject<Item>{
 
     }
 
+    public ItemFacade(Item item) {
+        this.ID = item.getID();
+        this.name = item.getName();
+        this.price = item.getPrice();
+        this.category = item.getCategory();
+        this.keywords = item.getKeywords();
+        this.info = item.getInfo();
+
+    }
+
     public String getInfo() {
         return info;
     }

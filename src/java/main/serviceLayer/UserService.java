@@ -5,6 +5,7 @@ import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.Market;
 import main.businessLayer.MarketException;
+import main.businessLayer.users.Visitor;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.List;
@@ -24,7 +25,12 @@ public class UserService {
     }
 
     public ResponseT<VisitorFacade> guestLogin() {
-        return null;
+        try{
+            Visitor guest = this.market.guestLogin();
+            return new ResponseT<>(new VisitorFacade(guest));
+        }catch (Exception e){
+            return new ResponseT(e.getMessage());
+        }
     }
 
     public Response exitSystem(String visitorName) {
