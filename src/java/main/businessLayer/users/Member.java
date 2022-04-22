@@ -2,9 +2,8 @@ package main.businessLayer.users;
 
 import main.businessLayer.ShoppingCart;
 import main.businessLayer.Appointment.Appointment;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Member {
     // TODO must be unique
@@ -18,8 +17,8 @@ public class Member {
     public Member(String name){
         this.name = name;
         myCart = new ShoppingCart();
-        appointedByMe = new ArrayList<>();
-        myAppointments = new ArrayList<>();
+        appointedByMe = new CopyOnWriteArrayList<>();
+        myAppointments = new CopyOnWriteArrayList<>();
     }
 
 

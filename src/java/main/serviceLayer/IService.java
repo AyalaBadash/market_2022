@@ -147,10 +147,9 @@ public interface IService {
      *
      * @param userName
      * @param userPassword
-     * @param userAdditionalAnswers - empty list if no additional queries exist
      * @return
      */
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers,
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword,
                                                String visitorName);
 
 
@@ -200,7 +199,8 @@ public interface IService {
      * @param shopName
      * @return
      */
-    public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName);
+    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+                                  List<String> keywords, int amount, String shopName);
 
     /**
      *
@@ -271,8 +271,15 @@ public interface IService {
      * @param updatedAppointment
      * @return
      */
-    public Response editShopManagerPermissions(String shopOwnerName,
+    public Response editShopManagerPermissions(String shopOwnerName, String shopManagerName, String relatedShop,
                                                ShopManagerAppointmentFacade updatedAppointment);
+
+    /**
+     * @param shopOwnerName
+     * @param managerName
+     * @return
+     */
+    public ResponseT getManagerPermission(String shopOwnerName, String managerName, String relatedShop);
 
     /**
      * need to update all shop employees

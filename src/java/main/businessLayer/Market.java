@@ -1,5 +1,6 @@
 package main.businessLayer;
 
+import main.businessLayer.Appointment.*;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.users.UserController;
@@ -9,9 +10,15 @@ import main.resources.Pair;
 import main.resources.PaymentMethod;
 import main.serviceLayer.FacadeObjects.VisitorFacade;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+
+
+
 
 public class Market {
     private UserController userController;
@@ -27,9 +34,9 @@ public class Market {
 
 
     private Market() {
-        this.shops = new HashMap();
-        this.allItemsInMarketToShop = new HashMap<>();
-        this.itemByName = new HashMap<>();
+        this.shops = new ConcurrentHashMap<>();
+        this.allItemsInMarketToShop = new ConcurrentHashMap<>();
+        this.itemByName = new ConcurrentHashMap<>();
         this.userController = UserController.getInstance();
         nextItemID = 1;
     }
@@ -177,8 +184,140 @@ public class Market {
         return temp;
     }
 
+    public List<String> memberLogin(String userName, String userPassword, String visitorName) throws Exception{ //TODO -Check whick Exception
+        Security security = Security.getInstance();
+        List<String> questions = security.validatePassword(userName,userPassword);
+        return null;
+
+    }
+
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception {
+        Security security = Security.getInstance();
+        security.validateQuestions(userName,answers);
+        Member member =  userController.getMembers().get(userName);
+        List<Appointment> appointmentByMe = member.getAppointedByMe();
+        List<AppointmentFacade> appointmentFacadesByMe= new ArrayList<>();
+        for (Appointment appointment: appointmentByMe)
+        {
+            //appointmentFacadesByMe.add(null); // TODO -  Understand how to turn appointment to appointmentFacade
+        }
+        List<Appointment> appointments = member.getAppointedByMe();
+        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
+        for (Appointment appointment: appointments)
+        {
+            //appointmentsFacades.add(null);
+        }
+        userController.finishLogin(userName);
+        return new ResponseT<MemberFacade>(new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades));
+    }
+
+
+
     public void visitorExitSystem(String visitorName) throws MarketException {
         userController.exitSystem(visitorName);
+    }
+
+    public Appointment getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) throws MarketException {
+        for (Map.Entry<String, Shop> shopEntry : this.shops.entrySet()){
+            Shop shop = shopEntry.getValue();
+            if (shop.getShopName().equals(relatedShop)){
+                return shop.getManagerAppointment(shopOwnerName,managerName);
+            }
+        }
+        throw new MarketException("shop couldn't be found");
+    }
+
+    public void editShopManagerPermissions(String shopOwnerName, String managerName, String relatedShop, Appointment updatedAppointment) throws MarketException {
+        for (Map.Entry<String, Shop> shopEntry : this.shops.entrySet()){
+            Shop shop = shopEntry.getValue();
+            if (shop.getShopName().equals(relatedShop)){
+                shop.editManagerPermission(shopOwnerName,managerName,updatedAppointment);
+                return;
+            }
+        }
+        throw new MarketException("shop couldn't be found");
+    }
+
+    public void closeShop(String shopOwnerName, String shopName) throws MarketException {
+        Shop shopToClose = shops.get(shopName);
+        if (shopToClose.getShopFounder().getName().equals(shopOwnerName))
+        {
+            shops.remove(shopName);
+            removeClosedShopItemsFromMarket(shopToClose);
+            //TODO send Notification
+            History history = History.getInstance();
+            history.closeShop(shopToClose);
+        }
+    }
+
+    private void removeClosedShopItemsFromMarket(Shop shopToClose) {
+        for (Map.Entry<Integer,String> entry:allItemsInMarketToShop.entrySet())
+        {
+            if (entry.getValue().equals(shopToClose.getShopName()))
+                allItemsInMarketToShop.remove(entry.getKey());
+        }
+        Map<Integer,Item> itemMap = shopToClose.getItemMap();
+        for (Map.Entry<Integer,Item> entry : itemMap.entrySet())
+        {
+            //Get list of items by the name . then delete by the specific ID
+            itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
+        }
+    }
+
+    public void removeItemFromShop(String shopOwnerName, String itemName, String shopName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        //Check if user indeed is the shop owner
+        if(!shop.isShopOwner(shopOwnerName))
+        {
+            throw new MarketException(shopOwnerName+" is not "+ shopName+ " owner . Removing "+itemName + " from shop has failed.");
+        }
+        else //we can remove item
+        {
+            Item itemToDelete = shop.getItemMap().get(itemName);
+            shop.deleteItem(itemToDelete);
+            updateMarketOnDeleteItem(itemToDelete);
+        }
+    }
+
+    private void updateMarketOnDeleteItem(Item itemToDelete) {
+        allItemsInMarketToShop.remove(itemToDelete.getID());
+        itemByName.get(itemToDelete.getName()).remove(itemToDelete.getID());
+    }
+
+    public void addItemToShop(String shopOwnerName,String itemName, double price,Item.Category category,String info,
+                              List<String> keywords, int amount, String shopName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        //Check if user indeed is the shop owner
+        if(!shop.isShopOwner(shopOwnerName))
+        {
+            throw new MarketException(shopOwnerName+" is not "+ shopName+ " owner . adding "+itemName + " from shop has failed.");
+        }
+        else //we can add item
+        {
+            Item toAdd = new Item(nextItemID,itemName,price,info);
+            shop.addItem(toAdd);
+            updateMarketOnAddedItem(toAdd,shopName);
+        }
+    }
+
+    private void updateMarketOnAddedItem(Item toAdd,String shopName) {
+        allItemsInMarketToShop.put(toAdd.getID(),shopName);
+        if (!itemByName.containsKey(toAdd.getName())) // No such item name in the entire market
+        {
+            List<Integer> newList = new ArrayList<>();
+            newList.add(toAdd.getID());
+            itemByName.put(toAdd.getName(),newList);
+        }
+        else {
+            itemByName.get(toAdd.getName()).add(toAdd.getID());
+        }
+    }
+
+    public Response setItemCurrentAmount(ItemFacade facadeItem, int amount, String shopName) {
+            Shop shop = shops.get(shopName);
+            Item item = facadeItem.toBusinessObject();
+            shop.setItemAmount(item,amount);
+            return new Response();
     }
 
     public String memberLogout(String member) throws MarketException {

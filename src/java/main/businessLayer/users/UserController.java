@@ -5,6 +5,7 @@ import main.businessLayer.MarketException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserController {
     private Map<String, Member> members;
@@ -19,8 +20,8 @@ public class UserController {
     }
 
     private UserController() {
-        members = new HashMap<>();
-        visitorsInMarket = new HashMap<>();
+        members = new ConcurrentHashMap<>();
+        visitorsInMarket = new ConcurrentHashMap<>();
         nextUniqueNumber = 1;
     }
 
@@ -29,6 +30,10 @@ public class UserController {
         String name = getNextUniqueName();
         throw new UnsupportedOperationException();
     }
+    public Member memberLogin(String userName, String userPassword){
+        return null;
+    }
+
 
     public void exitSystem(String visitorName) throws MarketException {
         if (this.visitorsInMarket.containsKey(visitorName)) {
@@ -81,5 +86,10 @@ public class UserController {
             visitorsInMarket.put(newVisitorName, newVisitor);
             return newVisitorName;
         }
+    }
+    public Member finishLogin(String userName) {
+        Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
+        visitorsInMarket.put(userName,newVisitorMember);
+        return newVisitorMember.getMember();
     }
 }

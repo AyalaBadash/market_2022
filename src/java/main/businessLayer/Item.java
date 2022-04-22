@@ -2,7 +2,7 @@ package main.businessLayer;
 
 import main.serviceLayer.FacadeObjects.ItemFacade;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.List;
 
 public class Item implements IHistory {
@@ -24,7 +24,7 @@ public class Item implements IHistory {
         this.ID = ID;
         this.name = name;
         this.price = price;
-        this.keywords = new ArrayList<>();
+        this.keywords = new CopyOnWriteArrayList<>();
         this.info = info;
     }
 

@@ -2,12 +2,13 @@ package main.businessLayer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBasket implements IHistory {
     Map<Item, Double> items;//<Item,quantity>
 
     public ShoppingBasket() {
-        items = new HashMap<>();
+        items = new ConcurrentHashMap<>();
     }
 
 

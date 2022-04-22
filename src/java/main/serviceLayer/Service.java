@@ -3,10 +3,12 @@ package main.serviceLayer;
 import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.PaymentMethod;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Service implements IService {
@@ -115,9 +117,33 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers, String visitorName) {
-        return null;
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, String visitorName) {
+        try {
+           ResponseT<List<String>> responseQs = userService.memberLogin(userName, userPassword, visitorName);
+            List<String> Qs = responseQs.getValue(); // TODO -  display Qs to user.
+            List<String> ans = new ArrayList<>(); //TODO users input
+            return validateSecurityQuestions(userName,ans);
+        }
+        catch (Exception e){
+            //TODO - What to do here
+            return null; //TODO change here
+        }
     }
+
+    private ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) {
+
+        try{
+            return userService.validateSecurityQuestions(userName,answers);
+        }
+        catch (Exception e)
+        {
+            //TODO
+            return null; //TODO change here
+        }
+
+    }
+
+
 
     @Override
     public ResponseT<VisitorFacade> logout(String visitorName) {
@@ -136,12 +162,13 @@ public class Service implements IService {
 
     @Override
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
-        return null;
+        return marketService.removeItemFromShop(shopOwnerName, item, shopName);
     }
 
     @Override
-    public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName) {
-        return null;
+    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+                                  List<String> keywords, int amount, String shopName) {
+        return marketService.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
     }
 
     @Override
@@ -149,9 +176,9 @@ public class Service implements IService {
         return null;
     }
 
-    @Override
+    @Override //TODO check if we need to get shop owner name in here too ( like remove and add)
     public Response setItemCurrentAmount(ItemFacade item, int amount, String shopName) {
-        return null;
+        return marketService.setItemCurrentAmount(item, amount, shopName);
     }
 
     @Override
@@ -185,14 +212,26 @@ public class Service implements IService {
     }
 
     @Override
-    public Response editShopManagerPermissions(String shopOwnerName,
+    public Response editShopManagerPermissions(String shopOwnerName,String managerName, String relatedShop,
                                                ShopManagerAppointmentFacade updatedAppointment) {
-        return null;
+        return this.userService.editShopManagerPermissions(shopOwnerName,managerName , relatedShop,updatedAppointment);
+    }
+
+    @Override
+    public ResponseT getManagerPermission(String shopOwnerName, String managerName, String relatedShop){
+        return this.userService.getManagerAppointment(shopOwnerName,managerName, relatedShop);
     }
 
     @Override
     public Response closeShop(String shopOwnerName, String shopName) {
-        return null;
+        try {
+            return marketService.closeShop(shopOwnerName,shopName);
+
+        }
+        catch (MarketException e)
+        {
+            return null; //TODO change it
+        }
     }
 
     @Override
@@ -219,4 +258,6 @@ public class Service implements IService {
     public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
         return null;
     }
+
+
 }

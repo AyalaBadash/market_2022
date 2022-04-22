@@ -4,9 +4,9 @@ import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.users.Member;
 
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Shop {
     // TODO must be unique
@@ -19,9 +19,9 @@ public class Shop {
 
     public Shop(String name) {
         this.shopName = name;
-        itemMap = new HashMap<>();
-        employees = new HashMap<>();
-        itemsCurrentAmount = new HashMap<>();
+        itemMap = new ConcurrentHashMap<>();
+        employees = new ConcurrentHashMap<>();
+        itemsCurrentAmount = new ConcurrentHashMap<>();
         this.closed = false;
 
     }
@@ -40,9 +40,16 @@ public class Shop {
         return "shop: " + shopName;
     }
 
-    public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) {
-
-        throw new UnsupportedOperationException();
+    public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
+        Appointment ownerAppointment = employees.get(superVisorName);
+        if (ownerAppointment == null ){
+            throw new MarketException(String.format("%s: cannot find an owner '%s'",shopName , superVisorName));
+        }
+        Appointment oldAppointment = employees.get(managerName);
+        if (oldAppointment ==  null ){
+            throw new MarketException(String.format("%s: cannot find an appointment of %s" , this.getShopName(), managerName));
+        }
+        this.employees.put(managerName, appointment);
     }
 
 
@@ -58,10 +65,10 @@ public class Shop {
         itemMap.remove(item.getName());
     }
 
-    public void addItem(Item item) throws Exception {
+    public void addItem(Item item) throws MarketException {
         if (!itemMap.containsKey(item.getName()))
             itemMap.put(item.getID(), item);
-        else throw new Exception();
+        else throw new MarketException("Item name already exist");
     }
 
     public int getItemCurrentAmount(Item item) {
@@ -92,6 +99,10 @@ public class Shop {
 
     public List<Item> getAllItemsByPrice(int minPrice, int maxPrice) {
         throw new UnsupportedOperationException();
+    }
+
+    public Map<Integer, Item> getItemMap() {
+        return itemMap;
     }
 
     public int calculateBasket(ShoppingBasket basket) {
@@ -132,5 +143,23 @@ public class Shop {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Shop && ((Shop) obj).getShopName().equals(this.shopName);
+    }
+
+    public Appointment getManagerAppointment(String shopOwnerName, String managerName) throws MarketException {
+
+        Appointment ownerAppointment = employees.get(shopOwnerName);
+        if (ownerAppointment == null ){
+            throw new MarketException(String.format("%s: cannot find an owner '%s'",shopName , shopOwnerName));
+        }
+        Appointment appointment = employees.get(managerName);
+        if (appointment ==  null ){
+            throw new MarketException(String.format("%s: cannot find an appointment of %s" , this.getShopName(), managerName));
+        }
+        // TODO can it be the superVisor of the superVisor?
+        if (!appointment.getSuperVisor().getName().equals(shopOwnerName)){
+            throw new MarketException(String.format("%s: you must be %s superVisor to change his permissions" , this.getShopName(), managerName));
+        }
+        return appointment;
+
     }
 }
