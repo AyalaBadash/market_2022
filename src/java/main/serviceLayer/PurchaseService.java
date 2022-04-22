@@ -42,8 +42,13 @@ public class PurchaseService {
     }
 
 
-    public Response buyShoppingCart(String visitorName, int expectedPrice,
+    public Response buyShoppingCart(String visitorName, double expectedPrice,
                                     PaymentMethod paymentMethod, Address address) {
-        return null;
+        try {
+            this.market.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
+            return new Response();
+        }catch (Exception e){
+            return new Response(e.getMessage());
+        }
     }
 }

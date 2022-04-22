@@ -61,7 +61,9 @@ public class UserController {
         throw new UnsupportedOperationException();
     }
 
-
+    public Visitor getVisitor(String visitorName){
+        return this.visitorsInMarket.get(visitorName);
+    }
     public Map<String, Visitor> getVisitorsInMarket() {
         return visitorsInMarket;
     }

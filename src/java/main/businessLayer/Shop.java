@@ -2,6 +2,7 @@ package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.users.Member;
+import net.bytebuddy.implementation.bytecode.assign.TypeCasting;
 
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class Shop {
     private String shopName;
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, Appointment> employees;     //<name, appointment>
-    private Map<Item, Integer> itemsCurrentAmount;
+    private Map<Item, Double> itemsCurrentAmount;
     private boolean closed;
 
 
@@ -21,7 +22,7 @@ public class Shop {
         this.shopName = name;
         itemMap = new ConcurrentHashMap<>();
         employees = new ConcurrentHashMap<>();
-        itemsCurrentAmount = new ConcurrentHashMap<>();
+        itemsCurrentAmount = new ConcurrentHashMap<Item, Double>();
         this.closed = false;
 
     }
@@ -97,6 +98,40 @@ public class Shop {
 
     }
 
+    public void releaseItems(ShoppingBasket shoppingBasket) {
+        Map<Item, Double> items = shoppingBasket.getItems();
+        for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
+            Item currItem = itemAmount.getKey();
+            Double newAmount = this.itemsCurrentAmount.get(currItem) + itemAmount.getValue();
+            this.itemsCurrentAmount.put(currItem, newAmount);
+        }
+    }
+
+    public synchronized double buyBasket(ShoppingBasket shoppingBasket) throws MarketException {
+        Map<Item, Double> items = shoppingBasket.getItems();
+        StringBuilder missingMessage = new StringBuilder();
+        boolean failed = false;
+        missingMessage.append(String.format("%s: cannot complete your purchase because some items are missing:\n", this.shopName));
+        for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
+            Item currItem = itemAmount.getKey();
+            Double currAmount = itemAmount.getValue();
+            if (this.itemsCurrentAmount.get(currItem) < currAmount){
+                failed = true;
+                missingMessage.append(String.format("%s X %f",currItem.getName(), currAmount));
+            };
+        }
+        if (failed){
+            throw new MarketException(missingMessage);
+        }
+        for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
+            Item currItem = itemAmount.getKey();
+            Double newAmount = this.itemsCurrentAmount.get(currItem) - itemAmount.getValue();
+            this.itemsCurrentAmount.put(currItem, newAmount);
+        }
+        return calculateBasket(shoppingBasket);
+    }
+
+
     public List<Item> getAllItemsByPrice(int minPrice, int maxPrice) {
         throw new UnsupportedOperationException();
     }
@@ -106,9 +141,6 @@ public class Shop {
     }
 
     // TODO need to calculate again - if doesn't match - exception
-    public int buyBasket(int expectedAmount) {
-        throw new UnsupportedOperationException();
-    }
 
     public boolean isShopOwner(String memberName) {
         throw new UnsupportedOperationException();
@@ -158,4 +190,6 @@ public class Shop {
         return appointment;
 
     }
+
+
 }

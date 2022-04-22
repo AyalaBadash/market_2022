@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBasket implements IHistory {
-    Map<Item, Double> items;//<Item,quantity>
+    private Map<Item, Double> items;//<Item,quantity>
 
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
@@ -36,6 +36,10 @@ public class ShoppingBasket implements IHistory {
             }
         }
         return true;
+    }
+
+    public Map<Item, Double> getItems() {
+        return items;
     }
 
     public void addItem(Item item, int amount) {

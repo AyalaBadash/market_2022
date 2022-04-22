@@ -4,12 +4,13 @@ import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.users.UserController;
-import main.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
+import main.businessLayer.users.Visitor;
 import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +27,7 @@ public class Market {
 
     private static Market instance;
 
-
+    // TODO need understand how to we want to handle error messages
     private Market() {
         this.shops = new ConcurrentHashMap<>();
         this.allItemsInMarketToShop = new ConcurrentHashMap<>();
@@ -83,10 +84,37 @@ public class Market {
 
     }
 
-    //TODO need to check - store update is synchronized
-    public void buyShoppingCart(String visitorName, int expectedPrice,
-                                PaymentMethod paymentMethod, Address address) {
-        throw new UnsupportedOperationException();
+
+    public void buyShoppingCart(String visitorName, double expectedPrice,
+                                PaymentMethod paymentMethod, Address address) throws MarketException {
+        boolean succeed = true;
+        Visitor visitor = userController.getVisitor(visitorName);
+        ShoppingCart cart = visitor.getCart();
+        double actualPrice = cart.saveFromShops();
+
+        // checks the price is correct
+        if (actualPrice != expectedPrice){
+            throw new MarketException(String.format("Sorry, the price cart price change\n" +
+                    "The new Price is: %f\nThe old Price was: %f\n",actualPrice,expectedPrice));
+        }
+        String supplyID = "";
+        // tries to pay if fails - return items to shops
+        try {
+            supplyID = this.supplyService.supply(address, LocalDateTime.now());
+
+            this.paymentService.pay(paymentMethod);
+        }catch (Exception e){
+            try {
+                if (!supplyID.equals("")) {
+                    supplyService.cancelSupply(supplyID);
+                }
+            }catch (Exception ignored){}
+            cart.cancelShopSave();
+            succeed = false;
+        }
+        if (succeed){
+            cart.clear();
+        }
     }
 
     public void addSecurity() {

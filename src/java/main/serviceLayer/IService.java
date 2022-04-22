@@ -139,7 +139,7 @@ public interface IService {
      * @param address
      * @return
      */
-    public Response buyShoppingCart(String visitorName, int expectedPrice, PaymentMethod paymentMethod, Address address);
+    public Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address);
 
 
     /**

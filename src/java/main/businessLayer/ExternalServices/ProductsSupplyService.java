@@ -8,7 +8,7 @@ public interface ProductsSupplyService {
 
 
 //    public LocalDateTime checkAvailability(Address address);
-    public boolean supply(Address address, LocalDateTime date);
-    public boolean cancelSupply(Address address, LocalDateTime date);
+    public String supply(Address address, LocalDateTime date);
+    public boolean cancelSupply(String supplyID);
 
 }
