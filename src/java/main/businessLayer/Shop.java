@@ -66,10 +66,10 @@ public class Shop {
         itemMap.remove(item.getName());
     }
 
-    public void addItem(Item item) throws Exception {
+    public void addItem(Item item) throws MarketException {
         if (!itemMap.containsKey(item.getName()))
             itemMap.put(item.getID(), item);
-        else throw new Exception();
+        else throw new MarketException("Item name already exist");
     }
 
     public int getItemCurrentAmount(Item item) {
@@ -134,6 +134,10 @@ public class Shop {
 
     public List<Item> getAllItemsByPrice(int minPrice, int maxPrice) {
         throw new UnsupportedOperationException();
+    }
+
+    public Map<Integer, Item> getItemMap() {
+        return itemMap;
     }
 
     public int calculateBasket(ShoppingBasket basket) {

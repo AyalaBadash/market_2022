@@ -1,6 +1,7 @@
 package main.serviceLayer.FacadeObjects;
 
-import main.businessLayer.Appointment.Appointment;
+
+import main.businessLayer.Appointment.*;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
 
@@ -11,7 +12,6 @@ public abstract class AppointmentFacade implements FacadeObject<Appointment> {
     protected Member superVisor;      //  member appointedMe
     protected Shop relatedShop;
     List<PermissionFacade> permissions;
-
 
     public AppointmentFacade(Member appointed, Member superVisor, Shop relatedShop,
                              List<PermissionFacade> permissions) {
@@ -53,4 +53,5 @@ public abstract class AppointmentFacade implements FacadeObject<Appointment> {
         this.permissions = permissions;
     }
 
+    public abstract AppointmentFacade toFacade(ShopManagerAppointment appointment);
 }

@@ -147,10 +147,9 @@ public interface IService {
      *
      * @param userName
      * @param userPassword
-     * @param userAdditionalAnswers - empty list if no additional queries exist
      * @return
      */
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers,
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword,
                                                String visitorName);
 
 
@@ -160,7 +159,7 @@ public interface IService {
      * @param visitorName
      * @return
      */
-    public Response logout(String visitorName);
+    public ResponseT<VisitorFacade> logout(String visitorName);
 
     /**
      * @param visitorName
@@ -200,7 +199,8 @@ public interface IService {
      * @param shopName
      * @return
      */
-    public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName);
+    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+                                  List<String> keywords, int amount, String shopName);
 
     /**
      *

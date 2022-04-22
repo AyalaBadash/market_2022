@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
 public class HistoryUnitTest extends mainTest {
 
     @Mock

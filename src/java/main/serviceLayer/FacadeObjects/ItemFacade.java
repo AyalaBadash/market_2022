@@ -75,7 +75,7 @@ public class ItemFacade implements FacadeObject<Item>{
 
     @Override
     public Item toBusinessObject() {
-
-        return null;
+        Item item = new Item(this);
+        return item;
     }
 }

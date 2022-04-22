@@ -3,6 +3,7 @@ package test.Bridge;
 import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.users.Member;
 import main.serviceLayer.FacadeObjects.*;
 import main.serviceLayer.IService;
 import main.resources.Address;
@@ -98,12 +99,12 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, List<String> userAdditionalAnswers, String visitorName) {
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, String visitorName) {
         return null;
     }
 
     @Override
-    public Response logout(String visitorName) {
+    public ResponseT<VisitorFacade> logout(String visitorName) {
         return null;
     }
 
@@ -123,7 +124,8 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName) {
+    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+                                  List<String> keywords, int amount, String shopName) {
         return null;
     }
 
