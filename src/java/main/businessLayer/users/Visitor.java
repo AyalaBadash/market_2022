@@ -15,6 +15,12 @@ public class Visitor {
         this.cart = new ShoppingCart();
     }
 
+    public Visitor(String name, Member member, ShoppingCart cart) {
+        this.name = name;
+        this.member = member;
+        this.cart = cart;
+    }
+
     //use case - Register
     public boolean register(String username,String password){throw new UnsupportedOperationException();}
 

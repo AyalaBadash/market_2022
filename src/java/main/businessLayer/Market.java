@@ -3,12 +3,12 @@ package main.businessLayer;
 import main.businessLayer.Appointment.*;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
+import main.businessLayer.users.Member;
 import main.businessLayer.users.UserController;
-import main.serviceLayer.FacadeObjects.ShoppingCartFacade;
+import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.Pair;
 import main.resources.PaymentMethod;
-import main.serviceLayer.FacadeObjects.VisitorFacade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
