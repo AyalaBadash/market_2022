@@ -45,9 +45,9 @@ public class UserController {
         throw new MarketException(String.format("%s tried to exit system but never entered", visitorName));
     }
 
-    public boolean register(String userName, String userPassword) {
-        throw new UnsupportedOperationException();
-
+    public boolean register(String userName) {
+        members.put(userName,new Member(userName));
+        return true;
     }
 
 

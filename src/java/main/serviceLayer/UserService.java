@@ -4,6 +4,7 @@ import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.Market;
+import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.List;
@@ -36,11 +37,20 @@ public class UserService {
     }
 
     public ResponseT<Boolean> register(String userName, String userPassword) {
-        return null;
+        ResponseT<Boolean> responseT;
+        try {
+            market.register(userName, userPassword);
+            responseT = new ResponseT<>(true);
+        }
+        catch (MarketException e)
+        {
+            responseT = new ResponseT<>(false);
+        }
+        return responseT;
     }
 
     public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
-        return null;
+        return market.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
 
     public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) throws Exception {

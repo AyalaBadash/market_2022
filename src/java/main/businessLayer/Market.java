@@ -65,17 +65,11 @@ public class Market {
         return null;
     }
 
-    public void register(String name, String password, String validatedPassword, List<Pair<String, String>> securityQuestions) throws Exception {
-//        try {
-//            Security security = Security.getInstance();
-//            security.validateRegister(name, password, validatedPassword, securityQuestions);
-//            MemberController mc = MemberController.getInstance();
-//            mc.createMember(name);
-//            security.addNewMember(name, password, securityQuestions);
-//
-//        } catch (Exception e) {
-//            throw e;
-//        }
+    public void register(String name, String password) throws MarketException {
+        Security security = Security.getInstance();
+        security.validateRegister(name,password);
+        userController.register(name);
+
     }
 
     public Shop getShopByName(String shopName) {
@@ -350,5 +344,20 @@ public class Market {
 
     public String memberLogout(String member) throws MarketException {
         return userController.memberLogout(member);
+    }
+    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member)
+    {
+        ResponseT<Boolean> responseT;
+        try {
+            Security security = Security.getInstance();
+            security.addPersonalQuery(userAdditionalQueries,userAdditionalAnswers,member);
+            responseT = new ResponseT<>(false);
+        }
+        catch (MarketException e)
+        {
+            responseT = new ResponseT<>(false);
+
+        }
+        return responseT;
     }
 }
