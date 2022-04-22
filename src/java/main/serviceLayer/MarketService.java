@@ -103,7 +103,7 @@ public class MarketService {
     }
 
     public Response setItemCurrentAmount(ItemFacade item,int amount, String shopName){
-        return null;
+        return market.setItemCurrentAmount(item,amount,shopName);
     }
     // TODO need to check users are updated
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {

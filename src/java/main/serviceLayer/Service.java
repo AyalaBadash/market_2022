@@ -176,9 +176,9 @@ public class Service implements IService {
         return null;
     }
 
-    @Override
+    @Override //TODO check if we need to get shop owner name in here too ( like remove and add)
     public Response setItemCurrentAmount(ItemFacade item, int amount, String shopName) {
-        return null;
+        return marketService.setItemCurrentAmount(item, amount, shopName);
     }
 
     @Override

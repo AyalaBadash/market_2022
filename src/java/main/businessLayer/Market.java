@@ -313,4 +313,11 @@ public class Market {
             itemByName.get(toAdd.getName()).add(toAdd.getID());
         }
     }
+
+    public Response setItemCurrentAmount(ItemFacade facadeItem, int amount, String shopName) {
+            Shop shop = shops.get(shopName);
+            Item item = facadeItem.toBusinessObject();
+            shop.setItemAmount(item,amount);
+            return new Response();
+    }
 }
