@@ -1,5 +1,7 @@
 package main.businessLayer;
 
+import main.serviceLayer.FacadeObjects.MemberFacade;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +23,10 @@ public class Security {
         else return instance;
     }
 
-    public void validateRegister(String name, String password,
-                                 List<String> questions,List<String> answers) throws Exception {
-        validateRegisterPassword(password);
+    public void validateRegister(String name, String password) throws MarketException {
         validateName(name);
-        validateQuestions(questions, answers);
-
-
+        LoginCard card = new LoginCard(name,password,new ArrayList<>(),new ArrayList<>());
+        namesToLoginInfo.put(name,card);
     }
     // TODO need to document all exceptions
     private void validateQuestions(List<String> questions, List<String> answers) throws Exception {
@@ -35,14 +34,14 @@ public class Security {
             throw new Exception();
     }
 
-    private void validateName(String name) throws Exception {
-        if (namesToLoginInfo.containsKey(name) || name == null || name.equals(""))
-            throw new Exception();
+    private void validateName(String name) throws MarketException {
+        if (namesToLoginInfo.containsKey(name))
+            throw new MarketException("Name is already taken ,try to be a little more creative and choose another name. ");
+        if (name == null || name.equals(""))
+            throw new MarketException("Name can't be null or empty string");
     }
 
-    private void validateRegisterPassword(String password) throws Exception {
 
-    }
 
     public void addNewMember(String name, String password, List<String> questions,
                              List<String> answers) {
@@ -94,5 +93,18 @@ public class Security {
             if(entry.getValue().equals(answers.get(index)))
                 index++;
         }
+    }
+
+    public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) throws MarketException {
+        if (!namesToLoginInfo.containsKey(member.getName()))
+        {
+            throw new MarketException("No such user exist");
+        }
+        else {
+            LoginCard card = namesToLoginInfo.get(member.getName());
+            Map<String,String> QA = card.getQandA();
+            QA.put(userAdditionalQueries,userAdditionalAnswers);
+        }
+
     }
 }

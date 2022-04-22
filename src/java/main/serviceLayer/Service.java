@@ -48,12 +48,12 @@ public class Service implements IService {
 
     @Override
     public ResponseT<Boolean> register(String userName, String userPassword) {
-        return null;
+        return userService.register(userName, userPassword);
     }
 
     @Override
     public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
-        return null;
+        return userService.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
 
     @Override
