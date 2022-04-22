@@ -73,16 +73,37 @@ public class MarketService {
 
     // TODO need to check users are updated
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
-        return null;
+        Response response;
+        try {
+             market.removeItemFromShop(shopOwnerName,item.getName(),shopName);
+             market.removeItemFromShop(shopOwnerName,item.getName(),shopName);
+             response = new Response();
+        }
+        catch (MarketException e)
+        {
+             response = new Response(e.getMessage());
+        }
+        return response;
+
     }
 
 
-    public Response addItemToShop(String shopOwnerName, ItemFacade item, int amount, String shopName) {
-        return null;
+    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+                                  List<String> keywords, int amount, String shopName) {
+        Response response;
+        try {
+            market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
+            response = new Response();
+        }
+        catch (MarketException e){
+            response = new Response(e.getMessage());
+        }
+        return response;
+
     }
 
     public Response setItemCurrentAmount(ItemFacade item,int amount, String shopName){
-        return null;
+        return market.setItemCurrentAmount(item,amount,shopName);
     }
     // TODO need to check users are updated
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {

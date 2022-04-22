@@ -264,4 +264,60 @@ public class Market {
             itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
         }
     }
+
+    public void removeItemFromShop(String shopOwnerName, String itemName, String shopName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        //Check if user indeed is the shop owner
+        if(!shop.isShopOwner(shopOwnerName))
+        {
+            throw new MarketException(shopOwnerName+" is not "+ shopName+ " owner . Removing "+itemName + " from shop has failed.");
+        }
+        else //we can remove item
+        {
+            Item itemToDelete = shop.getItemMap().get(itemName);
+            shop.deleteItem(itemToDelete);
+            updateMarketOnDeleteItem(itemToDelete);
+        }
+    }
+
+    private void updateMarketOnDeleteItem(Item itemToDelete) {
+        allItemsInMarketToShop.remove(itemToDelete.getID());
+        itemByName.get(itemToDelete.getName()).remove(itemToDelete.getID());
+    }
+
+    public void addItemToShop(String shopOwnerName,String itemName, double price,Item.Category category,String info,
+                              List<String> keywords, int amount, String shopName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        //Check if user indeed is the shop owner
+        if(!shop.isShopOwner(shopOwnerName))
+        {
+            throw new MarketException(shopOwnerName+" is not "+ shopName+ " owner . adding "+itemName + " from shop has failed.");
+        }
+        else //we can add item
+        {
+            Item toAdd = new Item(nextItemID,itemName,price,info);
+            shop.addItem(toAdd);
+            updateMarketOnAddedItem(toAdd,shopName);
+        }
+    }
+
+    private void updateMarketOnAddedItem(Item toAdd,String shopName) {
+        allItemsInMarketToShop.put(toAdd.getID(),shopName);
+        if (!itemByName.containsKey(toAdd.getName())) // No such item name in the entire market
+        {
+            List<Integer> newList = new ArrayList<>();
+            newList.add(toAdd.getID());
+            itemByName.put(toAdd.getName(),newList);
+        }
+        else {
+            itemByName.get(toAdd.getName()).add(toAdd.getID());
+        }
+    }
+
+    public Response setItemCurrentAmount(ItemFacade facadeItem, int amount, String shopName) {
+            Shop shop = shops.get(shopName);
+            Item item = facadeItem.toBusinessObject();
+            shop.setItemAmount(item,amount);
+            return new Response();
+    }
 }
