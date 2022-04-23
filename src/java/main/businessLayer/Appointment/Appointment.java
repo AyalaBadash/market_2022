@@ -1,5 +1,6 @@
 package main.businessLayer.Appointment;
 
+import main.businessLayer.MarketException;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
 import main.businessLayer.Appointment.Permissions.EmployeesPermission;
@@ -7,6 +8,7 @@ import main.businessLayer.Appointment.Permissions.IPermission;
 import main.businessLayer.Appointment.Permissions.PurchaseHistoryPermission;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Appointment {
@@ -68,4 +70,10 @@ public abstract class Appointment {
     public abstract boolean isOwner();
 
 
+    public List<Appointment> getShopEmployeesInfo() throws MarketException {
+        EmployeesPermission permission = new EmployeesPermission();
+        if (!permissions.contains(permission))
+            throw new MarketException("no permission");
+        return permission.apply(relatedShop);
+    }
 }

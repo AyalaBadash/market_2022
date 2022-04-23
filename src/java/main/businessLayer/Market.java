@@ -364,4 +364,10 @@ public class Market {
     public Visitor guestLogin() {
         return userController.guestLogin();
     }
+
+    public List<Appointment> getShopEmployeesInfo(String shopManagerName, String shopName) throws MarketException {
+        if (!shops.containsKey(shopName))
+            throw new MarketException("shop does not exist");
+        return shops.get(shopName).getShopEmployeesInfo(shopManagerName);
+    }
 }
