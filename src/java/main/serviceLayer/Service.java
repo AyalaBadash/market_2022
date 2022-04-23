@@ -240,6 +240,11 @@ public class Service implements IService {
     }
 
     @Override
+    public ResponseT<ShopFacade> getShopInfo(String member, String shopName) {
+        return marketService.getShopInfo(member, shopName);
+    }
+
+    @Override
     public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName) {
         return null;
     }

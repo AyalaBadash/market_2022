@@ -133,31 +133,6 @@ public class Market {
         return shops;
     }
 
-    private String ReceiveInformationAboutShop(String user, String shop) throws Exception {
-//        MemberController mc = MemberController.getInstance();
-//        if (mc.getVisitorsInMarket().getName() != user) {
-//            throw new Exception("user is not currently logged in");
-//        } else if (!shops.containsKey(shop)) {
-//            throw new Exception("shop does not exist");
-//        } else {
-//            return shops.get(shop).receiveInfo(user);
-//        }
-        throw new UnsupportedOperationException();
-    }
-
-    private String ReceiveInformationAboutItemInShop(String user, String shop, String itemId) throws Exception {
-//        MemberController mc = MemberController.getInstance();
-//        if (mc.getVisitorsInMarket().getName() != user) {
-//            throw new Exception("user is not currently logged in");
-//        } else if (!shops.containsKey(shop)) {
-//            throw new Exception("shop does not exist");
-//        } else {
-//            return shops.get(shop).receiveInfoAboutItem(itemId, user);
-//        }
-        throw new UnsupportedOperationException();
-
-    }
-
     public String getSystemManagerName() {
         return systemManagerName;
     }
@@ -369,5 +344,11 @@ public class Market {
         if (!shops.containsKey(shopName))
             throw new MarketException("shop does not exist");
         return shops.get(shopName).getShopEmployeesInfo(shopManagerName);
+    }
+
+    public Shop getShopInfo(String member, String shopName) throws MarketException {
+        if (!shops.containsKey(shopName))
+            throw new MarketException("no such shop");
+        return shops.get(shopName).getShopInfo(member);
     }
 }

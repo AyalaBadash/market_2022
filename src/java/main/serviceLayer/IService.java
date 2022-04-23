@@ -168,6 +168,14 @@ public interface IService {
      */
     public Response openNewShop(String visitorName, String shopName);
 
+    /**
+     *
+     * @param member
+     * @param shopName
+     * @return
+     */
+    public ResponseT<ShopFacade> getShopInfo(String member, String shopName);
+
 
     // *********************** Shop Owner use cases *******************************//
 

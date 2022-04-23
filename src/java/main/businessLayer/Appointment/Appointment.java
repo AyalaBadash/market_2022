@@ -76,4 +76,10 @@ public abstract class Appointment {
             throw new MarketException("no permission");
         return permission.apply(relatedShop);
     }
+
+    public Shop getShopInfo() throws MarketException {
+        if (relatedShop.isClosed() && !isOwner())
+            throw new MarketException("only shop owners and founders can get close shop info");
+        return relatedShop;
+    }
 }

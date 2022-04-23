@@ -8,6 +8,7 @@ import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.Market;
 import main.businessLayer.MarketException;
+import main.businessLayer.Shop;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.ArrayList;
@@ -160,5 +161,16 @@ public class MarketService {
 
     public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
         return null;
+    }
+
+    public ResponseT<ShopFacade> getShopInfo(String member, String shopName) {
+        ResponseT<ShopFacade> toReturn;
+        try {
+            Shop shop = market.getShopInfo(member, shopName);
+            toReturn = new ResponseT<>(new ShopFacade(shop));
+        } catch (Exception e) {
+            toReturn = new ResponseT<>(e.getMessage());
+        }
+        return toReturn;
     }
 }
