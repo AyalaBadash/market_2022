@@ -213,4 +213,13 @@ public class Shop {
             throw new MarketException("only owners can view employees info");
         return employee.getShopEmployeesInfo();
     }
+
+    public Shop getShopInfo(String member) throws MarketException {
+        if (isClosed()){
+            if (!employees.containsKey(member))
+                throw new MarketException("member must be shop owner in order to get close shop info");
+            return employees.get(member).getShopInfo();
+        }
+        return this;
+    }
 }

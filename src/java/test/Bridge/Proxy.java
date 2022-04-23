@@ -114,6 +114,11 @@ public class Proxy implements IService {
     }
 
     @Override
+    public ResponseT<ShopFacade> getShopInfo(String member, String shopName) {
+        return null;
+    }
+
+    @Override
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
         return null;
     }

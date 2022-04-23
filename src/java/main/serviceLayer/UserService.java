@@ -124,7 +124,7 @@ public class UserService {
 
     public ResponseT getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) {
         try {
-            // TODO need to remove casting
+
             Appointment appointment = (market.getManagerAppointment(shopOwnerName, managerName, relatedShop));
             AppointmentFacade appointmentFacade = appointment.isManager() ?
                     new ShopManagerAppointmentFacade((ShopManagerAppointment) appointment) :
