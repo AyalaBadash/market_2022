@@ -3,6 +3,8 @@ package main.businessLayer.Appointment;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
 
+import java.util.List;
+
 public class ShopOwnerAppointment extends Appointment {
     private boolean isShopFounder;
     public ShopOwnerAppointment(Member appointed, Member appoint, Shop relatedShop,
@@ -25,4 +27,5 @@ public class ShopOwnerAppointment extends Appointment {
     public boolean isShopFounder() {
         return isShopFounder;
     }
+
 }

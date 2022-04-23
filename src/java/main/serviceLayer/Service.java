@@ -236,7 +236,7 @@ public class Service implements IService {
 
     @Override
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
-        return null;
+        return marketService.getShopEmployeesInfo(shopManagerName, shopName);
     }
 
     @Override

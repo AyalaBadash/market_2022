@@ -4,6 +4,7 @@ import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.users.Member;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -172,6 +173,10 @@ public class Shop {
         return employees;
     }
 
+    public List<Appointment> getEmployeesList(){
+        return new ArrayList<>(getEmployees().values());
+    }
+
     public Member getShopFounder() {
         throw new UnsupportedOperationException();
     }
@@ -200,4 +205,12 @@ public class Shop {
     }
 
 
+    public List<Appointment> getShopEmployeesInfo(String shopManagerName) throws MarketException {
+        if(!employees.containsKey(shopManagerName))
+            throw new MarketException(shopManagerName+" is not working at this shop");
+        Appointment employee = employees.get(shopManagerName);
+        if (!employee.isOwner())
+            throw new MarketException("only owners can view employees info");
+        return employee.getShopEmployeesInfo();
+    }
 }

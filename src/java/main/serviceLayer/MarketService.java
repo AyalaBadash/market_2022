@@ -1,5 +1,8 @@
 package main.serviceLayer;
 
+import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.Appointment.ShopManagerAppointment;
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
@@ -7,6 +10,7 @@ import main.businessLayer.Market;
 import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MarketService {
@@ -117,8 +121,25 @@ public class MarketService {
 
     public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName){return null;}
 
+    // TODO need to remove casting
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
-        return null;
+        ResponseT<List<AppointmentFacade>> toReturn;
+        try {
+            List <Appointment> employees = market.getShopEmployeesInfo(shopManagerName, shopName);
+            List <AppointmentFacade> employeesFacadeList = new ArrayList<>();
+            for (Appointment a : employees){
+                AppointmentFacade employeeFacade;
+                if (a.isOwner())
+                    employeeFacade = new ShopOwnerAppointmentFacade((ShopOwnerAppointment) a);
+                else
+                    employeeFacade = new ShopManagerAppointmentFacade((ShopManagerAppointment) a);
+                employeesFacadeList.add(employeeFacade);
+            }
+            return new ResponseT<>(employeesFacadeList);
+        } catch (Exception e) {
+            toReturn = new ResponseT<>(e.getMessage());
+        }
+        return toReturn;
     }
 
 
