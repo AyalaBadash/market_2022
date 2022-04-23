@@ -6,9 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBasket implements IHistory {
     private Map<Item, Double> items;//<Item,quantity>
+    private double price;
 
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
+        price = 0;
     }
 
 
@@ -23,6 +25,14 @@ public class ShoppingBasket implements IHistory {
             }
         }
         return review;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getPrice() {
+        return price;
     }
 
     public boolean isEmpty() {
@@ -42,13 +52,21 @@ public class ShoppingBasket implements IHistory {
         return items;
     }
 
-    public void addItem(Item item, int amount) {
-        // TODO implement
+    public void addItem(Item item, double amount) {
+        items.put(item,amount);
     }
 
-    public void removeItem(Item item, int amount) {
-
+    public void removeItem(Item item, double amount) throws MarketException {
+        if (!items.containsKey(item))
+            throw new MarketException("No such item on basket");
+        if (items.get(item)>amount)
+            items.put(item,items.get(item)-amount);
+        else items.remove(item);
     }
 
 
+    public ShoppingBasket calculate() {
+        return null;
+        // TODO check if needed.
+    }
 }

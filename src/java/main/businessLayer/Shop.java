@@ -145,8 +145,15 @@ public class Shop {
         return itemMap;
     }
 
-    public int calculateBasket(ShoppingBasket basket) {
-        throw new UnsupportedOperationException();
+    public double calculateBasket(ShoppingBasket basket) {
+        double sum = 0;
+        Map<Item, Double> items = basket.getItems();
+        for (Map.Entry<Item,Double> currItem:items.entrySet())
+        {
+            sum = sum + currItem.getValue()*currItem.getKey().getPrice();
+        }
+        basket.setPrice(sum);
+        return sum;
     }
 
     // TODO need to calculate again - if doesn't match - exception
@@ -221,5 +228,17 @@ public class Shop {
             return employees.get(member).getShopInfo();
         }
         return this;
+    }
+
+    public ShoppingBasket validateBasket(ShoppingBasket basket) {
+        Map<Item, Double> items = basket.getItems();
+        for (Map.Entry<Item, Double> currentItem : items.entrySet())
+        {
+            if (currentItem.getValue()>itemsCurrentAmount.get(currentItem.getKey()))
+            {
+                currentItem.setValue(itemsCurrentAmount.get(currentItem.getKey()));
+            }
+        }
+        return basket;
     }
 }

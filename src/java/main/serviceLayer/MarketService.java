@@ -1,14 +1,11 @@
 package main.serviceLayer;
 
+import main.businessLayer.*;
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Appointment.ShopOwnerAppointment;
-import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
-import main.businessLayer.Market;
-import main.businessLayer.MarketException;
-import main.businessLayer.Shop;
 import main.serviceLayer.FacadeObjects.*;
 
 import java.util.ArrayList;
@@ -172,5 +169,11 @@ public class MarketService {
             toReturn = new ResponseT<>(e.getMessage());
         }
         return toReturn;
+    }
+
+    public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
+        ShoppingCartFacade cart =  market.calculateShoppingCart(visitorName);
+        ResponseT <ShoppingCartFacade> responseT = new ResponseT<>(cart);
+        return responseT;
     }
 }
