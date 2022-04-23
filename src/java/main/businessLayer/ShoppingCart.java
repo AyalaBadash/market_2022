@@ -15,6 +15,10 @@ public class ShoppingCart implements IHistory {
         this.cart = new ConcurrentHashMap<>();
     }
 
+    public void setCurrentPrice(double currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
     // TODO need to append visitor name when called
     @Override
     public StringBuilder getReview() {

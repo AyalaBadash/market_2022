@@ -8,7 +8,6 @@ import main.businessLayer.users.UserController;
 import main.businessLayer.users.Visitor;
 import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
-import main.resources.Pair;
 import main.resources.PaymentMethod;
 
 import java.time.LocalDateTime;
@@ -121,8 +120,26 @@ public class Market {
 
     }
 
-    public ShoppingCartFacade calculateShoppingCart() {
-        return null;
+    public ShoppingCartFacade calculateShoppingCart(String visitorName) {
+        ShoppingCart currentCart = userController.getVisitorsInMarket().get(visitorName).getCart();
+        ShoppingCart updatedCart = validateCart(currentCart);
+
+        ShoppingCartFacade cartFacade = new ShoppingCartFacade(updatedCart);
+        return cartFacade;
+    }
+
+    private ShoppingCart validateCart(ShoppingCart currentCart) {
+        ShoppingCart res = new ShoppingCart();
+        double cartPrice = 0;
+        Map<Shop, ShoppingBasket> baskets = currentCart.getCart();
+        for (Map.Entry<Shop,ShoppingBasket> basketEntry: baskets.entrySet())
+        {
+            ShoppingBasket updatedBasket = basketEntry.getKey().validateBasket(basketEntry.getValue());
+            basketEntry.setValue(updatedBasket);
+            cartPrice = cartPrice + updatedBasket.getPrice();
+        }
+        res.setCurrentPrice(cartPrice);
+        return res;
     }
 
     private int calculateShoppingCartPrice() {

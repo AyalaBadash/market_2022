@@ -108,7 +108,7 @@ public class Service implements IService {
 
     @Override
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
-        return null;
+        return marketService.calculateShoppingCart(visitorName);
     }
 
     @Override
