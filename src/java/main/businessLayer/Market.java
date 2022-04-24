@@ -207,7 +207,7 @@ public class Market {
 
     }
 
-    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception {
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception{
         Security security = Security.getInstance();
         security.validateQuestions(userName,answers);
         Member member =  userController.getMembers().get(userName);
