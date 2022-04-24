@@ -14,6 +14,7 @@ import main.resources.PaymentMethod;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -169,8 +170,51 @@ public class Market {
     }
 
 
-    public Map<String, List<Integer>> getItemByName() {
-        return itemByName;
+    public List<Item> getItemByName(String name) throws MarketException {
+        if (!itemByName.containsKey(name))
+            throw new MarketException("no such item");
+        List<Item> toReturn = new ArrayList<>();
+        List<Integer> itemIds =  itemByName.get(name);
+        for (int item : itemIds){
+            String shopStr = allItemsInMarketToShop.get(item);
+            Shop shop = shops.get(shopStr);
+            toReturn.add(shop.getItemMap().get(item));
+        }
+        return toReturn;
+    }
+
+    public List<Item> getItemByCategory(Item.Category category){
+        List<Item> toReturn = new ArrayList<>();
+        for (Shop shop : shops.values()){
+            toReturn.addAll(shop.getItemsByCategory(category));
+        }
+        return toReturn;
+    }
+
+    public List<Item> getItemsByKeyword(String keyword){
+        List<Item> toReturn = new ArrayList<>();
+        for (Shop shop : shops.values()){
+            toReturn.addAll(shop.getItemsByKeyword(keyword));
+        }
+        return toReturn;
+    }
+
+    public List<Item> filterItemsByPrice(List<Item> items, int minPrice, int maxPrice) {
+        List<Item> toReturn = new ArrayList<>();
+        for (Item item : items){
+            if (item.getPrice() >= minPrice && item.getPrice() <= maxPrice)
+                toReturn.add(item);
+        }
+        return toReturn;
+    }
+
+    public List<Item> filterItemsByCategory(List<Item> items, Item.Category category){
+        List<Item> toReturn = new ArrayList<>();
+        for (Item item : items){
+            if (item.getCategory().equals(category))
+                toReturn.add(item);
+        }
+        return toReturn;
     }
 
 
@@ -396,4 +440,6 @@ public class Market {
         } else
             throw new MarketException ( "You are not a member. Only members can open a new shop in the market" );
     }
+
+
 }

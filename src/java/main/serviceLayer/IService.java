@@ -70,32 +70,32 @@ public interface IService {
      * @param name
      * @return
      */
-    public ResponseT<ItemFacade> searchProductByName(String name);
+    public ResponseT<List<ItemFacade>> searchProductByName(String name);
 
     /**
      * @param category
      * @return
      */
-    public ResponseT<ItemFacade> searchProductByCategory(Item.Category category);
+    public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category);
 
     /**
      * @param keyWord
      * @return
      */
-    public ResponseT<ItemFacade> searchProductByKeyword(String keyWord);
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord);
 
     /**
      * @param minPrice
      * @param maxPrice
      * @return
      */
-    public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice);
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice);
 
     /**
      * @param category
      * @return
      */
-    public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category);
+    public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category);
 
     /**
      * @param itemToInsert

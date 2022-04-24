@@ -67,28 +67,28 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByName(String name) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByName(String name) {
+        return marketService.searchProductByName(name);
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByCategory(Item.Category category) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category) {
+        return marketService.searchProductByCategory(category);
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByKeyword(String keyWord) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord) {
+        return marketService.searchProductByKeyword(keyWord);
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice) {
-        return null;
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice) {
+        return marketService.filterItemByPrice(items, minPrice, maxPrice);
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category) {
-        return null;
+    public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category) {
+        return marketService.filterItemByCategory(items, category);
     }
 
     @Override
