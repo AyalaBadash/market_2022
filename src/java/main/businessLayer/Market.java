@@ -214,12 +214,13 @@ public class Market {
         for (Appointment appointment: appointmentByMe)
         {
             //appointmentFacadesByMe.add(null); // TODO -  Understand how to turn appointment to appointmentFacade
+
         }
         List<Appointment> appointments = member.getAppointedByMe();
         List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
         for (Appointment appointment: appointments)
         {
-            //appointmentsFacades.add(null);
+            //appointmentsFacades.add(null);//TODO
         }
         userController.finishLogin(userName);
         return new ResponseT<MemberFacade>(new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades));
