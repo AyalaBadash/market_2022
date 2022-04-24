@@ -1,6 +1,8 @@
 package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.Appointment.ShopManagerAppointment;
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.users.Member;
@@ -205,7 +207,7 @@ public class Market {
 
     }
 
-    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception {
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception{
         Security security = Security.getInstance();
         security.validateQuestions(userName,answers);
         Member member =  userController.getMembers().get(userName);
@@ -213,7 +215,16 @@ public class Market {
         List<AppointmentFacade> appointmentFacadesByMe= new ArrayList<>();
         for (Appointment appointment: appointmentByMe)
         {
-            //appointmentFacadesByMe.add(null); // TODO -  Understand how to turn appointment to appointmentFacade
+            if (appointment.isOwner()){
+            ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment; //TODO - approve casting
+            ShopOwnerAppointmentFacade facade = new ShopOwnerAppointmentFacade(shopOwnerAppointment);
+            appointmentFacadesByMe.add(facade);
+            }
+            else {
+                ShopManagerAppointment shopManagerAppointment = (ShopManagerAppointment) appointment;
+                ShopManagerAppointmentFacade facade = new ShopManagerAppointmentFacade(shopManagerAppointment);
+                appointmentFacadesByMe.add(facade);
+            }
 
         }
         List<Appointment> appointments = member.getAppointedByMe();
