@@ -224,14 +224,7 @@ public class Service implements IService {
 
     @Override
     public Response closeShop(String shopOwnerName, String shopName) {
-        try {
-            return marketService.closeShop(shopOwnerName,shopName);
-
-        }
-        catch (MarketException e)
-        {
-            return null; //TODO change it
-        }
+            return this.marketService.closeShop(shopOwnerName,shopName);
     }
 
     @Override
