@@ -369,7 +369,7 @@ public class Market {
         return userController.guestLogin();
     }
 
-    public List<Appointment> getShopEmployeesInfo(String shopManagerName, String shopName) throws MarketException {
+    public Map<String, Appointment> getShopEmployeesInfo(String shopManagerName, String shopName) throws MarketException {
         if (!shops.containsKey(shopName))
             throw new MarketException("shop does not exist");
         return shops.get(shopName).getShopEmployeesInfo(shopManagerName);
@@ -379,5 +379,21 @@ public class Market {
         if (!shops.containsKey(shopName))
             throw new MarketException("no such shop");
         return shops.get(shopName).getShopInfo(member);
+    }
+
+    public void openNewShop(String visitorName, String shopName) throws MarketException {
+        Member curMember;
+        if(userController.isMember(visitorName)){
+            curMember = userController.getMember (visitorName);
+            if(shops.get ( shopName ) == null) {
+                Shop shop = new Shop ( shopName );
+                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
+                shop.addEmployee(shopFounder);
+                shops.put ( shopName, shop );
+                curMember.addAppointmentToMe(shopFounder);
+            } else
+                throw new MarketException ( "Shop with the same shop name is already exists" );
+        } else
+            throw new MarketException ( "You are not a member. Only members can open a new shop in the market" );
     }
 }

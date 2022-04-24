@@ -3,15 +3,15 @@ package main.businessLayer.Appointment.Permissions;
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Shop;
 
-import java.util.List;
+import java.util.Map;
 
-public class EmployeesPermission extends IPermission<List<Appointment>> {
+public class EmployeesPermission extends IPermission<Map<String, Appointment>> {
     public EmployeesPermission() {
         this.name = "get_employees_info";
     }
 
     @Override
-    public List<Appointment> apply(Shop relatedShop) {
-        return relatedShop.getEmployeesList();
+    public Map<String, Appointment> apply(Shop relatedShop) {
+        return relatedShop.getEmployees ();
     }
 }
