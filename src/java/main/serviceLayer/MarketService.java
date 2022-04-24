@@ -112,9 +112,17 @@ public class MarketService {
         return null;
     }
 
-    public Response closeShop(String shopOwnerName, String shopName) throws MarketException {
-         market.closeShop(shopOwnerName,shopName);
-         return null;
+    public Response closeShop(String shopOwnerName, String shopName) {
+        Response response;
+        try {
+            market.closeShop(shopOwnerName,shopName);
+            response = new Response();
+        }
+        catch (MarketException e)
+        {
+            response = new Response(e.getMessage());
+        }
+         return response;
     }
 
     public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName){return null;}
