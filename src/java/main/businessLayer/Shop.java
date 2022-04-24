@@ -5,9 +5,7 @@ import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.users.Member;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Shop {
     // TODO must be unique
@@ -159,7 +157,7 @@ public class Shop {
         throw new UnsupportedOperationException();
     }
 
-    public Map<Integer, Item> getItemMap() {
+    public synchronized Map<Integer, Item> getItemMap() {
         return itemMap;
     }
 
@@ -302,5 +300,23 @@ public class Shop {
             else
                 shopManagers.put ( employeeName, newAppointment );
         }
+    }
+
+    public List<Item> getItemsByCategory(Item.Category category) {
+        List<Item> toReturn = new ArrayList<>();
+        for (Item item : itemMap.values()){
+            if (item.getCategory().equals(category))
+                toReturn.add(item);
+        }
+        return toReturn;
+    }
+
+    public List<Item> getItemsByKeyword(String keyword) {
+        List<Item> toReturn = new ArrayList<>();
+        for (Item item : itemMap.values()){
+            if (item.getKeywords().contains(keyword))
+                toReturn.add(item);
+        }
+        return toReturn;
     }
 }
