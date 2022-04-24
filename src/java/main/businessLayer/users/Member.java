@@ -1,5 +1,6 @@
 package main.businessLayer.users;
 
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.ShoppingCart;
 import main.businessLayer.Appointment.Appointment;
 import java.util.List;

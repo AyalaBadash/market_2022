@@ -1,56 +1,63 @@
 package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.users.Member;
 
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Shop {
     // TODO must be unique
     private String shopName;
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
-    private Map<String, Appointment> employees;     //<name, appointment>
+    private Map<String, Appointment> shopManagers;     //<name, appointment>
+    private Map<String, Appointment> shopOwners;     //<name, appointment>
     private Map<Item, Double> itemsCurrentAmount;
     private boolean closed;
 
 
     public Shop(String name) {
         this.shopName = name;
-        itemMap = new ConcurrentHashMap<>();
-        employees = new ConcurrentHashMap<>();
-        itemsCurrentAmount = new ConcurrentHashMap<Item, Double>();
+        itemMap = new HashMap<> ();
+        shopManagers = new HashMap<>();
+        shopOwners = new HashMap<> (  );
+        itemsCurrentAmount = new HashMap<>();
         this.closed = false;
-
     }
 
 
     //use case - receive info of a shop
     public String receiveInfo(String userName) throws Exception {
+        Boolean hasPermission = false;
         if (isClosed()) {
-            for (Map.Entry<String, Appointment> appointment : employees.entrySet()) {
+            for (Map.Entry<String, Appointment> appointment : shopOwners.entrySet()) {
                 if (appointment.getValue().getAppointed().getName().equals(userName)) {
-                    break;
+                    hasPermission = true;
                 }
-                throw new Exception("only owners and managers of the shop can view it's information");
             }
+            for (Map.Entry<String, Appointment> appointment : shopManagers.entrySet()) {
+                if (appointment.getValue().getAppointed().getName().equals(userName)) {
+                    hasPermission = true;
+                }
+            }
+            throw new Exception("only owners and managers of the shop can view it's information");
         }
         return "shop: " + shopName;
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
-        Appointment ownerAppointment = employees.get(superVisorName);
+        Appointment ownerAppointment = shopOwners.get(superVisorName);
         if (ownerAppointment == null ){
             throw new MarketException(String.format("%s: cannot find an owner '%s'",shopName , superVisorName));
         }
-        Appointment oldAppointment = employees.get(managerName);
+        Appointment oldAppointment = shopManagers.get(managerName);
         if (oldAppointment ==  null ){
             throw new MarketException(String.format("%s: cannot find an appointment of %s" , this.getShopName(), managerName));
         }
-        this.employees.put(managerName, appointment);
+        this.shopManagers.put(managerName, appointment);
     }
 
 
@@ -88,12 +95,23 @@ public class Shop {
 
     public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
         if (isClosed()) {
-            for (Map.Entry<String, Appointment> appointment : employees.entrySet()) {
+            boolean hasPermission = false;
+            for (Map.Entry<String, Appointment> appointment : shopManagers.entrySet()) {
                 if (appointment.getValue().getAppointed().getName().equals(userName)) {
+                    hasPermission = true;
                     break;
                 }
-                throw new Exception("only owners and managers of the shop can view it's information");
             }
+            if(!hasPermission) {
+                for ( Map.Entry<String, Appointment> appointment : shopOwners.entrySet ( ) ) {
+                    if (appointment.getValue ( ).getAppointed ( ).getName ( ).equals ( userName )) {
+                        hasPermission = true;
+                        break;
+                    }
+                }
+            }
+            if(!hasPermission)
+                throw new Exception("only owners and managers of the shop can view it's information");
         }
         if (!itemMap.containsKey(itemId)) {
             throw new Exception("no such item in shop");
@@ -175,13 +193,12 @@ public class Shop {
         return shopName;
     }
 
-
-    public Map<String, Appointment> getEmployees() {
+    //TODO need to check if works
+    public Map<String, Appointment> getEmployees(){
+        Map employees = new HashMap (  );
+        employees.putAll ( shopOwners );
+        employees.putAll ( shopManagers );
         return employees;
-    }
-
-    public List<Appointment> getEmployeesList(){
-        return new ArrayList<>(getEmployees().values());
     }
 
     public Member getShopFounder() {
@@ -195,11 +212,11 @@ public class Shop {
 
     public Appointment getManagerAppointment(String shopOwnerName, String managerName) throws MarketException {
 
-        Appointment ownerAppointment = employees.get(shopOwnerName);
+        Appointment ownerAppointment = shopOwners.get(shopOwnerName);
         if (ownerAppointment == null ){
             throw new MarketException(String.format("%s: cannot find an owner '%s'",shopName , shopOwnerName));
         }
-        Appointment appointment = employees.get(managerName);
+        Appointment appointment = shopManagers.get(managerName);
         if (appointment ==  null ){
             throw new MarketException(String.format("%s: cannot find an appointment of %s" , this.getShopName(), managerName));
         }
@@ -208,14 +225,15 @@ public class Shop {
             throw new MarketException(String.format("%s: you must be %s superVisor to change his permissions" , this.getShopName(), managerName));
         }
         return appointment;
-
     }
 
-
-    public List<Appointment> getShopEmployeesInfo(String shopManagerName) throws MarketException {
-        if(!employees.containsKey(shopManagerName))
+    //TODO shop owner wants to get info about what? need to insert another name?
+    public Map<String, Appointment> getShopEmployeesInfo(String shopManagerName) throws MarketException {
+        Appointment employee = shopManagers.get ( shopManagerName );
+        if(employee == null)
+            employee = shopOwners.get ( shopManagerName );
+        if(employee == null)
             throw new MarketException(shopManagerName+" is not working at this shop");
-        Appointment employee = employees.get(shopManagerName);
         if (!employee.isOwner())
             throw new MarketException("only owners can view employees info");
         return employee.getShopEmployeesInfo();
@@ -223,11 +241,34 @@ public class Shop {
 
     public Shop getShopInfo(String member) throws MarketException {
         if (isClosed()){
-            if (!employees.containsKey(member))
+
+            if (!isEmployee ( member ))
                 throw new MarketException("member must be shop owner in order to get close shop info");
-            return employees.get(member).getShopInfo();
+            return getEmployee ( member ).getShopInfo();
         }
         return this;
+    }
+
+    private boolean isEmployee(String memberName){
+        boolean hasPermission = false;
+        for (Map.Entry<String, Appointment> appointment : shopManagers.entrySet()) {
+            if (appointment.getValue().getAppointed().getName().equals(memberName)) {
+                return true;
+            }
+        }
+        for ( Map.Entry<String, Appointment> appointment : shopOwners.entrySet ( ) ) {
+            if (appointment.getValue ( ).getAppointed ( ).getName ( ).equals ( memberName )) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Appointment getEmployee(String member){
+        Appointment employee = shopManagers.get ( member );
+        if(employee != null)
+            return employee;
+        return shopOwners.get ( member );
     }
 
     public ShoppingBasket validateBasket(ShoppingBasket basket) {
@@ -240,5 +281,26 @@ public class Shop {
             }
         }
         return basket;
+    }
+
+    public void addEmployee(ShopOwnerAppointment newAppointment) throws MarketException {
+        String employeeName = newAppointment.getAppointed ().getName ();
+        Appointment oldAppointment = shopOwners.get ( employeeName );
+        if(oldAppointment != null) {
+            if (newAppointment.isOwner ())
+                throw new MarketException ( "this member is already a shop owner" );
+            shopManagers.put ( employeeName, newAppointment );
+        } else {
+            oldAppointment = shopManagers.get ( employeeName );
+            if(oldAppointment != null){
+                if (newAppointment.isManager ())
+                    throw new MarketException ( "this member is already a shop manager" );
+                shopOwners.put ( employeeName, newAppointment );
+            }
+            else if(newAppointment.isOwner () )
+                shopOwners.put ( employeeName, newAppointment );
+            else
+                shopManagers.put ( employeeName, newAppointment );
+        }
     }
 }

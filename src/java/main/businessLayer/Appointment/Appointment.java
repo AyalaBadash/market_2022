@@ -70,7 +70,7 @@ public abstract class Appointment {
     public abstract boolean isOwner();
 
 
-    public List<Appointment> getShopEmployeesInfo() throws MarketException {
+    public Map<String, Appointment> getShopEmployeesInfo() throws MarketException {
         EmployeesPermission permission = new EmployeesPermission();
         if (!permissions.contains(permission))
             throw new MarketException("no permission");

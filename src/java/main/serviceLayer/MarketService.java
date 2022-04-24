@@ -64,9 +64,13 @@ public class MarketService {
         return null;
     }
 
-    // TODO validate visitor is a member
     public Response openNewShop(String visitorName, String shopName) {
-        return null;
+        try{
+            market.openNewShop(visitorName, shopName);
+            return new Response (  );
+        }catch (MarketException marketException){
+            return new Response ( marketException.getMessage () );
+        }
     }
 
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
@@ -131,7 +135,7 @@ public class MarketService {
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
         ResponseT<List<AppointmentFacade>> toReturn;
         try {
-            List <Appointment> employees = market.getShopEmployeesInfo(shopManagerName, shopName);
+            List <Appointment> employees = market.getShopEmployeesInfo(shopManagerName, shopName).values ().stream( ).toList ();
             List <AppointmentFacade> employeesFacadeList = new ArrayList<>();
             for (Appointment a : employees){
                 AppointmentFacade employeeFacade;
