@@ -306,6 +306,18 @@ public class Shop implements IHistory{
         }
     }
 
+    public void addManager(ShopManagerAppointment newAppointment) throws MarketException {
+        String employeeName = newAppointment.getAppointed().getName();
+        Appointment oldAppointment = shopManagers.get(employeeName);
+        if (oldAppointment != null) {
+            if (newAppointment.isManager())
+                throw new MarketException("this member is already a shop manager");
+            shopOwners.put(employeeName, newAppointment);
+        }
+        else
+            shopManagers.put(employeeName, newAppointment);
+
+    }
     public List<Item> getItemsByCategory(Item.Category category) {
         List<Item> toReturn = new ArrayList<>();
         for (Item item : itemMap.values()){
@@ -328,22 +340,6 @@ public class Shop implements IHistory{
         return itemMap.get ( item );
     }
 
-    public void appointShopOwner(Member shopOwner, Member appointedShopOwner) throws MarketException {
-        if (isShopOwner(appointedShopOwner.getName()))
-            throw new MarketException("appointed shop owner is already a shop owner of the shop.");
-        if (shopOwner != null || !isShopOwner(shopOwner.getName()))
-            throw new MarketException("member is not a shop owner so is not authorized to appoint shop owner");
-        ShopOwnerAppointment appointment = new ShopOwnerAppointment(appointedShopOwner, shopOwner, this, false);
-        addEmployee(appointment);
-    }
-    public void appointShopManager(Member shopOwner, Member appointedShopOwner) throws MarketException {
-        if (isManager(appointedShopOwner.getName()))
-            throw new MarketException("appointed shop owner is already a shop owner of the shop.");
-        if (shopOwner != null || !isShopOwner(shopOwner.getName()))
-            throw new MarketException("member is not a shop owner so is not authorized to appoint shop owner");
-        ShopManagerAppointment appointment = new ShopManagerAppointment(appointedShopOwner, shopOwner, this);
-        addEmployee(appointment);
-    }
     public boolean isManager(String shopManagerName) {
         return shopManagers.get ( shopManagerName ) != null;
     }
@@ -373,5 +369,3 @@ public class Shop implements IHistory{
         return review;
     }
 }
-
-
