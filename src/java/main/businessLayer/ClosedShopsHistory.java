@@ -1,5 +1,8 @@
 package main.businessLayer;
 
+import main.resources.ErrorLog;
+import main.resources.EventLog;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -22,8 +25,11 @@ public class ClosedShopsHistory {
     // TODO need to implement here
     public void closeShop(Shop closedShop) throws MarketException {
         if (closedShop == null){
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Tried to close a shop but shop is null");
             throw new MarketException("tried to close a null shop!");
         }
+        EventLog.getInstance().Log("Shop " + closedShop.getShopName() + " closed successfully");
         closedShops.add(closedShop);
     }
 

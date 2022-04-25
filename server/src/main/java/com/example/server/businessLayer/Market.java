@@ -158,6 +158,8 @@ public class Market {
 
         // checks the price is correct
         if (actualPrice != expectedPrice){
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Shopping cart price has been changed for a costumer");
             throw new MarketException(String.format("Sorry, the price cart price change\n" +
                     "The new Price is: %f\nThe old Price was: %f\n",actualPrice,expectedPrice));
         }
@@ -165,12 +167,15 @@ public class Market {
         // tries to pay if fails - return items to shops
         try {
             supplyID = this.supplyService.supply(address, LocalDateTime.now());
-
             this.paymentService.pay(paymentMethod);
+            EventLog eventLog = EventLog.getInstance();
+            eventLog.Log("Supply has been set up for the costumer +"+visitorName+".\n Payment has been done.");
         }catch (Exception e){
             try {
                 if (!supplyID.equals("")) {
                     supplyService.cancelSupply(supplyID);
+                    ErrorLog errorLog = ErrorLog.getInstance();
+                    errorLog.Log("Supply has been failed.");
                 }
             }catch (Exception ignored){}
             cart.cancelShopSave();
@@ -190,7 +195,6 @@ public class Market {
     public ShoppingCartFacade calculateShoppingCart(String visitorName) {
         ShoppingCart currentCart = userController.getVisitorsInMarket().get(visitorName).getCart();
         ShoppingCart updatedCart = validateCart(currentCart);
-
         ShoppingCartFacade cartFacade = new ShoppingCartFacade(updatedCart);
         return cartFacade;
     }
@@ -235,8 +239,9 @@ public class Market {
 
 
     public List<Item> getItemByName(String name) throws MarketException {
-        if (!itemByName.containsKey(name))
+        if (!itemByName.containsKey(name)) {
             throw new MarketException("no such item");
+        }
         List<Item> toReturn = new ArrayList<>();
         List<Integer> itemIds =  itemByName.get(name);
         for (int item : itemIds){

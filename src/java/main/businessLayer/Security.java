@@ -1,5 +1,6 @@
 package main.businessLayer;
 
+import main.resources.ErrorLog;
 import main.serviceLayer.FacadeObjects.MemberFacade;
 
 import java.util.HashMap;
@@ -35,10 +36,14 @@ public class Security {
     }
 
     private void validateName(String name) throws MarketException {
-        if (namesToLoginInfo.containsKey(name))
+        if (namesToLoginInfo.containsKey(name)) {
+            ErrorLog.getInstance().Log("User tried to register with taken name.");
             throw new MarketException("Name is already taken ,try to be a little more creative and choose another name. ");
-        if (name == null || name.equals(""))
+        }
+        if (name == null || name.equals("")){
+            ErrorLog.getInstance().Log("User tried to register with invalid name ( null or empty string).");
             throw new MarketException("Name can't be null or empty string");
+        }
     }
 
 

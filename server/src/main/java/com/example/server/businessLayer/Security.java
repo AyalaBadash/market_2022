@@ -1,5 +1,7 @@
 package com.example.server.businessLayer;
 
+import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
 
 import java.util.ArrayList;
@@ -67,16 +69,24 @@ public class Security {
 
 
     public List<String> validatePassword(String userName, String userPassword) throws MarketException { //TODO specify exceptions
-        if (!namesToLoginInfo.containsKey(userName))
-            throw new MarketException ("No such user name in the system");
-        if (!namesToLoginInfo.get(userName).getPassword().equals(userPassword))
-            throw new MarketException ("Password mismatch");
+        if (!namesToLoginInfo.containsKey(userName)) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Non member visitor tried to log in.");
+            throw new MarketException("No such user name in the system");
+        }
+        if (!namesToLoginInfo.get(userName).getPassword().equals(userPassword)) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Member "+userName+" tried to log in but has password mismatch.");
+            throw new MarketException("Password mismatch");
+        }
         List<String> questions = new ArrayList<>();
         LoginCard card = namesToLoginInfo.get(userName);
         for (Map.Entry<String,String> entry : card.getQandA().entrySet())
         {
             questions.add(entry.getValue());
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("Prepared security questions for member.");
         return questions;
 
     }
@@ -84,8 +94,11 @@ public class Security {
     public void validateQuestions(String userName, List<String> answers) throws MarketException{
         LoginCard card = namesToLoginInfo.get(userName);
         Map<String, String> QsAndAns = card.getQandA();
-        if (answers.size()!=QsAndAns.size())
-            throw new MarketException ("Answers size different from questions size");
+        if (answers.size()!=QsAndAns.size()) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Member didnt gave number of answers equal to questions number");
+            throw new MarketException("Answers size different from questions size");
+        }
         int index = 0;
         for (Map.Entry<String,String> entry: QsAndAns.entrySet())
         {
