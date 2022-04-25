@@ -19,6 +19,8 @@ public class Item implements IHistory {
     private String name;
     private double price;
     private String info;
+    private int rank;
+    private int rankers;
     private Category category;
     private List<String> keywords;
     // TODO ID must be generated in market
@@ -31,6 +33,8 @@ public class Item implements IHistory {
         this.keywords = keywords;
         this.info = info;
         this.category = category;
+        rank= 1;
+        rankers=0;
     }
 
     public Item(ItemFacade it){
@@ -39,6 +43,9 @@ public class Item implements IHistory {
         this.price= it.getPrice();
         this.keywords= it.getKeywords();
         this.info= it.getInfo();
+        rank= it.getRank();
+        rankers=it.getRankers();
+        category=it.getCategory();
     }
     public String getInfo() {
         return info;
@@ -90,4 +97,10 @@ public class Item implements IHistory {
         return keywords;
     }
 
+    public void addRank(int rankN){
+        rank=((rank*rankers)+rankN)/(rankers+1);
+        rankers++;
+    }
+    public int getRank(){return rank;}
+    public int getRankers(){return rankers;}
 }

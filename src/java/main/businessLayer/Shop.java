@@ -2,6 +2,7 @@ package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.users.Member;
+import main.resources.EventLog;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 
 
@@ -16,7 +17,8 @@ public class Shop implements IHistory{
     private Map<Item, Double> itemsCurrentAmount;
     private boolean closed;
     private List<StringBuilder> purchaseHistory;
-
+    private int rank;
+    private int rankers;
 
     public Shop(String name) {
         this.shopName = name;
@@ -25,7 +27,9 @@ public class Shop implements IHistory{
         shopOwners = new HashMap<> (  );
         itemsCurrentAmount = new HashMap<>();
         this.closed = false;
-        purchaseHistory = new ArrayList<> (  );
+        purchaseHistory = new ArrayList<> ();
+        rank= 1;
+        rankers=0;
     }
 
 
@@ -188,7 +192,7 @@ public class Shop implements IHistory{
     // TODO need to calculate again - if doesn't match - exception
 
     public boolean isShopOwner(String memberName) {
-        throw new UnsupportedOperationException();
+        return shopOwners.containsKey(memberName);
     }
 
     public boolean isClosed() {
@@ -362,9 +366,11 @@ public class Shop implements IHistory{
             review.append ( String.format ("acquisition %d:\n %s", i, acquisition.toString () ));
             i++;
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A user recived the shop: "+this.shopName + " history.");
         return review;
     }
-
+  
     public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
         if(!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
@@ -377,4 +383,11 @@ public class Shop implements IHistory{
         itemsCurrentAmount.put ( addedItem, amount );
         return addedItem;
     }
+  
+    public void addRank(int rankN){
+        rank=((rank*rankers)+rankN)/(rankers+1);
+        rankers++;
+    }
+  
+    public int getRank(){return rank;}
 }

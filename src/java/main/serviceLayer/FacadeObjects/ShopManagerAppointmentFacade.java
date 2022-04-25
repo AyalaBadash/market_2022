@@ -5,8 +5,6 @@ import main.businessLayer.Appointment.Permissions.IPermission;
 import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
-
-import java.awt.geom.IllegalPathStateException;
 import java.util.ArrayList;
 import java.util.List;
 

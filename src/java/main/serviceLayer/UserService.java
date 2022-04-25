@@ -161,5 +161,7 @@ public class UserService {
             return new ResponseT<> ( e.getMessage () );
         }
     }
-
+    public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName) throws Exception {
+        return market.validateMember(userName,userPassword,visitorName);
+    }
 }

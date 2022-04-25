@@ -5,6 +5,7 @@ import main.businessLayer.Item;
 import main.businessLayer.MarketException;
 import main.businessLayer.ShoppingCart;
 import main.businessLayer.Appointment.Appointment;
+import main.resources.EventLog;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 
 import java.util.ArrayList;
@@ -72,6 +73,8 @@ public class Member {
             history.append ( String.format ( "purcase %d:\n%s", i, shoppingCart.getReview () ));
             i++;
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("Pulled "+this.getName()+" history");
         return history;
     }
 
