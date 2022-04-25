@@ -1,15 +1,15 @@
 package main.serviceLayer.FacadeObjects;
 
-import main.businessLayer.History;
+import main.businessLayer.ClosedShopsHistory;
 import main.businessLayer.users.Member;
 import main.businessLayer.users.SystemManager;
 
 public class SystemManagerFacade implements FacadeObject<SystemManager> {
 
     private Member member;
-    private History history;
+    private ClosedShopsHistory history;
 
-    public SystemManagerFacade(Member member, History history) {
+    public SystemManagerFacade(Member member, ClosedShopsHistory history) {
         this.member = member;
         this.history = history;
     }
@@ -22,12 +22,12 @@ public class SystemManagerFacade implements FacadeObject<SystemManager> {
         this.member = member;
     }
 
-    public History getHistory() {
+    public ClosedShopsHistory getHistory() {
         return history;
     }
 
-    public void setHistory(History history) {
-        this.history = history;
+    public void setHistory(ClosedShopsHistory closedShopsHistory) {
+        this.history = closedShopsHistory;
     }
 
     @Override

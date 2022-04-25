@@ -2,11 +2,11 @@ package main.businessLayer.users;
 
 
 import main.businessLayer.Market;
-import main.businessLayer.History;
+import main.businessLayer.ClosedShopsHistory;
 
 public class SystemManager  {
     private Member member;
-    private History history;
+    private ClosedShopsHistory history;
 
     public String getAllSystemPurchaseHistory(Market market) {
         return null;
@@ -26,7 +26,7 @@ public class SystemManager  {
         return member;
     }
 
-    public History getHistory() {
+    public ClosedShopsHistory getHistory() {
         return history;
     }
 }

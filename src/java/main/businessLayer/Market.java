@@ -14,7 +14,6 @@ import main.resources.PaymentMethod;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -73,20 +72,35 @@ public class Market {
     }
 
 
-
-    //TODO must check permission
-    public String getAllSystemPurchaseHistory() {
-        return null;
+    public StringBuilder getAllSystemPurchaseHistory(String memberName) throws MarketException {
+        if(!systemManagerName.equals ( memberName ))
+            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        StringBuilder history = new StringBuilder ( "Market history: \n" );
+        for ( Shop shop: shops.values () ){
+            history.append ( shop.getReview () );
+        }
+        return history;
     }
 
-    //TODO must check permission
-    public String getHistoryByShop(String shopName) {
-        return null;
+
+    public StringBuilder getHistoryByShop(String member, String shopName) throws MarketException {
+        if(!systemManagerName.equals ( member ))
+            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        Shop shop = shops.get ( shopName );
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in the market" );
+        return shop.getReview ();
     }
 
-    //TODO must check permission
-    public String getHistoryByMember(String memberName) {
-        return null;
+    public StringBuilder getHistoryByMember(String systemManagerName, String memberName) throws MarketException {
+        if(systemManagerName.equals ( this.systemManagerName ))
+            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        Member member = userController.getMember ( memberName );
+        if(member == null){
+            throw new MarketException ( "member does not exist" );
+        }
+        StringBuilder history = member.getPurchaseHistory();
+        return history;
     }
 
     public void register(String name, String password) throws MarketException {
@@ -137,6 +151,8 @@ public class Market {
             succeed = false;
         }
         if (succeed){
+            Member member = visitor.getMember ();
+            member.savePurchase(cart);
             cart.clear();
         }
     }
@@ -268,9 +284,7 @@ public class Market {
 
     public List<String> memberLogin(String userName, String userPassword, String visitorName) throws Exception{ //TODO -Check whick Exception
         Security security = Security.getInstance();
-        List<String> questions = security.validatePassword(userName,userPassword);
-        return null;
-
+        return security.validatePassword(userName,userPassword);
     }
 
     public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception{
@@ -337,7 +351,7 @@ public class Market {
             shops.remove(shopName);
             removeClosedShopItemsFromMarket(shopToClose);
             //TODO send Notification
-            History history = History.getInstance();
+            ClosedShopsHistory history = ClosedShopsHistory.getInstance();
             history.closeShop(shopToClose);
         }
     }
@@ -468,7 +482,7 @@ public class Market {
         ShoppingCart shoppingCart = userController.getVisitor ( visitorName ).getCart ();
         Shop curShop = shops.get ( shopName );
         if(curShop == null)
-            throw new MarketException ( "this shop does not exist in the narket" );
+            throw new MarketException ( "this shop does not exist in the market" );
         Item item = curShop.getItem (itemToInsert);
         if(item == null)
             throw new MarketException ( "this item does not exist in this shop" );
@@ -476,5 +490,12 @@ public class Market {
         if(curAmount < amount)
             throw new MarketException ( "the shop amount of this item is less then the wanted amount" );
         shoppingCart.addItem ( curShop, item, amount );
+    }
+
+    public StringBuilder getShopPurchaseHistory(String shopManagerName, String shopName) throws MarketException {
+        Shop shopToHistory = shops.get ( shopName );
+        if(shopToHistory == null)
+            throw new MarketException ( "shop does not exist in the market" );
+        return shopToHistory.getPurchaseHistory(shopManagerName);
     }
 }

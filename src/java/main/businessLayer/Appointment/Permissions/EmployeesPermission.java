@@ -14,4 +14,9 @@ public class EmployeesPermission extends IPermission<Map<String, Appointment>> {
     public Map<String, Appointment> apply(Shop relatedShop) {
         return relatedShop.getEmployees ();
     }
+
+    @Override
+    public boolean isPermission(String permission) {
+        return permission == name;
+    }
 }
