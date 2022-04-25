@@ -520,7 +520,7 @@ public class Market {
         Member appointed= userController.getMember(appointedShopOwner);
         Member appoint= userController.getMember(shopOwnerName);
         ShopManagerAppointment app= new ShopManagerAppointment(appointed,appoint,shop);
-        shop.addManager(app);
+        shop.addEmployee(app);
         appointed.addAppointmentToMe(app);
         return true;
     }
