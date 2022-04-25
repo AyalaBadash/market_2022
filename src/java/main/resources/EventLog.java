@@ -1,6 +1,5 @@
 package main.resources;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,20 +7,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class WarningLogger {
+public class EventLog {
     private Logger logger ;
     File loggerFile;
 
-    private static WarningLogger instance;
+    private static EventLog instance;
 
-    private WarningLogger(){
+    private EventLog(){
         logger = LogManager.getLogger("warning logger");
         loggerFile = new File(System.getProperty("user.dir")+"/myLog.txt");
     }
 
-    public static WarningLogger getInstance() {
+    public static EventLog getInstance() {
         if (instance == null)
-            instance = new WarningLogger();
+            instance = new EventLog();
         return instance;
     }
 
@@ -34,5 +33,4 @@ public class WarningLogger {
             throw new RuntimeException(e);
         }
     }
-
 }

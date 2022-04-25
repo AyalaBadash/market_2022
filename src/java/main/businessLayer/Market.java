@@ -8,6 +8,8 @@ import main.businessLayer.ExternalServices.ProductsSupplyService;
 import main.businessLayer.users.Member;
 import main.businessLayer.users.UserController;
 import main.businessLayer.users.Visitor;
+import main.resources.ErrorLog;
+import main.resources.EventLog;
 import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.PaymentMethod;
@@ -63,40 +65,63 @@ public class Market {
     }
 
     public synchronized void firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) throws MarketException {
-        if (paymentService == null || supplyService == null)
-            throw new MarketException ( "market needs payment and supply services for initialize" );
+        if (paymentService == null || supplyService == null) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("A market initialization failed . Lack of payment / supply services ");
+            throw new MarketException("market needs payment and supply services for initialize");
+        }
         register ( userName, password );
         instance.systemManagerName = userName;
         instance.paymentService = paymentService;
         instance.supplyService = supplyService;
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A market has been initialized successfully");
+
     }
 
 
     public StringBuilder getAllSystemPurchaseHistory(String memberName) throws MarketException {
-        if(!systemManagerName.equals ( memberName ))
-            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        if(!systemManagerName.equals ( memberName )) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Member who is not the system manager tried to access system purchase history");
+            throw new MarketException("member is not a system manager so is not authorized to get th information");
+        }
         StringBuilder history = new StringBuilder ( "Market history: \n" );
         for ( Shop shop: shops.values () ){
             history.append ( shop.getReview () );
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("System manager got purchase history");
         return history;
     }
 
 
     public StringBuilder getHistoryByShop(String member, String shopName) throws MarketException {
-        if(!systemManagerName.equals ( member ))
-            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        if(!systemManagerName.equals ( member )) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Member who is not the system manager tried to access system purchase history");
+            throw new MarketException("member is not a system manager so is not authorized to get th information");
+        }
         Shop shop = shops.get ( shopName );
-        if(shop == null)
-            throw new MarketException ( "shop does not exist in the market" );
+        if(shop == null) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("User tried to get shop history for a non exiting shop");
+            throw new MarketException("shop does not exist in the market");
+        }
         return shop.getReview ();
     }
 
     public StringBuilder getHistoryByMember(String systemManagerName, String memberName) throws MarketException {
-        if(systemManagerName.equals ( this.systemManagerName ))
+        if(systemManagerName.equals ( this.systemManagerName )){
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Member who is not the system manager tried to access system purchase history");
             throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        }
+
         Member member = userController.getMember ( memberName );
         if(member == null){
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Tried to get history for a non existing member");
             throw new MarketException ( "member does not exist" );
         }
         StringBuilder history = member.getPurchaseHistory();
@@ -107,7 +132,8 @@ public class Market {
         Security security = Security.getInstance();
         security.validateRegister(name,password);
         userController.register(name);
-
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A new user registered , welcome "+name);
     }
 
     public Shop getShopByName(String shopName) {

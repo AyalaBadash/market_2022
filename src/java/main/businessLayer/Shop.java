@@ -4,6 +4,7 @@ import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.users.Member;
+import main.resources.EventLog;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 
 
@@ -354,6 +355,8 @@ public class Shop implements IHistory{
             review.append ( String.format ("acquisition %d:\n %s", i, acquisition.toString () ));
             i++;
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A user recived the shop: "+this.shopName + " history.");
         return review;
     }
 }
