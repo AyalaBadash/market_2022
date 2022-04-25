@@ -71,12 +71,11 @@ public class ShoppingBasket implements IHistory {
         // TODO check if needed.
     }
 
-    public boolean updateQuantity(int amount, Item itemFacade) throws MarketException {
+    public void updateQuantity(int amount, Item itemFacade) throws MarketException {
         if(!items.containsKey(itemFacade)){
             throw new MarketException("Item is not in cart. cannot update amount");
         }
         items.remove(itemFacade);
         items.put(itemFacade, Double.valueOf(amount));
-        return true;
     }
 }

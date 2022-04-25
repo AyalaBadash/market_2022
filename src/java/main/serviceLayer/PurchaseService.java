@@ -39,18 +39,7 @@ public class PurchaseService {
 
 
     public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) {
-       try{
-          if(market.editCart(amount, itemFacade, shopName, visitorName)){
-              return new Response();
-          }
-          else{
-              return new Response("Failed to edit item amount");
-          }
-       }
-       catch (Exception e){
-
-           return new Response(e.getMessage());
-       }
+        return null;
     }
 
 

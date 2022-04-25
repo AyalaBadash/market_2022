@@ -418,7 +418,6 @@ public class Market {
             itemByName.get(toAdd.getName()).add(toAdd.getID());
         }
     }
-
     public Response setItemCurrentAmount(ItemFacade facadeItem, int amount, String shopName) {
             Shop shop = shops.get(shopName);
             Item item = facadeItem.toBusinessObject();
@@ -492,12 +491,15 @@ public class Market {
         shoppingCart.addItem ( curShop, item, amount );
     }
 
+
+
     public StringBuilder getShopPurchaseHistory(String shopManagerName, String shopName) throws MarketException {
         Shop shopToHistory = shops.get ( shopName );
         if(shopToHistory == null)
             throw new MarketException ( "shop does not exist in the market" );
         return shopToHistory.getPurchaseHistory(shopManagerName);
     }
+
 
     public boolean appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
         if(!shops.containsKey(shopName)){
@@ -520,7 +522,7 @@ public class Market {
         Member appointed= userController.getMember(appointedShopOwner);
         Member appoint= userController.getMember(shopOwnerName);
         ShopManagerAppointment app= new ShopManagerAppointment(appointed,appoint,shop);
-        shop.addManager(app);
+        shop.addEmployee(app);
         appointed.addAppointmentToMe(app);
         return true;
     }
@@ -534,3 +536,5 @@ public class Market {
         return mem.updateAmountInCart(amount, itemFacade,shopName);
     }
 }
+
+

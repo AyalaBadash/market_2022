@@ -91,12 +91,7 @@ public class UserService {
         Response toReturn;
         try {
             toReturn = new Response();
-            if(market.appointShopOwner(shopOwnerName,appointedShopOwner,shopName)){
-            }
-            else{
-                toReturn = new Response("Failed to make shop manager appointment");
-            }
-
+            market.appointShopOwner(shopOwnerName,appointedShopOwner,shopName);
         } catch (Exception e) {
             toReturn = new Response(e.getMessage());
         }
@@ -104,16 +99,11 @@ public class UserService {
     }
 
 
-    public Response appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName) {
+    public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
         Response toReturn;
         try {
             toReturn = new Response();
-            if(market.appointShopManager(shopOwnerName,appointedShopOwner,shopName)){
-            }
-            else{
-                toReturn = new Response("Failed to make shop manager appointment");
-            }
-
+            market.appointShopManager(shopOwnerName,appointedShopManager,shopName);
         } catch (Exception e) {
             toReturn = new Response(e.getMessage());
         }
