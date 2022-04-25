@@ -21,9 +21,10 @@ public class ShoppingBasket implements IHistory {
             Item item = itemToAmount.getKey();
             Double amount = itemToAmount.getValue();
             if (amount > 0) {
-                review.append(String.format("%s X %f\n", item.getReview(), amount));
+                review.append(String.format("%s, amount: %f\n", item.getReview(), amount));
             }
         }
+        review.append ( String.format ( "total price: %f", price ));
         return review;
     }
 

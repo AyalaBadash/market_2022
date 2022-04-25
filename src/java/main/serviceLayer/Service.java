@@ -196,7 +196,7 @@ public class Service implements IService {
     }
 
     @Override
-    public Response appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName) {
+    public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
         return null;
     }
 
@@ -243,22 +243,22 @@ public class Service implements IService {
 
     @Override
     public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName) {
-        return null;
+        return marketService.getShopPurchaseHistory ( shopManagerName, shopName );
     }
 
     @Override
-    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName) {
-        return null;
+    public ResponseT<String> getAllSystemPurchaseHistory(String systemManagerName) {
+        return marketService.getAllSystemPurchaseHistory ( systemManagerName );
     }
 
     @Override
-    public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName) {
-        return null;
+    public ResponseT<String> getHistoryByShop(String systemManagerName, String shopName) {
+        return marketService.getHistoryByShop ( systemManagerName, shopName );
     }
 
     @Override
-    public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
-        return null;
+    public ResponseT<String> getHistoryByMember(String systemManagerName, String memberName) {
+        return marketService.getHistoryByMember ( systemManagerName, memberName );
     }
 
 

@@ -8,7 +8,7 @@ import main.serviceLayer.FacadeObjects.ItemFacade;
 
 import java.util.*;
 
-public class Shop {
+public class Shop implements IHistory{
     // TODO must be unique
     private String shopName;
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
@@ -16,6 +16,7 @@ public class Shop {
     private Map<String, Appointment> shopOwners;     //<name, appointment>
     private Map<Item, Double> itemsCurrentAmount;
     private boolean closed;
+    private List<StringBuilder> purchaseHistory;
 
 
     public Shop(String name) {
@@ -25,6 +26,7 @@ public class Shop {
         shopOwners = new HashMap<> (  );
         itemsCurrentAmount = new HashMap<>();
         this.closed = false;
+        purchaseHistory = new ArrayList<> (  );
     }
 
 
@@ -150,6 +152,7 @@ public class Shop {
             Double newAmount = this.itemsCurrentAmount.get(currItem) - itemAmount.getValue();
             this.itemsCurrentAmount.put(currItem, newAmount);
         }
+        purchaseHistory.add ( shoppingBasket.getReview () );
         return calculateBasket(shoppingBasket);
     }
 
@@ -249,7 +252,6 @@ public class Shop {
     }
 
     private boolean isEmployee(String memberName){
-        boolean hasPermission = false;
         for (Map.Entry<String, Appointment> appointment : shopManagers.entrySet()) {
             if (appointment.getValue().getAppointed().getName().equals(memberName)) {
                 return true;
@@ -332,5 +334,33 @@ public class Shop {
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         ShopOwnerAppointment appointment = new ShopOwnerAppointment ( appointedShopOwner, shopOwner, this, false);
         addEmployee ( appointment );
+
+    public boolean isManager(String shopManagerName) {
+        return shopManagers.get ( shopManagerName ) != null;
+    }
+
+    public boolean hasPermission(String shopManagerName, String permission) {
+        if(shopOwners.get ( shopManagerName ) != null)
+            return true;
+        if(shopManagers.get ( shopManagerName ) == null)
+            return false;
+        return shopManagers.get ( shopManagerName ).hasPermission(permission);
+    }
+
+    public StringBuilder getPurchaseHistory(String shopManagerName) throws MarketException {
+        if(!hasPermission(shopManagerName, "get_purchase_history"))
+            throw new MarketException ( shopManagerName + " is not authorized to see shop purchase history" );
+        return getReview ();
+    }
+
+    @Override
+    public StringBuilder getReview() {
+        StringBuilder review = new StringBuilder ( "Shop name: " + shopName + "\n" );
+        int i = 1;
+        for ( StringBuilder acquisition : purchaseHistory ){
+            review.append ( String.format ("acquisition %d:\n %s", i, acquisition.toString () ));
+            i++;
+        }
+        return review;
     }
 }

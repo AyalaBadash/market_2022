@@ -219,24 +219,60 @@ public class MarketService {
         return toReturn;
     }
 
-
+    /**
+     * relevant to shop manager
+     * @param shopManagerName
+     * @param shopName
+     * @return
+     */
     public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName) {
-        return null;
+        try {
+            String history = market.getShopPurchaseHistory(shopManagerName, shopName).toString ();
+            return new ResponseT<> ( history );
+        } catch (MarketException e){
+            return new ResponseT<> ( e.getMessage () );
+        }
     }
 
 
-    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName) {
-        return null;
+    /**
+     * relevant to system manager
+     * @param systemManagerName
+     * @return
+     */
+    public ResponseT<String> getAllSystemPurchaseHistory(String systemManagerName) {
+        try {
+            String history = market.getAllSystemPurchaseHistory (systemManagerName).toString ();
+            return new ResponseT<> ( history );
+        }catch (MarketException e){
+            return new ResponseT<> ( e.getMessage () );
+        }
     }
 
 
-    public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName) {
-        return null;
+    /**
+     * relevant to system manager
+     * @param systemManagerName
+     * @param shopName
+     * @return
+     */
+    public ResponseT<String> getHistoryByShop(String systemManagerName, String shopName) {
+        try {
+            String history = market.getHistoryByShop ( systemManagerName, shopName ).toString ();
+            return new ResponseT<> ( history );
+        } catch (MarketException e) {
+           return new ResponseT<> ( e.getMessage () ) ;
+        }
     }
 
 
-    public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
-        return null;
+    public ResponseT<String> getHistoryByMember(String systemManagerName, String memberName) {
+        try {
+            String history = market.getHistoryByMember ( systemManagerName, memberName ).toString ();
+            return new ResponseT<> ( history );
+        } catch (MarketException e){
+            return new ResponseT<> ( e.getMessage () );
+        }
     }
 
     public ResponseT<ShopFacade> getShopInfo(String member, String shopName) {

@@ -3,19 +3,19 @@ package main.businessLayer;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class History {
+public class ClosedShopsHistory {
     private List<Shop> closedShops;
     private StringBuilder overallHistory;
-    private static History instance;
+    private static ClosedShopsHistory instance;
 
-    private History(){
+    private ClosedShopsHistory(){
         this.closedShops = new CopyOnWriteArrayList<>();
         this.overallHistory = new StringBuilder();
     }
 
-    public synchronized static History getInstance(){
+    public synchronized static ClosedShopsHistory getInstance(){
         if (instance == null){
-            instance =  new History();
+            instance =  new ClosedShopsHistory ();
         }
         return instance;
     }

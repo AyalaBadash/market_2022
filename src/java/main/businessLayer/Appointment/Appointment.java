@@ -82,4 +82,12 @@ public abstract class Appointment {
             throw new MarketException("only shop owners and founders can get close shop info");
         return relatedShop;
     }
+
+    public boolean hasPermission(String permission) {
+        for( IPermission p : permissions ){
+            if (p.isPermission ( permission ))
+                return true;
+        }
+        return false;
+    }
 }

@@ -12,6 +12,8 @@ public abstract class IPermission<T> {
 
     public abstract T apply(Shop relatedShop);
 
+    public abstract boolean isPermission(String permission);
+
     public boolean equals(Object o){
         if (o.getClass()==this.getClass())
             return (((IPermission) o).name).equals(this.name);
