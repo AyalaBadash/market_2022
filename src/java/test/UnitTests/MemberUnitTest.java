@@ -25,7 +25,6 @@ import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
 public class MemberUnitTest {
 
-    //TODO IMPLEMENT OPEN SHOP
 
     Visitor visitor;
     UserController userController;
@@ -65,8 +64,6 @@ public class MemberUnitTest {
         Mockito.when(visitor.getName()).thenCallRealMethod();
         ReflectionTestUtils.setField ( market, "shops", shops );
         ReflectionTestUtils.setField ( member, "myAppointments", apps );
-
-
     }
 
     @Test
