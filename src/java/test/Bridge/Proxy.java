@@ -102,7 +102,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, String visitorName) {
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) {
         return null;
     }
 
@@ -143,7 +143,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response setItemCurrentAmount(ItemFacade item, int amount, String shopName) {
+    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         return null;
     }
 

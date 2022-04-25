@@ -311,12 +311,12 @@ public class Market {
         return temp;
     }
 
-    public List<String> memberLogin(String userName, String userPassword, String visitorName) throws Exception{ //TODO -Check whick Exception
+    public List<String> memberLogin(String userName, String userPassword, String visitorName) throws MarketException{ //TODO -Check whick Exception
         Security security = Security.getInstance();
         return security.validatePassword(userName,userPassword);
     }
 
-    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception{
+    public MemberFacade validateSecurityQuestions(String userName, List<String> answers) throws MarketException{
         Security security = Security.getInstance();
         security.validateQuestions(userName,answers);
         Member member =  userController.getMembers().get(userName);
@@ -343,7 +343,7 @@ public class Market {
             //appointmentsFacades.add(null);//TODO
         }
         userController.finishLogin(userName);
-        return new ResponseT<MemberFacade>(new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades));
+        return new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades);
     }
 
 
@@ -447,21 +447,18 @@ public class Market {
         itemByName.get(itemToDelete.getName()).remove(itemToDelete.getID());
     }
 
-    public Throwable addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
-                                   List<String> keywords, int amount, String shopName) throws MarketException {
+
+    public void addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
+                              List<String> keywords, int amount, String shopName) throws MarketException {
         Shop shop = shops.get(shopName);
-        //Check if user indeed is the shop owner
-        if(!shop.isShopOwner(shopOwnerName))
-        {
-            throw new MarketException(shopOwnerName+" is not "+ shopName+ " owner . adding "+itemName + " from shop has failed.");
-        }
-        else //we can add item
-        {
-            Item toAdd = new Item(nextItemID,itemName,price,info);
-            shop.addItem(toAdd);
-            updateMarketOnAddedItem(toAdd,shopName);
-        }
-        return null;
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in the market" );
+        Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID );
+        nextItemID++;
+        allItemsInMarketToShop.put ( nextItemID- 1, shopName );
+        if(itemByName.get ( itemName ) == null)
+            itemByName.put ( itemName, new ArrayList<> (  ));
+        itemByName.get ( itemName ).add ( nextItemID - 1 );
     }
 
     private void updateMarketOnAddedItem(Item toAdd,String shopName) {
@@ -477,16 +474,21 @@ public class Market {
         }
     }
 
-    public Response setItemCurrentAmount(ItemFacade facadeItem, int amount, String shopName) {
-            Shop shop = shops.get(shopName);
-            Item item = facadeItem.toBusinessObject();
-            shop.setItemAmount(item,amount);
-            return new Response();
+    //TODO not response!!
+    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade facadeItem, double amount, String shopName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if(shop == null){
+            throw new MarketException ( "shop does not exist in system" );
+        }
+        Item item = new Item ( facadeItem );
+        shop.setItemAmount(shopOwnerName,item,amount);
+        return new Response();
     }
 
     public String memberLogout(String member) throws MarketException {
         return userController.memberLogout(member);
     }
+    //TODO not response!
     public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member)
     {
         ResponseT<Boolean> responseT;
@@ -576,7 +578,7 @@ public class Market {
 
     public boolean appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
         if(!shops.containsKey(shopName)){
-            throw new MarketException("shop does not exists");
+            throw new MarketException("shop does not exists in the market");
         }
         Shop shop = shops.get(shopName);
         Member appointed= userController.getMember(appointedShopOwner);
@@ -596,8 +598,8 @@ public class Market {
         return mem.updateAmountInCart(amount, itemFacade,shopName);
     }
 
-
-    public void editItemStock(String memberName, String name, String shopName, int i) {
-        throw new UnsupportedOperationException();
+    //TODO
+    public void changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) throws MarketException {
+        throw new MarketException ( "" );
     }
 }

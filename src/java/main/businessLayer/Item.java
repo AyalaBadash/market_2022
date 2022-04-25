@@ -8,9 +8,11 @@ import java.util.List;
 public class Item implements IHistory {
 
     public enum Category {
+        general,
         fruit,
         meat,
-        //TODO complete
+        cellular,
+        electricity
     }
 
     private Integer ID;
@@ -22,15 +24,17 @@ public class Item implements IHistory {
     private Category category;
     private List<String> keywords;
     // TODO ID must be generated in market
-    public Item(Integer ID, String name, double price, String info,Category cat) {
+    public Item(Integer ID, String name, double price, String info, Category category, List<String> keywords) throws MarketException {
         this.ID = ID;
         this.name = name;
+        if(price < 0)
+            throw new MarketException ( "price has to be positive" );
         this.price = price;
-        this.keywords = new CopyOnWriteArrayList<>();
+        this.keywords = keywords;
         this.info = info;
+        this.category = category;
         rank= 1;
         rankers=0;
-        category=cat;
     }
 
     public Item(ItemFacade it){
