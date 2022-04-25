@@ -11,12 +11,12 @@ import java.util.List;
 
 public interface IService {
     //  ************************** System UseCases *******************************//
-
-    /**
-     * to be done in the version with the DB
-     * @return
-     */
-    public Response initMarket();
+//
+//    /**
+//     * to be done in the version with the DB
+//     * @return
+//     */
+//    public Response initMarket();
 
 
     /**

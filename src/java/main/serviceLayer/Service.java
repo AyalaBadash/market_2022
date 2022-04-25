@@ -27,11 +27,11 @@ public class Service implements IService {
             service = new Service();
         return service;
     }
-
-    @Override
-    public Response initMarket() {
-        return null;
-    }
+    // TODO implement V2
+//    @Override
+//    public Response initMarket() {
+//        return null;
+//    }
 
     @Override
     public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
@@ -60,11 +60,12 @@ public class Service implements IService {
         return userService.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
 
+    // TODO implement V2
     @Override
     public ResponseT<List<ShopFacade>> getAllShops() {
         return null;
     }
-
+    // TODO implement V2
     @Override
     public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop) {
         return null;
@@ -97,17 +98,15 @@ public class Service implements IService {
 
     @Override
     public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
-        return null;
+        return purchaseService.addItemToShoppingCart(itemToInsert,amount,shopName,visitorName);
     }
-
     @Override
     public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName) {
-        return null;
+        return purchaseService.showShoppingCart(visitorName);
     }
-
     @Override
     public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) {
-        return null;
+        return purchaseService.editItemFromShoppingCart(amount, itemFacade, shopName, visitorName);
     }
 
     @Override
@@ -154,11 +153,12 @@ public class Service implements IService {
         return userService.logout(visitorName);
     }
 
+    // TODO implement
     @Override
     public Response openNewShop(String visitorName, String shopName) {
         return null;
     }
-
+    // TODO implement
     @Override
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
         return null;
@@ -175,6 +175,7 @@ public class Service implements IService {
         return marketService.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
     }
 
+    // TODO implement
     @Override
     public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName) {
         return null;
@@ -185,31 +186,32 @@ public class Service implements IService {
         return marketService.setItemCurrentAmount(item, amount, shopName);
     }
 
+    // TODO implement
     @Override
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
         return null;
     }
-
+    // TODO implement
     @Override
     public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
         return null;
     }
-
+    // TODO implement
     @Override
     public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
         return null;
     }
-
+    // TODO implement
     @Override
     public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName) {
         return null;
     }
-
+    // TODO implement
     @Override
     public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName) {
         return null;
     }
-
+    // TODO implement
     @Override
     public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName) {
         return null;

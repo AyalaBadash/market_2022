@@ -80,13 +80,7 @@ public class Member {
     }
 
     public boolean updateAmountInCart(int amount, ItemFacade itemFacade, String shopName) throws MarketException {
-        try
-        {
-            myCart.editQuantity(amount,new Item(itemFacade),shopName);
-            return true;
-        }
-        catch(Exception e){
-            throw e;
-        }
+        myCart.editQuantity(amount,new Item(itemFacade),shopName);
+        return true;
     }
 }

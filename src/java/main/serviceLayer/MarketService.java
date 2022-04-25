@@ -37,7 +37,7 @@ public class MarketService {
 
 
     // TODO returns only open shops
-
+    // TODO implement
     /**
      *
      * @return only open shops
@@ -45,7 +45,7 @@ public class MarketService {
     public ResponseT<List<ShopFacade>> getAllShops() {
         return null;
     }
-
+    // TODO implement
     public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop) {
         return null;
     }
@@ -139,7 +139,7 @@ public class MarketService {
             return new Response ( marketException.getMessage () );
         }
     }
-
+    // TODO implement
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
         return null;
     }
@@ -179,6 +179,7 @@ public class MarketService {
         return market.setItemCurrentAmount(item,amount,shopName);
     }
     // TODO need to check users are updated
+    // TODO implement
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
         return null;
     }
@@ -195,7 +196,7 @@ public class MarketService {
         }
          return response;
     }
-
+    // TODO implement
     public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName){return null;}
 
     // TODO need to remove casting

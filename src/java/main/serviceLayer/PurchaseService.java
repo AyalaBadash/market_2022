@@ -32,17 +32,22 @@ public class PurchaseService {
         }
     }
 
-
+    // TODO implement
     public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName) {
         return null;
-    }
 
+    }
 
     public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) {
-        return null;
+        try{
+            market.editCart(amount, itemFacade, shopName, visitorName);
+            return new Response();
+        }catch (MarketException e){
+            return new Response(e.getMessage());
+        }
     }
 
-
+    // TODO implement
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
         return null;
     }

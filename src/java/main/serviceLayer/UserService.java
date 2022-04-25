@@ -68,6 +68,7 @@ public class UserService {
     */
     }
 
+    // TODO implement
     private ResponseT<List<String>> memberLoginGetQuestions(String memberName, String password)
     {
         return null;
@@ -110,17 +111,17 @@ public class UserService {
         return toReturn;
     }
 
-
+    // TODO implement
     public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName) {
         return null;
     }
 
-
+    // TODO implement
     public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName) {
         return null;
     }
 
-
+    // TODO implement
     public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName) {
         return null;
     }

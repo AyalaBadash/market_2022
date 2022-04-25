@@ -12,10 +12,10 @@ import main.resources.PaymentMethod;
 import java.util.List;
 
 public class Proxy implements IService {
-    @Override
-    public Response initMarket() {
-        return null;
-    }
+//    @Override
+//    public Response initMarket() {
+//        return null;
+//    }
 
     @Override
     public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
