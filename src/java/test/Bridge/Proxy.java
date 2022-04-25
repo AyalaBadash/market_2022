@@ -77,7 +77,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName, String visitorName) {
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
         return null;
     }
 
