@@ -180,7 +180,7 @@ public class Shop implements IHistory{
     // TODO need to calculate again - if doesn't match - exception
 
     public boolean isShopOwner(String memberName) {
-        throw new UnsupportedOperationException();
+        return shopOwners.containsKey(memberName);
     }
 
     public boolean isClosed() {

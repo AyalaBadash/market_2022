@@ -37,6 +37,7 @@ public class UserController {
         this.visitorsInMarket.put(res.getName(),res);
         return res;
     }
+
     public Member memberLogin(String userName, String userPassword){
         return null;
     }

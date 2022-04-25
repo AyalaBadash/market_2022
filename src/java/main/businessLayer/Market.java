@@ -111,7 +111,10 @@ public class Market {
     }
 
     public Shop getShopByName(String shopName) {
-        throw new UnsupportedOperationException();
+        if(!shops.containsKey(shopName)){
+            return null;
+        }
+        return shops.get(shopName);
     }
 
 
