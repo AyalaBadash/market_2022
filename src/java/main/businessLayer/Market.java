@@ -75,8 +75,14 @@ public class Market {
 
 
     //TODO must check permission
-    public String getAllSystemPurchaseHistory() {
-        return null;
+    public StringBuilder getAllSystemPurchaseHistory(String memberName) throws MarketException {
+        if(!systemManagerName.equals ( memberName ))
+            throw new MarketException ( "member is not a system manager so is not authorized to get th information." );
+        StringBuilder history = new StringBuilder ( "Market history: \n" );
+        for ( Shop shop: shops.values () ){
+            history.append ( shop.getReview () );
+        }
+        return history;
     }
 
     //TODO must check permission

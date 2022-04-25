@@ -243,12 +243,12 @@ public class Service implements IService {
 
     @Override
     public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName) {
-        return null;
+        return marketService.getShopPurchaseHistory ( shopManagerName, shopName );
     }
 
     @Override
-    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName) {
-        return null;
+    public ResponseT<String> getAllSystemPurchaseHistory(String systemManagerName) {
+        return marketService.getAllSystemPurchaseHistory ( systemManagerName );
     }
 
     @Override
