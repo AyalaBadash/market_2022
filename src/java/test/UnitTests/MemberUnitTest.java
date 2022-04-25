@@ -66,10 +66,10 @@ public class MemberUnitTest {
         ReflectionTestUtils.setField ( member, "myAppointments", apps );
     }
 
+    //TODO
     @Test
     @DisplayName("Member Unit Test - logout user good case")
     public void Logout() throws Exception {
-
 
         //good case
         market.register(memberName,memberPass);
@@ -80,9 +80,7 @@ public class MemberUnitTest {
         userController.memberLogout(memberName);
         Assertions.assertNull(visitor.getMember());
 
-
     }
-
 
     @Test
     @DisplayName("Member Unit Test - logout user bad case")
@@ -93,7 +91,9 @@ public class MemberUnitTest {
         visitor=market.guestLogin(false);
         Assertions.assertEquals(1, visitorsInMarket.size());
         Assertions.fail(userController.memberLogout(memberName));
+
     }
+
         @Test
     @DisplayName("Member Unit Test - open shop good case")
     public void OpenShop() throws Exception {

@@ -35,6 +35,8 @@ public class ShopOwnerUnitTest {
     List<Appointment> apps;
 
     Shop shop;
+
+    Map<Integer, Item> itemMap;
     Map<String, Shop> shops;
     String shopName;
 
@@ -55,6 +57,7 @@ public class ShopOwnerUnitTest {
         ReflectionTestUtils.setField ( market, "userController", userController );
         ReflectionTestUtils.setField ( market, "userController", userController );
         ReflectionTestUtils.setField ( userController, "members", members );
+        ReflectionTestUtils.setField ( shop, "itemMap", itemMap );
         ReflectionTestUtils.setField ( userController, "visitorsInMarket", visitorsInMarket );
         ReflectionTestUtils.setField ( visitor, "name", name );
         ReflectionTestUtils.setField ( visitor, "member", member );
@@ -78,10 +81,19 @@ public class ShopOwnerUnitTest {
     public void EditStock() throws Exception {
 
 
-        Item item= Mockito.mock(Item.class);
-      // market updateMarketOnAddedItem(Item toAdd,String shopName)
+        Item item= Mockito.mock(Item.class,CALLS_REAL_METHODS);
+        String itemName= "item name";
+        int amount =15 ;
+        int price = 10;
+        Item.Category cat= Item.Category.fruit;
+        ReflectionTestUtils.setField ( item, "name", itemName);
+        ReflectionTestUtils.setField ( item, "price", price );
+        ReflectionTestUtils.setField ( item, "price", price );
+        market.addItemToShop(memberName,item.getName(),item.getPrice(), cat,);
+        // market addItemToShop(String shopOwnerName,String itemName, double price,Item.Category category,String info,
+        //                              List<String> keywords, int amount, String shopName)
 
-     // market   removeItemFromShop(String shopOwnerName, String itemName, String shopName)
+        // market   removeItemFromShop(String shopOwnerName, String itemName, String shopName)
     }
 
     @Test
