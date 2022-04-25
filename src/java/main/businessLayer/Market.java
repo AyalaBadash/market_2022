@@ -36,6 +36,17 @@ public class Market {
     private static Market instance;
 
     // TODO need understand how to we want to handle error messages
+//    private Market(String system_manager, PaymentService paymentService, ProductsSupplyService supplyService) {
+//        this.shops = new ConcurrentHashMap<>();
+//        this.allItemsInMarketToShop = new ConcurrentHashMap<>();
+//        this.itemByName = new ConcurrentHashMap<>();
+//        this.userController = UserController.getInstance();
+//        nextItemID = 1;
+//        this.supplyService = supplyService;
+//        this.paymentService = paymentService;
+//        this.systemManagerName = system_manager;
+//    }
+
     private Market() {
         this.shops = new ConcurrentHashMap<>();
         this.allItemsInMarketToShop = new ConcurrentHashMap<>();
@@ -51,6 +62,17 @@ public class Market {
         }
         return instance;
     }
+
+    public synchronized void firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) throws MarketException {
+        if (paymentService == null || supplyService == null)
+            throw new MarketException ( "market needs payment and supply services for initialize" );
+        register ( userName, password );
+        instance.systemManagerName = userName;
+        instance.paymentService = paymentService;
+        instance.supplyService = supplyService;
+    }
+
+
 
     //TODO must check permission
     public String getAllSystemPurchaseHistory() {
