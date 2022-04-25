@@ -77,8 +77,8 @@ public class ShopOwnerUnitTest {
     //TODO PURCHASE HISTORY OF THE SHOP(SHOP OWNER)
 
     @Test
-    @DisplayName("Shop owner Unit Test - edit stock good cases")
-    public void EditStock() throws Exception {
+    @DisplayName("Shop owner Unit Test - add item good case")
+    public void AddItem() throws Exception {
 
 
         Item item= Mockito.mock(Item.class,CALLS_REAL_METHODS);
@@ -88,17 +88,66 @@ public class ShopOwnerUnitTest {
         Item.Category cat= Item.Category.fruit;
         ReflectionTestUtils.setField ( item, "name", itemName);
         ReflectionTestUtils.setField ( item, "price", price );
-        ReflectionTestUtils.setField ( item, "price", price );
-        market.addItemToShop(memberName,item.getName(),item.getPrice(), cat,);
-        // market addItemToShop(String shopOwnerName,String itemName, double price,Item.Category category,String info,
-        //                              List<String> keywords, int amount, String shopName)
+        ReflectionTestUtils.setField ( item, "category", cat );
+        ReflectionTestUtils.setField ( item, "amount", amount );
+        market.addItemToShop(memberName,item.getName(),item.getPrice(), cat ," ",new ArrayList<>(),amount,shopName);
+        Assertions.assertEquals(1,itemMap.size());
 
-        // market   removeItemFromShop(String shopOwnerName, String itemName, String shopName)
     }
 
     @Test
-    @DisplayName("Shop owner Unit Test - edit stock bad cases")
-    public void EditStockB() throws Exception {
+    @DisplayName("Shop owner Unit Test - add item good case")
+    public void RemoveItem() throws Exception {
 
+
+        Item item= Mockito.mock(Item.class,CALLS_REAL_METHODS);
+        String itemName= "item name";
+        int amount =15 ;
+        int price = 10;
+        Item.Category cat= Item.Category.fruit;
+        ReflectionTestUtils.setField ( item, "name", itemName);
+        ReflectionTestUtils.setField ( item, "price", price );
+        ReflectionTestUtils.setField ( item, "category", cat );
+        ReflectionTestUtils.setField ( item, "amount", amount );
+        market.addItemToShop(memberName,item.getName(),item.getPrice(), cat ," ",new ArrayList<>(),amount,shopName);
+        Assertions.assertEquals(1,itemMap.size());
+        market.removeItemFromShop(memberName,item.getName(),shopName);
+        Assertions.assertEquals(0,itemMap.size());
+    }
+    @Test
+    @DisplayName("Shop owner Unit Test - add item bad case.")
+    public void AddItemB() throws Exception {
+
+        Item item= Mockito.mock(Item.class,CALLS_REAL_METHODS);
+        String itemName= "item name";
+        int amount =15 ;
+        int price = 10;
+        Item.Category cat= Item.Category.fruit;
+        ReflectionTestUtils.setField ( item, "name", itemName);
+        ReflectionTestUtils.setField ( item, "price", price );
+        ReflectionTestUtils.setField ( item, "category", cat );
+        ReflectionTestUtils.setField ( item, "amount", amount );
+        Assertions.fail(market.addItemToShop(memberName,item.getName(),item.getPrice(), cat ," ",new ArrayList<>(),amount,"Shop who is not exists"));
+    }
+
+    @Test
+    @DisplayName("Shop owner Unit Test - add item good case")
+    public void RemoveItemB() throws Exception {
+
+
+        Item item= Mockito.mock(Item.class,CALLS_REAL_METHODS);
+        String itemName= "item name";
+        int amount =15 ;
+        int price = 10;
+        Item.Category cat= Item.Category.fruit;
+        ReflectionTestUtils.setField ( item, "name", itemName);
+        ReflectionTestUtils.setField ( item, "price", price );
+        ReflectionTestUtils.setField ( item, "category", cat );
+        ReflectionTestUtils.setField ( item, "amount", amount );
+        market.addItemToShop(memberName,item.getName(),item.getPrice(), cat ," ",new ArrayList<>(),amount,shopName);
+        Assertions.assertEquals(1,itemMap.size());
+
+
+        // market   removeItemFromShop(String shopOwnerName, String itemName, String shopName)
     }
     }

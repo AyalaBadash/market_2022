@@ -447,8 +447,8 @@ public class Market {
         itemByName.get(itemToDelete.getName()).remove(itemToDelete.getID());
     }
 
-    public void addItemToShop(String shopOwnerName,String itemName, double price,Item.Category category,String info,
-                              List<String> keywords, int amount, String shopName) throws MarketException {
+    public Throwable addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
+                                   List<String> keywords, int amount, String shopName) throws MarketException {
         Shop shop = shops.get(shopName);
         //Check if user indeed is the shop owner
         if(!shop.isShopOwner(shopOwnerName))
@@ -461,6 +461,7 @@ public class Market {
             shop.addItem(toAdd);
             updateMarketOnAddedItem(toAdd,shopName);
         }
+        return null;
     }
 
     private void updateMarketOnAddedItem(Item toAdd,String shopName) {
