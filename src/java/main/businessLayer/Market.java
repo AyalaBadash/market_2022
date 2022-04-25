@@ -73,11 +73,9 @@ public class Market {
     }
 
 
-
-    //TODO must check permission
     public StringBuilder getAllSystemPurchaseHistory(String memberName) throws MarketException {
         if(!systemManagerName.equals ( memberName ))
-            throw new MarketException ( "member is not a system manager so is not authorized to get th information." );
+            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
         StringBuilder history = new StringBuilder ( "Market history: \n" );
         for ( Shop shop: shops.values () ){
             history.append ( shop.getReview () );
@@ -85,9 +83,14 @@ public class Market {
         return history;
     }
 
-    //TODO must check permission
-    public String getHistoryByShop(String shopName) {
-        return null;
+
+    public StringBuilder getHistoryByShop(String member, String shopName) throws MarketException {
+        if(!systemManagerName.equals ( member ))
+            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        Shop shop = shops.get ( shopName );
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in the market" );
+        return shop.getReview ();
     }
 
     //TODO must check permission

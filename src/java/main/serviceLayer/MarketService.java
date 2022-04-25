@@ -252,12 +252,17 @@ public class MarketService {
 
     /**
      * relevant to system manager
-     * @param SystemManagerName
+     * @param systemManagerName
      * @param shopName
      * @return
      */
-    public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName) {
-        return null;
+    public ResponseT<String> getHistoryByShop(String systemManagerName, String shopName) {
+        try {
+            String history = market.getHistoryByShop ( systemManagerName, shopName ).toString ();
+            return new ResponseT<> ( history );
+        } catch (MarketException e) {
+           return new ResponseT<> ( e.getMessage () ) ;
+        }
     }
 
 
