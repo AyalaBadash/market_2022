@@ -20,13 +20,19 @@ public class MarketService {
     }
 
     public synchronized static MarketService getInstance() {
-        if (marketService == null)
+        if (marketService == null){
             marketService = new MarketService();
+        }
         return marketService;
     }
 
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
-        return null;
+    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
+        try {
+            market.firstInitMarket ( paymentService, supplyService, userName, password );
+            return new Response (  );
+        } catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
 
 

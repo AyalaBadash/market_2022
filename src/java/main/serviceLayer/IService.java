@@ -13,17 +13,26 @@ public interface IService {
     //  ************************** System UseCases *******************************//
 
     /**
+     * to be done in the version with the DB
+     * @return
+     */
+    public Response initMarket();
+
+
+    /**
+     * for when there is no DB and need to create a new system manager - TODO has to run first!!!!
      * @param paymentService
      * @param supplyService
      * @param userName
      * @param password
      * @return
      */
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
-                               String userName, String password);
-
+    Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
+                             String userName, String password);
 
     // ************************** Visitor Use cases ******************************//
+
+
 
     /**
      * generates a unique name (temporary)

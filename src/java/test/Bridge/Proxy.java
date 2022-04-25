@@ -13,7 +13,12 @@ import java.util.List;
 
 public class Proxy implements IService {
     @Override
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
+    public Response initMarket() {
+        return null;
+    }
+
+    @Override
+    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
         return null;
     }
 

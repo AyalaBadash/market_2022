@@ -3,7 +3,6 @@ package main.serviceLayer;
 import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
-import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.PaymentMethod;
@@ -30,10 +29,15 @@ public class Service implements IService {
     }
 
     @Override
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
-                               String userName, String password) {
-        // TODO need to create a user and add as system manager
+    public Response initMarket() {
         return null;
+    }
+
+    @Override
+    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
+                                    String userName, String password) {
+        // TODO need to create a user and add as system manager
+        return marketService.firstInitMarket ( paymentService, supplyService,userName,password );
     }
 
     @Override
