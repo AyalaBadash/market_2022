@@ -347,6 +347,34 @@ public class Market {
     }
 
 
+    public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName) {
+        Member member =  userController.getMembers().get(userName);
+        List<Appointment> appointmentByMe = member.getAppointedByMe();
+        List<AppointmentFacade> appointmentFacadesByMe= new ArrayList<>();
+        for (Appointment appointment: appointmentByMe)
+        {
+            if (appointment.isOwner()){
+                ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment; //TODO - approve casting
+                ShopOwnerAppointmentFacade facade = new ShopOwnerAppointmentFacade(shopOwnerAppointment);
+                appointmentFacadesByMe.add(facade);
+            }
+            else {
+                ShopManagerAppointment shopManagerAppointment = (ShopManagerAppointment) appointment;
+                ShopManagerAppointmentFacade facade = new ShopManagerAppointmentFacade(shopManagerAppointment);
+                appointmentFacadesByMe.add(facade);
+            }
+
+        }
+        List<Appointment> appointments = member.getAppointedByMe();
+        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
+        for (Appointment appointment: appointments)
+        {
+            //appointmentsFacades.add(null);//TODO
+        }
+        userController.finishLogin(userName);
+        return new ResponseT<MemberFacade>(new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades));
+
+    }
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         userController.exitSystem(visitorName);
@@ -477,7 +505,10 @@ public class Market {
     public Visitor guestLogin() {
         return userController.guestLogin();
     }
-
+    //for testing. cannot use the security class.
+    public Visitor guestLogin(boolean val) {
+        return userController.guestLogin(val);
+    }
     public Map<String, Appointment> getShopEmployeesInfo(String shopManagerName, String shopName) throws MarketException {
         if (!shops.containsKey(shopName))
             throw new MarketException("shop does not exist");
@@ -490,7 +521,7 @@ public class Market {
         return shops.get(shopName).getShopInfo(member);
     }
 
-    public void openNewShop(String visitorName, String shopName) throws MarketException {
+    public boolean openNewShop(String visitorName, String shopName) throws MarketException {
         Member curMember;
         if(userController.isMember(visitorName)){
             curMember = userController.getMember (visitorName);
@@ -504,6 +535,7 @@ public class Market {
                 throw new MarketException ( "Shop with the same shop name is already exists" );
         } else
             throw new MarketException ( "You are not a member. Only members can open a new shop in the market" );
+        return true;
     }
 
 
@@ -562,4 +594,6 @@ public class Market {
         }
         return mem.updateAmountInCart(amount, itemFacade,shopName);
     }
+
+
 }

@@ -134,6 +134,29 @@ public class Service implements IService {
         }
     }
 
+    @Override
+    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, String visitorName,boolean val) {
+        try {
+            return logMemberNoQuestions(userName,userPassword,visitorName);
+        }
+        catch (Exception e){
+            //TODO - What to do here
+            return null; //TODO change here
+        }
+    }
+
+    private ResponseT<MemberFacade> logMemberNoQuestions(String userName, String userPassword, String visitorName) {
+        try{
+            return userService.validateMember(userName,userPassword,visitorName);
+        }
+        catch (Exception e)
+        {
+            //TODO
+            return null; //TODO change here
+        }
+
+    }
+
     private ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) {
 
         try{
