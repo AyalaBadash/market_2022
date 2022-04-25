@@ -101,4 +101,12 @@ public class UserController {
         visitorsInMarket.put(userName,newVisitorMember);
         return newVisitorMember.getMember();
     }
+
+    public boolean isMember(String visitorName) {
+        return members.get ( visitorName ) != null;
+    }
+
+    public Member getMember(String visitorName) {
+        return members.get ( visitorName );
+    }
 }

@@ -3,7 +3,6 @@ package main.serviceLayer;
 import main.businessLayer.Item;
 import main.businessLayer.ExternalServices.PaymentService;
 import main.businessLayer.ExternalServices.ProductsSupplyService;
-import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.PaymentMethod;
@@ -30,10 +29,15 @@ public class Service implements IService {
     }
 
     @Override
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
-                               String userName, String password) {
-        // TODO need to create a user and add as system manager
+    public Response initMarket() {
         return null;
+    }
+
+    @Override
+    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
+                                    String userName, String password) {
+        // TODO need to create a user and add as system manager
+        return marketService.firstInitMarket ( paymentService, supplyService,userName,password );
     }
 
     @Override
@@ -67,32 +71,32 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByName(String name) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByName(String name) {
+        return marketService.searchProductByName(name);
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByCategory(Item.Category category) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category) {
+        return marketService.searchProductByCategory(category);
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByKeyword(String keyWord) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord) {
+        return marketService.searchProductByKeyword(keyWord);
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice) {
-        return null;
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice) {
+        return marketService.filterItemByPrice(items, minPrice, maxPrice);
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category) {
-        return null;
+    public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category) {
+        return marketService.filterItemByCategory(items, category);
     }
 
     @Override
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName, String visitorName) {
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
         return null;
     }
 

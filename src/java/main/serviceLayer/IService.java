@@ -13,17 +13,26 @@ public interface IService {
     //  ************************** System UseCases *******************************//
 
     /**
+     * to be done in the version with the DB
+     * @return
+     */
+    public Response initMarket();
+
+
+    /**
+     * for when there is no DB and need to create a new system manager - TODO has to run first!!!!
      * @param paymentService
      * @param supplyService
      * @param userName
      * @param password
      * @return
      */
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService,
-                               String userName, String password);
-
+    Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
+                             String userName, String password);
 
     // ************************** Visitor Use cases ******************************//
+
+
 
     /**
      * generates a unique name (temporary)
@@ -70,32 +79,32 @@ public interface IService {
      * @param name
      * @return
      */
-    public ResponseT<ItemFacade> searchProductByName(String name);
+    public ResponseT<List<ItemFacade>> searchProductByName(String name);
 
     /**
      * @param category
      * @return
      */
-    public ResponseT<ItemFacade> searchProductByCategory(Item.Category category);
+    public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category);
 
     /**
      * @param keyWord
      * @return
      */
-    public ResponseT<ItemFacade> searchProductByKeyword(String keyWord);
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord);
 
     /**
      * @param minPrice
      * @param maxPrice
      * @return
      */
-    public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice);
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice);
 
     /**
      * @param category
      * @return
      */
-    public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category);
+    public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category);
 
     /**
      * @param itemToInsert
@@ -104,7 +113,7 @@ public interface IService {
      * @param visitorName
      * @return
      */
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName,
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName,
                                           String visitorName);
 
     /**

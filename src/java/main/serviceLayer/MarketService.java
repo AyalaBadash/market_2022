@@ -20,13 +20,19 @@ public class MarketService {
     }
 
     public synchronized static MarketService getInstance() {
-        if (marketService == null)
+        if (marketService == null){
             marketService = new MarketService();
+        }
         return marketService;
     }
 
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
-        return null;
+    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
+        try {
+            market.firstInitMarket ( paymentService, supplyService, userName, password );
+            return new Response (  );
+        } catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
 
 
@@ -44,29 +50,94 @@ public class MarketService {
         return null;
     }
 
-    public ResponseT<ItemFacade> searchProductByName(String name) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByName(String name) {
+        ResponseT<List<ItemFacade>> toReturn;
+        try {
+            List<Item> items = market.getItemByName(name);
+            List<ItemFacade> facadeItems = new ArrayList<>();
+            for (Item item : items){
+                facadeItems.add(new ItemFacade(item));
+            }
+            toReturn = new ResponseT<>(facadeItems);
+        } catch (Exception e) {
+            toReturn = new ResponseT<>(e.getMessage());
+        }
+        return toReturn;
     }
 
-    public ResponseT<ItemFacade> searchProductByCategory(Item.Category category) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category) {
+        ResponseT<List<ItemFacade>> toReturn;
+        try {
+            List<Item> items = market.getItemByCategory(category);
+            List<ItemFacade> facadeItems = new ArrayList<>();
+            for (Item item : items){
+                facadeItems.add(new ItemFacade(item));
+            }
+            toReturn = new ResponseT<>(facadeItems);
+        } catch (Exception e) {
+            toReturn = new ResponseT<>(e.getMessage());
+        }
+        return toReturn;
     }
 
-    public ResponseT<ItemFacade> searchProductByKeyword(String keyWord) {
-        return null;
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord) {
+        ResponseT<List<ItemFacade>> toReturn;
+        try {
+            List<Item> items = market.getItemsByKeyword(keyWord);
+            List<ItemFacade> facadeItems = new ArrayList<>();
+            for (Item item : items){
+                facadeItems.add(new ItemFacade(item));
+            }
+            toReturn = new ResponseT<>(facadeItems);
+        } catch (Exception e) {
+            toReturn = new ResponseT<>(e.getMessage());
+        }
+        return toReturn;
     }
 
-    public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice) {
-        return null;
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice) {
+        List<Item> businessItems = new ArrayList<>();
+        for (ItemFacade item : items)
+            businessItems.add(item.toBusinessObject());
+        ResponseT<List<ItemFacade>> toReturn;
+        try {
+            List<Item> filteredItems = market.filterItemsByPrice(businessItems, minPrice, maxPrice);
+            List<ItemFacade> facadeItems = new ArrayList<>();
+            for (Item item : filteredItems){
+                facadeItems.add(new ItemFacade(item));
+            }
+            toReturn = new ResponseT<>(facadeItems);
+        } catch (Exception e) {
+            toReturn = new ResponseT<>(e.getMessage());
+        }
+        return toReturn;
     }
 
-    public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category) {
-        return null;
+    public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category) {
+        List<Item> businessItems = new ArrayList<>();
+        for (ItemFacade item : items)
+            businessItems.add(item.toBusinessObject());
+        ResponseT<List<ItemFacade>> toReturn;
+        try {
+            List<Item> filteredItems = market.filterItemsByCategory(businessItems, category);
+            List<ItemFacade> facadeItems = new ArrayList<>();
+            for (Item item : filteredItems){
+                facadeItems.add(new ItemFacade(item));
+            }
+            toReturn = new ResponseT<>(facadeItems);
+        } catch (Exception e) {
+            toReturn = new ResponseT<>(e.getMessage());
+        }
+        return toReturn;
     }
 
-    // TODO validate visitor is a member
     public Response openNewShop(String visitorName, String shopName) {
-        return null;
+        try{
+            market.openNewShop(visitorName, shopName);
+            return new Response (  );
+        }catch (MarketException marketException){
+            return new Response ( marketException.getMessage () );
+        }
     }
 
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
@@ -131,7 +202,7 @@ public class MarketService {
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
         ResponseT<List<AppointmentFacade>> toReturn;
         try {
-            List <Appointment> employees = market.getShopEmployeesInfo(shopManagerName, shopName);
+            List <Appointment> employees = market.getShopEmployeesInfo(shopManagerName, shopName).values ().stream( ).toList ();
             List <AppointmentFacade> employeesFacadeList = new ArrayList<>();
             for (Appointment a : employees){
                 AppointmentFacade employeeFacade;

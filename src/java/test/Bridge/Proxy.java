@@ -13,7 +13,12 @@ import java.util.List;
 
 public class Proxy implements IService {
     @Override
-    public Response initMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
+    public Response initMarket() {
+        return null;
+    }
+
+    @Override
+    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
         return null;
     }
 
@@ -48,33 +53,31 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByName(String name) {
+    public ResponseT<List<ItemFacade>> searchProductByName(String name) {
         return null;
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByCategory(Item.Category category) {
+    public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category) {
         return null;
     }
 
     @Override
-    public ResponseT<ItemFacade> searchProductByKeyword(String keyWord) {
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord) {
         return null;
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByPrice(int minPrice, int maxPrice) {
-        return null;
-    }
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice) {return null;}
 
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByCategory(Item.Category category) {
+    public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category) {
         return null;
     }
 
     @Override
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName, String visitorName) {
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
         return null;
     }
 

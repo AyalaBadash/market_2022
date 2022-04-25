@@ -14,6 +14,7 @@ import main.resources.PaymentMethod;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,6 +36,17 @@ public class Market {
     private static Market instance;
 
     // TODO need understand how to we want to handle error messages
+//    private Market(String system_manager, PaymentService paymentService, ProductsSupplyService supplyService) {
+//        this.shops = new ConcurrentHashMap<>();
+//        this.allItemsInMarketToShop = new ConcurrentHashMap<>();
+//        this.itemByName = new ConcurrentHashMap<>();
+//        this.userController = UserController.getInstance();
+//        nextItemID = 1;
+//        this.supplyService = supplyService;
+//        this.paymentService = paymentService;
+//        this.systemManagerName = system_manager;
+//    }
+
     private Market() {
         this.shops = new ConcurrentHashMap<>();
         this.allItemsInMarketToShop = new ConcurrentHashMap<>();
@@ -50,6 +62,17 @@ public class Market {
         }
         return instance;
     }
+
+    public synchronized void firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) throws MarketException {
+        if (paymentService == null || supplyService == null)
+            throw new MarketException ( "market needs payment and supply services for initialize" );
+        register ( userName, password );
+        instance.systemManagerName = userName;
+        instance.paymentService = paymentService;
+        instance.supplyService = supplyService;
+    }
+
+
 
     //TODO must check permission
     public String getAllSystemPurchaseHistory() {
@@ -169,8 +192,51 @@ public class Market {
     }
 
 
-    public Map<String, List<Integer>> getItemByName() {
-        return itemByName;
+    public List<Item> getItemByName(String name) throws MarketException {
+        if (!itemByName.containsKey(name))
+            throw new MarketException("no such item");
+        List<Item> toReturn = new ArrayList<>();
+        List<Integer> itemIds =  itemByName.get(name);
+        for (int item : itemIds){
+            String shopStr = allItemsInMarketToShop.get(item);
+            Shop shop = shops.get(shopStr);
+            toReturn.add(shop.getItemMap().get(item));
+        }
+        return toReturn;
+    }
+
+    public List<Item> getItemByCategory(Item.Category category){
+        List<Item> toReturn = new ArrayList<>();
+        for (Shop shop : shops.values()){
+            toReturn.addAll(shop.getItemsByCategory(category));
+        }
+        return toReturn;
+    }
+
+    public List<Item> getItemsByKeyword(String keyword){
+        List<Item> toReturn = new ArrayList<>();
+        for (Shop shop : shops.values()){
+            toReturn.addAll(shop.getItemsByKeyword(keyword));
+        }
+        return toReturn;
+    }
+
+    public List<Item> filterItemsByPrice(List<Item> items, int minPrice, int maxPrice) {
+        List<Item> toReturn = new ArrayList<>();
+        for (Item item : items){
+            if (item.getPrice() >= minPrice && item.getPrice() <= maxPrice)
+                toReturn.add(item);
+        }
+        return toReturn;
+    }
+
+    public List<Item> filterItemsByCategory(List<Item> items, Item.Category category){
+        List<Item> toReturn = new ArrayList<>();
+        for (Item item : items){
+            if (item.getCategory().equals(category))
+                toReturn.add(item);
+        }
+        return toReturn;
     }
 
 
@@ -369,7 +435,7 @@ public class Market {
         return userController.guestLogin();
     }
 
-    public List<Appointment> getShopEmployeesInfo(String shopManagerName, String shopName) throws MarketException {
+    public Map<String, Appointment> getShopEmployeesInfo(String shopManagerName, String shopName) throws MarketException {
         if (!shops.containsKey(shopName))
             throw new MarketException("shop does not exist");
         return shops.get(shopName).getShopEmployeesInfo(shopManagerName);
@@ -379,5 +445,36 @@ public class Market {
         if (!shops.containsKey(shopName))
             throw new MarketException("no such shop");
         return shops.get(shopName).getShopInfo(member);
+    }
+
+    public void openNewShop(String visitorName, String shopName) throws MarketException {
+        Member curMember;
+        if(userController.isMember(visitorName)){
+            curMember = userController.getMember (visitorName);
+            if(shops.get ( shopName ) == null) {
+                Shop shop = new Shop ( shopName );
+                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
+                shop.addEmployee(shopFounder);
+                shops.put ( shopName, shop );
+                curMember.addAppointmentToMe(shopFounder);
+            } else
+                throw new MarketException ( "Shop with the same shop name is already exists" );
+        } else
+            throw new MarketException ( "You are not a member. Only members can open a new shop in the market" );
+    }
+
+
+    public void addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws MarketException {
+        ShoppingCart shoppingCart = userController.getVisitor ( visitorName ).getCart ();
+        Shop curShop = shops.get ( shopName );
+        if(curShop == null)
+            throw new MarketException ( "this shop does not exist in the narket" );
+        Item item = curShop.getItem (itemToInsert);
+        if(item == null)
+            throw new MarketException ( "this item does not exist in this shop" );
+        int curAmount = curShop.getItemCurrentAmount ( item );
+        if(curAmount < amount)
+            throw new MarketException ( "the shop amount of this item is less then the wanted amount" );
+        shoppingCart.addItem ( curShop, item, amount );
     }
 }

@@ -1,6 +1,7 @@
 package main.serviceLayer;
 
 import main.businessLayer.Market;
+import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 import main.serviceLayer.FacadeObjects.Response;
 import main.serviceLayer.FacadeObjects.ResponseT;
@@ -22,8 +23,13 @@ public class PurchaseService {
         return purchaseService;
     }
 
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName, String visitorName) {
-        return null;
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
+        try {
+            market.addItemToShoppingCart(itemToInsert, amount, shopName, visitorName);
+            return new Response (  );
+        } catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
 
 
