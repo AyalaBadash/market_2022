@@ -268,9 +268,7 @@ public class Market {
 
     public List<String> memberLogin(String userName, String userPassword, String visitorName) throws Exception{ //TODO -Check whick Exception
         Security security = Security.getInstance();
-        List<String> questions = security.validatePassword(userName,userPassword);
-        return null;
-
+        return security.validatePassword(userName,userPassword);
     }
 
     public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception{
@@ -476,5 +474,12 @@ public class Market {
         if(curAmount < amount)
             throw new MarketException ( "the shop amount of this item is less then the wanted amount" );
         shoppingCart.addItem ( curShop, item, amount );
+    }
+
+    public StringBuilder getShopPurchaseHistory(String shopManagerName, String shopName) throws MarketException {
+        Shop shopToHistory = shops.get ( shopName );
+        if(shopToHistory == null)
+            throw new MarketException ( "shop does not exist in the market" );
+        return shopToHistory.getPurchaseHistory(shopManagerName);
     }
 }

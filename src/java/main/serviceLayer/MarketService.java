@@ -219,17 +219,38 @@ public class MarketService {
         return toReturn;
     }
 
-
+    /**
+     * relevant to shop manager
+     * @param shopManagerName
+     * @param shopName
+     * @return
+     */
     public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName) {
-        return null;
+        try {
+            String history = market.getShopPurchaseHistory(shopManagerName, shopName).toString ();
+            return new ResponseT<> ( history );
+        } catch (MarketException e){
+            return new ResponseT<> ( e.getMessage () );
+        }
     }
 
 
+    /**
+     * relevant to system manager
+     * @param SystemManagerName
+     * @return
+     */
     public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName) {
         return null;
     }
 
 
+    /**
+     * relevant to system manager
+     * @param SystemManagerName
+     * @param shopName
+     * @return
+     */
     public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName) {
         return null;
     }
