@@ -153,5 +153,7 @@ public class UserService {
     public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception {
         return market.validateSecurityQuestions(userName,answers);
     }
-
+    public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName) throws Exception {
+        return market.validateMember(userName,userPassword,visitorName);
+    }
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
+//TODO change name to MemberCard
 public class LoginCard {
     private String name;
     private String password;

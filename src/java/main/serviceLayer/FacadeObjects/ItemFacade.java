@@ -11,6 +11,8 @@ public class ItemFacade implements FacadeObject<Item>{
     private double price;
     private Item.Category category;
     private List<String> keywords;
+    private int rank;
+    private int rankers;
 
 
     public ItemFacade(Integer ID, String name, double price,
@@ -22,6 +24,8 @@ public class ItemFacade implements FacadeObject<Item>{
         this.category = category;
         this.keywords = keywords;
         this.info = info;
+        rank=1;
+        rankers=0;
 
     }
 
@@ -32,6 +36,8 @@ public class ItemFacade implements FacadeObject<Item>{
         this.category = item.getCategory();
         this.keywords = item.getKeywords();
         this.info = item.getInfo();
+        rank= item.getRank();
+        rankers= item.getRankers();
 
     }
 
@@ -88,4 +94,7 @@ public class ItemFacade implements FacadeObject<Item>{
         Item item = new Item(this);
         return item;
     }
+
+    public int getRank(){return rank;}
+    public int getRankers(){return rankers;}
 }

@@ -37,7 +37,15 @@ public class UserController {
         this.visitorsInMarket.put(res.getName(),res);
         return res;
     }
-    public Member memberLogin(String userName, String userPassword){
+    public Visitor guestLogin(boolean val) {
+        String name = getNextUniqueName();
+        Visitor res = new Visitor(name,null,new ShoppingCart());
+        this.visitorsInMarket.put(res.getName(),res);
+        return res;
+    }
+
+    //TODO:implement
+    public Member memberLogin(String userName, String userPassword,String visitorName){
         return null;
     }
 

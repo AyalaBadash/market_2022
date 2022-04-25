@@ -4,6 +4,7 @@ import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.users.Member;
+import main.resources.EventLog;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 
 
@@ -18,7 +19,8 @@ public class Shop implements IHistory{
     private Map<Item, Double> itemsCurrentAmount;
     private boolean closed;
     private List<StringBuilder> purchaseHistory;
-
+    private int rank;
+    private int rankers;
 
     public Shop(String name) {
         this.shopName = name;
@@ -27,7 +29,9 @@ public class Shop implements IHistory{
         shopOwners = new HashMap<> (  );
         itemsCurrentAmount = new HashMap<>();
         this.closed = false;
-        purchaseHistory = new ArrayList<> (  );
+        purchaseHistory = new ArrayList<> ();
+        rank= 1;
+        rankers=0;
     }
 
 
@@ -180,7 +184,7 @@ public class Shop implements IHistory{
     // TODO need to calculate again - if doesn't match - exception
 
     public boolean isShopOwner(String memberName) {
-        throw new UnsupportedOperationException();
+        return shopOwners.containsKey(memberName);
     }
 
     public boolean isClosed() {
@@ -354,6 +358,14 @@ public class Shop implements IHistory{
             review.append ( String.format ("acquisition %d:\n %s", i, acquisition.toString () ));
             i++;
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A user recived the shop: "+this.shopName + " history.");
         return review;
     }
+
+    public void addRank(int rankN){
+        rank=((rank*rankers)+rankN)/(rankers+1);
+        rankers++;
+    }
+    public int getRank(){return rank;}
 }
