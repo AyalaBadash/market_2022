@@ -498,4 +498,39 @@ public class Market {
             throw new MarketException ( "shop does not exist in the market" );
         return shopToHistory.getPurchaseHistory(shopManagerName);
     }
+
+    public boolean appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
+        if(!shops.containsKey(shopName)){
+            throw new MarketException("shop does not exists");
+        }
+        Shop shop = shops.get(shopName);
+        Member appointed= userController.getMember(appointedShopOwner);
+        Member appoint= userController.getMember(shopOwnerName);
+        ShopOwnerAppointment app= new ShopOwnerAppointment(appointed,appoint,shop,false);
+        shop.addEmployee(app);
+        appointed.addAppointmentToMe(app);
+        return true;
+    }
+
+    public boolean appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
+        if(!shops.containsKey(shopName)){
+            throw new MarketException("shop does not exists");
+        }
+        Shop shop = shops.get(shopName);
+        Member appointed= userController.getMember(appointedShopOwner);
+        Member appoint= userController.getMember(shopOwnerName);
+        ShopManagerAppointment app= new ShopManagerAppointment(appointed,appoint,shop);
+        shop.addManager(app);
+        appointed.addAppointmentToMe(app);
+        return true;
+    }
+
+    public boolean editCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) throws MarketException {
+
+        Member mem= userController.getMember(visitorName);
+        if(mem==null){
+            throw new MarketException("member does not exists, cannot update amount.");
+        }
+        return mem.updateAmountInCart(amount, itemFacade,shopName);
+    }
 }

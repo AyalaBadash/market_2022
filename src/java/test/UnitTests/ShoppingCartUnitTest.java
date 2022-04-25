@@ -1,9 +1,6 @@
 package test.UnitTests;
 
-import main.businessLayer.Item;
-import main.businessLayer.Shop;
-import main.businessLayer.ShoppingBasket;
-import main.businessLayer.ShoppingCart;
+import main.businessLayer.*;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +18,7 @@ public class ShoppingCartUnitTest extends mainTest {
     ShoppingCart shoppingCart = Mockito.mock(ShoppingCart.class);
     @Test
     @DisplayName("ShoppingCart Unit Test - edit cart")
-    public void editShoppingCart() throws IllegalAccessException {
+    public void editShoppingCart() throws IllegalAccessException, MarketException {
         shoppingCart.addItem(shop,item,10);
         Mockito.when(shoppingCart.getItemQuantity(item)).thenReturn(10);
         Assertions.assertEquals(10, shoppingCart.getItemQuantity(item));

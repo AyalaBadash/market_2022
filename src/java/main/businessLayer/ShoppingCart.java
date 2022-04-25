@@ -101,8 +101,19 @@ public class ShoppingCart implements IHistory {
         throw new UnsupportedOperationException();
     }
 
-    public void editQuantity(int amount, Item itemFacade, String shopName) {
-        throw new UnsupportedOperationException();
+    public boolean editQuantity(int amount, Item itemFacade, String shopName) throws MarketException {
+
+        ShoppingBasket basket=null;
+        for (Map.Entry<Shop, ShoppingBasket> bask: cart.entrySet()){
+            if(bask.getKey().getShopName().equals(shopName)){
+                basket=bask.getValue();
+                break;
+            }
+        }
+        if(basket==null){
+            throw new MarketException("The basket does not exist in the cart.");
+        }
+        return basket.updateQuantity(amount, itemFacade);
     }
 
 

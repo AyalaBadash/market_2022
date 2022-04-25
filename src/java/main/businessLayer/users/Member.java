@@ -1,8 +1,11 @@
 package main.businessLayer.users;
 
 import main.businessLayer.Appointment.ShopOwnerAppointment;
+import main.businessLayer.Item;
+import main.businessLayer.MarketException;
 import main.businessLayer.ShoppingCart;
 import main.businessLayer.Appointment.Appointment;
+import main.serviceLayer.FacadeObjects.ItemFacade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,5 +77,10 @@ public class Member {
 
     public void savePurchase(ShoppingCart cart) {
         purchaseHistory.add ( cart );
+    }
+
+    public boolean updateAmountInCart(int amount, ItemFacade itemFacade, String shopName) throws MarketException {
+        return myCart.editQuantity(amount,new Item(itemFacade),shopName);
+
     }
 }

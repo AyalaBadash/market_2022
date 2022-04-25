@@ -1,6 +1,7 @@
 package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
+import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.users.Member;
 import main.serviceLayer.FacadeObjects.ItemFacade;
@@ -305,6 +306,18 @@ public class Shop implements IHistory{
         }
     }
 
+    public void addManager(ShopManagerAppointment newAppointment) throws MarketException {
+        String employeeName = newAppointment.getAppointed().getName();
+        Appointment oldAppointment = shopManagers.get(employeeName);
+        if (oldAppointment != null) {
+            if (newAppointment.isManager())
+                throw new MarketException("this member is already a shop manager");
+            shopOwners.put(employeeName, newAppointment);
+        }
+        else
+            shopManagers.put(employeeName, newAppointment);
+
+    }
     public List<Item> getItemsByCategory(Item.Category category) {
         List<Item> toReturn = new ArrayList<>();
         for (Item item : itemMap.values()){

@@ -192,12 +192,12 @@ public class Service implements IService {
 
     @Override
     public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
-        return null;
+        return userService.appointShopOwner(shopOwnerName,appointedShopOwner,shopName);
     }
 
     @Override
     public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
-        return null;
+        return userService.appointShopManager(shopOwnerName,appointedShopManager,shopName);
     }
 
     @Override
