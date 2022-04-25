@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 
@@ -78,7 +76,7 @@ public class HistoryUnitTest extends mainTest {
     @Test
     @DisplayName("History - close a shop")
     public void closeShopValid() throws MarketException {
-        History instance = History.getInstance();
+        ClosedShopsHistory instance = ClosedShopsHistory.getInstance();
         instance.closeShop(shop);
         Assertions.assertFalse(instance.getClosedShops().isEmpty());
         Assertions.assertTrue(instance.getClosedShops().contains(shop));

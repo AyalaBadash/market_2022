@@ -26,6 +26,7 @@ public class Shop implements IHistory{
         shopOwners = new HashMap<> (  );
         itemsCurrentAmount = new HashMap<>();
         this.closed = false;
+        purchaseHistory = new ArrayList<> (  );
     }
 
 

@@ -266,8 +266,13 @@ public class MarketService {
     }
 
 
-    public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
-        return null;
+    public ResponseT<String> getHistoryByMember(String systemManagerName, String memberName) {
+        try {
+            String history = market.getHistoryByMember ( systemManagerName, memberName ).toString ();
+            return new ResponseT<> ( history );
+        } catch (MarketException e){
+            return new ResponseT<> ( e.getMessage () );
+        }
     }
 
     public ResponseT<ShopFacade> getShopInfo(String member, String shopName) {

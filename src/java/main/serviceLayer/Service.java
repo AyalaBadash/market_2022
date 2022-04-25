@@ -196,7 +196,7 @@ public class Service implements IService {
     }
 
     @Override
-    public Response appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName) {
+    public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
         return null;
     }
 
@@ -257,8 +257,8 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<String> getHistoryByMember(String SystemManagerName, String memberName) {
-        return null;
+    public ResponseT<String> getHistoryByMember(String systemManagerName, String memberName) {
+        return marketService.getHistoryByMember ( systemManagerName, memberName );
     }
 
 

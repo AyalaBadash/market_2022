@@ -14,7 +14,6 @@ import main.resources.PaymentMethod;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -93,9 +92,15 @@ public class Market {
         return shop.getReview ();
     }
 
-    //TODO must check permission
-    public String getHistoryByMember(String memberName) {
-        return null;
+    public StringBuilder getHistoryByMember(String systemManagerName, String memberName) throws MarketException {
+        if(systemManagerName.equals ( this.systemManagerName ))
+            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        Member member = userController.getMember ( memberName );
+        if(member == null){
+            throw new MarketException ( "member does not exist" );
+        }
+        StringBuilder history = member.getPurchaseHistory();
+        return history;
     }
 
     public void register(String name, String password) throws MarketException {
@@ -146,6 +151,8 @@ public class Market {
             succeed = false;
         }
         if (succeed){
+            Member member = visitor.getMember ();
+            member.savePurchase(cart);
             cart.clear();
         }
     }
@@ -344,7 +351,7 @@ public class Market {
             shops.remove(shopName);
             removeClosedShopItemsFromMarket(shopToClose);
             //TODO send Notification
-            History history = History.getInstance();
+            ClosedShopsHistory history = ClosedShopsHistory.getInstance();
             history.closeShop(shopToClose);
         }
     }
@@ -475,7 +482,7 @@ public class Market {
         ShoppingCart shoppingCart = userController.getVisitor ( visitorName ).getCart ();
         Shop curShop = shops.get ( shopName );
         if(curShop == null)
-            throw new MarketException ( "this shop does not exist in the narket" );
+            throw new MarketException ( "this shop does not exist in the market" );
         Item item = curShop.getItem (itemToInsert);
         if(item == null)
             throw new MarketException ( "this item does not exist in this shop" );
