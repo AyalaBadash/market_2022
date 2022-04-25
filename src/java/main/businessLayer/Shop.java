@@ -3,6 +3,7 @@ package main.businessLayer;
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.users.Member;
+import main.serviceLayer.FacadeObjects.ItemFacade;
 
 
 import java.util.*;
@@ -318,5 +319,9 @@ public class Shop {
                 toReturn.add(item);
         }
         return toReturn;
+    }
+
+    public Item getItem(ItemFacade item) {
+        return itemMap.get ( item );
     }
 }

@@ -464,4 +464,17 @@ public class Market {
     }
 
 
+    public void addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws MarketException {
+        ShoppingCart shoppingCart = userController.getVisitor ( visitorName ).getCart ();
+        Shop curShop = shops.get ( shopName );
+        if(curShop == null)
+            throw new MarketException ( "this shop does not exist in the narket" );
+        Item item = curShop.getItem (itemToInsert);
+        if(item == null)
+            throw new MarketException ( "this item does not exist in this shop" );
+        int curAmount = curShop.getItemCurrentAmount ( item );
+        if(curAmount < amount)
+            throw new MarketException ( "the shop amount of this item is less then the wanted amount" );
+        shoppingCart.addItem ( curShop, item, amount );
+    }
 }

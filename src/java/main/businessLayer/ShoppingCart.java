@@ -84,8 +84,13 @@ public class ShoppingCart implements IHistory {
         this.cart.clear();
     }
 
-    public void addItem(Shop shop, Item item, int amount) {
-        throw new UnsupportedOperationException();
+    public void addItem(Shop shop, Item item, double amount) {
+        ShoppingBasket shoppingBasket = cart.get ( shop );
+        if (shoppingBasket == null){
+            shoppingBasket = new ShoppingBasket ();
+            cart.put ( shop, shoppingBasket );
+        }
+        shoppingBasket.addItem ( item, amount );
     }
 
     public void removeItem(Shop shop, Item item, int amount) {

@@ -113,7 +113,7 @@ public interface IService {
      * @param visitorName
      * @return
      */
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, int amount, String shopName,
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName,
                                           String visitorName);
 
     /**
