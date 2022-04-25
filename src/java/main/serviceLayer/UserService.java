@@ -11,7 +11,7 @@ import main.serviceLayer.FacadeObjects.*;
 import java.util.List;
 
 public class UserService {
-    private static UserService userService = null;
+    private static UserService instance = null;
     private Market market;
 
     private UserService() {
@@ -19,9 +19,9 @@ public class UserService {
     }
 
     public synchronized static UserService getInstance() {
-        if (userService == null)
-            userService = new UserService();
-        return userService;
+        if (instance == null)
+            instance = new UserService();
+        return instance;
     }
 
     public ResponseT<VisitorFacade> guestLogin() {
@@ -87,8 +87,12 @@ public class UserService {
 
 
     public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
-
-        return null;
+        try{
+            market.appointShopOwner(shopOwnerName, appointedShopOwner, shopName);
+            return new Response (  );
+        }catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
 
 

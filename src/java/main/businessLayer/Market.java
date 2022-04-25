@@ -477,4 +477,15 @@ public class Market {
             throw new MarketException ( "the shop amount of this item is less then the wanted amount" );
         shoppingCart.addItem ( curShop, item, amount );
     }
+
+    public void appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
+        Member appointed = userController.getMember ( appointedShopOwner );
+        if(appointed == null)
+            throw new MarketException ( "appointed shop owner is not a member" );
+        Shop shop = shops.get ( shopName );
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in the market" );
+        Member shopOwner = userController.getMember ( shopOwnerName );
+        shop.appointShopOwner(shopOwner, appointed);
+    }
 }

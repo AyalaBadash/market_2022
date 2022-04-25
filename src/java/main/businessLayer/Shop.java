@@ -324,4 +324,13 @@ public class Shop {
     public Item getItem(ItemFacade item) {
         return itemMap.get ( item );
     }
+
+    public void appointShopOwner(Member shopOwner, Member appointedShopOwner) throws MarketException {
+        if(isShopOwner ( appointedShopOwner.getName () ))
+            throw new MarketException ( "appointed shop owner is already a shop owner of the shop." );
+        if(shopOwner != null || !isShopOwner (shopOwner.getName ()))
+            throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
+        ShopOwnerAppointment appointment = new ShopOwnerAppointment ( appointedShopOwner, shopOwner, this, false);
+        addEmployee ( appointment );
+    }
 }
