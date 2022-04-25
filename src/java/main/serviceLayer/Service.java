@@ -27,7 +27,7 @@ public class Service implements IService {
             service = new Service();
         return service;
     }
-    // TODO implement V2
+
 //    @Override
 //    public Response initMarket() {
 //        return null;
@@ -36,7 +36,6 @@ public class Service implements IService {
     @Override
     public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
                                     String userName, String password) {
-        // TODO need to create a user and add as system manager
         return marketService.firstInitMarket ( paymentService, supplyService,userName,password );
     }
 
@@ -60,16 +59,16 @@ public class Service implements IService {
         return userService.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
 
-    // TODO implement V2
-    @Override
-    public ResponseT<List<ShopFacade>> getAllShops() {
-        return null;
-    }
-    // TODO implement V2
-    @Override
-    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop) {
-        return null;
-    }
+
+//    @Override
+//    public ResponseT<List<ShopFacade>> getAllShops() {
+//        return null;
+//    }
+
+//    @Override
+//    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop) {
+//        return null;
+//    }
 
     @Override
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {
@@ -120,29 +119,9 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, String visitorName) {
-        try {
-           ResponseT<List<String>> responseQs = userService.memberLogin(userName, userPassword, visitorName);
-            List<String> Qs = responseQs.getValue(); // TODO -  display Qs to user.
-            List<String> ans = new ArrayList<>(); //TODO users input
-            return validateSecurityQuestions(userName,ans);
-        }
-        catch (Exception e){
-
-            //TODO - What to do here
-            return null; //TODO change here
-        }
-    }
-
-    @Override
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword, String visitorName,boolean val) {
-        try {
-            return logMemberNoQuestions(userName,userPassword,visitorName);
-        }
-        catch (Exception e){
-            //TODO - What to do here
-            return null; //TODO change here
-        }
+    //TODO - delete old visitor and save the new one in the loggein visitors
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) {
+        return userService.memberLogin(userName, userPassword, visitorName);
     }
 
     private ResponseT<MemberFacade> logMemberNoQuestions(String userName, String userPassword, String visitorName) {
@@ -158,16 +137,7 @@ public class Service implements IService {
     }
 
     private ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) {
-
-        try{
-            return userService.validateSecurityQuestions(userName,answers);
-        }
-        catch (Exception e)
-        {
-            //TODO
-            return null; //TODO change here
-        }
-
+        return userService.validateSecurityQuestions(userName,answers);
     }
 
 
@@ -177,15 +147,15 @@ public class Service implements IService {
         return userService.logout(visitorName);
     }
 
-    // TODO implement
+
     @Override
     public Response openNewShop(String visitorName, String shopName) {
-        return null;
+        return marketService.openNewShop ( visitorName, shopName );
     }
-    // TODO implement
+
     @Override
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
-        return null;
+        return marketService.updateShopItemAmount ( shopOwnerName, item, amount, shopName );
     }
 
     @Override
@@ -194,31 +164,30 @@ public class Service implements IService {
     }
 
     @Override
-    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+    public Response addItemToShop(String shopOwnerName, String name, double price,Item.Category category,String info,
                                   List<String> keywords, int amount, String shopName) {
         return marketService.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
     }
 
-    // TODO implement
     @Override
     public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName) {
-        return null;
+        return marketService.getItemCurrentAmount ( item, shopName );
     }
 
-    @Override //TODO check if we need to get shop owner name in here too ( like remove and add)
-    public Response setItemCurrentAmount(ItemFacade item, int amount, String shopName) {
-        return marketService.setItemCurrentAmount(item, amount, shopName);
+    @Override
+    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
+        return marketService.setItemCurrentAmount(shopOwnerName, item, amount, shopName);
     }
 
-    // TODO implement
+
     @Override
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
-        return null;
+        return marketService.changeShopItemInfo ( shopOwnerName, updatedItem, oldItem, shopName );
     }
-    // TODO implement
+
     @Override
     public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
-        return null;
+        return userService.appointShopOwner ( shopOwnerName, appointedShopOwner, shopName );
     }
     // TODO implement
     @Override
