@@ -597,4 +597,7 @@ public class Market {
     }
 
 
+    public void editItemStock(String memberName, String name, String shopName, int i) {
+        throw new UnsupportedOperationException();
+    }
 }
