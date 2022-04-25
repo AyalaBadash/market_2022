@@ -1,8 +1,6 @@
 package main.businessLayer;
 
 import main.businessLayer.Appointment.Appointment;
-import main.businessLayer.Appointment.ShopManagerAppointment;
-import main.businessLayer.Appointment.ShopOwnerAppointment;
 import main.businessLayer.users.Member;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 
@@ -90,8 +88,18 @@ public class Shop implements IHistory{
     }
 
 
-    public void setItemAmount(Item item, int amount) {
-        throw new UnsupportedOperationException();
+    public void setItemAmount(String shopOwnerName, Item item, double amount) throws MarketException {
+        if(!isShopOwner ( shopOwnerName )) {
+            throw new MarketException ( "member is not the shop owner and is not authorized to effect the inventory." );
+        }
+        if(amount < 0)
+            throw new MarketException ( "amount cannot be negative" );
+        if(itemMap.get ( item.getID ()) == null){
+            itemMap.put ( item.getID (), item );
+            itemsCurrentAmount.put ( item, amount );
+        } else {
+            itemsCurrentAmount.replace ( item, amount );
+        }
     }
 
 
@@ -355,5 +363,18 @@ public class Shop implements IHistory{
             i++;
         }
         return review;
+    }
+
+    public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
+        if(!isShopOwner ( shopOwnerName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
+        if(amount < 0)
+            throw new MarketException ( "amount has to be positive" );
+        if(category == null)
+            category = Item.Category.general;
+        Item addedItem = new Item ( id, itemName, price, info, category, keywords);
+        itemMap.put ( id, addedItem );
+        itemsCurrentAmount.put ( addedItem, amount );
+        return addedItem;
     }
 }

@@ -65,17 +65,6 @@ public interface IService {
 
 
     /**
-     * @return
-     */
-    public ResponseT<List<ShopFacade>> getAllShops();
-
-    /**
-     * @param shop
-     * @return
-     */
-    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop);
-
-    /**
      * @param name
      * @return
      */
@@ -158,7 +147,7 @@ public interface IService {
      * @param userPassword
      * @return
      */
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword,
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword,
                                                String visitorName);
 
 
@@ -208,10 +197,13 @@ public interface IService {
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName);
 
     /**
-     * need to check if the item is not already exist
      *
      * @param shopOwnerName
-     * @param item
+     * @param name
+     * @param price
+     * @param category
+     * @param info
+     * @param keywords
      * @param amount
      * @param shopName
      * @return
@@ -234,7 +226,7 @@ public interface IService {
      * @param shopName
      * @return sets item current amount in shop
      */
-    public Response setItemCurrentAmount(ItemFacade item,int amount, String shopName);
+    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName);
 
     /**
      * if the change is in a unique key then after changing need to update all uses like shopping cart

@@ -175,13 +175,23 @@ public class MarketService {
 
     }
 
-    public Response setItemCurrentAmount(ItemFacade item,int amount, String shopName){
-        return market.setItemCurrentAmount(item,amount,shopName);
+    public Response setItemCurrentAmount(String shopOwnerName,ItemFacade item, double amount, String shopName){
+        try{
+            market.setItemCurrentAmount(shopOwnerName, item,amount,shopName);
+            return new Response (  );
+        }catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
     // TODO need to check users are updated
     // TODO implement
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
-        return null;
+        try{
+            market.changeShopItemInfo(shopOwnerName, updatedItem, oldItem, shopName);
+            return new Response (  );
+        }catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
 
     public Response closeShop(String shopOwnerName, String shopName) {
