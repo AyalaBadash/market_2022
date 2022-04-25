@@ -1,8 +1,8 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
+import com.example.server.businessLayer.ClosedShopsHistory;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.SystemManager;
-import main.businessLayer.ClosedShopsHistory;
 
 public class SystemManagerFacade implements FacadeObject<SystemManager> {
 

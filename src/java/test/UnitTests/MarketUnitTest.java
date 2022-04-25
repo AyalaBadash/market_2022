@@ -1,6 +1,6 @@
 package test.UnitTests;
 
-import main.businessLayer.Market;
+import main.businessLayer.Market2;
 import main.businessLayer.MarketException;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
@@ -27,14 +27,14 @@ public class MarketUnitTest extends mainTest{
     Visitor memberVisitor;
     UserController userController;
     Shop shop;
-    Market market;
+    Market2 market2;
     String memberName;
     String visitorName;
     String shopName;
 
     @BeforeEach
     public void marketUnitTestInit(){
-        market = Mockito.mock ( Market.class );
+        market2 = Mockito.mock ( Market2.class );
         member = Mockito.mock ( Member.class, CALLS_REAL_METHODS );
         notMemberVisitor = Mockito.mock ( Visitor.class, CALLS_REAL_METHODS );
         memberVisitor = Mockito.mock ( Visitor.class, CALLS_REAL_METHODS );
@@ -48,29 +48,29 @@ public class MarketUnitTest extends mainTest{
     @Test
     @DisplayName ( "Open New Shop Use Case Test" )
     public void testOpenNewShop() throws MarketException {
-        when(market.getShops ()).thenCallRealMethod();
-        market = Market.getInstance ();
-        ReflectionTestUtils.setField ( market, "userController", userController );
+        when(market2.getShops ()).thenCallRealMethod();
+        market2 = Market2.getInstance ();
+        ReflectionTestUtils.setField (market2, "userController", userController );
         when ( member.getName ()).thenReturn ( memberName );
         when ( userController.isMember ( memberName ) ).thenReturn ( true );
         when ( userController.isMember ( visitorName ) ).thenReturn ( false );
         when ( userController.getMember (memberName) ).thenReturn ( new Member ( memberName ) );
 
-        market.openNewShop ( memberName, shopName );
-        Assertions.assertTrue ( market.getShops ().size () == 1 );
+        market2.openNewShop ( memberName, shopName );
+        Assertions.assertTrue ( market2.getShops ().size () == 1 );
         try{
-            market.openNewShop ( memberName, shopName );
+            market2.openNewShop ( memberName, shopName );
         } catch (MarketException marketException){
             Assertions.assertEquals ( marketException.getMessage (), "Shop with the same shop name is already exists" );
         }
-        Assertions.assertTrue ( market.getShops ().size () == 1 );
+        Assertions.assertTrue ( market2.getShops ().size () == 1 );
         try{
-            market.openNewShop ( visitorName, shopName );
+            market2.openNewShop ( visitorName, shopName );
         } catch (MarketException marketException){
             Assertions.assertEquals ( marketException.getMessage (), "You are not a member. Only members can open a new shop in the market" );
         }
-        Assertions.assertTrue ( market.getShops ().size () == 1 );
-        shop = market.getShopByName ( shopName );
+        Assertions.assertTrue ( market2.getShops ().size () == 1 );
+        shop = market2.getShopByName ( shopName );
         Assertions.assertTrue ( shop.isShopOwner ( memberName ) );
         Assertions.assertTrue ( shop.getEmployees ().containsKey ( memberName ) );
     }
@@ -79,9 +79,9 @@ public class MarketUnitTest extends mainTest{
     @Test
     @DisplayName("Market Unit Test - logout")
     public void testLogout() throws IllegalAccessException, MarketException {
-        Market market = Mockito.mock(Market.class, CALLS_REAL_METHODS);
+        Market2 market2 = Mockito.mock(Market2.class, CALLS_REAL_METHODS);
         UserController userController = Mockito.mock(UserController.class);
-        ReflectionTestUtils.setField(market, "userController", userController);
+        ReflectionTestUtils.setField(market2, "userController", userController);
         Member member = Mockito.mock(Member.class);
         Visitor visitor = Mockito.mock(Visitor.class);
         String memberName = "memberName_test";
@@ -91,7 +91,7 @@ public class MarketUnitTest extends mainTest{
         members.put(memberName, member);
         ReflectionTestUtils.setField(userController, "members", members);
         ReflectionTestUtils.setField(userController, "visitorsInMarket", visitorsInMarket);
-        String newVisitor = market.memberLogout(memberName);
+        String newVisitor = market2.memberLogout(memberName);
         Assertions.assertFalse(userController.getVisitorsInMarket().containsKey(memberName));
     }
 }

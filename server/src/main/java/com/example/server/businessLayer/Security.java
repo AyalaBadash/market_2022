@@ -66,11 +66,11 @@ public class Security {
     }
 
 
-    public List<String> validatePassword(String userName, String userPassword) throws Exception { //TODO specify exceptions
+    public List<String> validatePassword(String userName, String userPassword) throws MarketException { //TODO specify exceptions
         if (!namesToLoginInfo.containsKey(userName))
-            throw new Exception("No such user name in the system");
+            throw new MarketException ("No such user name in the system");
         if (!namesToLoginInfo.get(userName).getPassword().equals(userPassword))
-            throw new Exception("Password mismatch");
+            throw new MarketException ("Password mismatch");
         List<String> questions = new ArrayList<>();
         LoginCard card = namesToLoginInfo.get(userName);
         for (Map.Entry<String,String> entry : card.getQandA().entrySet())
@@ -81,11 +81,11 @@ public class Security {
 
     }
 
-    public void validateQuestions(String userName, List<String> answers) throws Exception{
+    public void validateQuestions(String userName, List<String> answers) throws MarketException{
         LoginCard card = namesToLoginInfo.get(userName);
         Map<String, String> QsAndAns = card.getQandA();
         if (answers.size()!=QsAndAns.size())
-            throw new Exception("Answers size different from questions size");
+            throw new MarketException ("Answers size different from questions size");
         int index = 0;
         for (Map.Entry<String,String> entry: QsAndAns.entrySet())
         {
@@ -93,6 +93,7 @@ public class Security {
                 index++;
         }
     }
+
 
     public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) throws MarketException {
         if (!namesToLoginInfo.containsKey(member.getName()))

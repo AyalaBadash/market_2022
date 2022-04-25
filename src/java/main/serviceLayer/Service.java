@@ -7,8 +7,8 @@ import main.serviceLayer.FacadeObjects.*;
 import main.resources.Address;
 import main.resources.PaymentMethod;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 public class Service implements IService {
     private static Service service = null;
@@ -119,22 +119,12 @@ public class Service implements IService {
     }
 
     @Override
-    //TODO - delete old visitor and save the new one in the loggein visitors
     public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) {
         return userService.memberLogin(userName, userPassword, visitorName);
     }
 
-    private ResponseT<MemberFacade> logMemberNoQuestions(String userName, String userPassword, String visitorName) {
-        try{
-            return userService.validateMember(userName,userPassword,visitorName);
-        }
-        catch (Exception e)
-        {
-            //TODO
-            return null; //TODO change here
-        }
 
-    }
+
 
     private ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) {
         return userService.validateSecurityQuestions(userName,answers);

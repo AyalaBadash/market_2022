@@ -1,9 +1,7 @@
 package test.UnitTests;
 
 import main.businessLayer.Appointment.Appointment;
-import main.businessLayer.Appointment.ShopOwnerAppointment;
-import main.businessLayer.Market;
-import main.businessLayer.MarketException;
+import main.businessLayer.Market2;
 import main.businessLayer.Security;
 import main.businessLayer.Shop;
 import main.businessLayer.users.Member;
@@ -35,7 +33,7 @@ public class MemberUnitTest {
     String memberName;
     String memberPass;
     String name;
-    Market market;
+    Market2 market2;
     List<Appointment> apps;
 
     Map<String, Shop> shops;
@@ -45,7 +43,7 @@ public class MemberUnitTest {
     public void marketUnitTestInit(){
         visitor = Mockito.mock(Visitor.class,CALLS_REAL_METHODS );
         userController= Mockito.mock(UserController.class,CALLS_REAL_METHODS);
-        market = Mockito.mock ( Market.class,CALLS_REAL_METHODS );
+        market2 = Mockito.mock ( Market2.class,CALLS_REAL_METHODS );
         memberName = "member1";
         memberPass= "123";
         shopName="ebay";
@@ -54,15 +52,15 @@ public class MemberUnitTest {
         members= new ConcurrentHashMap<>();
         security= Mockito.mock(Security.class, CALLS_REAL_METHODS);
         apps= new ArrayList<>();
-        ReflectionTestUtils.setField ( market, "userController", userController );
-        ReflectionTestUtils.setField ( market, "userController", userController );
+        ReflectionTestUtils.setField (market2, "userController", userController );
+        ReflectionTestUtils.setField (market2, "userController", userController );
         ReflectionTestUtils.setField ( userController, "members", members );
         ReflectionTestUtils.setField ( userController, "visitorsInMarket", visitorsInMarket );
         ReflectionTestUtils.setField ( visitor, "name", name );
         ReflectionTestUtils.setField ( visitor, "member", member );
         Mockito.when(visitor.getMember()).thenCallRealMethod();
         Mockito.when(visitor.getName()).thenCallRealMethod();
-        ReflectionTestUtils.setField ( market, "shops", shops );
+        ReflectionTestUtils.setField (market2, "shops", shops );
         ReflectionTestUtils.setField ( member, "myAppointments", apps );
     }
 
@@ -72,8 +70,8 @@ public class MemberUnitTest {
     public void Logout() throws Exception {
 
         //good case
-        market.register(memberName,memberPass);
-        visitor=market.guestLogin(false);
+        market2.register(memberName,memberPass);
+        visitor= market2.guestLogin(false);
         Assertions.assertEquals(1, visitorsInMarket.size());
         userController.memberLogin(memberName,memberPass,visitor.getName());
         Assertions.assertNotNull(visitor.getMember());
@@ -87,8 +85,8 @@ public class MemberUnitTest {
     public void LogoutB() throws Exception {
 
         //bad case - not logged in
-        market.register(memberName,memberPass);
-        visitor=market.guestLogin(false);
+        market2.register(memberName,memberPass);
+        visitor= market2.guestLogin(false);
         Assertions.assertEquals(1, visitorsInMarket.size());
         Assertions.fail(userController.memberLogout(memberName));
 
@@ -100,11 +98,11 @@ public class MemberUnitTest {
 
 
         //good case
-        market.register(memberName,memberPass);
-        visitor=market.guestLogin(false);
+        market2.register(memberName,memberPass);
+        visitor= market2.guestLogin(false);
         Assertions.assertEquals(1, visitorsInMarket.size());
         member = userController.memberLogin(memberName,memberPass,visitor.getName());
-        market.openNewShop(memberName,shopName);
+        market2.openNewShop(memberName,shopName);
         Assertions.assertEquals(1, shops.size());
         Assertions.assertEquals(1, apps.size());
 
@@ -117,10 +115,10 @@ public class MemberUnitTest {
     public void OpenShopB() throws Exception {
 
         //bad case
-        visitor = market.guestLogin(false);
+        visitor = market2.guestLogin(false);
         Assertions.assertEquals(1, visitorsInMarket.size());
         member = userController.memberLogin(memberName, memberPass, visitor.getName());
-        Assertions.fail(String.valueOf(market.openNewShop(memberName, shopName)));
+        Assertions.fail(String.valueOf(market2.openNewShop(memberName, shopName)));
     }
 
 }

@@ -4,19 +4,19 @@ package com.example.server.businessLayer;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ClosedShopHistory {
+public class ClosedShopsHistory {
     private List<Shop> closedShops;
     private StringBuilder overallHistory;
-    private static ClosedShopHistory instance;
+    private static ClosedShopsHistory instance;
 
-    private ClosedShopHistory(){
+    private ClosedShopsHistory(){
         this.closedShops = new CopyOnWriteArrayList<>();
         this.overallHistory = new StringBuilder();
     }
 
-    public synchronized static ClosedShopHistory getInstance(){
+    public synchronized static ClosedShopsHistory getInstance(){
         if (instance == null){
-            instance =  new ClosedShopHistory ();
+            instance =  new ClosedShopsHistory();
         }
         return instance;
     }

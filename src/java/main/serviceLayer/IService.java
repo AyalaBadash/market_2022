@@ -151,16 +151,6 @@ public interface IService {
                                                String visitorName);
 
 
-    /**
-     * need to delete the temporary VisitorName from data
-     *
-     * @param userName
-     * @param userPassword
-     * @return
-     */
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword,
-                                               String visitorName,boolean val);
-
 
     //************************* Member Use cases *************************************//
 

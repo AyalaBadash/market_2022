@@ -3,7 +3,7 @@ package main.serviceLayer;
 import main.businessLayer.Appointment.Appointment;
 import main.businessLayer.Appointment.ShopManagerAppointment;
 import main.businessLayer.Appointment.ShopOwnerAppointment;
-import main.businessLayer.Market;
+import main.businessLayer.Market2;
 import main.businessLayer.MarketException;
 import main.businessLayer.users.Visitor;
 import main.serviceLayer.FacadeObjects.*;
@@ -12,10 +12,10 @@ import java.util.List;
 
 public class UserService {
     private static UserService userService = null;
-    private Market market;
+    private Market2 market2;
 
     private UserService() {
-        market = Market.getInstance();
+        market2 = Market2.getInstance();
     }
 
     public synchronized static UserService getInstance() {
@@ -26,7 +26,7 @@ public class UserService {
 
     public ResponseT<VisitorFacade> guestLogin() {
         try{
-            Visitor guest = this.market.guestLogin();
+            Visitor guest = this.market2.guestLogin();
             return new ResponseT<>(new VisitorFacade(guest));
         }catch (Exception e){
             return new ResponseT(e.getMessage());
@@ -35,7 +35,7 @@ public class UserService {
 
     public Response exitSystem(String visitorName) {
         try {
-            this.market.visitorExitSystem(visitorName);
+            this.market2.visitorExitSystem(visitorName);
             return new Response();
         } catch (Exception e) {
             return new Response(e.getMessage());
@@ -45,7 +45,7 @@ public class UserService {
     public ResponseT<Boolean> register(String userName, String userPassword) {
         ResponseT<Boolean> responseT;
         try {
-            market.register(userName, userPassword);
+            market2.register(userName, userPassword);
             responseT = new ResponseT<>(true);
         }
         catch (MarketException e)
@@ -56,12 +56,12 @@ public class UserService {
     }
 
     public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
-        return market.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
+        return market2.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
 
     public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) {
         try {
-            List<String> securityQs = market.memberLogin(userName,userPassword,visitorName);
+            List<String> securityQs = market2.memberLogin(userName,userPassword,visitorName);
             return new ResponseT<>(securityQs);
         } catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );
@@ -81,7 +81,7 @@ public class UserService {
     public ResponseT<VisitorFacade> logout(String visitorName) {
         ResponseT<VisitorFacade> toReturn;
         try {
-            VisitorFacade visitorFacade = new VisitorFacade(market.memberLogout(visitorName) , null, null);
+            VisitorFacade visitorFacade = new VisitorFacade(market2.memberLogout(visitorName) , null, null);
             toReturn = new ResponseT<>(visitorFacade);
         } catch (Exception e) {
             toReturn = new ResponseT<>(e.getMessage());
@@ -95,7 +95,7 @@ public class UserService {
         Response toReturn;
         try {
             toReturn = new Response();
-            market.appointShopOwner(shopOwnerName,appointedShopOwner,shopName);
+            market2.appointShopOwner(shopOwnerName,appointedShopOwner,shopName);
         } catch (Exception e) {
             toReturn = new Response(e.getMessage());
         }
@@ -107,7 +107,7 @@ public class UserService {
         Response toReturn;
         try {
             toReturn = new Response();
-            market.appointShopManager(shopOwnerName,appointedShopManager,shopName);
+            market2.appointShopManager(shopOwnerName,appointedShopManager,shopName);
         } catch (Exception e) {
             toReturn = new Response(e.getMessage());
         }
@@ -133,7 +133,7 @@ public class UserService {
     public Response editShopManagerPermissions(String shopOwnerName, String managerName,
                                                String relatedShop, ShopManagerAppointmentFacade updatedAppointment) {
         try{
-            this.market.editShopManagerPermissions(shopOwnerName, managerName, relatedShop,updatedAppointment.toBusinessObject());
+            this.market2.editShopManagerPermissions(shopOwnerName, managerName, relatedShop,updatedAppointment.toBusinessObject());
             return new Response();
         }catch (Exception e){
             return new Response(e.getMessage());
@@ -143,7 +143,7 @@ public class UserService {
     public ResponseT getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) {
         try {
 
-            Appointment appointment = (market.getManagerAppointment(shopOwnerName, managerName, relatedShop));
+            Appointment appointment = (market2.getManagerAppointment(shopOwnerName, managerName, relatedShop));
             AppointmentFacade appointmentFacade = appointment.isManager() ?
                     new ShopManagerAppointmentFacade((ShopManagerAppointment) appointment) :
                      new ShopOwnerAppointmentFacade((ShopOwnerAppointment) appointment);
@@ -155,13 +155,13 @@ public class UserService {
 
     public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers)  {
         try{
-            MemberFacade memberLoggedIn = market.validateSecurityQuestions(userName,answers);
+            MemberFacade memberLoggedIn = market2.validateSecurityQuestions(userName,answers);
             return new ResponseT<> ( memberLoggedIn );
         }catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );
         }
     }
     public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName) throws Exception {
-        return market.validateMember(userName,userPassword,visitorName);
+        return market2.validateMember(userName,userPassword,visitorName);
     }
 }

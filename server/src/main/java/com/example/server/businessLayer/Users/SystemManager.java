@@ -1,7 +1,7 @@
 package com.example.server.businessLayer.Users;
 
+import com.example.server.businessLayer.ClosedShopsHistory;
 import com.example.server.businessLayer.Market;
-import main.businessLayer.ClosedShopsHistory;
 
 public class SystemManager  {
     private Member member;

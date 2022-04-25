@@ -1,6 +1,6 @@
 package main.serviceLayer;
 
-import main.businessLayer.Market;
+import main.businessLayer.Market2;
 import main.businessLayer.MarketException;
 import main.serviceLayer.FacadeObjects.ItemFacade;
 import main.serviceLayer.FacadeObjects.Response;
@@ -10,11 +10,11 @@ import main.resources.Address;
 import main.resources.PaymentMethod;
 
 public class PurchaseService {
-    private Market market;
+    private Market2 market2;
     private static PurchaseService purchaseService = null;
 
     private PurchaseService() {
-        market = Market.getInstance();
+        market2 = Market2.getInstance();
     }
 
     public synchronized static PurchaseService getInstance() {
@@ -25,7 +25,7 @@ public class PurchaseService {
 
     public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
         try {
-            market.addItemToShoppingCart(itemToInsert, amount, shopName, visitorName);
+            market2.addItemToShoppingCart(itemToInsert, amount, shopName, visitorName);
             return new Response (  );
         } catch (MarketException e){
             return new Response ( e.getMessage () );
@@ -40,7 +40,7 @@ public class PurchaseService {
 
     public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) {
         try{
-            market.editCart(amount, itemFacade, shopName, visitorName);
+            market2.editCart(amount, itemFacade, shopName, visitorName);
             return new Response();
         }catch (MarketException e){
             return new Response(e.getMessage());
@@ -56,7 +56,7 @@ public class PurchaseService {
     public Response buyShoppingCart(String visitorName, double expectedPrice,
                                     PaymentMethod paymentMethod, Address address) {
         try {
-            this.market.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
+            this.market2.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
             return new Response();
         }catch (Exception e){
             return new Response(e.getMessage());

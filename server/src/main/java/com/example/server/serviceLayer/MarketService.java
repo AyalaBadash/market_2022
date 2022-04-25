@@ -5,7 +5,7 @@ import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
-import com.example.server.businessLayer.ExternalServices.ProductSupplyService;
+import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
@@ -31,7 +31,7 @@ public class MarketService {
         return marketService;
     }
 
-    public Response firstInitMarket(PaymentService paymentService, ProductSupplyService supplyService, String userName, String password) {
+    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
         try {
             market.firstInitMarket ( paymentService, supplyService, userName, password );
             return new Response (  );
@@ -180,13 +180,23 @@ public class MarketService {
 
     }
 
-    public Response setItemCurrentAmount(ItemFacade item,int amount, String shopName){
-        return market.setItemCurrentAmount(item,amount,shopName);
+    public Response setItemCurrentAmount(String shopOwnerName,ItemFacade item, double amount, String shopName){
+        try{
+            market.setItemCurrentAmount(shopOwnerName, item,amount,shopName);
+            return new Response (  );
+        }catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
     // TODO need to check users are updated
     // TODO implement
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
-        return null;
+        try{
+            market.changeShopItemInfo(shopOwnerName, updatedItem, oldItem, shopName);
+            return new Response (  );
+        }catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
 
     public Response closeShop(String shopOwnerName, String shopName) {

@@ -1,12 +1,14 @@
 package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.Address;
+import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
-import com.example.server.businessLayer.ExternalServices.ProductSupplyService;
+import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
@@ -27,7 +29,7 @@ public class Market {
     private Map<String, List<Integer>> itemByName;                   // <itemName ,List<itemID>>
     private int nextItemID;
     private PaymentService paymentService;
-    private ProductSupplyService supplyService;
+    private ProductsSupplyService supplyService;
 
     private static Market instance;
 
@@ -59,53 +61,80 @@ public class Market {
         return instance;
     }
 
-    public synchronized void firstInitMarket(PaymentService paymentService, ProductSupplyService supplyService, String userName, String password) throws MarketException {
-        if (paymentService == null || supplyService == null)
-            throw new MarketException ( "market needs payment and supply services for initialize" );
+    public synchronized void firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) throws MarketException {
+        if (paymentService == null || supplyService == null) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("A market initialization failed . Lack of payment / supply services ");
+            throw new MarketException("market needs payment and supply services for initialize");
+        }
         register ( userName, password );
         instance.systemManagerName = userName;
         instance.paymentService = paymentService;
         instance.supplyService = supplyService;
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A market has been initialized successfully");
+
     }
 
 
+
     public StringBuilder getAllSystemPurchaseHistory(String memberName) throws MarketException {
-        if(!systemManagerName.equals ( memberName ))
-            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        if(!systemManagerName.equals ( memberName )) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Member who is not the system manager tried to access system purchase history");
+            throw new MarketException("member is not a system manager so is not authorized to get th information");
+        }
         StringBuilder history = new StringBuilder ( "Market history: \n" );
         for ( Shop shop: shops.values () ){
             history.append ( shop.getReview () );
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("System manager got purchase history");
         return history;
     }
 
 
     public StringBuilder getHistoryByShop(String member, String shopName) throws MarketException {
-        if(!systemManagerName.equals ( member ))
-            throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        if(!systemManagerName.equals ( member )) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Member who is not the system manager tried to access system purchase history");
+            throw new MarketException("member is not a system manager so is not authorized to get th information");
+        }
         Shop shop = shops.get ( shopName );
-        if(shop == null)
-            throw new MarketException ( "shop does not exist in the market" );
+        if(shop == null) {
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("User tried to get shop history for a non exiting shop");
+            throw new MarketException("shop does not exist in the market");
+        }
         return shop.getReview ();
     }
 
     public StringBuilder getHistoryByMember(String systemManagerName, String memberName) throws MarketException {
-        if(systemManagerName.equals ( this.systemManagerName ))
+        if(systemManagerName.equals ( this.systemManagerName )){
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Member who is not the system manager tried to access system purchase history");
             throw new MarketException ( "member is not a system manager so is not authorized to get th information" );
+        }
+
         Member member = userController.getMember ( memberName );
         if(member == null){
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Tried to get history for a non existing member");
             throw new MarketException ( "member does not exist" );
         }
         StringBuilder history = member.getPurchaseHistory();
         return history;
     }
 
+
     public void register(String name, String password) throws MarketException {
         Security security = Security.getInstance();
         security.validateRegister(name,password);
         userController.register(name);
-
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A new user registered , welcome "+name);
     }
+
 
     public Shop getShopByName(String shopName) {
         throw new UnsupportedOperationException();
@@ -265,11 +294,11 @@ public class Market {
         this.paymentService = paymentService;
     }
 
-    public ProductSupplyService getSupplyService() {
+    public ProductsSupplyService getSupplyService() {
         return supplyService;
     }
 
-    public void setSupplyService(ProductSupplyService supplyService) {
+    public void setSupplyService(ProductsSupplyService supplyService) {
         this.supplyService = supplyService;
     }
 
@@ -279,12 +308,12 @@ public class Market {
         return temp;
     }
 
-    public List<String> memberLogin(String userName, String userPassword, String visitorName) throws Exception{ //TODO -Check whick Exception
+    public List<String> memberLogin(String userName, String userPassword, String visitorName) throws MarketException { //TODO -Check whick Exception
         Security security = Security.getInstance();
         return security.validatePassword(userName,userPassword);
     }
 
-    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception{
+    public MemberFacade validateSecurityQuestions(String userName, List<String> answers) throws MarketException{
         Security security = Security.getInstance();
         security.validateQuestions(userName,answers);
         Member member =  userController.getMembers().get(userName);
@@ -311,7 +340,36 @@ public class Market {
             //appointmentsFacades.add(null);//TODO
         }
         userController.finishLogin(userName);
+        return new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades);
+    }
+
+    public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName) {
+        Member member =  userController.getMembers().get(userName);
+        List<Appointment> appointmentByMe = member.getAppointedByMe();
+        List<AppointmentFacade> appointmentFacadesByMe= new ArrayList<>();
+        for (Appointment appointment: appointmentByMe)
+        {
+            if (appointment.isOwner()){
+                ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment; //TODO - approve casting
+                ShopOwnerAppointmentFacade facade = new ShopOwnerAppointmentFacade(shopOwnerAppointment);
+                appointmentFacadesByMe.add(facade);
+            }
+            else {
+                ShopManagerAppointment shopManagerAppointment = (ShopManagerAppointment) appointment;
+                ShopManagerAppointmentFacade facade = new ShopManagerAppointmentFacade(shopManagerAppointment);
+                appointmentFacadesByMe.add(facade);
+            }
+
+        }
+        List<Appointment> appointments = member.getAppointedByMe();
+        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
+        for (Appointment appointment: appointments)
+        {
+            //appointmentsFacades.add(null);//TODO
+        }
+        userController.finishLogin(userName);
         return new ResponseT<MemberFacade>(new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades));
+
     }
 
 
@@ -348,7 +406,7 @@ public class Market {
             shops.remove(shopName);
             removeClosedShopItemsFromMarket(shopToClose);
             //TODO send Notification
-            ClosedShopHistory history = ClosedShopHistory.getInstance();
+            ClosedShopsHistory history = ClosedShopsHistory.getInstance();
             history.closeShop(shopToClose);
         }
     }
@@ -387,20 +445,17 @@ public class Market {
         itemByName.get(itemToDelete.getName()).remove(itemToDelete.getID());
     }
 
-    public void addItemToShop(String shopOwnerName,String itemName, double price,Item.Category category,String info,
+    public void addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
                               List<String> keywords, int amount, String shopName) throws MarketException {
         Shop shop = shops.get(shopName);
-        //Check if user indeed is the shop owner
-        if(!shop.isShopOwner(shopOwnerName))
-        {
-            throw new MarketException(shopOwnerName+" is not "+ shopName+ " owner . adding "+itemName + " from shop has failed.");
-        }
-        else //we can add item
-        {
-            Item toAdd = new Item(nextItemID,itemName,price,info);
-            shop.addItem(toAdd);
-            updateMarketOnAddedItem(toAdd,shopName);
-        }
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in the market" );
+        Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID );
+        nextItemID++;
+        allItemsInMarketToShop.put ( nextItemID- 1, shopName );
+        if(itemByName.get ( itemName ) == null)
+            itemByName.put ( itemName, new ArrayList<> (  ));
+        itemByName.get ( itemName ).add ( nextItemID - 1 );
     }
 
     private void updateMarketOnAddedItem(Item toAdd,String shopName) {
@@ -416,10 +471,14 @@ public class Market {
         }
     }
 
-    public Response setItemCurrentAmount(ItemFacade facadeItem, int amount, String shopName) {
+    //TODO not response!!
+    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade facadeItem, double amount, String shopName) throws MarketException {
         Shop shop = shops.get(shopName);
-        Item item = facadeItem.toBusinessObject();
-        shop.setItemAmount(item,amount);
+        if(shop == null){
+            throw new MarketException ( "shop does not exist in system" );
+        }
+        Item item = new Item ( facadeItem );
+        shop.setItemAmount(shopOwnerName,item,amount);
         return new Response();
     }
 
@@ -458,7 +517,7 @@ public class Market {
         return shops.get(shopName).getShopInfo(member);
     }
 
-    public void openNewShop(String visitorName, String shopName) throws MarketException {
+    public boolean openNewShop(String visitorName, String shopName) throws MarketException {
         Member curMember;
         if(userController.isMember(visitorName)){
             curMember = userController.getMember (visitorName);
@@ -472,7 +531,9 @@ public class Market {
                 throw new MarketException ( "Shop with the same shop name is already exists" );
         } else
             throw new MarketException ( "You are not a member. Only members can open a new shop in the market" );
+        return true;
     }
+
 
 
     public void addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws MarketException {
@@ -529,5 +590,11 @@ public class Market {
             throw new MarketException("member does not exists, cannot update amount.");
         }
         return mem.updateAmountInCart(amount, itemFacade,shopName);
+    }
+
+
+    //TODO
+    public void changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) throws MarketException {
+        throw new MarketException ( "" );
     }
 }

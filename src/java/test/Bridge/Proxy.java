@@ -42,15 +42,6 @@ public class Proxy implements IService {
         return null;
     }
 
-    @Override
-    public ResponseT<List<ShopFacade>> getAllShops() {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop) {
-        return null;
-    }
 
     @Override
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {

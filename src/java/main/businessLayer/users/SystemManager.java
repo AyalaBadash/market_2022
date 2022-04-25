@@ -1,14 +1,14 @@
 package main.businessLayer.users;
 
 
-import main.businessLayer.Market;
+import main.businessLayer.Market2;
 import main.businessLayer.ClosedShopsHistory;
 
 public class SystemManager  {
     private Member member;
     private ClosedShopsHistory history;
 
-    public String getAllSystemPurchaseHistory(Market market) {
+    public String getAllSystemPurchaseHistory(Market2 market2) {
         return null;
     }
 

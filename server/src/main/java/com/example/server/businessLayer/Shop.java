@@ -1,5 +1,6 @@
 package com.example.server.businessLayer;
 
+import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
@@ -17,19 +18,24 @@ public class Shop implements IHistory{
     private Map<String, Appointment> shopOwners;     //<name, appointment>
     private Map<Item, Double> itemsCurrentAmount;
     private boolean closed;
+
+    private int rank;
+    private int rankers;
     private List<StringBuilder> purchaseHistory;
+
 
 
     public Shop(String name) {
         this.shopName = name;
-        itemMap = new HashMap<>();
+        itemMap = new HashMap<> ();
         shopManagers = new HashMap<>();
         shopOwners = new HashMap<> (  );
         itemsCurrentAmount = new HashMap<>();
         this.closed = false;
-        purchaseHistory = new ArrayList<>(  );
+        purchaseHistory = new ArrayList<> ();
+        rank= 1;
+        rankers=0;
     }
-
 
     //use case - receive info of a shop
     public String receiveInfo(String userName) throws Exception {
@@ -90,10 +96,19 @@ public class Shop implements IHistory{
     }
 
 
-    public void setItemAmount(Item item, int amount) {
-        throw new UnsupportedOperationException();
+    public void setItemAmount(String shopOwnerName, Item item, double amount) throws MarketException {
+        if(!isShopOwner ( shopOwnerName )) {
+            throw new MarketException ( "member is not the shop owner and is not authorized to effect the inventory." );
+        }
+        if(amount < 0)
+            throw new MarketException ( "amount cannot be negative" );
+        if(itemMap.get ( item.getID ()) == null){
+            itemMap.put ( item.getID (), item );
+            itemsCurrentAmount.put ( item, amount );
+        } else {
+            itemsCurrentAmount.replace ( item, amount );
+        }
     }
-
 
     public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
         if (isClosed()) {
@@ -180,7 +195,7 @@ public class Shop implements IHistory{
     // TODO need to calculate again - if doesn't match - exception
 
     public boolean isShopOwner(String memberName) {
-        throw new UnsupportedOperationException();
+        return shopOwners.containsKey(memberName);
     }
 
     public boolean isClosed() {
@@ -354,6 +369,29 @@ public class Shop implements IHistory{
             review.append ( String.format ("acquisition %d:\n %s", i, acquisition.toString () ));
             i++;
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A user recived the shop: "+this.shopName + " history.");
         return review;
     }
+
+    public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
+        if(!isShopOwner ( shopOwnerName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
+        if(amount < 0)
+            throw new MarketException ( "amount has to be positive" );
+        if(category == null)
+            category = Item.Category.general;
+        Item addedItem = new Item ( id, itemName, price, info, category, keywords);
+        itemMap.put ( id, addedItem );
+        itemsCurrentAmount.put ( addedItem, amount );
+        return addedItem;
+    }
+
+    public void addRank(int rankN){
+        rank=((rank*rankers)+rankN)/(rankers+1);
+        rankers++;
+    }
+
+    public int getRank(){return rank;}
+
 }

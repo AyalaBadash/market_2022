@@ -28,7 +28,7 @@ public interface IService {
      * @param password
      * @return
      */
-    Response firstInitMarket(PaymentService paymentService, ProductSupplyService supplyService,
+    Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
                              String userName, String password);
 
     // ************************** Visitor Use cases ******************************//
@@ -64,17 +64,6 @@ public interface IService {
     public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers,
                                                MemberFacade member);
 
-
-    /**
-     * @return
-     */
-    public ResponseT<List<ShopFacade>> getAllShops();
-
-    /**
-     * @param shop
-     * @return
-     */
-    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop);
 
     /**
      * @param name
@@ -152,6 +141,7 @@ public interface IService {
     public Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address);
 
 
+
     /**
      * need to delete the temporary VisitorName from data
      *
@@ -159,8 +149,9 @@ public interface IService {
      * @param userPassword
      * @return
      */
-    public ResponseT<MemberFacade> memberLogin(String userName, String userPassword,
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword,
                                                String visitorName);
+
 
 
     //************************* Member Use cases *************************************//
@@ -209,17 +200,19 @@ public interface IService {
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName);
 
     /**
-     * need to check if the item is not already exist
      *
      * @param shopOwnerName
-     * @param item
+     * @param name
+     * @param price
+     * @param category
+     * @param info
+     * @param keywords
      * @param amount
      * @param shopName
      * @return
      */
     public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
                                   List<String> keywords, int amount, String shopName);
-
     /**
      *
      * @param item
@@ -228,6 +221,7 @@ public interface IService {
      */
     public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName);
 
+
     /**
      *
      * @param item
@@ -235,7 +229,8 @@ public interface IService {
      * @param shopName
      * @return sets item current amount in shop
      */
-    public Response setItemCurrentAmount(ItemFacade item,int amount, String shopName);
+    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName);
+
 
     /**
      * if the change is in a unique key then after changing need to update all uses like shopping cart

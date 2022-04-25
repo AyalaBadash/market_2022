@@ -13,10 +13,10 @@ import java.util.List;
 
 public class MarketService {
     private static MarketService marketService = null;
-    private Market market;
+    private Market2 market2;
 
     private MarketService() {
-        market = Market.getInstance();
+        market2 = Market2.getInstance();
     }
 
     public synchronized static MarketService getInstance() {
@@ -28,7 +28,7 @@ public class MarketService {
 
     public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
         try {
-            market.firstInitMarket ( paymentService, supplyService, userName, password );
+            market2.firstInitMarket ( paymentService, supplyService, userName, password );
             return new Response (  );
         } catch (MarketException e){
             return new Response ( e.getMessage () );
@@ -53,7 +53,7 @@ public class MarketService {
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {
         ResponseT<List<ItemFacade>> toReturn;
         try {
-            List<Item> items = market.getItemByName(name);
+            List<Item> items = market2.getItemByName(name);
             List<ItemFacade> facadeItems = new ArrayList<>();
             for (Item item : items){
                 facadeItems.add(new ItemFacade(item));
@@ -68,7 +68,7 @@ public class MarketService {
     public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category) {
         ResponseT<List<ItemFacade>> toReturn;
         try {
-            List<Item> items = market.getItemByCategory(category);
+            List<Item> items = market2.getItemByCategory(category);
             List<ItemFacade> facadeItems = new ArrayList<>();
             for (Item item : items){
                 facadeItems.add(new ItemFacade(item));
@@ -83,7 +83,7 @@ public class MarketService {
     public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord) {
         ResponseT<List<ItemFacade>> toReturn;
         try {
-            List<Item> items = market.getItemsByKeyword(keyWord);
+            List<Item> items = market2.getItemsByKeyword(keyWord);
             List<ItemFacade> facadeItems = new ArrayList<>();
             for (Item item : items){
                 facadeItems.add(new ItemFacade(item));
@@ -101,7 +101,7 @@ public class MarketService {
             businessItems.add(item.toBusinessObject());
         ResponseT<List<ItemFacade>> toReturn;
         try {
-            List<Item> filteredItems = market.filterItemsByPrice(businessItems, minPrice, maxPrice);
+            List<Item> filteredItems = market2.filterItemsByPrice(businessItems, minPrice, maxPrice);
             List<ItemFacade> facadeItems = new ArrayList<>();
             for (Item item : filteredItems){
                 facadeItems.add(new ItemFacade(item));
@@ -119,7 +119,7 @@ public class MarketService {
             businessItems.add(item.toBusinessObject());
         ResponseT<List<ItemFacade>> toReturn;
         try {
-            List<Item> filteredItems = market.filterItemsByCategory(businessItems, category);
+            List<Item> filteredItems = market2.filterItemsByCategory(businessItems, category);
             List<ItemFacade> facadeItems = new ArrayList<>();
             for (Item item : filteredItems){
                 facadeItems.add(new ItemFacade(item));
@@ -133,7 +133,7 @@ public class MarketService {
 
     public Response openNewShop(String visitorName, String shopName) {
         try{
-            market.openNewShop(visitorName, shopName);
+            market2.openNewShop(visitorName, shopName);
             return new Response (  );
         }catch (MarketException marketException){
             return new Response ( marketException.getMessage () );
@@ -148,8 +148,8 @@ public class MarketService {
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
         Response response;
         try {
-             market.removeItemFromShop(shopOwnerName,item.getName(),shopName);
-             market.removeItemFromShop(shopOwnerName,item.getName(),shopName);
+             market2.removeItemFromShop(shopOwnerName,item.getName(),shopName);
+             market2.removeItemFromShop(shopOwnerName,item.getName(),shopName);
              response = new Response();
         }
         catch (MarketException e)
@@ -165,7 +165,7 @@ public class MarketService {
                                   List<String> keywords, int amount, String shopName) {
         Response response;
         try {
-            market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
+            market2.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
             response = new Response();
         }
         catch (MarketException e){
@@ -177,7 +177,7 @@ public class MarketService {
 
     public Response setItemCurrentAmount(String shopOwnerName,ItemFacade item, double amount, String shopName){
         try{
-            market.setItemCurrentAmount(shopOwnerName, item,amount,shopName);
+            market2.setItemCurrentAmount(shopOwnerName, item,amount,shopName);
             return new Response (  );
         }catch (MarketException e){
             return new Response ( e.getMessage () );
@@ -187,7 +187,7 @@ public class MarketService {
     // TODO implement
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
         try{
-            market.changeShopItemInfo(shopOwnerName, updatedItem, oldItem, shopName);
+            market2.changeShopItemInfo(shopOwnerName, updatedItem, oldItem, shopName);
             return new Response (  );
         }catch (MarketException e){
             return new Response ( e.getMessage () );
@@ -197,7 +197,7 @@ public class MarketService {
     public Response closeShop(String shopOwnerName, String shopName) {
         Response response;
         try {
-            market.closeShop(shopOwnerName,shopName);
+            market2.closeShop(shopOwnerName,shopName);
             response = new Response();
         }
         catch (MarketException e)
@@ -213,7 +213,7 @@ public class MarketService {
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
         ResponseT<List<AppointmentFacade>> toReturn;
         try {
-            List <Appointment> employees = market.getShopEmployeesInfo(shopManagerName, shopName).values ().stream( ).toList ();
+            List <Appointment> employees = market2.getShopEmployeesInfo(shopManagerName, shopName).values ().stream( ).toList ();
             List <AppointmentFacade> employeesFacadeList = new ArrayList<>();
             for (Appointment a : employees){
                 AppointmentFacade employeeFacade;
@@ -238,7 +238,7 @@ public class MarketService {
      */
     public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName) {
         try {
-            String history = market.getShopPurchaseHistory(shopManagerName, shopName).toString ();
+            String history = market2.getShopPurchaseHistory(shopManagerName, shopName).toString ();
             return new ResponseT<> ( history );
         } catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );
@@ -253,7 +253,7 @@ public class MarketService {
      */
     public ResponseT<String> getAllSystemPurchaseHistory(String systemManagerName) {
         try {
-            String history = market.getAllSystemPurchaseHistory (systemManagerName).toString ();
+            String history = market2.getAllSystemPurchaseHistory (systemManagerName).toString ();
             return new ResponseT<> ( history );
         }catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );
@@ -269,7 +269,7 @@ public class MarketService {
      */
     public ResponseT<String> getHistoryByShop(String systemManagerName, String shopName) {
         try {
-            String history = market.getHistoryByShop ( systemManagerName, shopName ).toString ();
+            String history = market2.getHistoryByShop ( systemManagerName, shopName ).toString ();
             return new ResponseT<> ( history );
         } catch (MarketException e) {
            return new ResponseT<> ( e.getMessage () ) ;
@@ -279,7 +279,7 @@ public class MarketService {
 
     public ResponseT<String> getHistoryByMember(String systemManagerName, String memberName) {
         try {
-            String history = market.getHistoryByMember ( systemManagerName, memberName ).toString ();
+            String history = market2.getHistoryByMember ( systemManagerName, memberName ).toString ();
             return new ResponseT<> ( history );
         } catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );
@@ -289,7 +289,7 @@ public class MarketService {
     public ResponseT<ShopFacade> getShopInfo(String member, String shopName) {
         ResponseT<ShopFacade> toReturn;
         try {
-            Shop shop = market.getShopInfo(member, shopName);
+            Shop shop = market2.getShopInfo(member, shopName);
             toReturn = new ResponseT<>(new ShopFacade(shop));
         } catch (Exception e) {
             toReturn = new ResponseT<>(e.getMessage());
@@ -298,7 +298,7 @@ public class MarketService {
     }
 
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
-        ShoppingCartFacade cart =  market.calculateShoppingCart(visitorName);
+        ShoppingCartFacade cart =  market2.calculateShoppingCart(visitorName);
         ResponseT <ShoppingCartFacade> responseT = new ResponseT<>(cart);
         return responseT;
     }

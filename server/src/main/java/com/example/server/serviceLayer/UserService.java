@@ -61,11 +61,14 @@ public class UserService {
         return market.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
 
-    public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) throws Exception {
-        List<String> securityQs = market.memberLogin(userName,userPassword,visitorName);
-        return new ResponseT<>(securityQs);
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) {
+        try {
+            List<String> securityQs = market.memberLogin(userName,userPassword,visitorName);
+            return new ResponseT<>(securityQs);
+        } catch (MarketException e){
+            return new ResponseT<> ( e.getMessage () );
+        }
         /*
-
         MemberFacade memberFacade = new MemberFacade(member.getName(),member.getMyCart(),appointedByMeFacadeList,appointmentsFacadeList);
     */
     }
@@ -152,8 +155,16 @@ public class UserService {
         }
     }
 
-    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) throws Exception {
-        return market.validateSecurityQuestions(userName,answers);
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers)  {
+        try{
+            MemberFacade memberLoggedIn = market.validateSecurityQuestions(userName,answers);
+            return new ResponseT<> ( memberLoggedIn );
+        }catch (MarketException e){
+            return new ResponseT<> ( e.getMessage () );
+        }
+    }
+    public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName)  {
+        return market.validateMember(userName,userPassword,visitorName);
     }
 
 }

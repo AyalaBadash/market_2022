@@ -8,25 +8,36 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Item implements IHistory {
 
     public enum Category {
+        general,
         fruit,
         meat,
-        //TODO complete
+        cellular,
+        electricity
     }
 
     private Integer ID;
     private String name;
     private double price;
     private String info;
+    private int rank;
+    private int rankers;
     private Category category;
     private List<String> keywords;
     // TODO ID must be generated in market
-    public Item(Integer ID, String name, double price, String info) {
+    public Item(Integer ID, String name, double price, String info,
+                Category category, List<String> keywords) throws MarketException {
         this.ID = ID;
         this.name = name;
+        if(price < 0)
+            throw new MarketException( "price has to be positive" );
         this.price = price;
-        this.keywords = new CopyOnWriteArrayList<>();
+        this.keywords = keywords;
         this.info = info;
+        this.category = category;
+        rank= 1;
+        rankers=0;
     }
+
 
     public Item(ItemFacade it){
         this.ID= it.getID();
@@ -84,5 +95,13 @@ public class Item implements IHistory {
     public List<String> getKeywords() {
         return keywords;
     }
+
+
+    public void addRank(int rankN){
+        rank=((rank*rankers)+rankN)/(rankers+1);
+        rankers++;
+    }
+    public int getRank(){return rank;}
+    public int getRankers(){return rankers;}
 
 }

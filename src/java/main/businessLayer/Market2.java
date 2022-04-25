@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 
-public class Market {
+public class Market2 {
     private UserController userController;
     private String systemManagerName;
     private Map<String, Shop> shops;                                 // <shopName, shop>
@@ -34,7 +34,7 @@ public class Market {
     private PaymentService paymentService;
     private ProductsSupplyService supplyService;
 
-    private static Market instance;
+    private static Market2 instance;
 
     // TODO need understand how to we want to handle error messages
 //    private Market(String system_manager, PaymentService paymentService, ProductsSupplyService supplyService) {
@@ -48,7 +48,7 @@ public class Market {
 //        this.systemManagerName = system_manager;
 //    }
 
-    private Market() {
+    private Market2() {
         this.shops = new ConcurrentHashMap<>();
         this.allItemsInMarketToShop = new ConcurrentHashMap<>();
         this.itemByName = new ConcurrentHashMap<>();
@@ -57,9 +57,9 @@ public class Market {
     }
 
 
-    public synchronized static Market getInstance() {
+    public synchronized static Market2 getInstance() {
         if (instance == null) {
-            instance = new Market();
+            instance = new Market2();
         }
         return instance;
     }
@@ -285,8 +285,8 @@ public class Market {
     }
 
 
-    public static void setInstance(Market instance) {
-        Market.instance = instance;
+    public static void setInstance(Market2 instance) {
+        Market2.instance = instance;
     }
 
     public PaymentService getPaymentService() {

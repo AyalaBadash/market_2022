@@ -1,5 +1,7 @@
 package com.example.server.businessLayer.Users;
 
+
+import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
@@ -24,7 +26,7 @@ public class Member {
         myCart = new ShoppingCart();
         appointedByMe = new CopyOnWriteArrayList<>();
         myAppointments = new CopyOnWriteArrayList<>();
-        purchaseHistory = new ArrayList<>(  );
+        purchaseHistory = new ArrayList<> (  );
     }
 
 
@@ -71,6 +73,8 @@ public class Member {
             history.append ( String.format ( "purcase %d:\n%s", i, shoppingCart.getReview () ));
             i++;
         }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("Pulled "+this.getName()+" history");
         return history;
     }
 
