@@ -35,17 +35,22 @@ public class ShopOwnerAppointmentFacade extends AppointmentFacade {
     }
 
     public AppointmentFacade toFacade(ShopManagerAppointment appointment) {
-        List<IPermission> list = appointment.getPermissions();
-        List<PermissionFacade> facadeList = new ArrayList<>();
-        for (IPermission permission : list) {
-            facadeList.add(new PermissionFacade(permission));
-        }
-        ShopManagerAppointmentFacade test = new ShopManagerAppointmentFacade(appointment.getAppointed(), appointment.getSuperVisor()
-                , appointment.getRelatedShop(), facadeList);
-        return test;
+        return null;
     }
 
+    public AppointmentFacade toFacade(ShopOwnerAppointment appointment) {
+        List<IPermission> myPermissions = appointment.getPermissions ();
+        List<PermissionFacade> facadePermissions = new ArrayList<> (  );
+        for(IPermission permission : myPermissions){
+            facadePermissions.add ( new PermissionFacade ( permission ) );
+        }
+        return new ShopOwnerAppointmentFacade (appointment.getAppointed (), appointment.getSuperVisor (), appointment.getRelatedShop (), facadePermissions, appointment.isShopFounder () );
+    }
 
+    @Override
+    public AppointmentFacade toFacade(Appointment appointment) {
+        return appointment.visit(this);
+    }
 
 
     @Override

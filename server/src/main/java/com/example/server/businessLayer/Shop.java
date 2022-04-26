@@ -394,4 +394,12 @@ public class Shop implements IHistory{
 
     public int getRank(){return rank;}
 
+    public void changeShopItemInfo(String shopOwnerName, Item updatedItem, Item oldItem) throws MarketException {
+        if(!isShopOwner ( shopOwnerName ))
+            throw new MarketException ( "member is not shop owner so is not authorized to vhange item info" );
+        if (!itemMap.containsValue ( oldItem ))
+            throw new MarketException ( "item does not exist in shop" );
+        deleteItem ( oldItem );
+        addItem ( updatedItem );
+    }
 }

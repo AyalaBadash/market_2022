@@ -234,6 +234,7 @@ public class Market {
     }
 
 
+    //TODO no exceptions
     public List<Item> getItemByName(String name) throws MarketException {
         if (!itemByName.containsKey(name))
             throw new MarketException("no such item");
@@ -308,71 +309,40 @@ public class Market {
         return temp;
     }
 
-    public List<String> memberLogin(String userName, String userPassword, String visitorName) throws MarketException { //TODO -Check whick Exception
+    public List<String> memberLogin(String userName, String userPassword) throws MarketException { //TODO -Check whick Exception
         Security security = Security.getInstance();
         return security.validatePassword(userName,userPassword);
     }
 
-    public MemberFacade validateSecurityQuestions(String userName, List<String> answers) throws MarketException{
+    public MemberFacade validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException{
         Security security = Security.getInstance();
         security.validateQuestions(userName,answers);
         Member member =  userController.getMembers().get(userName);
         List<Appointment> appointmentByMe = member.getAppointedByMe();
-        List<AppointmentFacade> appointmentFacadesByMe= new ArrayList<>();
-        for (Appointment appointment: appointmentByMe)
+        List<AppointmentFacade> appointmentByMeFacade = appointmentToFacade ( appointmentByMe );
+        List<Appointment> myAppointments = member.getMyAppointments ();
+        List<AppointmentFacade> myAppointmentsFacades = appointmentToFacade ( myAppointments );
+        userController.finishLogin(userName, visitorName);
+        return new MemberFacade(member.getName(),member.getMyCart(), appointmentByMeFacade, myAppointmentsFacades);
+    }
+
+    private List<AppointmentFacade> appointmentToFacade(List<Appointment> appointments){
+        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
+        for (Appointment appointment: appointments)
         {
             if (appointment.isOwner()){
-                ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment; //TODO - approve casting
+                ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment;
                 ShopOwnerAppointmentFacade facade = new ShopOwnerAppointmentFacade(shopOwnerAppointment);
-                appointmentFacadesByMe.add(facade);
+                appointmentsFacades.add(facade);
             }
             else {
                 ShopManagerAppointment shopManagerAppointment = (ShopManagerAppointment) appointment;
                 ShopManagerAppointmentFacade facade = new ShopManagerAppointmentFacade(shopManagerAppointment);
-                appointmentFacadesByMe.add(facade);
+                appointmentsFacades.add(facade);
             }
-
         }
-        List<Appointment> appointments = member.getAppointedByMe();
-        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
-        for (Appointment appointment: appointments)
-        {
-            //appointmentsFacades.add(null);//TODO
-        }
-        userController.finishLogin(userName);
-        return new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades);
+        return appointmentsFacades;
     }
-
-    public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName) {
-        Member member =  userController.getMembers().get(userName);
-        List<Appointment> appointmentByMe = member.getAppointedByMe();
-        List<AppointmentFacade> appointmentFacadesByMe= new ArrayList<>();
-        for (Appointment appointment: appointmentByMe)
-        {
-            if (appointment.isOwner()){
-                ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment; //TODO - approve casting
-                ShopOwnerAppointmentFacade facade = new ShopOwnerAppointmentFacade(shopOwnerAppointment);
-                appointmentFacadesByMe.add(facade);
-            }
-            else {
-                ShopManagerAppointment shopManagerAppointment = (ShopManagerAppointment) appointment;
-                ShopManagerAppointmentFacade facade = new ShopManagerAppointmentFacade(shopManagerAppointment);
-                appointmentFacadesByMe.add(facade);
-            }
-
-        }
-        List<Appointment> appointments = member.getAppointedByMe();
-        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
-        for (Appointment appointment: appointments)
-        {
-            //appointmentsFacades.add(null);//TODO
-        }
-        userController.finishLogin(userName);
-        return new ResponseT<MemberFacade>(new MemberFacade(member.getName(),member.getMyCart(),appointmentFacadesByMe,appointmentsFacades));
-
-    }
-
-
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         userController.exitSystem(visitorName);
@@ -427,18 +397,17 @@ public class Market {
 
     public void removeItemFromShop(String shopOwnerName, String itemName, String shopName) throws MarketException {
         Shop shop = shops.get(shopName);
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in the market" );
         //Check if user indeed is the shop owner
         if(!shop.isShopOwner(shopOwnerName))
-        {
             throw new MarketException(shopOwnerName+" is not "+ shopName+ " owner . Removing "+itemName + " from shop has failed.");
-        }
-        else //we can remove item
-        {
-            Item itemToDelete = shop.getItemMap().get(itemName);
-            shop.deleteItem(itemToDelete);
-            updateMarketOnDeleteItem(itemToDelete);
-        }
+        Item itemToDelete = shop.getItemMap().get(itemName);
+        userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
+        shop.deleteItem(itemToDelete);
+        updateMarketOnDeleteItem(itemToDelete);
     }
+
 
     private void updateMarketOnDeleteItem(Item itemToDelete) {
         allItemsInMarketToShop.remove(itemToDelete.getID());
@@ -472,12 +441,11 @@ public class Market {
     }
 
     //TODO not response!!
-    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade facadeItem, double amount, String shopName) throws MarketException {
+    public Response setItemCurrentAmount(String shopOwnerName, Item item, double amount, String shopName) throws MarketException {
         Shop shop = shops.get(shopName);
         if(shop == null){
             throw new MarketException ( "shop does not exist in system" );
         }
-        Item item = new Item ( facadeItem );
         shop.setItemAmount(shopOwnerName,item,amount);
         return new Response();
     }
@@ -594,7 +562,10 @@ public class Market {
 
 
     //TODO
-    public void changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) throws MarketException {
-        throw new MarketException ( "" );
+    public void changeShopItemInfo(String shopOwnerName, Item updatedItem, Item oldItem, String shopName) throws MarketException {
+        Shop shop = shops.get ( shopName );
+        if(shop == null)
+            throw new MarketException ( "shop doed not exist in the narket" );
+        shop.changeShopItemInfo(shopOwnerName, updatedItem, oldItem);
     }
 }

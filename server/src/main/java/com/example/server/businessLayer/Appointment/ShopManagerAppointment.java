@@ -3,6 +3,9 @@ package com.example.server.businessLayer.Appointment;
 import com.example.server.businessLayer.Appointment.Permissions.IPermission;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Member;
+import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
+import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
+import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
 import java.util.List;
 
@@ -25,6 +28,16 @@ public class ShopManagerAppointment extends Appointment {
     @Override
     public boolean isOwner() {
         return false;
+    }
+
+    @Override
+    public AppointmentFacade visit(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade) {
+        return shopOwnerAppointmentFacade.toFacade ( this );
+    }
+
+    @Override
+    public AppointmentFacade visit(ShopManagerAppointmentFacade shopManagerAppointmentFacade) {
+        return shopManagerAppointmentFacade.toFacade ( this );
     }
 
 

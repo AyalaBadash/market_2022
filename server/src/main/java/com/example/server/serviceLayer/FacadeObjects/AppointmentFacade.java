@@ -2,6 +2,7 @@ package com.example.server.serviceLayer.FacadeObjects;
 
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
+import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Member;
 
@@ -54,4 +55,8 @@ public abstract class AppointmentFacade implements FacadeObject<Appointment> {
     }
 
     public abstract AppointmentFacade toFacade(ShopManagerAppointment appointment);
+
+    public abstract AppointmentFacade toFacade(ShopOwnerAppointment appointment);
+
+    public abstract AppointmentFacade toFacade(Appointment appointment);
 }
