@@ -36,10 +36,15 @@ public class Security {
     }
 
     private void validateName(String name) throws MarketException {
-        if (namesToLoginInfo.containsKey(name))
+        if (namesToLoginInfo.containsKey(name)) {
+            ErrorLog.getInstance().Log("User tried to register with taken name.");
             throw new MarketException("Name is already taken ,try to be a little more creative and choose another name. ");
-        if (name == null || name.equals(""))
+        }
+        if (name == null || name.equals("")){
+            ErrorLog.getInstance().Log("User tried to register with invalid name.");
             throw new MarketException("Name can't be null or empty string");
+        }
+
     }
 
 
