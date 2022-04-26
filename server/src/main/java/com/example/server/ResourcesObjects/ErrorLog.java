@@ -16,7 +16,7 @@ public class ErrorLog {
 
     private ErrorLog(){
         logger = LogManager.getLogger("warning logger");
-        loggerFile = new File(System.getProperty("user.dir")+"/myLog.txt");
+        loggerFile = new File(System.getProperty("user.dir")+"/ErrorLog.txt");
     }
 
     public static ErrorLog getInstance() {
