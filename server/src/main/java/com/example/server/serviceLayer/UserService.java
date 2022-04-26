@@ -61,9 +61,9 @@ public class UserService {
         return market.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
 
-    public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) {
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword) {
         try {
-            List<String> securityQs = market.memberLogin(userName,userPassword,visitorName);
+            List<String> securityQs = market.memberLogin(userName,userPassword);
             return new ResponseT<>(securityQs);
         } catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );
@@ -72,13 +72,6 @@ public class UserService {
         MemberFacade memberFacade = new MemberFacade(member.getName(),member.getMyCart(),appointedByMeFacadeList,appointmentsFacadeList);
     */
     }
-
-    // TODO implement
-    private ResponseT<List<String>> memberLoginGetQuestions(String memberName, String password)
-    {
-        return null;
-    }
-
 
     public ResponseT<VisitorFacade> logout(String visitorName) {
         ResponseT<VisitorFacade> toReturn;
@@ -116,22 +109,6 @@ public class UserService {
         return toReturn;
     }
 
-    // TODO implement
-    public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName) {
-        return null;
-    }
-
-    // TODO implement
-    public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName) {
-        return null;
-    }
-
-    // TODO implement
-    public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName) {
-        return null;
-    }
-
-
     public Response editShopManagerPermissions(String shopOwnerName, String managerName,
                                                String relatedShop, ShopManagerAppointmentFacade updatedAppointment) {
         try{
@@ -155,16 +132,13 @@ public class UserService {
         }
     }
 
-    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers)  {
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName)  {
         try{
-            MemberFacade memberLoggedIn = market.validateSecurityQuestions(userName,answers);
+            MemberFacade memberLoggedIn = market.validateSecurityQuestions(userName,answers, visitorName);
             return new ResponseT<> ( memberLoggedIn );
         }catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );
         }
-    }
-    public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName)  {
-        return market.validateMember(userName,userPassword,visitorName);
     }
 
 }

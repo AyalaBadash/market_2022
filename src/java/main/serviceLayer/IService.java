@@ -260,21 +260,6 @@ public interface IService {
      */
     public Response appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName);
 
-    /**
-     * @return managers and shop owners I appointed
-     */
-    public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName);
-
-    /**
-     * @return managers I appointed
-     */
-    public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName);
-
-    /**
-     * @return shop owners I appointed
-     */
-    public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName);
-
 
     /**
      * @param shopOwnerName
