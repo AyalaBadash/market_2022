@@ -38,7 +38,7 @@ public class ClosedShopsHistory {
         return closedShops;
     }
 
-    private void setClosedShops(List<Shop> closedShops) {
+    public void setClosedShops(List<Shop> closedShops) {
         this.closedShops = closedShops;
     }
 
@@ -46,7 +46,7 @@ public class ClosedShopsHistory {
         return overallHistory;
     }
 
-    private void setOverallHistory(StringBuilder overallHistory) {
+    public void setOverallHistory(StringBuilder overallHistory) {
         this.overallHistory = overallHistory;
     }
 }

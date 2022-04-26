@@ -6,6 +6,9 @@ import com.example.server.businessLayer.Appointment.Permissions.PurchaseHistoryP
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Member;
+import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
+import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
+import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
 import java.util.List;
 import java.util.Map;
@@ -90,4 +93,9 @@ public abstract class Appointment {
         }
         return false;
     }
+
+    public abstract AppointmentFacade visit(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade);
+
+
+    public abstract  AppointmentFacade visit(ShopManagerAppointmentFacade shopManagerAppointmentFacade);
 }

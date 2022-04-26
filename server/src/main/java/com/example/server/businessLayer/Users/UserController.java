@@ -1,6 +1,8 @@
 package com.example.server.businessLayer.Users;
 
+import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingCart;
 
 import java.util.Map;
@@ -94,9 +96,10 @@ public class UserController {
             return newVisitorName;
         }
     }
-    public Member finishLogin(String userName) {
+    public Member finishLogin(String userName, String visitorName) {
         Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
         visitorsInMarket.put(userName,newVisitorMember);
+        visitorsInMarket.remove ( visitorName );
         return newVisitorMember.getMember();
     }
 
@@ -106,5 +109,14 @@ public class UserController {
 
     public Member getMember(String visitorName) {
         return members.get ( visitorName );
+    }
+
+    public void updateVisitorsInRemoveOfItem(Shop shop, Item itemToRemove) throws MarketException {
+        for ( Visitor visitor : visitorsInMarket.values ()){
+            visitor.getCart ().removeItem ( shop, itemToRemove);
+        }
+        for ( Member member: members.values ()){
+            member.getMyCart().removeItem( shop, itemToRemove);
+        }
     }
 }

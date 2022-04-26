@@ -6,16 +6,21 @@ import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 public class Service implements IService {
     private static Service service = null;
     MarketService marketService;
     PurchaseService purchaseService;
     UserService userService;
+
 
     private Service() {
         marketService = MarketService.getInstance();
@@ -108,7 +113,7 @@ public class Service implements IService {
 
     @Override
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
-        return marketService.calculateShoppingCart(visitorName);
+        return purchaseService.calculateShoppingCart(visitorName);
     }
 
     @Override
@@ -117,21 +122,13 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) {
-        return userService.memberLogin(userName, userPassword, visitorName);
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword) {
+        return userService.memberLogin(userName, userPassword);
     }
 
-    private ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers) {
-
-        try{
-            return userService.validateSecurityQuestions(userName,answers);
-        }
-        catch (Exception e)
-        {
-            //TODO
-            return null; //TODO change here
-        }
-
+    @Override
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName) {
+        return userService.validateSecurityQuestions ( userName, answers, visitorName );
     }
 
 
@@ -141,7 +138,6 @@ public class Service implements IService {
         return userService.logout(visitorName);
     }
 
-    // TODO implement
     @Override
     public Response openNewShop(String visitorName, String shopName) {
         return marketService.openNewShop ( visitorName, shopName );
@@ -165,11 +161,6 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName) {
-        return marketService.getItemCurrentAmount ( item, shopName );
-    }
-
-    @Override
     public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         return marketService.setItemCurrentAmount(shopOwnerName, item, amount, shopName);
     }
@@ -186,21 +177,6 @@ public class Service implements IService {
     }
     @Override
     public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
-        return null;
-    }
-    // TODO implement
-    @Override
-    public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName) {
-        return null;
-    }
-    // TODO implement
-    @Override
-    public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName) {
-        return null;
-    }
-    // TODO implement
-    @Override
-    public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName) {
         return null;
     }
 

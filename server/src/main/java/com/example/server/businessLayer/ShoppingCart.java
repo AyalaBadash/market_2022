@@ -19,7 +19,6 @@ public class ShoppingCart implements IHistory {
         this.currentPrice = currentPrice;
     }
 
-    // TODO need to append visitor name when called
     @Override
     public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();
@@ -29,7 +28,6 @@ public class ShoppingCart implements IHistory {
             if (basket.isEmpty()) {
                 continue;
             }
-            // TODO need to make sure all items in cart is bought
             review.append(String.format("Basket for %s:\n%s\n", shop.getShopName(), basket.getReview()));
             review.append(String.format("Overall Cart Price: %f", currentPrice));
 
@@ -93,8 +91,11 @@ public class ShoppingCart implements IHistory {
         shoppingBasket.addItem ( item, amount );
     }
 
-    public void removeItem(Shop shop, Item item, int amount) {
-        throw new UnsupportedOperationException();
+    public void removeItem(Shop shop, Item item) throws MarketException {
+        ShoppingBasket shoppingBasket = cart.get ( shop );
+        if(shoppingBasket == null)
+            return;
+        shoppingBasket.removeItem ( item);
     }
 
     public void calculate() {

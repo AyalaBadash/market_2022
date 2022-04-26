@@ -21,7 +21,7 @@ public interface IService {
 
 
     /**
-     * for when there is no DB and need to create a new system manager - TODO has to run first!!!!
+     * for when there is no DB and need to create a new system manager - !!!!has to run first!!!!
      * @param paymentService
      * @param supplyService
      * @param userName
@@ -123,7 +123,6 @@ public interface IService {
                                              String visitorName);
 
     /**
-     * TODO add price (initial to -1) to shopping cart and update after calculating
      *
      * @param visitorName
      * @return
@@ -149,9 +148,17 @@ public interface IService {
      * @param userPassword
      * @return
      */
-    public ResponseT<List<String>> memberLogin(String userName, String userPassword,
-                                               String visitorName);
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword);
 
+
+    /**
+     *
+     * @param userName
+     * @param answers
+     * @param visitorName
+     * @return
+     */
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName);
 
 
     //************************* Member Use cases *************************************//
@@ -213,13 +220,6 @@ public interface IService {
      */
     public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
                                   List<String> keywords, int amount, String shopName);
-    /**
-     *
-     * @param item
-     * @param shopName
-     * @return items current amount in the shop
-     */
-    public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName);
 
 
     /**
@@ -262,21 +262,6 @@ public interface IService {
      * @param shopName
      */
     public Response appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName);
-
-    /**
-     * @return managers and shop owners I appointed
-     */
-    public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName);
-
-    /**
-     * @return managers I appointed
-     */
-    public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName);
-
-    /**
-     * @return shop owners I appointed
-     */
-    public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName);
 
 
     /**

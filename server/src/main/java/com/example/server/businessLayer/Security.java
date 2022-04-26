@@ -92,6 +92,8 @@ public class Security {
     }
 
     public void validateQuestions(String userName, List<String> answers) throws MarketException{
+        if(answers == null)
+            return;
         LoginCard card = namesToLoginInfo.get(userName);
         Map<String, String> QsAndAns = card.getQandA();
         if (answers.size()!=QsAndAns.size()) {
@@ -104,6 +106,9 @@ public class Security {
         {
             if(entry.getValue().equals(answers.get(index)))
                 index++;
+            else
+                //TODO add log
+                throw new MarketException ( String.format ( "answer %s does not fit the answers", answers.get(index) ) );
         }
     }
 
