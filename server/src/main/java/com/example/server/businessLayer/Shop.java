@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Shop implements IHistory{
-    // TODO must be unique
     private String shopName;
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, Appointment> shopManagers;     //<name, appointment>
@@ -38,46 +37,32 @@ public class Shop implements IHistory{
         rankers=0;
     }
 
-    //use case - receive info of a shop
-    public String receiveInfo(String userName) throws Exception {
-        Boolean hasPermission = false;
-        if (isClosed()) {
-            for (Map.Entry<String, Appointment> appointment : shopOwners.entrySet()) {
-                if (appointment.getValue().getAppointed().getName().equals(userName)) {
-                    hasPermission = true;
-                }
-            }
-            for (Map.Entry<String, Appointment> appointment : shopManagers.entrySet()) {
-                if (appointment.getValue().getAppointed().getName().equals(userName)) {
-                    hasPermission = true;
-                }
-            }
-            throw new Exception("only owners and managers of the shop can view it's information");
-        }
-        return "shop: " + shopName;
-    }
-
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
-        //TODO - check this method.
         Appointment ownerAppointment = shopOwners.get(superVisorName);
         if (ownerAppointment == null ){
+            ErrorLog.getInstance ().Log (String.format("%s: cannot find an owner '%s'",shopName , superVisorName));
             throw new MarketException(String.format("%s: cannot find an owner '%s'",shopName , superVisorName));
         }
         Appointment oldAppointment = shopManagers.get(managerName);
         if (oldAppointment ==  null ){
+            ErrorLog.getInstance ().Log (String.format("%s: cannot find an appointment of %s" , this.getShopName(), managerName));
             throw new MarketException(String.format("%s: cannot find an appointment of %s" , this.getShopName(), managerName));
+        }
+        if(!oldAppointment.getSuperVisor ().equals ( superVisorName )){
+            ErrorLog.getInstance ().Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ));
+            throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
         this.shopManagers.put(managerName, appointment);
     }
 
 
     //use case - Stock management
-    // TODO if key value changed, need to inform all relevant like users
-    public void editItem(Item item) {
-        itemMap.put(item.getID(), item);
+    public void editItem(Item newItem, String id) throws MarketException {
+        if(newItem.getID () != Integer.getInteger ( id ))
+            throw new MarketException ( "must not chance the item id" );
+        itemMap.put(newItem.getID (), newItem);
     }
 
-    ;
 
     public void deleteItem(Item item) {
         itemMap.remove(item.getName());
@@ -245,12 +230,9 @@ public class Shop implements IHistory{
     }
 
     public Shop getShopInfo(String member) throws MarketException {
-        if (isClosed()){
-            if (!isEmployee ( member )) {
-                ErrorLog.getInstance().Log("Non shop owner tried to access shop info. ");
-                throw new MarketException("member must be shop owner in order to get close shop info");
-            }
-            return getEmployee ( member ).getShopInfo();
+        if (isClosed() && !isShopOwner ( member )) {
+            ErrorLog.getInstance ( ).Log ( "Non shop owner or system manager tried to access shop info. " );
+            throw new MarketException ( "member must be shop owner or system manager in order to get a close shop info" );
         }
         return this;
     }

@@ -199,6 +199,15 @@ public class MarketService {
         }
     }
 
+    public Response editItem(ItemFacade newItem, String id){
+        try{
+            market.editItem(newItem.toBusinessObject (), id);
+            return new Response (  );
+        } catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
     public Response closeShop(String shopOwnerName, String shopName) {
         Response response;
         try {
