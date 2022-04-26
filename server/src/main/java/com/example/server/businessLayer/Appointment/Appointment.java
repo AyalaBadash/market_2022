@@ -80,10 +80,10 @@ public abstract class Appointment {
         return permission.apply(relatedShop);
     }
 
-    public Shop getShopInfo() throws MarketException {
+    public StringBuilder getShopInfo() throws MarketException {
         if (relatedShop.isClosed() && !isOwner())
             throw new MarketException("only shop owners and founders can get close shop info");
-        return relatedShop;
+        return relatedShop.getReview ();
     }
 
     public boolean hasPermission(String permission) {

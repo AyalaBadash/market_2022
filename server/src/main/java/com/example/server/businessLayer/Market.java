@@ -490,11 +490,12 @@ public class Market {
     }
 
     public Shop getShopInfo(String member, String shopName) throws MarketException {
-        //TODO  - check . Talk with raz.
-        if (!shops.containsKey(shopName)) {
-            EventLog.getInstance().Log("");
-            throw new MarketException("no such shop");
+        if (!shops.containsKey(shopName) && !ClosedShopsHistory.getInstance ().isClosed(shopName)) {
+            EventLog.getInstance().Log(String.format ("Asked for shop info while shop %s does not exist", shopName));
+            throw new MarketException("shop does not exist in the market");
         }
+        if(member.equals ( systemManagerName ))
+            return shops.get ( shopName );
         return shops.get(shopName).getShopInfo(member);
     }
 
@@ -607,5 +608,15 @@ public class Market {
         if(!userController.isLoggedIn(visitorName))
             throw new MarketException ( "has to be visitor in the system to watch shopping cart" );
         return userController.getVisitor ( visitorName ).getCart ();
+    }
+
+    public void editItem(Item newItem, String id) throws MarketException {
+        String shopName = allItemsInMarketToShop.get ( id );
+        if(shopName == null)
+            throw new MarketException ( "item does not exist in the market" );
+        Shop shop = shops.get ( shopName );
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in the market" );
+        shop.editItem ( newItem, id );
     }
 }

@@ -69,7 +69,7 @@ public class ClosedShopHistoryTest extends mainTest {
     public void closeShopValid() throws MarketException {
         Assertions.assertTrue(closedShopsHistory.getClosedShops().isEmpty());
         closedShopsHistory.closeShop(shop);
-        Assertions.assertTrue(closedShopsHistory.getClosedShops().contains(shop));
+        Assertions.assertTrue(closedShopsHistory.getClosedShops().containsKey (shop.getShopName ()));
     }
     @Test
     @DisplayName("History - close null shop")
