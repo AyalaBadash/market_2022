@@ -7,8 +7,6 @@ import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
-import com.example.server.serviceLayer.FacadeObjects.Response;
-import com.example.server.serviceLayer.FacadeObjects.ResponseT;
 import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
 
 public class PurchaseService {

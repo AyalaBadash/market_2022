@@ -42,7 +42,7 @@ public class Security {
     }
 
     public void addNewMember(String name, String password, List<String> questions,
-                             List<String> answers) {
+                             List<String> answers) throws MarketException {
         LoginCard card = new LoginCard(name, password,questions, answers);
         this.namesToLoginInfo.put(name, card);
     }
@@ -96,13 +96,14 @@ public class Security {
     }
 
 
-    public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) throws MarketException {
-        if (!namesToLoginInfo.containsKey(member.getName()))
+    public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String name) throws MarketException {
+        if (!namesToLoginInfo.containsKey(name))
         {
-            throw new MarketException("No such user exist");
+            ErrorLog.getInstance ().Log ( "Cannot add a personal query cause there is no such user in the system " );
+            throw new MarketException("Cannot add a personal query cause there is no such user in the system ");
         }
         else {
-            LoginCard card = namesToLoginInfo.get(member.getName());
+            LoginCard card = namesToLoginInfo.get(name);
             Map<String,String> QA = card.getQandA();
             QA.put(userAdditionalQueries,userAdditionalAnswers);
         }

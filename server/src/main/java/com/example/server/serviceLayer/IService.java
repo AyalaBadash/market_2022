@@ -1,9 +1,5 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.businessLayer.ExternalServices.*;
-import com.example.server.ResourcesObjects.Address;
-import com.example.server.ResourcesObjects.PaymentMethod;
-import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;

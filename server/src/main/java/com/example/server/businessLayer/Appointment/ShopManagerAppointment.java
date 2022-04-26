@@ -42,11 +42,12 @@ public class ShopManagerAppointment extends Appointment {
 
 
     public void removePermission(IPermission permission){
-        throw new UnsupportedOperationException();
+        if(permissions.contains ( permission ))
+            permissions.remove ( permission );
     }
 
     public void addPermission(IPermission permission){
-        throw new UnsupportedOperationException();
+        permissions.add ( permission );
     }
 
 

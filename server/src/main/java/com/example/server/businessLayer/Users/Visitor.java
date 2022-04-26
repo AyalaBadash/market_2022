@@ -6,7 +6,6 @@ import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 
 public class Visitor {
-    // TODO must be unique
     private String name;
     private Member member;
     private ShoppingCart cart;
@@ -21,33 +20,6 @@ public class Visitor {
         this.name = name;
         this.member = member;
         this.cart = cart;
-    }
-
-    //use case - payment
-    public boolean payment(ShoppingCart cart,String paymentDetails){
-        throw new UnsupportedOperationException();
-    } // return true if payment succeeded
-    public void cleanShoppingCart(){
-        throw new UnsupportedOperationException();
-    }
-
-    //use case - user leaves the market
-    public void leaveMarket(){throw new UnsupportedOperationException();}
-    public void saveShoppingCart(){throw new UnsupportedOperationException();};
-
-    //use case - receive info of a shop
-    public void getShopInfo(String shopID){throw new UnsupportedOperationException();} // TODO - maybe shopID needs to be main.businessLayer.Shop name
-
-    //use case - Save items in shopping cart
-    public void addToShoppingCart(Item item, double amount, String shopID) // TODO - think if shopID needed here and if so from where we are getting it
-    {throw new UnsupportedOperationException();}
-
-    //use case - Show shopping cart
-    public void displayShoppingCart(){throw new UnsupportedOperationException();}
-
-    //use case - Acquisition
-    public boolean purchase(){throw new UnsupportedOperationException();
-        //cleanShoppingCart();
     }
 
 

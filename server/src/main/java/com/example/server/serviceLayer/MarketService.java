@@ -2,8 +2,6 @@ package com.example.server.serviceLayer;
 
 
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
-import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Item;

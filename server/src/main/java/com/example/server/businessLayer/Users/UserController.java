@@ -60,15 +60,15 @@ public class UserController {
         }
     }
 
-    public boolean register(String userName) {
+    public boolean register(String userName) throws MarketException {
         members.put(userName,new Member(userName));
-        EventLog.getInstance().Log("Welcome to our new member:"+userName);
+        EventLog.getInstance().Log("Welcome to our new member: "+userName);
         return true;
     }
 
 
     private synchronized String getNextUniqueName() {
-        String name = "visitor" + nextUniqueNumber;
+        String name = "@visitor" + nextUniqueNumber;
         nextUniqueNumber++;
         return name;
     }

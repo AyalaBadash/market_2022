@@ -13,7 +13,7 @@ import com.example.server.serviceLayer.FacadeObjects.*;
 import java.util.List;
 
 public class UserService {
-    private static UserService userService = null;
+    private static UserService instance = null;
     private Market market;
 
     private UserService() {
@@ -21,9 +21,9 @@ public class UserService {
     }
 
     public synchronized static UserService getInstance() {
-        if (userService == null)
-            userService = new UserService();
-        return userService;
+        if (instance == null)
+            instance = new UserService();
+        return instance;
     }
 
     public ResponseT<VisitorFacade> guestLogin() {
@@ -57,7 +57,7 @@ public class UserService {
         return responseT;
     }
 
-    public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
+    public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) {
         try {
             market.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
             return new Response (  );
@@ -91,17 +91,13 @@ public class UserService {
 
 
     public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
-
-        Response toReturn;
         try {
-            toReturn = new Response();
             market.appointShopOwner(shopOwnerName,appointedShopOwner,shopName);
+            return new Response();
         } catch (Exception e) {
-            toReturn = new Response(e.getMessage());
+            return new Response(e.getMessage());
         }
-        return toReturn;
     }
-
 
     public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
         Response toReturn;

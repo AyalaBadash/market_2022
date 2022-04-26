@@ -5,12 +5,12 @@ import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
 public class AddPersonalQueryRequest {
     private String userAdditionalQueries;
     private String userAdditionalAnswers;
-    private MemberFacade member;
+    private String member;
 
     public AddPersonalQueryRequest() {
     }
 
-    public AddPersonalQueryRequest(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
+    public AddPersonalQueryRequest(String userAdditionalQueries, String userAdditionalAnswers, String member) {
         this.userAdditionalQueries = userAdditionalQueries;
         this.userAdditionalAnswers = userAdditionalAnswers;
         this.member = member;
@@ -33,11 +33,11 @@ public class AddPersonalQueryRequest {
         this.userAdditionalAnswers = userAdditionalAnswers;
     }
 
-    public MemberFacade getMember() {
+    public String getMember() {
         return member;
     }
 
-    public void setMember(MemberFacade member) {
+    public void setMember(String member) {
         this.member = member;
     }
 }
