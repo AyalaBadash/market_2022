@@ -7,8 +7,11 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
+import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
+import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.Requests.*;
 import com.example.server.serviceLayer.Response;
+import com.example.server.serviceLayer.ResponseT;
 import com.example.server.serviceLayer.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -41,6 +44,7 @@ import java.util.List;
 
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -91,8 +95,7 @@ class ServerApplicationTests {
     void contextLoads() {
     }
 
-    PaymentMock paymentMock = new PaymentMock();
-    SupplyMock supplyMock = new SupplyMock();
+
     String systemManagerName = "Raz";
     String systemManagerPassword = "1234Manager";
     String shopOwnerName = "Ayala";
@@ -109,14 +112,9 @@ class ServerApplicationTests {
     @Test
     @DisplayName("first init market - valid")
     public void validFirstInitMarketTwice() throws Exception {
-        InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
-        String methodCall = "/firstInitMarket";
+
         try{
-            MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
-                            content(toHttpRequest(request)).contentType(contentType))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            Response result =  deserialize(res, Response.class);
+            Response result =  initMarket();
             assert !result.isErrorOccurred();
 
         }catch (Exception e){
@@ -149,33 +147,39 @@ class ServerApplicationTests {
     }
 
     @Test
-    @DisplayName("get info by visitor")
-    public void validgetInfoByVisitor() throws Exception {
-        initMarket ();
-        register ( memberName1, password1);
-        addShop ( memberName1, shopName1 );
-
-        InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
-        InitMarketRequest request2 =  new InitMarketRequest("raz", "1234Raz");
-        String methodCall = "/firstInitMarket";
+    @DisplayName("valid guest login")
+    public void guestLoginValid() throws Exception {
+        initMarket();
+        String methodCall = "/guestLogin";
         try{
+            MvcResult res = mvc.perform(post(methodCall)).andReturn();
+            ResponseT<VisitorFacade> result =  deserialize(res, ResponseT.class);
+            assert !result.isErrorOccurred();
+            VisitorFacade visitor = result.getValue();
 
         }catch (Exception e){
             assert false;
         }
+
     }
 
     @Test
-    @DisplayName("valid guest login")
-    public void guestLoginValid() throws Exception {
-        TwoStringRequest request =  new TwoStringRequest ("ido", "1234Ido");
-        String methodCall = "/getShopInfo";
+    @DisplayName("guest leaves the market")
+    public void guestExitMarket() throws Exception {
+
+        initMarket();
+        VisitorFacade visitor = getVisitor();
+        String memberName = "raz";
+        String password = "1234Raz";
+        NamePasswordRequest request = new NamePasswordRequest(memberName, password);
+        String methodCall = "/register";
         try{
             MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                             content(toHttpRequest(request)).contentType(contentType))
                     .andExpect(status().isOk())
                     .andReturn();
-            Response result =  deserialize(res, Response.class);
+            ResponseT<Boolean> result =  deserialize(res, ResponseT.class);
+            assertTrue(result.getValue());
             assert !result.isErrorOccurred();
 
         }catch (Exception e){
@@ -183,60 +187,80 @@ class ServerApplicationTests {
         }
     }
 
-
-
     @Test
-    public void requestExample() throws Exception{
+    @DisplayName("member login valid")
+    public void memberLoginValid() throws Exception {
 
-        ItemFacade item = new ItemFacade(1,"milk", 10, Item.Category.general , new ArrayList<>() , "sad" );
-        EditItemFromShoppingCartRequest request =  new EditItemFromShoppingCartRequest(10.4, item, "shop" , "visitor" );
-        String methodCall = "/editItemFromShoppingCart";
+        initMarket();
+        VisitorFacade visitor = getVisitor();
+        String memberName = "raz";
+        String password = "Raz123";
+        try {
+            register(memberName, password);
+            List<String> questions = getMemberQuestions(memberName, password);
+            Assertions.assertTrue(questions.isEmpty());
+            MemberFacade member = validateSecurityQuestions(memberName,new ArrayList<>() , password);
+        }catch (Exception e){assert false;}
+
+
+    }
+
+
+
+
+//
+//    @Test
+//    public void requestExample() throws Exception{
+//
+//        ItemFacade item = new ItemFacade(1,"milk", 10, Item.Category.general , new ArrayList<>() , "sad" );
+//        EditItemFromShoppingCartRequest request =  new EditItemFromShoppingCartRequest(10.4, item, "shop" , "visitor" );
+//        String methodCall = "/editItemFromShoppingCart";
+////        CloseShopRequest request = new CloseShopRequest("ido", "1");
+//        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+//                        content(toHttpRequest(request)).contentType(contentType))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//    }
+
+//    @Test
+//    public void testReq() throws Exception {
+//        String methodCall = "/closeShop";
 //        CloseShopRequest request = new CloseShopRequest("ido", "1");
-        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
-                        content(toHttpRequest(request)).contentType(contentType))
-                .andExpect(status().isOk())
-                .andReturn();
+//        String t = this.toHttpRequest(request);
+//        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+//                        content(toHttpRequest(request)).contentType(contentType))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//    }
 
-    }
-
-    @Test
-    public void testReq() throws Exception {
-        String methodCall = "/closeShop";
-        CloseShopRequest request = new CloseShopRequest("ido", "1");
-        String t = this.toHttpRequest(request);
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(methodCall).
-                        content(toHttpRequest(request)).contentType(contentType))
-                .andExpect(status().isOk())
-                .andReturn();
-
-    }
-
-    @Test
-    public void test_hello() throws Exception {
-        String name = "shaked";
-        String email = "shak@gmail.com";
-        String methodCall = "/getStudent";
-        List<Student> studentList = new ArrayList<>();
-        Student ido = new Student("ido", "1");
-
-        studentList.add(ido);
-        studentList.add(new Student("raz", "2"));
-        Gson gson = new Gson();
-
-        Student ido2 = gson.fromJson(gson.toJson(ido),Student.class);
-        String json = gson.toJson(studentList);
-        int x = 3;
-        Type listType = new TypeToken<ArrayList<Student>>(){}.getType();
-        List<Student> result = gson.fromJson(json,listType);
-
-//        String req = String.format("?name=%s&email=%s",name,email);
-        String req = String.format("?name=shaked&email=ido");
-        MvcResult res = mvc.perform(post("/getStudent"+req)).andReturn();
-//        MvcResult res = mvc.perform(post("/getStudent?name=shaked&email=ido")).andReturn();
-        String resS = res.getResponse().getContentAsString();
-        Student student = new ObjectMapper().readValue(resS,Student.class);
-        Assertions.assertEquals("hello shaked", res.getResponse().getContentAsString());
-    }
+//    @Test
+//    public void test_hello() throws Exception {
+//        String name = "shaked";
+//        String email = "shak@gmail.com";
+//        String methodCall = "/getStudent";
+//        List<Student> studentList = new ArrayList<>();
+//        Student ido = new Student("ido", "1");
+//
+//        studentList.add(ido);
+//        studentList.add(new Student("raz", "2"));
+//        Gson gson = new Gson();
+//
+//        Student ido2 = gson.fromJson(gson.toJson(ido),Student.class);
+//        String json = gson.toJson(studentList);
+//        int x = 3;
+//        Type listType = new TypeToken<ArrayList<Student>>(){}.getType();
+//        List<Student> result = gson.fromJson(json,listType);
+//
+////        String req = String.format("?name=%s&email=%s",name,email);
+//        String req = String.format("?name=shaked&email=ido");
+//        MvcResult res = mvc.perform(post("/getStudent"+req)).andReturn();
+////        MvcResult res = mvc.perform(post("/getStudent?name=shaked&email=ido")).andReturn();
+//        String resS = res.getResponse().getContentAsString();
+//        Student student = new ObjectMapper().readValue(resS,Student.class);
+//        Assertions.assertEquals("hello shaked", res.getResponse().getContentAsString());
+//    }
 
     protected String toHttpRequest(Object obj) throws IOException {
         MockHttpOutputMessage  mockHttpOutputMessage = new MockHttpOutputMessage();
@@ -248,16 +272,60 @@ class ServerApplicationTests {
     protected <T> T deserialize(MvcResult res, Class<T> classType) throws UnsupportedEncodingException {
         return gson.fromJson(res.getResponse().getContentAsString(), classType);
     }
-    public void initMarket() throws Exception {
+    public Response initMarket() throws Exception {
         InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
         String methodCall = "/firstInitMarket";
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                         content(toHttpRequest(request)).contentType(contentType))
                 .andExpect(status().isOk())
                 .andReturn();
+        return deserialize(res,Response.class);
 
     }
 
+
+    public void login(String name , String password){
+        NamePasswordRequest request =  new NamePasswordRequest (name, password);
+        String methodCall = "/register";
+        try{
+
+            MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                            content(toHttpRequest(request)).contentType(contentType))
+                    .andExpect(status().isOk())
+                    .andReturn();
+        }catch (Exception e){return ;}
+    }
+    public MemberFacade validateSecurityQuestions(String userName, List<String> answers, String visitorName){
+        ValidateSecurityRequest request =  new ValidateSecurityRequest(userName, answers,visitorName);
+        String methodCall = "/validateSecurityQuestions";
+        try{
+            MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                            content(toHttpRequest(request)).contentType(contentType))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            ResponseT<MemberFacade> result =  deserialize(res, ResponseT.class);
+            return result.getValue();
+        }catch (Exception e){
+            return null;
+        }
+    }
+    public List<String> getMemberQuestions(String name, String password){
+        NamePasswordRequest request = new NamePasswordRequest(name, password);
+        String methodCall = "/memberLogin";
+        try{
+            MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                            content(toHttpRequest(request)).contentType(contentType))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            ResponseT<List<String>> result =  deserialize(res, ResponseT.class);
+            return result.getValue();
+
+
+        }catch (Exception e){
+            return null;
+        }
+
+    }
     public void register(String name, String password) throws Exception {
         NamePasswordRequest request =  new NamePasswordRequest (name, password);
         String methodCall = "/register";
@@ -284,6 +352,18 @@ class ServerApplicationTests {
                 .andExpect(status().isOk())
                 .andReturn();
     }
+    public VisitorFacade getVisitor(){
+        String methodCall = "/guestLogin";
+        try{
+            MvcResult res = mvc.perform(post(methodCall)).andReturn();
+            ResponseT<VisitorFacade> result =  deserialize(res, ResponseT.class);
+            VisitorFacade visitor = result.getValue();
+            return  visitor;
 
+        }catch (Exception e){
+            return null;
+        }
+
+    }
 
 }
