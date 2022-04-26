@@ -101,7 +101,8 @@ class MemberTest {
 
     @Test
     void getPurchaseHistory() {
-        Assertions.assertEquals(member.getPurchaseHistory().toString(),"");
+        String test = member.getPurchaseHistory().toString();
+        Assertions.assertEquals(test,String.format ("%s:\n", member.getName ()));
         member.savePurchase(myCart);
         Mockito.when(myCart.getReview()).thenReturn(new StringBuilder().append("cart test"));
         Assertions.assertTrue(member.getPurchaseHistory().toString().contains("cart test"));
