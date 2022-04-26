@@ -1,4 +1,4 @@
-package com.example.server.UnitTests;
+package com.example.server.IntegrationTests;
 
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;

@@ -1,7 +1,6 @@
 package com.example.server.UnitTests;
 
 import com.example.server.Bridge.Proxy;
-import com.example.server.ResourcesObjects.ConfigReader;
 import com.example.server.serviceLayer.IService;
 import com.example.server.serviceLayer.Service;
 import org.junit.jupiter.api.BeforeAll;
