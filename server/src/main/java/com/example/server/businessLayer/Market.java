@@ -51,6 +51,10 @@ public class Market {
     }
 
     public synchronized void firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) throws MarketException {
+        if (this.paymentService != null || this.supplyService != null){
+            ErrorLog.getInstance().Log("A market initialization failed .already initialized");
+            throw new MarketException("market is already initialized");
+        }
         if (paymentService == null || supplyService == null) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("A market initialization failed . Lack of payment / supply services ");
