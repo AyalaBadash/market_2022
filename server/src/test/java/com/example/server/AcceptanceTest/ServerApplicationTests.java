@@ -145,6 +145,26 @@ class ServerApplicationTests {
     }
 
     @Test
+    @DisplayName("valid guest login")
+    public void guestLoginValid() throws Exception {
+        InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
+        String methodCall = "/firstInitMarket";
+        try{
+            MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                            content(toHttpRequest(request)).contentType(contentType))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            Response result =  deserialize(res, Response.class);
+            assert !result.isErrorOccurred();
+
+        }catch (Exception e){
+            assert false;
+        }
+    }
+
+
+
+    @Test
     public void requestExample() throws Exception{
 
         ItemFacade item = new ItemFacade(1,"milk", 10, Item.Category.general , new ArrayList<>() , "sad" );
@@ -206,6 +226,15 @@ class ServerApplicationTests {
     }
     protected <T> T deserialize(MvcResult res, Class<T> classType) throws UnsupportedEncodingException {
         return gson.fromJson(res.getResponse().getContentAsString(), classType);
+    }
+    public void initMarket() throws Exception {
+        InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
+        String methodCall = "/firstInitMarket";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+
     }
 
 
