@@ -7,9 +7,7 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
-import com.example.server.serviceLayer.Requests.CloseShopRequest;
-import com.example.server.serviceLayer.Requests.EditItemFromShoppingCartRequest;
-import com.example.server.serviceLayer.Requests.InitMarketRequest;
+import com.example.server.serviceLayer.Requests.*;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,7 +52,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ServerApplicationTests {
 
-
+    private String shopName1 = "shop1";
+    private String memberName1 = "member1";
+    private String password1 = "password1";
+    private String itemName1 = "item1";
+    private double price1 = 10;
+    private Item.Category category = Item.Category.cellular;
+    private double amount1 = 5;
 
     protected MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -145,10 +149,27 @@ class ServerApplicationTests {
     }
 
     @Test
+    @DisplayName("get info by visitor")
+    public void validgetInfoByVisitor() throws Exception {
+        initMarket ();
+        register ( memberName1, password1);
+        addShop ( memberName1, shopName1 );
+
+        InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
+        InitMarketRequest request2 =  new InitMarketRequest("raz", "1234Raz");
+        String methodCall = "/firstInitMarket";
+        try{
+
+        }catch (Exception e){
+            assert false;
+        }
+    }
+
+    @Test
     @DisplayName("valid guest login")
     public void guestLoginValid() throws Exception {
-        InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
-        String methodCall = "/firstInitMarket";
+        TwoStringRequest request =  new TwoStringRequest ("ido", "1234Ido");
+        String methodCall = "/getShopInfo";
         try{
             MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                             content(toHttpRequest(request)).contentType(contentType))
@@ -235,6 +256,33 @@ class ServerApplicationTests {
                 .andExpect(status().isOk())
                 .andReturn();
 
+    }
+
+    public void register(String name, String password) throws Exception {
+        NamePasswordRequest request =  new NamePasswordRequest (name, password);
+        String methodCall = "/register";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    public void addShop(String memberName, String shopName) throws Exception {
+        TwoStringRequest request =  new TwoStringRequest (memberName, shopName);
+        String methodCall = "/openNewShop";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    public void addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, String shopName) throws Exception {
+        AddItemToShopRequest request =  new AddItemToShopRequest (memberName1, itemName1, price1, category, info, new ArrayList<> (  ), amount1, shopName);
+        String methodCall = "/addItemToShop";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
 
