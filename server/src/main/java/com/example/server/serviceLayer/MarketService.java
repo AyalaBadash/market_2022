@@ -203,12 +203,12 @@ public class MarketService {
         try {
             List <Appointment> employees = market.getShopEmployeesInfo(shopManagerName, shopName).values ().stream( ).toList ();
             List <AppointmentFacade> employeesFacadeList = new ArrayList<>();
-            for (Appointment a : employees){
+            for (Appointment appointment : employees){
                 AppointmentFacade employeeFacade;
-                if (a.isOwner())
-                    employeeFacade = new ShopOwnerAppointmentFacade((ShopOwnerAppointment) a);
+                if (appointment.isOwner())
+                    employeeFacade = new ShopOwnerAppointmentFacade((ShopOwnerAppointment) appointment);
                 else
-                    employeeFacade = new ShopManagerAppointmentFacade((ShopManagerAppointment) a);
+                    employeeFacade = new ShopManagerAppointmentFacade((ShopManagerAppointment) appointment);
                 employeesFacadeList.add(employeeFacade);
             }
             return new ResponseT<>(employeesFacadeList);
@@ -284,5 +284,4 @@ public class MarketService {
         }
         return toReturn;
     }
-
 }

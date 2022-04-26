@@ -140,8 +140,5 @@ public class UserService {
             return new ResponseT<> ( e.getMessage () );
         }
     }
-    public ResponseT<MemberFacade> validateMember(String userName, String userPassword, String visitorName)  {
-        return market.validateMember(userName,userPassword,visitorName);
-    }
 
 }

@@ -154,21 +154,6 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName) {
-        return null;
-    }
-
-    @Override
     public Response editShopManagerPermissions(String shopOwnerName, String managerName, String relatedShop,
                                                ShopManagerAppointmentFacade updatedAppointment) {
         return null;
