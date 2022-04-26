@@ -1,5 +1,6 @@
 package com.example.server.businessLayer;
 
+import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Users.Member;
@@ -57,6 +58,7 @@ public class Shop implements IHistory{
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
+        //TODO - check this method.
         Appointment ownerAppointment = shopOwners.get(superVisorName);
         if (ownerAppointment == null ){
             throw new MarketException(String.format("%s: cannot find an owner '%s'",shopName , superVisorName));
@@ -154,26 +156,26 @@ public class Shop implements IHistory{
         missingMessage.append(String.format("%s: cannot complete your purchase because some items are missing:\n", this.shopName));
         for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
             Item currItem = itemAmount.getKey();
-            Double currAmount = itemAmount.getValue();
+            double currAmount = itemAmount.getValue();
             if (this.itemsCurrentAmount.get(currItem) < currAmount){
                 failed = true;
                 missingMessage.append(String.format("%s X %f",currItem.getName(), currAmount));
-            };
+            }
         }
         if (failed){
             throw new MarketException(missingMessage);
         }
         for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
             Item currItem = itemAmount.getKey();
-            Double newAmount = this.itemsCurrentAmount.get(currItem) - itemAmount.getValue();
+            double newAmount = this.itemsCurrentAmount.get(currItem) - itemAmount.getValue();
             this.itemsCurrentAmount.put(currItem, newAmount);
         }
         purchaseHistory.add ( shoppingBasket.getReview () );
-        return calculateBasket(shoppingBasket);
+        return shoppingBasket.getPrice ();
     }
 
 
-    public List<Item> getAllItemsByPrice(int minPrice, int maxPrice) {
+    public List<Item> getAllItemsByPrice(double minPrice, double maxPrice) {
         throw new UnsupportedOperationException();
     }
 
@@ -181,30 +183,12 @@ public class Shop implements IHistory{
         return itemMap;
     }
 
-    public double calculateBasket(ShoppingBasket basket) {
-        double sum = 0;
-        Map<Item, Double> items = basket.getItems();
-        for (Map.Entry<Item,Double> currItem:items.entrySet())
-        {
-            sum = sum + currItem.getValue()*currItem.getKey().getPrice();
-        }
-        basket.setPrice(sum);
-        return sum;
-    }
-
-    // TODO need to calculate again - if doesn't match - exception
-
     public boolean isShopOwner(String memberName) {
         return shopOwners.containsKey(memberName);
     }
 
     public boolean isClosed() {
         return closed;
-    }
-
-    //TODO returns all items, doesn't matter amount
-    public List<Item> getAllItems() {
-        throw new UnsupportedOperationException();
     }
 
     public String getShopName() {
@@ -238,7 +222,6 @@ public class Shop implements IHistory{
         if (appointment ==  null ){
             throw new MarketException(String.format("%s: cannot find an appointment of %s" , this.getShopName(), managerName));
         }
-        // TODO can it be the superVisor of the superVisor?
         if (!appointment.getSuperVisor().getName().equals(shopOwnerName)){
             throw new MarketException(String.format("%s: you must be %s superVisor to change his permissions" , this.getShopName(), managerName));
         }
@@ -250,18 +233,23 @@ public class Shop implements IHistory{
         Appointment employee = shopManagers.get ( shopManagerName );
         if(employee == null)
             employee = shopOwners.get ( shopManagerName );
-        if(employee == null)
-            throw new MarketException(shopManagerName+" is not working at this shop");
-        if (!employee.isOwner())
+        if(employee == null) {
+            ErrorLog.getInstance().Log("Tried to get information on someone who doesnt work in the shop.");
+            throw new MarketException(shopManagerName + " is not working at this shop");
+        }
+        if (!employee.isOwner()) {
+            ErrorLog.getInstance().Log("Non shop owner tried to access employees info. ");
             throw new MarketException("only owners can view employees info");
+        }
         return employee.getShopEmployeesInfo();
     }
 
     public Shop getShopInfo(String member) throws MarketException {
         if (isClosed()){
-
-            if (!isEmployee ( member ))
+            if (!isEmployee ( member )) {
+                ErrorLog.getInstance().Log("Non shop owner tried to access shop info. ");
                 throw new MarketException("member must be shop owner in order to get close shop info");
+            }
             return getEmployee ( member ).getShopInfo();
         }
         return this;
@@ -356,8 +344,10 @@ public class Shop implements IHistory{
     }
 
     public StringBuilder getPurchaseHistory(String shopManagerName) throws MarketException {
-        if(!hasPermission(shopManagerName, "get_purchase_history"))
-            throw new MarketException ( shopManagerName + " is not authorized to see shop purchase history" );
+        if(!hasPermission(shopManagerName, "get_purchase_history")) {
+            ErrorLog.getInstance().Log("Non authorized user tried to access shop's purchase history.");
+            throw new MarketException(shopManagerName + " is not authorized to see shop purchase history");
+        }
         return getReview ();
     }
 
@@ -401,5 +391,20 @@ public class Shop implements IHistory{
             throw new MarketException ( "item does not exist in shop" );
         deleteItem ( oldItem );
         addItem ( updatedItem );
+    }
+
+    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
+        Map<Item, Double> items = shoppingBasket.getItems();
+        for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
+            Item currItem = itemAmount.getKey();
+            double currAmount = itemAmount.getValue();
+            double amount = this.itemsCurrentAmount.get(currItem);
+            if ( amount < currAmount){
+                if(amount == 0)
+                    shoppingBasket.removeItem ( currItem );
+                else
+                    shoppingBasket.updateQuantity ( amount, currItem );
+            }
+        }
     }
 }

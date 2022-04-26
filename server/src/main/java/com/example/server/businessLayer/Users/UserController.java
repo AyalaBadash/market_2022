@@ -1,5 +1,7 @@
 package com.example.server.businessLayer.Users;
 
+import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
@@ -35,6 +37,7 @@ public class UserController {
         String name = getNextUniqueName();
         Visitor res = new Visitor(name,null,new ShoppingCart());
         this.visitorsInMarket.put(res.getName(),res);
+        EventLog.getInstance().Log("A new visitor entered the market.");
         return res;
     }
     public Member memberLogin(String userName, String userPassword){
@@ -48,12 +51,18 @@ public class UserController {
 //                visitorName = this.logout(visitorName).getName();
             }
             this.visitorsInMarket.remove(visitorName);
+            EventLog.getInstance().Log("User left the market.");
         }
-        throw new MarketException(String.format("%s tried to exit system but never entered", visitorName));
+        else
+        {
+            ErrorLog.getInstance().Log("Non visitor tried to leave - The only way to be out is to be in.");
+            throw new MarketException(String.format("%s tried to exit system but never entered", visitorName));
+        }
     }
 
     public boolean register(String userName) {
         members.put(userName,new Member(userName));
+        EventLog.getInstance().Log("Welcome to our new member:"+userName);
         return true;
     }
 
@@ -84,15 +93,20 @@ public class UserController {
     }
 
     public String memberLogout(String member) throws MarketException {
-        if (!members.containsKey(member))
+        if (!members.containsKey(member)) {
+            ErrorLog.getInstance().Log("Non member tried to logout");
             throw new MarketException("no such member");
-        else if (!visitorsInMarket.containsKey(member))
+        }
+        else if (!visitorsInMarket.containsKey(member)) {
+            ErrorLog.getInstance().Log("member who is not visiting tried to logout");
             throw new MarketException("not currently visiting the shop");
+        }
         else{
             visitorsInMarket.remove(member);
             String newVisitorName = getNextUniqueName();
             Visitor newVisitor = new Visitor(newVisitorName);
             visitorsInMarket.put(newVisitorName, newVisitor);
+            EventLog.getInstance().Log("Our beloved member "+member+" logged out.");
             return newVisitorName;
         }
     }
@@ -100,6 +114,7 @@ public class UserController {
         Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
         visitorsInMarket.put(userName,newVisitorMember);
         visitorsInMarket.remove ( visitorName );
+        EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();
     }
 
@@ -118,5 +133,10 @@ public class UserController {
         for ( Member member: members.values ()){
             member.getMyCart().removeItem( shop, itemToRemove);
         }
+        EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
+    }
+
+    public boolean isLoggedIn(String visitorName) {
+        return visitorsInMarket.containsKey ( visitorName );
     }
 }

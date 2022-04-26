@@ -94,8 +94,6 @@ public abstract class Appointment {
         return false;
     }
 
-    public abstract AppointmentFacade visit(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade);
-
-
-    public abstract  AppointmentFacade visit(ShopManagerAppointmentFacade shopManagerAppointmentFacade);
+    public abstract AppointmentFacade visitToFacade(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade);
+    public abstract  AppointmentFacade visitToFacade(ShopManagerAppointmentFacade shopManagerAppointmentFacade);
 }

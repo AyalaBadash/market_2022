@@ -66,7 +66,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addPersonalQuery")
     @CrossOrigin
-    public ResponseT<Boolean> addPersonalQuery(@RequestBody AddPersonalQueryRequest request) {
+    public Response addPersonalQuery(@RequestBody AddPersonalQueryRequest request) {
         return userService.addPersonalQuery(request.getUserAdditionalQueries(), request.getUserAdditionalAnswers(), request.getMember());
     }
 

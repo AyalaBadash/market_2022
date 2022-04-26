@@ -57,8 +57,13 @@ public class UserService {
         return responseT;
     }
 
-    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
-        return market.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
+    public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
+        try {
+            market.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
+            return new Response (  );
+        }catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
 
     public ResponseT<List<String>> memberLogin(String userName, String userPassword) {

@@ -81,9 +81,4 @@ public class Member {
     public void savePurchase(ShoppingCart cart) {
         purchaseHistory.add ( cart );
     }
-
-    public boolean updateAmountInCart(int amount, ItemFacade itemFacade, String shopName) throws MarketException {
-        myCart.editQuantity(amount,new Item(itemFacade),shopName);
-        return true;
-    }
 }

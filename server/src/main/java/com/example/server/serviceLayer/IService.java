@@ -54,8 +54,8 @@ public interface IService {
      * @param request
      * @return
      */
-    public ResponseT<Boolean> addPersonalQuery(AddPersonalQueryRequest request);
 
+    public Response addPersonalQuery(AddPersonalQueryRequest request);
 
     /**
      * @param name

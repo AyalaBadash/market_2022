@@ -31,12 +31,12 @@ public class ShopManagerAppointment extends Appointment {
     }
 
     @Override
-    public AppointmentFacade visit(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade) {
+    public AppointmentFacade visitToFacade(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade) {
         return shopOwnerAppointmentFacade.toFacade ( this );
     }
 
     @Override
-    public AppointmentFacade visit(ShopManagerAppointmentFacade shopManagerAppointmentFacade) {
+    public AppointmentFacade visitToFacade(ShopManagerAppointmentFacade shopManagerAppointmentFacade) {
         return shopManagerAppointmentFacade.toFacade ( this );
     }
 
