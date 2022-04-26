@@ -23,7 +23,6 @@ public class PermissionFacade implements FacadeObject{
         this.name = name;
     }
 
-    //TODO
     @Override
     public IPermission toBusinessObject() {
         if(name.equals ( "get_employees_info" ))
