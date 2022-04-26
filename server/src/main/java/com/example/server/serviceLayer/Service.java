@@ -1,5 +1,7 @@
 package com.example.server.serviceLayer;
 
+import com.example.server.businessLayer.ExternalServices.PaymentMock;
+import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -39,7 +41,9 @@ public class Service implements IService {
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
-        return marketService.firstInitMarket ( request.getPaymentService(), request.getSupplyService(), request.getUserName(), request.getPassword() );
+        PaymentMock paymentService = new PaymentMock();
+        SupplyMock supplyMock = new SupplyMock();
+        return marketService.firstInitMarket ( paymentService,supplyMock, request.getUserName(), request.getPassword() );
     }
 
     @Override
