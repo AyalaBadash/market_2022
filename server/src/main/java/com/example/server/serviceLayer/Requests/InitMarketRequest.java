@@ -4,36 +4,34 @@ import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 
 public class InitMarketRequest {
-    private PaymentService paymentService;
-    private ProductsSupplyService supplyService;
+//    private PaymentService paymentService;
+//    private ProductsSupplyService supplyService;
     private String userName;
     private String password;
 
     public InitMarketRequest() {
     }
 
-    public InitMarketRequest(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
-        this.paymentService = paymentService;
-        this.supplyService = supplyService;
+    public InitMarketRequest(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
 
-    public PaymentService getPaymentService() {
-        return paymentService;
-    }
-
-    public void setPaymentService(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
-
-    public ProductsSupplyService getSupplyService() {
-        return supplyService;
-    }
-
-    public void setSupplyService(ProductsSupplyService supplyService) {
-        this.supplyService = supplyService;
-    }
+//    public PaymentService getPaymentService() {
+//        return paymentService;
+//    }
+//
+//    public void setPaymentService(PaymentService paymentService) {
+//        this.paymentService = paymentService;
+//    }
+//
+//    public ProductsSupplyService getSupplyService() {
+//        return supplyService;
+//    }
+//
+//    public void setSupplyService(ProductsSupplyService supplyService) {
+//        this.supplyService = supplyService;
+//    }
 
     public String getUserName() {
         return userName;

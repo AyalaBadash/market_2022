@@ -4,7 +4,7 @@ import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 
 public class EditItemFromShoppingCartRequest {
 
-    private double amount;
+    private Double amount;
     private ItemFacade itemFacade;
     private String shopName;
     private String visitorName;
