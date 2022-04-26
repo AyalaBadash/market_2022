@@ -1,5 +1,6 @@
 package com.example.server.businessLayer;
 
+import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Users.Member;
@@ -57,6 +58,7 @@ public class Shop implements IHistory{
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
+        //TODO - check this method.
         Appointment ownerAppointment = shopOwners.get(superVisorName);
         if (ownerAppointment == null ){
             throw new MarketException(String.format("%s: cannot find an owner '%s'",shopName , superVisorName));
@@ -231,18 +233,23 @@ public class Shop implements IHistory{
         Appointment employee = shopManagers.get ( shopManagerName );
         if(employee == null)
             employee = shopOwners.get ( shopManagerName );
-        if(employee == null)
-            throw new MarketException(shopManagerName+" is not working at this shop");
-        if (!employee.isOwner())
+        if(employee == null) {
+            ErrorLog.getInstance().Log("Tried to get information on someone who doesnt work in the shop.");
+            throw new MarketException(shopManagerName + " is not working at this shop");
+        }
+        if (!employee.isOwner()) {
+            ErrorLog.getInstance().Log("Non shop owner tried to access employees info. ");
             throw new MarketException("only owners can view employees info");
+        }
         return employee.getShopEmployeesInfo();
     }
 
     public Shop getShopInfo(String member) throws MarketException {
         if (isClosed()){
-
-            if (!isEmployee ( member ))
+            if (!isEmployee ( member )) {
+                ErrorLog.getInstance().Log("Non shop owner tried to access shop info. ");
                 throw new MarketException("member must be shop owner in order to get close shop info");
+            }
             return getEmployee ( member ).getShopInfo();
         }
         return this;
@@ -337,8 +344,10 @@ public class Shop implements IHistory{
     }
 
     public StringBuilder getPurchaseHistory(String shopManagerName) throws MarketException {
-        if(!hasPermission(shopManagerName, "get_purchase_history"))
-            throw new MarketException ( shopManagerName + " is not authorized to see shop purchase history" );
+        if(!hasPermission(shopManagerName, "get_purchase_history")) {
+            ErrorLog.getInstance().Log("Non authorized user tried to access shop's purchase history.");
+            throw new MarketException(shopManagerName + " is not authorized to see shop purchase history");
+        }
         return getReview ();
     }
 
