@@ -31,14 +31,19 @@ public class Security {
     }
 
     private void validateName(String name) throws MarketException {
+        if (name == null || name.equals("")|| name.charAt(0) == '@'){
+            ErrorLog.getInstance().Log("User tried to register with invalid name.");
+            throw new MarketException("Name can't be null or empty string");
+        }
         if (namesToLoginInfo.containsKey(name)) {
             ErrorLog.getInstance().Log("User tried to register with taken name.");
             throw new MarketException("Name is already taken ,try to be a little more creative and choose another name. ");
         }
-        if (name == null || name.equals("")){
-            ErrorLog.getInstance().Log("User tried to register with invalid name.");
-            throw new MarketException("Name can't be null or empty string");
-        }
+
+    }
+
+    public Map<String, LoginCard> getNamesToLoginInfo() {
+        return namesToLoginInfo;
     }
 
     public void addNewMember(String name, String password, List<String> questions,
@@ -51,7 +56,7 @@ public class Security {
     }
 
     public List<String> validatePassword(String userName, String userPassword) throws MarketException {
-        if (!namesToLoginInfo.containsKey(userName)) {
+        if (userName == null || !namesToLoginInfo.containsKey(userName)) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Non member visitor tried to log in.");
             throw new MarketException("No such user name in the system");
