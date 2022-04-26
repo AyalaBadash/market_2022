@@ -21,14 +21,6 @@ public class ShopManagerAppointmentFacade extends AppointmentFacade {
     @Override
     public AppointmentFacade toFacade(ShopManagerAppointment appointment) {
         return new ShopManagerAppointmentFacade ( appointment );
-//        List<IPermission> list = appointment.getPermissions();
-//        List<PermissionFacade> facadeList = new ArrayList<>();
-//        for (IPermission permission : list) {
-//            facadeList.add(new PermissionFacade(permission));
-//        }
-//        ShopManagerAppointmentFacade shopManager = new ShopManagerAppointmentFacade(appointment.getAppointed(), appointment.getSuperVisor()
-//                , appointment.getRelatedShop(), facadeList);
-//        return shopManager;
     }
 
     @Override

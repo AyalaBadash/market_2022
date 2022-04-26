@@ -1,4 +1,4 @@
-package com.example.server.serviceLayer.FacadeObjects;
+package com.example.server.serviceLayer;
 public class Response {
     private String errorMessage;
 

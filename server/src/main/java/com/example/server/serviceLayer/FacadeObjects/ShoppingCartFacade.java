@@ -1,5 +1,6 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
+import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingBasket;
 import com.example.server.businessLayer.ShoppingCart;
@@ -9,9 +10,11 @@ import java.util.Map;
 
 public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
     Map<ShopFacade, ShoppingBasketFacade> cart; // <Shop ,basket for the shop>
+    double price;
 
-    public ShoppingCartFacade(Map<ShopFacade, ShoppingBasketFacade> cart) {
+    public ShoppingCartFacade(Map<ShopFacade, ShoppingBasketFacade> cart,double price) {
         this.cart = cart;
+        this.price = price;
     }
 
     public ShoppingCartFacade(ShoppingCart cart) {
@@ -33,7 +36,13 @@ public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
     }
 
     @Override
-    public ShoppingCart toBusinessObject() {
-        return null;
+    public ShoppingCart toBusinessObject() throws MarketException {
+        Map<Shop,ShoppingBasket> baskets = new HashMap<>();
+        for (Map.Entry<ShopFacade,ShoppingBasketFacade> entry:this.cart.entrySet())
+        {
+            baskets.put(entry.getKey().toBusinessObject(),entry.getValue().toBusinessObject());
+        }
+        return new ShoppingCart(baskets,this.price);
+
     }
 }

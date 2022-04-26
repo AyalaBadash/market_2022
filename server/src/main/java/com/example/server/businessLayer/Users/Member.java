@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Member {
-    // TODO must be unique
     private String name;
     private ShoppingCart myCart;
     private List<Appointment> appointedByMe;
@@ -21,7 +20,9 @@ public class Member {
     private List<ShoppingCart> purchaseHistory;
 
 
-    public Member(String name){
+    public Member(String name) throws MarketException {
+        if(name.charAt ( 0 ) == '@')
+            throw new MarketException ( "cannot create a member with a username starts with @" );
         this.name = name;
         myCart = new ShoppingCart();
         appointedByMe = new CopyOnWriteArrayList<>();
@@ -34,7 +35,9 @@ public class Member {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws MarketException {
+        if(name.charAt ( 0 ) == '@')
+            throw new MarketException ( "cannot create a member with a username starts with @" );
         this.name = name;
     }
 

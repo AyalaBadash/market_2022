@@ -1,4 +1,4 @@
-package com.example.server.serviceLayer.FacadeObjects;
+package com.example.server.serviceLayer;
 public class ResponseT<T> extends Response {
     private T value;
 

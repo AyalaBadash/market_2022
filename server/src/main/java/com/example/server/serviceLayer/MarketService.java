@@ -2,8 +2,6 @@ package com.example.server.serviceLayer;
 
 
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
-import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
@@ -87,8 +85,14 @@ public class MarketService {
 
     public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, double minPrice, double maxPrice) {
         List<Item> businessItems = new ArrayList<>();
-        for (ItemFacade item : items)
-            businessItems.add(item.toBusinessObject());
+        for (ItemFacade item : items) {
+            try {
+                businessItems.add(item.toBusinessObject());
+            } catch (MarketException e) {
+                return new ResponseT<>(e.getMessage());
+
+            }
+        }
         ResponseT<List<ItemFacade>> toReturn;
         try {
             List<Item> filteredItems = market.filterItemsByPrice(businessItems, minPrice, maxPrice);
@@ -105,8 +109,13 @@ public class MarketService {
 
     public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category) {
         List<Item> businessItems = new ArrayList<>();
-        for (ItemFacade item : items)
-            businessItems.add(item.toBusinessObject());
+        for (ItemFacade item : items) {
+            try {
+                businessItems.add(item.toBusinessObject());
+            } catch (MarketException e) {
+                return new ResponseT<>(e.getMessage());
+            }
+        }
         ResponseT<List<ItemFacade>> toReturn;
         try {
             List<Item> filteredItems = market.filterItemsByCategory(businessItems, category);
@@ -132,7 +141,8 @@ public class MarketService {
 
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         try{
-            market.setItemCurrentAmount ( shopOwnerName,  new Item ( item ), amount, shopName);
+            Item itemBL = new Item(item.getID(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
+            market.setItemCurrentAmount ( shopOwnerName,  itemBL, amount, shopName);
             return new Response (  );
         } catch (MarketException e){
             return new Response ( e.getMessage () );
@@ -168,7 +178,8 @@ public class MarketService {
 
     public Response setItemCurrentAmount(String shopOwnerName,ItemFacade item, double amount, String shopName){
         try{
-            market.setItemCurrentAmount(shopOwnerName, new Item (item) ,amount,shopName);
+            Item itemBL = new Item(item.getID(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
+            market.setItemCurrentAmount(shopOwnerName, itemBL ,amount,shopName);
             return new Response (  );
         }catch (MarketException e){
             return new Response ( e.getMessage () );
@@ -177,9 +188,20 @@ public class MarketService {
 
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
         try{
-            market.changeShopItemInfo(shopOwnerName, new Item (updatedItem), new Item ( oldItem), shopName);
+            Item oldItemBL = new Item(oldItem.getID(),oldItem.getName(),oldItem.getPrice(),oldItem.getInfo(),oldItem.getCategory(),oldItem.getKeywords());
+            Item updatedItemBL = new Item(updatedItem.getID(),updatedItem.getName(),updatedItem.getPrice(),updatedItem.getInfo(),updatedItem.getCategory(),updatedItem.getKeywords());
+            market.changeShopItemInfo(shopOwnerName, updatedItemBL, oldItemBL, shopName);
             return new Response (  );
         }catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response editItem(ItemFacade newItem, String id){
+        try{
+            market.editItem(newItem.toBusinessObject (), id);
+            return new Response (  );
+        } catch (MarketException e){
             return new Response ( e.getMessage () );
         }
     }

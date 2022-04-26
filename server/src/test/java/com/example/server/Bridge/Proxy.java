@@ -5,11 +5,12 @@ import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.IService;
 import com.example.server.serviceLayer.Requests.*;
+import com.example.server.serviceLayer.Response;
+import com.example.server.serviceLayer.ResponseT;
 
 import java.util.List;
 
 public class Proxy implements IService  {
-
 
     @Override
     public Response firstInitMarket(InitMarketRequest request) {
@@ -32,7 +33,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public ResponseT<Boolean> addPersonalQuery(AddPersonalQueryRequest request) {
+    public Response addPersonalQuery(AddPersonalQueryRequest request) {
         return null;
     }
 
@@ -133,6 +134,11 @@ public class Proxy implements IService  {
 
     @Override
     public Response changeShopItemInfo(ChangeShopItemInfoRequest request) {
+        return null;
+    }
+
+    @Override
+    public Response editItem(editItemRequest request) {
         return null;
     }
 

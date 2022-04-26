@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MemberTest {
 
+    Member member;
     String name = "moshe";
-    Member member = new Member(name);
     ShoppingCart myCart = Mockito.mock(ShoppingCart.class);
     ShoppingCart oldCart = Mockito.mock(ShoppingCart.class);
     List<Appointment> appointedByMe = new ArrayList<>();
@@ -33,8 +33,8 @@ class MemberTest {
     List<ShoppingCart> purchaseHistory = new ArrayList<>();
 
     @BeforeEach
-    public void initMemberTest(){
-        Member member = new Member(name);
+    public void initMemberTest() throws MarketException {
+        member = new Member(name);
         member.setMyCart(myCart);
 
     }

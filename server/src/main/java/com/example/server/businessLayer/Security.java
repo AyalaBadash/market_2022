@@ -29,28 +29,25 @@ public class Security {
         LoginCard card = new LoginCard(name,password,new ArrayList<>(),new ArrayList<>());
         namesToLoginInfo.put(name,card);
     }
-    // TODO need to document all exceptions
-    private void validateQuestions(List<String> questions, List<String> answers) throws Exception {
-        if (questions.size() != answers.size())
-            throw new Exception();
-    }
 
     private void validateName(String name) throws MarketException {
+        if (name == null || name.equals("")|| name.charAt(0) == '@'){
+            ErrorLog.getInstance().Log("User tried to register with invalid name.");
+            throw new MarketException("Name can't be null or empty string");
+        }
         if (namesToLoginInfo.containsKey(name)) {
             ErrorLog.getInstance().Log("User tried to register with taken name.");
             throw new MarketException("Name is already taken ,try to be a little more creative and choose another name. ");
         }
-        if (name == null || name.equals("")){
-            ErrorLog.getInstance().Log("User tried to register with invalid name.");
-            throw new MarketException("Name can't be null or empty string");
-        }
 
     }
 
-
+    public Map<String, LoginCard> getNamesToLoginInfo() {
+        return namesToLoginInfo;
+    }
 
     public void addNewMember(String name, String password, List<String> questions,
-                             List<String> answers) {
+                             List<String> answers) throws MarketException {
         LoginCard card = new LoginCard(name, password,questions, answers);
         this.namesToLoginInfo.put(name, card);
     }
@@ -58,23 +55,8 @@ public class Security {
         return this.namesToLoginInfo.get(name).getQuestions();
     }
 
-    // TODO question to answer must be corresponding sorted
-    public boolean validateLogin(String name, String password,
-                                 List<String> questions, List<String> answers) throws Exception {
-        LoginCard loginCard = namesToLoginInfo.get(name);
-        if (!password.equals(loginCard.getPassword()))
-            throw new Exception();
-        for (int i =0; i< questions.size(); i++){
-            if (loginCard.getQandA().get(questions.get(i)).equals(answers.get(i))){
-                throw new Exception();
-            }
-        }
-        return true;
-    }
-
-
-    public List<String> validatePassword(String userName, String userPassword) throws MarketException { //TODO specify exceptions
-        if (!namesToLoginInfo.containsKey(userName)) {
+    public List<String> validatePassword(String userName, String userPassword) throws MarketException {
+        if (userName == null || !namesToLoginInfo.containsKey(userName)) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Non member visitor tried to log in.");
             throw new MarketException("No such user name in the system");
@@ -111,20 +93,22 @@ public class Security {
         {
             if(entry.getValue().equals(answers.get(index)))
                 index++;
-            else
-                //TODO add log
-                throw new MarketException ( String.format ( "answer %s does not fit the answers", answers.get(index) ) );
+            else {
+                ErrorLog.getInstance().Log("Mismatch in validating security questions.");
+                throw new MarketException(String.format("answer %s does not fit the answers", answers.get(index)));
+            }
         }
     }
 
 
-    public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) throws MarketException {
-        if (!namesToLoginInfo.containsKey(member.getName()))
+    public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String name) throws MarketException {
+        if (!namesToLoginInfo.containsKey(name))
         {
-            throw new MarketException("No such user exist");
+            ErrorLog.getInstance ().Log ( "Cannot add a personal query cause there is no such user in the system " );
+            throw new MarketException("Cannot add a personal query cause there is no such user in the system ");
         }
         else {
-            LoginCard card = namesToLoginInfo.get(member.getName());
+            LoginCard card = namesToLoginInfo.get(name);
             Map<String,String> QA = card.getQandA();
             QA.put(userAdditionalQueries,userAdditionalAnswers);
         }

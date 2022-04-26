@@ -1,13 +1,11 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.businessLayer.ExternalServices.*;
-import com.example.server.ResourcesObjects.Address;
-import com.example.server.ResourcesObjects.PaymentMethod;
-import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import java.util.List;
@@ -201,6 +199,10 @@ public interface IService {
      * @return
      */
     public Response changeShopItemInfo(ChangeShopItemInfoRequest request);
+
+    @RequestMapping(value = "/editItemRequest")
+    @CrossOrigin
+    Response editItem(@RequestBody editItemRequest request);
 
     /**
      *
