@@ -95,8 +95,7 @@ class ServerApplicationTests {
     void contextLoads() {
     }
 
-    PaymentMock paymentMock = new PaymentMock();
-    SupplyMock supplyMock = new SupplyMock();
+
     String systemManagerName = "Raz";
     String systemManagerPassword = "1234Manager";
     String shopOwnerName = "Ayala";
@@ -113,14 +112,9 @@ class ServerApplicationTests {
     @Test
     @DisplayName("first init market - valid")
     public void validFirstInitMarketTwice() throws Exception {
-        InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
-        String methodCall = "/firstInitMarket";
+
         try{
-            MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
-                            content(toHttpRequest(request)).contentType(contentType))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            Response result =  deserialize(res, Response.class);
+            Response result =  initMarket();
             assert !result.isErrorOccurred();
 
         }catch (Exception e){
@@ -278,13 +272,14 @@ class ServerApplicationTests {
     protected <T> T deserialize(MvcResult res, Class<T> classType) throws UnsupportedEncodingException {
         return gson.fromJson(res.getResponse().getContentAsString(), classType);
     }
-    public void initMarket() throws Exception {
+    public Response initMarket() throws Exception {
         InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
         String methodCall = "/firstInitMarket";
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                         content(toHttpRequest(request)).contentType(contentType))
                 .andExpect(status().isOk())
                 .andReturn();
+        return deserialize(res,Response.class);
 
     }
 
