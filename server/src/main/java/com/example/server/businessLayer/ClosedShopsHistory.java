@@ -1,16 +1,21 @@
 package com.example.server.businessLayer;
 
 
+import com.example.server.ResourcesObjects.ErrorLog;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ClosedShopsHistory {
-    private List<Shop> closedShops;
+    private Map<String, Shop> closedShops;
     private StringBuilder overallHistory;
     private static ClosedShopsHistory instance;
 
     private ClosedShopsHistory(){
-        this.closedShops = new CopyOnWriteArrayList<>();
+        this.closedShops = new ConcurrentHashMap<> ();
         this.overallHistory = new StringBuilder();
     }
 
@@ -20,12 +25,18 @@ public class ClosedShopsHistory {
         }
         return instance;
     }
-    // TODO need to implement here
+
     public void closeShop(Shop closedShop) throws MarketException {
         if (closedShop == null){
+            ErrorLog.getInstance ().Log ( "tried to close a null shop!" );
             throw new MarketException("tried to close a null shop!");
         }
-        closedShops.add(closedShop);
+        if(closedShop.isClosed ())
+        {
+            ErrorLog.getInstance ().Log ( String.format ( "shop %s is already closed", closedShop.getShopName () ) );
+            throw new MarketException ( String.format ( "shop %s is already closed", closedShop.getShopName () ));
+        }
+        closedShops.put (closedShop.getShopName (), closedShop);
     }
 
     public void addPurchaseHistory(String purchaseReview, Shop shop){
@@ -34,11 +45,11 @@ public class ClosedShopsHistory {
         }
     }
 
-    public List<Shop> getClosedShops() {
+    public Map<String, Shop> getClosedShops() {
         return closedShops;
     }
 
-    public void setClosedShops(List<Shop> closedShops) {
+    public void setClosedShops(Map<String, Shop> closedShops) {
         this.closedShops = closedShops;
     }
 
@@ -48,5 +59,9 @@ public class ClosedShopsHistory {
 
     public void setOverallHistory(StringBuilder overallHistory) {
         this.overallHistory = overallHistory;
+    }
+
+    public boolean isClosed(String shopName) {
+        return closedShops.containsKey ( shopName );
     }
 }

@@ -10,7 +10,6 @@ import java.util.List;
 
 public class Proxy implements IService  {
 
-
     @Override
     public Response firstInitMarket(InitMarketRequest request) {
         return null;
@@ -32,7 +31,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public ResponseT<Boolean> addPersonalQuery(AddPersonalQueryRequest request) {
+    public Response addPersonalQuery(AddPersonalQueryRequest request) {
         return null;
     }
 
@@ -133,6 +132,11 @@ public class Proxy implements IService  {
 
     @Override
     public Response changeShopItemInfo(ChangeShopItemInfoRequest request) {
+        return null;
+    }
+
+    @Override
+    public Response editItem(editItemRequest request) {
         return null;
     }
 

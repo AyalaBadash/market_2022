@@ -215,6 +215,15 @@ public class Service implements IService {
     }
 
     @Override
+    @RequestMapping(value = "/editItemRequest")
+    @CrossOrigin
+    public Response editItem(@RequestBody editItemRequest request) {
+        return marketService.editItem (request.getNewItem (), request.getId ());
+    }
+
+
+
+    @Override
     @RequestMapping(value = "/appointShopOwner")
     @CrossOrigin
     public Response appointShopOwner(@RequestBody AppointmentShopOwnerRequest request) {
@@ -279,7 +288,7 @@ public class Service implements IService {
     }
 
     @Override
-    @RequestMapping(value = "/getAllSystemPurchaseHistory")
+    @RequestMapping(value = "/getHistoryByShop")
     @CrossOrigin
     public ResponseT<String> getHistoryByShop(@RequestBody TwoStringRequest request) {
         return marketService.getHistoryByShop (request.getName(), request.getShopName() );
