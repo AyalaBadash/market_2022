@@ -6,13 +6,13 @@ public class UpdateShopItemAmountRequest {
 
     private String shopOwnerName;
     private ItemFacade item;
-    private int amount;
+    private double amount;
     private String shopName;
 
     public UpdateShopItemAmountRequest() {
     }
 
-    public UpdateShopItemAmountRequest(String shopOwnerName, ItemFacade item, int amount, String shopName) {
+    public UpdateShopItemAmountRequest(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         this.shopOwnerName = shopOwnerName;
         this.item = item;
         this.amount = amount;
@@ -35,11 +35,11 @@ public class UpdateShopItemAmountRequest {
         this.item = item;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

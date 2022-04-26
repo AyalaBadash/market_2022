@@ -6,14 +6,14 @@ import java.util.List;
 
 public class FilterItemByPriceRequest {
     private List<ItemFacade> items;
-    private int minPrice;
-    private int maxPrice;
+    private double minPrice;
+    private double maxPrice;
 
     public FilterItemByPriceRequest() {
         this.items = items;
     }
 
-    public FilterItemByPriceRequest(List<ItemFacade> items, int minPrice, int maxPrice) {
+    public FilterItemByPriceRequest(List<ItemFacade> items, double minPrice, double maxPrice) {
         this.items = items;
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
@@ -27,19 +27,19 @@ public class FilterItemByPriceRequest {
         this.items = items;
     }
 
-    public int getMinPrice() {
+    public double getMinPrice() {
         return minPrice;
     }
 
-    public void setMinPrice(int minPrice) {
+    public void setMinPrice(double minPrice) {
         this.minPrice = minPrice;
     }
 
-    public int getMaxPrice() {
+    public double getMaxPrice() {
         return maxPrice;
     }
 
-    public void setMaxPrice(int maxPrice) {
+    public void setMaxPrice(double maxPrice) {
         this.maxPrice = maxPrice;
     }
 }

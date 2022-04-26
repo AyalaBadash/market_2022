@@ -4,10 +4,10 @@ import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 
 public class InitMarketRequest {
-    PaymentService paymentService;
-    ProductsSupplyService supplyService;
-    String userName;
-    String password;
+    private PaymentService paymentService;
+    private ProductsSupplyService supplyService;
+    private String userName;
+    private String password;
 
     public InitMarketRequest() {
     }

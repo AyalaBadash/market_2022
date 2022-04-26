@@ -12,16 +12,13 @@ public class AddItemToShopRequest {
     private Item.Category category;
     private String info;
     private List<String> keywords;
-    private int amount;
+    private double amount;
     private String shopName;
-
 
     public AddItemToShopRequest() {
     }
 
-    public AddItemToShopRequest(String shopOwnerName, String name, double price,
-                                Item.Category category, String info, List<String> keywords,
-                                int amount, String shopName) {
+    public AddItemToShopRequest(String shopOwnerName, String name, double price, Item.Category category, String info, List<String> keywords, double amount, String shopName) {
         this.shopOwnerName = shopOwnerName;
         this.name = name;
         this.price = price;
@@ -80,11 +77,11 @@ public class AddItemToShopRequest {
         this.keywords = keywords;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

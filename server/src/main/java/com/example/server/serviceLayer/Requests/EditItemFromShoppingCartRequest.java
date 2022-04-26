@@ -4,7 +4,7 @@ import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 
 public class EditItemFromShoppingCartRequest {
 
-    private int amount;
+    private double amount;
     private ItemFacade itemFacade;
     private String shopName;
     private String visitorName;
@@ -12,18 +12,18 @@ public class EditItemFromShoppingCartRequest {
     public EditItemFromShoppingCartRequest() {
     }
 
-    public EditItemFromShoppingCartRequest(int amount, ItemFacade itemFacade, String shopName, String visitorName) {
+    public EditItemFromShoppingCartRequest(double amount, ItemFacade itemFacade, String shopName, String visitorName) {
         this.amount = amount;
         this.itemFacade = itemFacade;
         this.shopName = shopName;
         this.visitorName = visitorName;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
