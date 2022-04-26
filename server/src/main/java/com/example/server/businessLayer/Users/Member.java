@@ -30,6 +30,13 @@ public class Member {
         purchaseHistory = new ArrayList<> (  );
     }
 
+    public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<ShoppingCart> purchaseHistory ){
+        this.name = name;
+        myCart = shoppingCart;
+        this.appointedByMe = appointmentedByME;
+        this.myAppointments = myAppointments;
+        this.purchaseHistory = purchaseHistory;
+    }
 
     public String getName() {
         return name;

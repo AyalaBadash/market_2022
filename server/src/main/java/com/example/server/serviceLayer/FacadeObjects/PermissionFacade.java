@@ -1,7 +1,9 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
 
+import com.example.server.businessLayer.Appointment.Permissions.EmployeesPermission;
 import com.example.server.businessLayer.Appointment.Permissions.IPermission;
+import com.example.server.businessLayer.Appointment.Permissions.PurchaseHistoryPermission;
 
 public class PermissionFacade implements FacadeObject{
     private String name;
@@ -21,10 +23,11 @@ public class PermissionFacade implements FacadeObject{
         this.name = name;
     }
 
-
     //TODO
     @Override
     public IPermission toBusinessObject() {
-        return null;
+        if(name.equals ( "get_employees_info" ))
+            return new EmployeesPermission ();
+        return new PurchaseHistoryPermission ();
     }
 }
