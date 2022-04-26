@@ -28,6 +28,8 @@ public class MemberFacade implements FacadeObject<Member> {
     }
 
     public MemberFacade(Member member) {
+        if(member == null)
+            return;
         this.name = member.getName();
         this.myCart = new ShoppingCartFacade (member.getMyCart());
         this.appointedByMe = member.getAppointedByMe().stream().map((appointment ->

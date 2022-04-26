@@ -40,7 +40,7 @@ public class ClosedShopsHistory {
     }
 
     public void addPurchaseHistory(String purchaseReview, Shop shop){
-        if (purchaseReview != null){
+        if (purchaseReview != null && purchaseReview != ""){
             overallHistory.append("\n").append(purchaseReview);
         }
     }

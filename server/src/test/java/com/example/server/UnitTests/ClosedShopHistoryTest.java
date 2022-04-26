@@ -46,7 +46,8 @@ public class ClosedShopHistoryTest extends mainTest {
         // empty item name
         String purchase = "";
         closedShopsHistory.addPurchaseHistory(purchase, shop);
-        Assertions.assertEquals(closedShopsHistory.getOverallHistory().toString(),"");
+        String test = closedShopsHistory.getOverallHistory().toString();
+        Assertions.assertEquals(test,"");
         purchase = "purchase";
         try{
             closedShopsHistory.addPurchaseHistory(purchase,null);
@@ -68,6 +69,7 @@ public class ClosedShopHistoryTest extends mainTest {
     @DisplayName("History - close a shop")
     public void closeShopValid() throws MarketException {
         Assertions.assertTrue(closedShopsHistory.getClosedShops().isEmpty());
+        ReflectionTestUtils.setField(shop, "shopName", shopName);
         closedShopsHistory.closeShop(shop);
         Assertions.assertTrue(closedShopsHistory.getClosedShops().containsKey (shop.getShopName ()));
     }
