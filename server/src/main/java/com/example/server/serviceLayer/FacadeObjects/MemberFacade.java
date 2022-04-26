@@ -1,31 +1,35 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
+import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.businessLayer.Users.Member;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MemberFacade implements FacadeObject<Member> {
     private String name;
-    private ShoppingCart myCart;
+    private ShoppingCartFacade myCart;
     private List<AppointmentFacade> appointedByMe;
     private List<AppointmentFacade> myAppointments;
+    private List<ShoppingCartFacade> purchaseHistory;
 
     public MemberFacade(String name, ShoppingCart myCart,
                         List<AppointmentFacade> appointedByMe,
                         List<AppointmentFacade> myAppointments) {
         this.name = name;
-        this.myCart = myCart;
+        this.myCart = new ShoppingCartFacade (myCart);
         this.appointedByMe = appointedByMe;
         this.myAppointments = myAppointments;
     }
 
     public MemberFacade(Member member) {
         this.name = member.getName();
-        this.myCart = member.getMyCart();
+        this.myCart = new ShoppingCartFacade (member.getMyCart());
         this.appointedByMe = member.getAppointedByMe().stream().map((appointment ->
                 appointment.isManager() ?
                         new ShopManagerAppointmentFacade((ShopManagerAppointment) appointment) :
@@ -44,11 +48,11 @@ public class MemberFacade implements FacadeObject<Member> {
         this.name = name;
     }
 
-    public ShoppingCart getMyCart() {
+    public ShoppingCartFacade getMyCart() {
         return myCart;
     }
 
-    public void setMyCart(ShoppingCart myCart) {
+    public void setMyCart(ShoppingCartFacade myCart) {
         this.myCart = myCart;
     }
 
@@ -69,7 +73,17 @@ public class MemberFacade implements FacadeObject<Member> {
     }
 
     @Override
-    public Member toBusinessObject() {
-        return null;
+    public Member toBusinessObject() throws MarketException {
+        ShoppingCart shoppingCart = myCart.toBusinessObject ();
+        List<Appointment> appointedByMe = new ArrayList<> (  );
+        for(AppointmentFacade appointment : this.appointedByMe)
+            appointedByMe.add ( appointment.toBusinessObject () );
+        List<Appointment> myAppointments = new ArrayList<> (  );
+        for(AppointmentFacade appointment : this.myAppointments)
+            myAppointments.add ( appointment.toBusinessObject () );
+        List<ShoppingCart> purchaseHistory = new ArrayList<> (  );
+        for(ShoppingCartFacade shoppingCartFacade : this.purchaseHistory)
+            purchaseHistory.add ( shoppingCartFacade.toBusinessObject () );
+        return new Member ( name, shoppingCart, appointedByMe,myAppointments, purchaseHistory);
     }
 }
