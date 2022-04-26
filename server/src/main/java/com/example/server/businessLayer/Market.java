@@ -264,7 +264,7 @@ public class Market {
         return toReturn;
     }
 
-    public List<Item> filterItemsByPrice(List<Item> items, int minPrice, int maxPrice) {
+    public List<Item> filterItemsByPrice(List<Item> items, double minPrice, double maxPrice) {
         List<Item> toReturn = new ArrayList<>();
         for (Item item : items){
             if (item.getPrice() >= minPrice && item.getPrice() <= maxPrice)
@@ -415,7 +415,7 @@ public class Market {
     }
 
     public void addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
-                              List<String> keywords, int amount, String shopName) throws MarketException {
+                              List<String> keywords, double amount, String shopName) throws MarketException {
         Shop shop = shops.get(shopName);
         if(shop == null)
             throw new MarketException ( "shop does not exist in the market" );
@@ -453,20 +453,11 @@ public class Market {
     public String memberLogout(String member) throws MarketException {
         return userController.memberLogout(member);
     }
-    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member)
-    {
-        ResponseT<Boolean> responseT;
-        try {
-            Security security = Security.getInstance();
-            security.addPersonalQuery(userAdditionalQueries,userAdditionalAnswers,member);
-            responseT = new ResponseT<>(false);
-        }
-        catch (MarketException e)
-        {
-            responseT = new ResponseT<>(false);
 
-        }
-        return responseT;
+    //TODO log
+    public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) throws MarketException {
+        Security security = Security.getInstance();
+        security.addPersonalQuery(userAdditionalQueries,userAdditionalAnswers,member);
     }
 
     public Visitor guestLogin() {
@@ -525,9 +516,10 @@ public class Market {
         return shopToHistory.getPurchaseHistory(shopManagerName);
     }
 
+    //TODO check before - update from pr
     public boolean appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
         if(!shops.containsKey(shopName)){
-            throw new MarketException("shop does not exists");
+            throw new MarketException("shop does not exist");
         }
         Shop shop = shops.get(shopName);
         Member appointed= userController.getMember(appointedShopOwner);
@@ -551,21 +543,26 @@ public class Market {
         return true;
     }
 
-    public boolean editCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) throws MarketException {
+    public boolean editCart(double amount, ItemFacade itemFacade, String shopName, String visitorName) throws MarketException {
 
-        Member mem= userController.getMember(visitorName);
-        if(mem==null){
+        Visitor visitor= userController.getVisitor (visitorName);
+        if(visitor == null){
             throw new MarketException("member does not exists, cannot update amount.");
         }
-        return mem.updateAmountInCart(amount, itemFacade,shopName);
+        return visitor.updateAmountInCart(amount, itemFacade,shopName);
     }
 
 
-    //TODO
     public void changeShopItemInfo(String shopOwnerName, Item updatedItem, Item oldItem, String shopName) throws MarketException {
         Shop shop = shops.get ( shopName );
         if(shop == null)
             throw new MarketException ( "shop doed not exist in the narket" );
         shop.changeShopItemInfo(shopOwnerName, updatedItem, oldItem);
+    }
+
+    public ShoppingCart showShoppingCart(String visitorName) throws MarketException {
+        if(!userController.isLoggedIn(visitorName))
+            throw new MarketException ( "has to be visitor in the system to watch shopping cart" );
+        return userController.getVisitor ( visitorName ).getCart ();
     }
 }

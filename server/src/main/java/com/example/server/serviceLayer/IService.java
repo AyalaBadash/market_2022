@@ -61,8 +61,8 @@ public interface IService {
      * @param member
      * @return
      */
-    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers,
-                                               MemberFacade member);
+    public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers,
+                                     MemberFacade member);
 
 
     /**
@@ -88,7 +88,7 @@ public interface IService {
      * @param maxPrice
      * @return
      */
-    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice);
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, double minPrice, double maxPrice);
 
     /**
      * @param category
@@ -119,7 +119,7 @@ public interface IService {
      * @param visitorName
      * @return
      */
-    public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName,
+    public Response editItemFromShoppingCart(double amount, ItemFacade itemFacade, String shopName,
                                              String visitorName);
 
     /**
@@ -196,7 +196,7 @@ public interface IService {
      * @param shopName
      * @return
      */
-    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName);
+    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName);
 
     /**
      * @param shopOwnerName
@@ -219,7 +219,7 @@ public interface IService {
      * @return
      */
     public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
-                                  List<String> keywords, int amount, String shopName);
+                                  List<String> keywords, double amount, String shopName);
 
 
     /**

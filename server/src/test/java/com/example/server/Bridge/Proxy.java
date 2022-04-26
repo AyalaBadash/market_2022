@@ -32,7 +32,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
+    public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
         return null;
     }
 
@@ -52,7 +52,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice) {
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, double minPrice, double maxPrice) {
         return null;
     }
 
@@ -72,7 +72,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) {
+    public Response editItemFromShoppingCart(double amount, ItemFacade itemFacade, String shopName, String visitorName) {
         return null;
     }
 
@@ -112,7 +112,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
+    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         return null;
     }
 
@@ -122,7 +122,7 @@ public class Proxy implements IService {
     }
 
     @Override
-    public Response addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info, List<String> keywords, int amount, String shopName) {
+    public Response addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info, List<String> keywords, double amount, String shopName) {
         return null;
     }
 

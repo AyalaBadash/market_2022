@@ -14,6 +14,8 @@ public abstract class AppointmentFacade implements FacadeObject<Appointment> {
     protected Shop relatedShop;
     List<PermissionFacade> permissions;
 
+    public AppointmentFacade(){}
+
     public AppointmentFacade(Member appointed, Member superVisor, Shop relatedShop,
                              List<PermissionFacade> permissions) {
         this.appointed = appointed;
@@ -59,4 +61,5 @@ public abstract class AppointmentFacade implements FacadeObject<Appointment> {
     public abstract AppointmentFacade toFacade(ShopOwnerAppointment appointment);
 
     public abstract AppointmentFacade toFacade(Appointment appointment);
+
 }

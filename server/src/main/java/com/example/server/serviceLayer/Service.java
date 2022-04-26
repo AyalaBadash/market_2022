@@ -6,10 +6,6 @@ import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 
 import java.util.List;
@@ -60,18 +56,9 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
+    public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
         return userService.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
-
-//    @Override
-//    public ResponseT<List<ShopFacade>> getAllShops() {
-//        return null;
-//    }
-//    @Override
-//    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop) {
-//        return null;
-//    }
 
     @Override
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {
@@ -89,7 +76,7 @@ public class Service implements IService {
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice) {
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, double minPrice, double maxPrice) {
         return marketService.filterItemByPrice(items, minPrice, maxPrice);
     }
 
@@ -107,7 +94,7 @@ public class Service implements IService {
         return purchaseService.showShoppingCart(visitorName);
     }
     @Override
-    public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) {
+    public Response editItemFromShoppingCart(double amount, ItemFacade itemFacade, String shopName, String visitorName) {
         return purchaseService.editItemFromShoppingCart(amount, itemFacade, shopName, visitorName);
     }
 
@@ -144,7 +131,7 @@ public class Service implements IService {
     }
 
     @Override
-    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
+    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         return marketService.updateShopItemAmount ( shopOwnerName, item, amount, shopName );
     }
 
@@ -156,7 +143,7 @@ public class Service implements IService {
 
     @Override
     public Response addItemToShop(String shopOwnerName, String name, double price,Item.Category category,String info,
-                                  List<String> keywords, int amount, String shopName) {
+                                  List<String> keywords, double amount, String shopName) {
         return marketService.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
     }
 

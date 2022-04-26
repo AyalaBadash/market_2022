@@ -32,6 +32,16 @@ public class ShoppingBasket implements IHistory {
     }
 
     public double getPrice() {
+        return calculatePrice();
+    }
+
+    private double calculatePrice() {
+        double price = 0;
+        for (Map.Entry<Item,Double> currItem:items.entrySet())
+        {
+            price = price + currItem.getValue()*currItem.getKey().getPrice();
+        }
+        setPrice(price);
         return price;
     }
 
@@ -63,12 +73,7 @@ public class ShoppingBasket implements IHistory {
     }
 
 
-    public ShoppingBasket calculate() {
-        return null;
-        // TODO check if needed.
-    }
-
-    public void updateQuantity(int amount, Item itemFacade) throws MarketException {
+    public void updateQuantity(double amount, Item itemFacade) throws MarketException {
         if(!items.containsKey(itemFacade)){
             throw new MarketException("Item is not in cart. cannot update amount");
         }

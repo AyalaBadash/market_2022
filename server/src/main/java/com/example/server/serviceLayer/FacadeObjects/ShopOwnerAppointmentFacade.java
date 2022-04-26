@@ -14,6 +14,8 @@ import java.util.List;
 public class ShopOwnerAppointmentFacade extends AppointmentFacade {
     private boolean isShopFounder;
 
+    public ShopOwnerAppointmentFacade(){super();}
+
     public ShopOwnerAppointmentFacade(Member appointed, Member superVisor,
                                       Shop relatedShop, List<PermissionFacade> permissions, boolean isShopFounder) {
         super(appointed, superVisor, relatedShop, permissions);
@@ -39,17 +41,18 @@ public class ShopOwnerAppointmentFacade extends AppointmentFacade {
     }
 
     public AppointmentFacade toFacade(ShopOwnerAppointment appointment) {
-        List<IPermission> myPermissions = appointment.getPermissions ();
-        List<PermissionFacade> facadePermissions = new ArrayList<> (  );
-        for(IPermission permission : myPermissions){
-            facadePermissions.add ( new PermissionFacade ( permission ) );
-        }
-        return new ShopOwnerAppointmentFacade (appointment.getAppointed (), appointment.getSuperVisor (), appointment.getRelatedShop (), facadePermissions, appointment.isShopFounder () );
+        return new ShopOwnerAppointmentFacade ( appointment );
+//        List<IPermission> myPermissions = appointment.getPermissions ();
+//        List<PermissionFacade> facadePermissions = new ArrayList<> (  );
+//        for(IPermission permission : myPermissions){
+//            facadePermissions.add ( new PermissionFacade ( permission ) );
+//        }
+//        return new ShopOwnerAppointmentFacade (appointment.getAppointed (), appointment.getSuperVisor (), appointment.getRelatedShop (), facadePermissions, appointment.isShopFounder () );
     }
 
     @Override
     public AppointmentFacade toFacade(Appointment appointment) {
-        return appointment.visit(this);
+        return appointment.visitToFacade(this);
     }
 
 

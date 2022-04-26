@@ -119,4 +119,8 @@ public class UserController {
             member.getMyCart().removeItem( shop, itemToRemove);
         }
     }
+
+    public boolean isLoggedIn(String visitorName) {
+        return visitorsInMarket.containsKey ( visitorName );
+    }
 }

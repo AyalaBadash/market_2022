@@ -1,7 +1,9 @@
 package com.example.server.businessLayer.Users;
 
 import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
+import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 
 public class Visitor {
     // TODO must be unique
@@ -37,7 +39,7 @@ public class Visitor {
     public void getShopInfo(String shopID){throw new UnsupportedOperationException();} // TODO - maybe shopID needs to be main.businessLayer.Shop name
 
     //use case - Save items in shopping cart
-    public void addToShoppingCart(Item item, int amount, String shopID) // TODO - think if shopID needed here and if so from where we are getting it
+    public void addToShoppingCart(Item item, double amount, String shopID) // TODO - think if shopID needed here and if so from where we are getting it
     {throw new UnsupportedOperationException();}
 
     //use case - Show shopping cart
@@ -76,5 +78,10 @@ public class Visitor {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Visitor && ((Visitor) obj).getName().equals(this.name);
+    }
+
+    public boolean updateAmountInCart(double amount, ItemFacade itemFacade, String shopName) throws MarketException {
+        cart.editQuantity (amount,new Item(itemFacade),shopName);
+        return true;
     }
 }
