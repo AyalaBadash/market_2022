@@ -11,8 +11,6 @@ import com.example.server.serviceLayer.IService;
 import java.util.List;
 
 public class Proxy implements IService {
-
-
     @Override
     public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
         return null;
@@ -89,7 +87,12 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<List<String>> memberLogin(String userName, String userPassword, String visitorName) {
+    public ResponseT<List<String>> memberLogin(String userName, String userPassword) {
+        return null;
+    }
+
+    @Override
+    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName) {
         return null;
     }
 
@@ -124,11 +127,6 @@ public class Proxy implements IService {
     }
 
     @Override
-    public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName) {
-        return null;
-    }
-
-    @Override
     public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         return null;
     }
@@ -145,21 +143,6 @@ public class Proxy implements IService {
 
     @Override
     public Response appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName) {
-        return null;
-    }
-
-    @Override
-    public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName) {
         return null;
     }
 
