@@ -11,6 +11,10 @@ public class ShoppingBasket implements IHistory {
         items = new ConcurrentHashMap<>();
         price = 0;
     }
+    public ShoppingBasket(Map<Item,Double> items , double price){
+        this.items = items;
+        this.price = price;
+    }
 
 
     @Override

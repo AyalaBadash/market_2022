@@ -33,10 +33,11 @@ public class LoginCard {
 
 
     public void addPrivateQuestion(String q, String ans){
-        throw new UnsupportedOperationException();
+        QandA.put(q,ans);
     }
     public void removePrivateQuestion(String q){
-        throw new UnsupportedOperationException();
+        if (QandA.containsKey(q))
+            QandA.remove(q);
     }
 
     public String getName() {

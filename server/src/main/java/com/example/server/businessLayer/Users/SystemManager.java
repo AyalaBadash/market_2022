@@ -5,7 +5,10 @@ import com.example.server.businessLayer.Market;
 
 public class SystemManager  {
     private Member member;
-    private ClosedShopsHistory history;
+
+    public SystemManager(Member member){
+        this.member = member;
+    }
 
     public String getAllSystemPurchaseHistory(Market market) {
         return null;
@@ -25,7 +28,4 @@ public class SystemManager  {
         return member;
     }
 
-    public ClosedShopsHistory getHistory() {
-        return history;
-    }
 }

@@ -9,9 +9,9 @@ public class SystemManagerFacade implements FacadeObject<SystemManager> {
     private Member member;
     private ClosedShopsHistory history;
 
-    public SystemManagerFacade(Member member, ClosedShopsHistory history) {
+    public SystemManagerFacade(Member member) {
         this.member = member;
-        this.history = history;
+        this.history = ClosedShopsHistory.getInstance();
     }
 
     public Member getMember() {
@@ -32,6 +32,6 @@ public class SystemManagerFacade implements FacadeObject<SystemManager> {
 
     @Override
     public SystemManager toBusinessObject() {
-        return null;
+        return new SystemManager(this.member);
     }
 }
