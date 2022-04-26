@@ -93,8 +93,7 @@ class ServerApplicationTests {
     String systemManagerPassword = "1234Manager";
     String shopOwnerName = "Ayala";
     Gson gson = new Gson();
-    String RED = "\t\\u001B[31m";
-    String WHITE = "\\u001B[37m";
+;
 
 
 
@@ -116,7 +115,6 @@ class ServerApplicationTests {
             Response result =  deserialize(res, Response.class);
             assert !result.isErrorOccurred();
 
-            Assertions.assertFalse(result.isErrorOccurred());
         }catch (Exception e){
             assert false;
         }
