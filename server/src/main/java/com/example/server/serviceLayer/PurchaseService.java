@@ -53,9 +53,14 @@ public class PurchaseService {
     }
 
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
-        ShoppingCartFacade cart =  market.calculateShoppingCart(visitorName);
-        ResponseT <ShoppingCartFacade> responseT = new ResponseT<>(cart);
-        return responseT;
+        try {
+            ShoppingCartFacade cart = market.calculateShoppingCart(visitorName);
+            ResponseT<ShoppingCartFacade> responseT = new ResponseT<>(cart);
+            return responseT;
+        }
+        catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
     }
 
 
