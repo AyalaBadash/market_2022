@@ -7,10 +7,14 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
+import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
+import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.Requests.CloseShopRequest;
 import com.example.server.serviceLayer.Requests.EditItemFromShoppingCartRequest;
 import com.example.server.serviceLayer.Requests.InitMarketRequest;
+import com.example.server.serviceLayer.Requests.NamePasswordRequest;
 import com.example.server.serviceLayer.Response;
+import com.example.server.serviceLayer.ResponseT;
 import com.example.server.serviceLayer.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -43,6 +47,7 @@ import java.util.List;
 
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -147,20 +152,45 @@ class ServerApplicationTests {
     @Test
     @DisplayName("valid guest login")
     public void guestLoginValid() throws Exception {
-        InitMarketRequest request =  new InitMarketRequest("ido", "1234Ido");
-        String methodCall = "/firstInitMarket";
+        initMarket();
+        String methodCall = "/guestLogin";
+        try{
+            MvcResult res = mvc.perform(post(methodCall)).andReturn();
+            ResponseT<VisitorFacade> result =  deserialize(res, ResponseT.class);
+            assert !result.isErrorOccurred();
+            VisitorFacade visitor = result.getValue();
+
+        }catch (Exception e){
+            assert false;
+        }
+
+    }
+
+    @Test
+    @DisplayName("guest leaves the market")
+    public void guestExitMarket() throws Exception {
+
+        initMarket();
+        VisitorFacade visitor = getVisitor();
+        String memberName = "raz";
+        String password = "1234Raz";
+        NamePasswordRequest request = new NamePasswordRequest(memberName, password);
+        String methodCall = "/register";
         try{
             MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                             content(toHttpRequest(request)).contentType(contentType))
                     .andExpect(status().isOk())
                     .andReturn();
-            Response result =  deserialize(res, Response.class);
+            ResponseT<MemberFacade> result =  deserialize(res, ResponseT.class);
+            MemberFacade member = result.getValue();
             assert !result.isErrorOccurred();
 
         }catch (Exception e){
             assert false;
         }
     }
+
+
 
 
 
@@ -171,10 +201,13 @@ class ServerApplicationTests {
         EditItemFromShoppingCartRequest request =  new EditItemFromShoppingCartRequest(10.4, item, "shop" , "visitor" );
         String methodCall = "/editItemFromShoppingCart";
 //        CloseShopRequest request = new CloseShopRequest("ido", "1");
-        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
-                        content(toHttpRequest(request)).contentType(contentType))
-                .andExpect(status().isOk())
-                .andReturn();
+//        MvcResult res = mvc.perform(post("/getStudent"+req)).andReturn();
+//        MvcResult res = mvc.perform(post(methodCall)).andReturn();
+//
+//        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+//                        content(toHttpRequest(request)).contentType(contentType))
+//                .andExpect(status().isOk())
+//                .andReturn();
 
     }
 
@@ -234,6 +267,19 @@ class ServerApplicationTests {
                         content(toHttpRequest(request)).contentType(contentType))
                 .andExpect(status().isOk())
                 .andReturn();
+
+    }
+    public VisitorFacade getVisitor(){
+        String methodCall = "/guestLogin";
+        try{
+            MvcResult res = mvc.perform(post(methodCall)).andReturn();
+            ResponseT<VisitorFacade> result =  deserialize(res, ResponseT.class);
+            VisitorFacade visitor = result.getValue();
+            return  visitor;
+
+        }catch (Exception e){
+            return null;
+        }
 
     }
 
