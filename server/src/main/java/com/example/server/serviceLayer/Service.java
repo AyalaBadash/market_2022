@@ -1,20 +1,17 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.ResourcesObjects.Address;
-import com.example.server.ResourcesObjects.PaymentMethod;
-import com.example.server.businessLayer.ExternalServices.PaymentService;
-import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
 import java.util.List;
 
-
+@RestController
 public class Service implements IService {
     private static Service service = null;
     MarketService marketService;
@@ -39,191 +36,260 @@ public class Service implements IService {
 //    }
 
     @Override
-    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
-                                    String userName, String password) {
-        return marketService.firstInitMarket ( paymentService, supplyService,userName,password );
+    @RequestMapping(value = "/firstInitMarket")
+    @CrossOrigin
+    public Response firstInitMarket(@RequestBody InitMarketRequest request) {
+        return marketService.firstInitMarket ( request.getPaymentService(), request.getSupplyService(), request.getUserName(), request.getPassword() );
     }
 
     @Override
+    @RequestMapping(value = "/guestLogin")
+    @CrossOrigin
     public ResponseT<VisitorFacade> guestLogin() {
         return this.userService.guestLogin();
     }
 
     @Override
-    public Response exitSystem(String visitorName) {
+    @RequestMapping(value = "/exitSystem")
+    @CrossOrigin
+    public Response exitSystem(@RequestBody String visitorName) {
         return this.userService.exitSystem(visitorName);
     }
 
     @Override
-    public ResponseT<Boolean> register(String userName, String userPassword) {
-        return userService.register(userName, userPassword);
+    @RequestMapping(value = "/register")
+    @CrossOrigin
+    public ResponseT<Boolean> register(@RequestBody NamePasswordRequest request) {
+        return userService.register(request.getName(), request.getPassword());
     }
 
     @Override
-    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, MemberFacade member) {
-        return userService.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
+    @RequestMapping(value = "/addPersonalQuery")
+    @CrossOrigin
+    public ResponseT<Boolean> addPersonalQuery(@RequestBody AddPersonalQueryRequest request) {
+        return userService.addPersonalQuery(request.getUserAdditionalQueries(), request.getUserAdditionalAnswers(), request.getMember());
     }
 
-//    @Override
-//    public ResponseT<List<ShopFacade>> getAllShops() {
-//        return null;
-//    }
-//    @Override
-//    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop) {
-//        return null;
-//    }
+
 
     @Override
-    public ResponseT<List<ItemFacade>> searchProductByName(String name) {
+    @RequestMapping(value = "/searchProductByName")
+    @CrossOrigin
+    public ResponseT<List<ItemFacade>> searchProductByName(@RequestBody String name) {
         return marketService.searchProductByName(name);
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category) {
+    @RequestMapping(value = "/searchProductByCategory")
+    @CrossOrigin
+    public ResponseT<List<ItemFacade>> searchProductByCategory(@RequestBody Item.Category category) {
         return marketService.searchProductByCategory(category);
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord) {
+    @RequestMapping(value = "/searchProductByKeyword")
+    @CrossOrigin
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(@RequestBody String keyWord) {
         return marketService.searchProductByKeyword(keyWord);
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice) {
-        return marketService.filterItemByPrice(items, minPrice, maxPrice);
+    @RequestMapping(value = "/filterItemByCategory")
+    @CrossOrigin
+    public ResponseT<List<ItemFacade>> filterItemByCategory(@RequestBody FilterItemByCategoryRequest request) {
+        return marketService.filterItemByCategory(request.getItems(),request.getCategory());
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category) {
-        return marketService.filterItemByCategory(items, category);
+    @RequestMapping(value = "/filterItemByPrice")
+    @CrossOrigin
+    public ResponseT<List<ItemFacade>> filterItemByPrice(@RequestBody FilterItemByPriceRequest request) {
+        return marketService.filterItemByPrice(request.getItems(), request.getMinPrice(), request.getMaxPrice());
     }
 
     @Override
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
-        return purchaseService.addItemToShoppingCart(itemToInsert,amount,shopName,visitorName);
+    @RequestMapping(value = "/addItemToShoppingCart")
+    @CrossOrigin
+    public Response addItemToShoppingCart(@RequestBody AddItemToShoppingCartRequest request) {
+        return purchaseService.addItemToShoppingCart(request.getItemToInsert(),request.getAmount(),request.getShopName(),request.getVisitorName());
     }
     @Override
-    public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName) {
+    @RequestMapping(value = "/showShoppingCart")
+    @CrossOrigin
+    public ResponseT<ShoppingCartFacade> showShoppingCart(@RequestBody String visitorName) {
         return purchaseService.showShoppingCart(visitorName);
     }
     @Override
-    public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName, String visitorName) {
-        return purchaseService.editItemFromShoppingCart(amount, itemFacade, shopName, visitorName);
+    @RequestMapping(value = "/editItemFromShoppingCart")
+    @CrossOrigin
+    public Response editItemFromShoppingCart(@RequestBody EditItemFromShoppingCartRequest request) {
+        return purchaseService.editItemFromShoppingCart(request.getAmount(),request.getItemFacade() ,
+                request.getShopName(),request.getVisitorName());
     }
 
     @Override
-    public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
+    @RequestMapping(value = "/calculateShoppingCart")
+    @CrossOrigin
+    public ResponseT<ShoppingCartFacade> calculateShoppingCart(@RequestBody String visitorName) {
         return purchaseService.calculateShoppingCart(visitorName);
     }
 
     @Override
-    public Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address) {
-        return this.purchaseService.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
+    @RequestMapping(value = "/buyShoppingCart")
+    @CrossOrigin
+    public Response buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
+        return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
+                request.getPaymentMethod(), request.getAddress());
     }
 
     @Override
-    public ResponseT<List<String>> memberLogin(String userName, String userPassword) {
-        return userService.memberLogin(userName, userPassword);
+    @RequestMapping(value = "/memberLogin")
+    @CrossOrigin
+    public ResponseT<List<String>> memberLogin(@RequestBody NamePasswordRequest request) {
+        return userService.memberLogin(request.getName(),request.getPassword());
     }
 
     @Override
-    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName) {
-        return userService.validateSecurityQuestions ( userName, answers, visitorName );
+    @RequestMapping(value = "/validateSecurityQuestions")
+    @CrossOrigin
+    public ResponseT<MemberFacade> validateSecurityQuestions(@RequestBody ValidateSecurityRequest request) {
+        return userService.validateSecurityQuestions (request.getUserName(), request.getAnswers(), request.getVisitorName() );
     }
 
 
 
     @Override
-    public ResponseT<VisitorFacade> logout(String visitorName) {
+    @RequestMapping(value = "/logout")
+    @CrossOrigin
+    public ResponseT<VisitorFacade> logout(@RequestBody String visitorName) {
         return userService.logout(visitorName);
     }
 
     @Override
-    public Response openNewShop(String visitorName, String shopName) {
-        return marketService.openNewShop ( visitorName, shopName );
+    @RequestMapping(value = "/openNewShop")
+    @CrossOrigin
+    public Response openNewShop(@RequestBody OpenNewShopRequest request) {
+        return marketService.openNewShop ( request.getMemberName(), request.getShopName() );
     }
 
     @Override
-    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
-        return marketService.updateShopItemAmount ( shopOwnerName, item, amount, shopName );
-    }
+    @RequestMapping(value = "/updateShopItemAmount")
+    @CrossOrigin
+    public Response updateShopItemAmount(@RequestBody UpdateShopItemAmountRequest request) {
 
-
-    @Override
-    public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
-        return marketService.removeItemFromShop(shopOwnerName, item, shopName);
-    }
-
-    @Override
-    public Response addItemToShop(String shopOwnerName, String name, double price,Item.Category category,String info,
-                                  List<String> keywords, int amount, String shopName) {
-        return marketService.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
-    }
-
-    @Override
-    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
-        return marketService.setItemCurrentAmount(shopOwnerName, item, amount, shopName);
+        return marketService.updateShopItemAmount (request.getShopOwnerName(), request.getItem(),
+                request.getAmount(), request.getShopName() );
     }
 
 
     @Override
-    public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
-        return marketService.changeShopItemInfo ( shopOwnerName, updatedItem, oldItem, shopName );
+    @RequestMapping(value = "/removeItemFromShop")
+    @CrossOrigin
+    public Response removeItemFromShop(@RequestBody RemoveItemFromShopRequest request) {
+        return marketService.removeItemFromShop(request.getShopOwnerName(),request.getItem(),request.getShopName());
     }
 
     @Override
-    public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
-        return userService.appointShopOwner ( shopOwnerName, appointedShopOwner, shopName );
+    @RequestMapping(value = "/addItemToShop")
+    @CrossOrigin
+    public Response addItemToShop(@RequestBody AddItemToShopRequest request) {
+        return marketService.addItemToShop(request.getShopOwnerName(), request.getName(), request.getPrice(),
+                request.getCategory(), request.getInfo(), request.getKeywords(), request.getAmount(), request.getShopName());
+    }
+
+    @Override
+    @RequestMapping(value = "/setItemCurrentAmount")
+    @CrossOrigin
+    public Response setItemCurrentAmount(@RequestBody SetItemCurrentAmountRequest request) {
+        return marketService.setItemCurrentAmount(request.getShopOwnerName(), request.getItem(),
+                request.getAmount(), request.getShopName());
+    }
+
+
+    @Override
+    @RequestMapping(value = "/changeShopItemInfo")
+    @CrossOrigin
+    public Response changeShopItemInfo(@RequestBody ChangeShopItemInfoRequest request) {
+        return marketService.changeShopItemInfo (request.getShopOwnerName(), request.getUpdatedItem(),
+                request.getOldItem(), request.getShopName() );
+    }
+
+    @Override
+    @RequestMapping(value = "/appointShopOwner")
+    @CrossOrigin
+    public Response appointShopOwner(@RequestBody AppointmentShopOwnerRequest request) {
+        return userService.appointShopOwner (request.getShopOwnerName(), request.getAppointedShopOwner(), request.getShopName() );
     }
     @Override
-    public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
+    @RequestMapping(value = "/appointShopManager")
+    @CrossOrigin
+    public Response appointShopManager(@RequestBody AppointmentShopManagerRequest request) {
         return null;
     }
 
     @Override
-    public Response editShopManagerPermissions(String shopOwnerName, String managerName, String relatedShop,
-                                               ShopManagerAppointmentFacade updatedAppointment) {
-        return this.userService.editShopManagerPermissions(shopOwnerName,managerName , relatedShop,updatedAppointment);
+    @RequestMapping(value = "/editShopManagerPermissions")
+    @CrossOrigin
+    public Response editShopManagerPermissions(@RequestBody EditShopManagerPermissionsRequest request) {
+        return this.userService.editShopManagerPermissions(
+                request.getShopOwnerName(), request.getManagerName() , request.getRelatedShop(), request.getUpdatedAppointment());
     }
 
     @Override
-    public ResponseT getManagerPermission(String shopOwnerName, String managerName, String relatedShop){
-        return this.userService.getManagerAppointment(shopOwnerName,managerName, relatedShop);
+    @RequestMapping(value = "/getManagerPermission")
+    @CrossOrigin
+    public ResponseT getManagerPermission(@RequestBody GetManagerPermissionRequest request){
+        return this.userService.getManagerAppointment(request.getShopOwnerName(),
+                request.getManagerName(), request.getRelatedShop());
     }
 
     @Override
-    public Response closeShop(String shopOwnerName, String shopName) {
-        return this.marketService.closeShop(shopOwnerName,shopName);
+    @RequestMapping(value = "/closeShop")
+    @CrossOrigin
+    public Response closeShop(@RequestBody CloseShopRequest request) {
+        return this.marketService.closeShop(request.getShopOwnerName(), request.getShopName());
     }
 
     @Override
-    public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
-        return marketService.getShopEmployeesInfo(shopManagerName, shopName);
+    @RequestMapping(value = "/getShopEmployeesInfo")
+    @CrossOrigin
+    public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(@RequestBody GetShopEmployeesRequest request) {
+        return marketService.getShopEmployeesInfo(request.getShopName(), request.getShopName());
     }
 
     @Override
-    public ResponseT<ShopFacade> getShopInfo(String member, String shopName) {
-        return marketService.getShopInfo(member, shopName);
+    @RequestMapping(value = "/getShopInfo")
+    @CrossOrigin
+    public ResponseT<ShopFacade> getShopInfo(@RequestBody TwoStringRequest request) {
+        return marketService.getShopInfo(request.getName(), request.getShopName());
     }
 
     @Override
-    public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName) {
-        return marketService.getShopPurchaseHistory ( shopManagerName, shopName );
+    @RequestMapping(value = "/getShopPurchaseHistory")
+    @CrossOrigin
+    public ResponseT<String> getShopPurchaseHistory(@RequestBody TwoStringRequest request) {
+        return marketService.getShopPurchaseHistory (request.getName(), request.getShopName() );
     }
 
     @Override
-    public ResponseT<String> getAllSystemPurchaseHistory(String systemManagerName) {
+    @RequestMapping(value = "/getAllSystemPurchaseHistory")
+    @CrossOrigin
+    public ResponseT<String> getAllSystemPurchaseHistory(@RequestBody String systemManagerName) {
         return marketService.getAllSystemPurchaseHistory ( systemManagerName );
     }
 
     @Override
-    public ResponseT<String> getHistoryByShop(String systemManagerName, String shopName) {
-        return marketService.getHistoryByShop ( systemManagerName, shopName );
+    @RequestMapping(value = "/getAllSystemPurchaseHistory")
+    @CrossOrigin
+    public ResponseT<String> getHistoryByShop(@RequestBody TwoStringRequest request) {
+        return marketService.getHistoryByShop (request.getName(), request.getShopName() );
     }
 
     @Override
-    public ResponseT<String> getHistoryByMember(String systemManagerName, String memberName) {
-        return marketService.getHistoryByMember ( systemManagerName, memberName );
+    @RequestMapping(value = "/getHistoryByMember")
+    @CrossOrigin
+    public ResponseT<String> getHistoryByMember(@RequestBody GetHistoryByMemberRequest request) {
+        return marketService.getHistoryByMember (request.getSystemManagerName(), request.getMemberName() );
     }
 
 

@@ -6,6 +6,8 @@ import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.Requests.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.util.List;
@@ -20,16 +22,8 @@ public interface IService {
 //    public Response initMarket();
 
 
-    /**
-     * for when there is no DB and need to create a new system manager - !!!!has to run first!!!!
-     * @param paymentService
-     * @param supplyService
-     * @param userName
-     * @param password
-     * @return
-     */
-    Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService,
-                             String userName, String password);
+
+    Response firstInitMarket(InitMarketRequest request);
 
     // ************************** Visitor Use cases ******************************//
 
@@ -49,20 +43,18 @@ public interface IService {
     public Response exitSystem(String visitorName);
 
     /**
-     * @param userName
-     * @param userPassword
+     *
+     * @param request
      * @return
      */
-    public ResponseT<Boolean> register(String userName, String userPassword);
+    public ResponseT<Boolean> register(NamePasswordRequest request);
 
     /**
-     * @param userAdditionalQueries
-     * @param userAdditionalAnswers
-     * @param member
+     *
+     * @param request
      * @return
      */
-    public ResponseT<Boolean> addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers,
-                                               MemberFacade member);
+    public ResponseT<Boolean> addPersonalQuery(AddPersonalQueryRequest request);
 
 
     /**
@@ -84,27 +76,25 @@ public interface IService {
     public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord);
 
     /**
-     * @param minPrice
-     * @param maxPrice
+     *
+     * @param request
      * @return
      */
-    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice);
+    public ResponseT<List<ItemFacade>> filterItemByPrice(FilterItemByPriceRequest request);
 
     /**
-     * @param category
+     *
+     * @param request
      * @return
      */
-    public ResponseT<List<ItemFacade>> filterItemByCategory(List<ItemFacade> items, Item.Category category);
+    public ResponseT<List<ItemFacade>> filterItemByCategory(FilterItemByCategoryRequest request);
 
     /**
-     * @param itemToInsert
-     * @param amount
-     * @param shopName
-     * @param visitorName
+     *
+     * @param request
      * @return
      */
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName,
-                                          String visitorName);
+    public Response addItemToShoppingCart(AddItemToShoppingCartRequest request);
 
     /**
      * @param visitorName
@@ -112,15 +102,13 @@ public interface IService {
      */
     public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName);
 
+
     /**
-     * @param amount
-     * @param itemFacade
-     * @param shopName
-     * @param visitorName
+     *
+     * @param request
      * @return
      */
-    public Response editItemFromShoppingCart(int amount, ItemFacade itemFacade, String shopName,
-                                             String visitorName);
+    public Response editItemFromShoppingCart(EditItemFromShoppingCartRequest request);
 
     /**
      *
@@ -130,35 +118,26 @@ public interface IService {
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName);
 
     /**
-     * update if nothing changed and the buying is actually occurred shops for purchase history and items updating
      *
-     * @param visitorName
-     * @param paymentMethod
-     * @param address
+     * @param request
      * @return
      */
-    public Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address);
-
-
-
-    /**
-     * need to delete the temporary VisitorName from data
-     *
-     * @param userName
-     * @param userPassword
-     * @return
-     */
-    public ResponseT<List<String>> memberLogin(String userName, String userPassword);
+    public Response buyShoppingCart(BuyShoppingCartRequest request);
 
 
     /**
      *
-     * @param userName
-     * @param answers
-     * @param visitorName
+     * @param request
      * @return
      */
-    public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName);
+    public ResponseT<List<String>> memberLogin(NamePasswordRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    public ResponseT<MemberFacade> validateSecurityQuestions(ValidateSecurityRequest request);
 
 
     //************************* Member Use cases *************************************//
@@ -170,141 +149,110 @@ public interface IService {
     public ResponseT<VisitorFacade> logout(String visitorName);
 
     /**
-     * @param visitorName
-     * @param shopName
+     *
+     * @param request
      * @return
      */
-    public Response openNewShop(String visitorName, String shopName);
+    public Response openNewShop(OpenNewShopRequest request);
 
     /**
      *
-     * @param member
-     * @param shopName
+     * @param request
      * @return
      */
-    public ResponseT<ShopFacade> getShopInfo(String member, String shopName);
+    public ResponseT<ShopFacade> getShopInfo(TwoStringRequest request);
 
 
     // *********************** Shop Owner use cases *******************************//
 
     /**
-     * !this method is not used for updating amount when buying a shopping cart!
      *
-     * @param shopOwnerName
-     * @param item
-     * @param amount
-     * @param shopName
+     * @param request
      * @return
      */
-    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName);
-
-    /**
-     * @param shopOwnerName
-     * @param item
-     * @param shopName
-     * @return
-     */
-    public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName);
+    public Response updateShopItemAmount(UpdateShopItemAmountRequest request);
 
     /**
      *
-     * @param shopOwnerName
-     * @param name
-     * @param price
-     * @param category
-     * @param info
-     * @param keywords
-     * @param amount
-     * @param shopName
+     * @param request
      * @return
      */
-    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
-                                  List<String> keywords, int amount, String shopName);
+    public Response removeItemFromShop(RemoveItemFromShopRequest request);
+
+    /**
+     *
+     * @param addItemToShopRequest
+     * @return
+     */
+    public Response addItemToShop(AddItemToShopRequest addItemToShopRequest);
 
 
     /**
      *
-     * @param item
-     * @param amount
-     * @param shopName
-     * @return sets item current amount in shop
+     * @param request
+     * @return
      */
-    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName);
+    public Response setItemCurrentAmount(SetItemCurrentAmountRequest request);
 
 
     /**
-     * if the change is in a unique key then after changing need to update all uses like shopping cart
      *
-     * @param shopOwnerName
-     * @param updatedItem
-     * @param oldItem
-     * @param shopName
+     * @param request
      * @return
      */
-    public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName);
-
+    public Response changeShopItemInfo(ChangeShopItemInfoRequest request);
 
     /**
-     * needed to be implemented as Mira showed (shaked sent the relevant photo)
      *
-     * @param shopOwnerName
-     * @param appointedShopOwner
-     * @param shopName
+     * @param request
      * @return
      */
-    public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName);
+    public Response appointShopOwner(AppointmentShopOwnerRequest request);
 
     /**
-     * initial to all permissions
      *
-     * @param shopOwnerName
-     * @param appointedShopOwner
-     * @param shopName
-     */
-    public Response appointShopManager(String shopOwnerName, String appointedShopOwner, String shopName);
-
-
-    /**
-     * @param shopOwnerName
-     * @param updatedAppointment
+     * @param request
      * @return
      */
-    public Response editShopManagerPermissions(String shopOwnerName, String shopManagerName, String relatedShop,
-                                               ShopManagerAppointmentFacade updatedAppointment);
+    public Response appointShopManager(AppointmentShopManagerRequest request);
+
 
     /**
-     * @param shopOwnerName
-     * @param managerName
-     * @return
-     */
-    public ResponseT getManagerPermission(String shopOwnerName, String managerName, String relatedShop);
-
-    /**
-     * need to update all shop employees
      *
-     * @param shopOwnerName
-     * @param shopName
+     * @param request
      * @return
      */
-    public Response closeShop(String shopOwnerName, String shopName);
+    public Response editShopManagerPermissions(EditShopManagerPermissionsRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    public ResponseT getManagerPermission(GetManagerPermissionRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    public Response closeShop(CloseShopRequest request);
 
     // ************************** Shop Manager and Shop Owner use cases ********************************//
 
     /**
-     * need to check permissions (shop owner or manager)
      *
-     * @param shopManagerName
-     * @param shopName
+     * @param request
      * @return
      */
-    public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName);
+    public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(GetShopEmployeesRequest request);
 
     /**
-     * @param shopManagerName
-     * @param shopName
+     *
+     * @param request
      * @return
      */
-    public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName);
+    public ResponseT<String> getShopPurchaseHistory(TwoStringRequest request);
 
 
     // ************************** System Manager use cases ********************************//
@@ -316,12 +264,14 @@ public interface IService {
 
 
     /**
-     * @return Shop purchase history
+     *
+     * @param request
+     * @return
      */
-    public ResponseT<String> getHistoryByShop(String SystemManagerName, String shopName);
+    public ResponseT<String> getHistoryByShop(TwoStringRequest request);
 
     /**
      * @return Member purchase history
      */
-    public ResponseT<String> getHistoryByMember(String SystemManagerName, String shopName);
+    public ResponseT<String> getHistoryByMember(GetHistoryByMemberRequest request);
 }
