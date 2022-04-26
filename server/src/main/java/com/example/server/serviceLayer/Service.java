@@ -279,7 +279,7 @@ public class Service implements IService {
     }
 
     @Override
-    @RequestMapping(value = "/getAllSystemPurchaseHistory")
+    @RequestMapping(value = "/getHistoryByShop")
     @CrossOrigin
     public ResponseT<String> getHistoryByShop(@RequestBody TwoStringRequest request) {
         return marketService.getHistoryByShop (request.getName(), request.getShopName() );

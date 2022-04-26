@@ -2,6 +2,7 @@ package com.example.server.serviceLayer;
 
 import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.PaymentMethod;
+import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
@@ -45,7 +46,8 @@ public class PurchaseService {
 
     public Response editItemFromShoppingCart(double amount, ItemFacade itemFacade, String shopName, String visitorName) {
         try{
-            market.editCart(amount, itemFacade, shopName, visitorName);
+            Item item = new Item(itemFacade.getID(),itemFacade.getName(),itemFacade.getPrice(),itemFacade.getInfo(),itemFacade.getCategory(),itemFacade.getKeywords());
+            market.editCart(amount, item, shopName, visitorName);
             return new Response();
         }catch (MarketException e){
             return new Response(e.getMessage());

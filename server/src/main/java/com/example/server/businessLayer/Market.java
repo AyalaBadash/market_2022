@@ -141,12 +141,7 @@ public class Market {
     }
 
 
-    public boolean login(String name, String pass,
-                         List<String> questions, List<String> answers) throws Exception {
-        Security security = Security.getInstance();
-        return security.validateLogin(name, pass, questions, answers);
 
-    }
 
 
     public void buyShoppingCart(String visitorName, double expectedPrice,
@@ -588,13 +583,13 @@ public class Market {
         return true;
     }
 
-    public boolean editCart(double amount, ItemFacade itemFacade, String shopName, String visitorName) throws MarketException {
+    public boolean editCart(double amount, Item item, String shopName, String visitorName) throws MarketException {
         Visitor visitor= userController.getVisitor (visitorName);
         if(visitor == null){
             ErrorLog.getInstance().Log("Non member ");
             throw new MarketException("member does not exists, cannot update amount.");
         }
-        return visitor.updateAmountInCart(amount, itemFacade,shopName);
+        return visitor.updateAmountInCart(amount, item,shopName);
     }
 
 

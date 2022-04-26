@@ -1,6 +1,5 @@
 package com.example.server.businessLayer;
 
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,7 +22,6 @@ public class Item implements IHistory {
     private int rankers;
     private Category category;
     private List<String> keywords;
-    // TODO ID must be generated in market
     public Item(Integer ID, String name, double price, String info,
                 Category category, List<String> keywords) throws MarketException {
         this.ID = ID;
@@ -39,13 +37,6 @@ public class Item implements IHistory {
     }
 
 
-    public Item(ItemFacade it){
-        this.ID= it.getID();
-        this.name= it.getName();
-        this.price= it.getPrice();
-        this.keywords= it.getKeywords();
-        this.info= it.getInfo();
-    }
     public String getInfo() {
         return info;
     }
@@ -83,10 +74,13 @@ public class Item implements IHistory {
     }
 
     public void addKeyword(String keyword){
-        throw new UnsupportedOperationException();
+        if (!keywords.contains(keyword))
+            keywords.add(keyword);
     }
     public void removeKeyword(String keyword){
-        throw new UnsupportedOperationException();
+        if (keywords.contains(keyword))
+            keywords.remove(keyword);
+
     }
     public Category getCategory() {
         return category;

@@ -80,8 +80,8 @@ public class Visitor {
         return obj instanceof Visitor && ((Visitor) obj).getName().equals(this.name);
     }
 
-    public boolean updateAmountInCart(double amount, ItemFacade itemFacade, String shopName) throws MarketException {
-        cart.editQuantity (amount,new Item(itemFacade),shopName);
+    public boolean updateAmountInCart(double amount, Item item, String shopName) throws MarketException {
+        cart.editQuantity (amount,item,shopName);
         return true;
     }
 }

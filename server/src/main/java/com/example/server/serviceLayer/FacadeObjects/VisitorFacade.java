@@ -1,5 +1,8 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
+import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.ShoppingCart;
+import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.Visitor;
 
 public class VisitorFacade implements FacadeObject<Visitor>{
@@ -44,7 +47,9 @@ public class VisitorFacade implements FacadeObject<Visitor>{
     }
 
     @Override
-    public Visitor toBusinessObject() {
-        return null;
+    public Visitor toBusinessObject() throws MarketException {
+        Member mem = this.member.toBusinessObject();
+        ShoppingCart shoppingCart = this.cart.toBusinessObject();
+        return new Visitor(this.name,mem,shoppingCart);
     }
 }

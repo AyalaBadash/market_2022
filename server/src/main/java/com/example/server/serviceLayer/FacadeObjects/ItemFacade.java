@@ -1,6 +1,7 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
 import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.MarketException;
 
 import java.util.List;
 
@@ -92,8 +93,8 @@ public class ItemFacade implements FacadeObject<Item>{
     }
 
     @Override
-    public Item toBusinessObject() {
-        Item item = new Item(this);
+    public Item toBusinessObject() throws MarketException {
+        Item item = new Item(this.ID,this.name,this.price,this.info,this.category,this.keywords);
         return item;
     }
 
