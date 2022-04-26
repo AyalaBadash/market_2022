@@ -15,7 +15,7 @@ public class EventLog {
 
     private EventLog(){
         logger = LogManager.getLogger("warning logger");
-        loggerFile = new File(System.getProperty("user.dir")+"/myLog.txt");
+        loggerFile = new File(System.getProperty("user.dir")+"/EventLog.txt");
     }
 
     public static EventLog getInstance() {
