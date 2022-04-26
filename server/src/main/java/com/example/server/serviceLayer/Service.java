@@ -6,16 +6,21 @@ import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 public class Service implements IService {
     private static Service service = null;
     MarketService marketService;
     PurchaseService purchaseService;
     UserService userService;
+
 
     private Service() {
         marketService = MarketService.getInstance();
