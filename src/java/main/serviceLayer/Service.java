@@ -179,25 +179,10 @@ public class Service implements IService {
     public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
         return userService.appointShopOwner ( shopOwnerName, appointedShopOwner, shopName );
     }
-    // TODO implement
+
     @Override
     public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
-        return null;
-    }
-    // TODO implement
-    @Override
-    public ResponseT<List<AppointmentFacade>> getSelfAppointed(String shopOwnerName) {
-        return null;
-    }
-    // TODO implement
-    @Override
-    public ResponseT<List<ShopManagerAppointmentFacade>> getSelfManagerAppointed(String shopOwnerName) {
-        return null;
-    }
-    // TODO implement
-    @Override
-    public ResponseT<List<ShopOwnerAppointmentFacade>> getSelfShopOwnerAppointed(String shopOwnerName) {
-        return null;
+        return userService.appointShopOwner ( shopOwnerName, appointedShopManager, shopName );
     }
 
     @Override

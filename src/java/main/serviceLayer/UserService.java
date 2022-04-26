@@ -74,7 +74,7 @@ public class UserService {
     // TODO implement
     private ResponseT<List<String>> memberLoginGetQuestions(String memberName, String password)
     {
-        return null;
+        ;
     }
 
 

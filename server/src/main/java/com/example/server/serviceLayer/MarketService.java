@@ -40,21 +40,6 @@ public class MarketService {
         }
     }
 
-
-    // TODO returns only open shops
-    // TODO implement
-    /**
-     *
-     * @return only open shops
-     */
-    public ResponseT<List<ShopFacade>> getAllShops() {
-        return null;
-    }
-    // TODO implement
-    public ResponseT<List<ItemFacade>> getAllItemsByShop(ShopFacade shop) {
-        return null;
-    }
-
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {
         ResponseT<List<ItemFacade>> toReturn;
         try {
@@ -144,25 +129,26 @@ public class MarketService {
             return new Response ( marketException.getMessage () );
         }
     }
-    // TODO implement
+
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
-        return null;
+        try{
+            market.setItemCurrentAmount ( shopOwnerName,  new Item ( item ), amount, shopName);
+            return new Response (  );
+        } catch (MarketException e){
+            return new Response ( e.getMessage () );
+        }
     }
 
-    // TODO need to check users are updated
+
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
-        Response response;
         try {
             market.removeItemFromShop(shopOwnerName,item.getName(),shopName);
-            market.removeItemFromShop(shopOwnerName,item.getName(),shopName);
-            response = new Response();
+            return new Response();
         }
         catch (MarketException e)
         {
-            response = new Response(e.getMessage());
+            return new Response(e.getMessage());
         }
-        return response;
-
     }
 
 
@@ -182,17 +168,16 @@ public class MarketService {
 
     public Response setItemCurrentAmount(String shopOwnerName,ItemFacade item, double amount, String shopName){
         try{
-            market.setItemCurrentAmount(shopOwnerName, item,amount,shopName);
+            market.setItemCurrentAmount(shopOwnerName, new Item (item) ,amount,shopName);
             return new Response (  );
         }catch (MarketException e){
             return new Response ( e.getMessage () );
         }
     }
-    // TODO need to check users are updated
-    // TODO implement
+
     public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
         try{
-            market.changeShopItemInfo(shopOwnerName, updatedItem, oldItem, shopName);
+            market.changeShopItemInfo(shopOwnerName, new Item (updatedItem), new Item ( oldItem), shopName);
             return new Response (  );
         }catch (MarketException e){
             return new Response ( e.getMessage () );
@@ -211,8 +196,6 @@ public class MarketService {
         }
         return response;
     }
-    // TODO implement
-    public ResponseT<Integer> getItemCurrentAmount(ItemFacade item, String shopName){return null;}
 
     // TODO need to remove casting
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
@@ -302,9 +285,4 @@ public class MarketService {
         return toReturn;
     }
 
-    public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
-        ShoppingCartFacade cart =  market.calculateShoppingCart(visitorName);
-        ResponseT <ShoppingCartFacade> responseT = new ResponseT<>(cart);
-        return responseT;
-    }
 }

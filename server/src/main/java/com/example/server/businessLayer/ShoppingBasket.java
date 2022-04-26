@@ -56,11 +56,9 @@ public class ShoppingBasket implements IHistory {
         items.put(item,amount);
     }
 
-    public void removeItem(Item item, double amount) throws MarketException {
+    public void removeItem(Item item) throws MarketException {
         if (!items.containsKey(item))
-            throw new MarketException("No such item on basket");
-        if (items.get(item)>amount)
-            items.put(item,items.get(item)-amount);
+            return;
         else items.remove(item);
     }
 

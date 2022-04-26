@@ -47,9 +47,10 @@ public class PurchaseService {
         }
     }
 
-    // TODO implement
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
-        return null;
+        ShoppingCartFacade cart =  market.calculateShoppingCart(visitorName);
+        ResponseT <ShoppingCartFacade> responseT = new ResponseT<>(cart);
+        return responseT;
     }
 
 

@@ -21,12 +21,6 @@ public class Visitor {
         this.cart = cart;
     }
 
-    //use case - Register
-    public boolean register(String username,String password){throw new UnsupportedOperationException();}
-
-    public boolean login(String username , String password){
-        throw new UnsupportedOperationException();}//returns true if login succeeded
-
     //use case - payment
     public boolean payment(ShoppingCart cart,String paymentDetails){
         throw new UnsupportedOperationException();
