@@ -54,22 +54,22 @@ public class ShoppingCart implements IHistory {
      *                         return all items to shops, MarketException message include missing items
      */
     public double saveFromShops() throws MarketException {
-        List<Shop> canceledShops = new ArrayList<>();
+        boolean succeeded = true;
         List<Shop> succeedShops = new ArrayList<>();
         StringBuilder missing = new StringBuilder();
         double price = 0;
-        // TODO need to think how to return missing items
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             try {
                 price += shopToBasket.getKey().buyBasket(shopToBasket.getValue());
                 succeedShops.add(shopToBasket.getKey());
             } catch (Exception e) {
+                succeeded = false;
+                shopToBasket.getKey ().removeItemMissing ( shopToBasket.getValue () );
                 missing.append(e.getMessage());
                 missing.append("\n");
-                canceledShops.add(shopToBasket.getKey());
             }
         }
-        if (!canceledShops.isEmpty()) {
+        if (!succeeded) {
             for (Shop shop : succeedShops) {
                 shop.releaseItems(cart.get(shop));
             }
@@ -99,10 +99,12 @@ public class ShoppingCart implements IHistory {
     }
 
     public void calculate() {
-        throw new UnsupportedOperationException();
+        double price = 0;
+        for(ShoppingBasket shoppingBasket : cart.values ())
+            price += shoppingBasket.getPrice ();
     }
 
-    public void editQuantity(int amount, Item itemFacade, String shopName) throws MarketException {
+    public void editQuantity(double amount, Item item, String shopName) throws MarketException {
         ShoppingBasket basket=null;
         for (Map.Entry<Shop, ShoppingBasket> bask: cart.entrySet()){
             if(bask.getKey().getShopName().equals(shopName)){
@@ -113,7 +115,7 @@ public class ShoppingCart implements IHistory {
         if(basket==null){
             throw new MarketException("The basket does not exist in the cart.");
         }
-        basket.updateQuantity(amount, itemFacade);
+        basket.updateQuantity(amount, item);
     }
 
 

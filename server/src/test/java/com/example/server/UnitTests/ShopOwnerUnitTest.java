@@ -78,7 +78,7 @@ public class ShopOwnerUnitTest {
 
         Item item = Mockito.mock(Item.class, CALLS_REAL_METHODS);
         String itemName = "item name";
-        int amount = 15;
+        double amount = 15;
         int price = 10;
         Item.Category cat = Item.Category.fruit;
         ReflectionTestUtils.setField(item, "name", itemName);
@@ -119,8 +119,8 @@ public class ShopOwnerUnitTest {
 
         Item item = Mockito.mock(Item.class, CALLS_REAL_METHODS);
         String itemName = "item name";
-        int amount = 15;
-        int price = 10;
+        double amount = 15;
+        double price = 10;
         Item.Category cat = Item.Category.fruit;
         ReflectionTestUtils.setField(item, "name", itemName);
         ReflectionTestUtils.setField(item, "price", price);
@@ -138,8 +138,8 @@ public class ShopOwnerUnitTest {
 
         Item item = Mockito.mock(Item.class, CALLS_REAL_METHODS);
         String itemName = "item name";
-        int amount = 15;
-        int price = 10;
+        double amount = 15;
+        double price = 10;
         Item.Category cat = Item.Category.fruit;
         ReflectionTestUtils.setField(item, "name", itemName);
         ReflectionTestUtils.setField(item, "price", price);
@@ -156,8 +156,8 @@ public class ShopOwnerUnitTest {
 
         Item item = Mockito.mock(Item.class, CALLS_REAL_METHODS);
         String itemName = "item name";
-        int amount = 15;
-        int price = 10;
+        double amount = 15;
+        double price = 10;
         Item.Category cat = Item.Category.fruit;
         ReflectionTestUtils.setField(item, "name", itemName);
         ReflectionTestUtils.setField(item, "price", price);

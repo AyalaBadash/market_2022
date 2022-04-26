@@ -135,4 +135,8 @@ public class UserController {
         }
         EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
     }
+
+    public boolean isLoggedIn(String visitorName) {
+        return visitorsInMarket.containsKey ( visitorName );
+    }
 }

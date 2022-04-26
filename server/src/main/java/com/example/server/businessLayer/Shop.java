@@ -156,26 +156,26 @@ public class Shop implements IHistory{
         missingMessage.append(String.format("%s: cannot complete your purchase because some items are missing:\n", this.shopName));
         for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
             Item currItem = itemAmount.getKey();
-            Double currAmount = itemAmount.getValue();
+            double currAmount = itemAmount.getValue();
             if (this.itemsCurrentAmount.get(currItem) < currAmount){
                 failed = true;
                 missingMessage.append(String.format("%s X %f",currItem.getName(), currAmount));
-            };
+            }
         }
         if (failed){
             throw new MarketException(missingMessage);
         }
         for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
             Item currItem = itemAmount.getKey();
-            Double newAmount = this.itemsCurrentAmount.get(currItem) - itemAmount.getValue();
+            double newAmount = this.itemsCurrentAmount.get(currItem) - itemAmount.getValue();
             this.itemsCurrentAmount.put(currItem, newAmount);
         }
         purchaseHistory.add ( shoppingBasket.getReview () );
-        return calculateBasket(shoppingBasket);
+        return shoppingBasket.getPrice ();
     }
 
 
-    public List<Item> getAllItemsByPrice(int minPrice, int maxPrice) {
+    public List<Item> getAllItemsByPrice(double minPrice, double maxPrice) {
         throw new UnsupportedOperationException();
     }
 
@@ -183,30 +183,12 @@ public class Shop implements IHistory{
         return itemMap;
     }
 
-    public double calculateBasket(ShoppingBasket basket) {
-        double sum = 0;
-        Map<Item, Double> items = basket.getItems();
-        for (Map.Entry<Item,Double> currItem:items.entrySet())
-        {
-            sum = sum + currItem.getValue()*currItem.getKey().getPrice();
-        }
-        basket.setPrice(sum);
-        return sum;
-    }
-
-    // TODO need to calculate again - if doesn't match - exception
-
     public boolean isShopOwner(String memberName) {
         return shopOwners.containsKey(memberName);
     }
 
     public boolean isClosed() {
         return closed;
-    }
-
-    //TODO returns all items, doesn't matter amount
-    public List<Item> getAllItems() {
-        throw new UnsupportedOperationException();
     }
 
     public String getShopName() {
@@ -240,7 +222,6 @@ public class Shop implements IHistory{
         if (appointment ==  null ){
             throw new MarketException(String.format("%s: cannot find an appointment of %s" , this.getShopName(), managerName));
         }
-        // TODO can it be the superVisor of the superVisor?
         if (!appointment.getSuperVisor().getName().equals(shopOwnerName)){
             throw new MarketException(String.format("%s: you must be %s superVisor to change his permissions" , this.getShopName(), managerName));
         }
@@ -410,5 +391,20 @@ public class Shop implements IHistory{
             throw new MarketException ( "item does not exist in shop" );
         deleteItem ( oldItem );
         addItem ( updatedItem );
+    }
+
+    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
+        Map<Item, Double> items = shoppingBasket.getItems();
+        for (Map.Entry<Item,Double> itemAmount: items.entrySet()){
+            Item currItem = itemAmount.getKey();
+            double currAmount = itemAmount.getValue();
+            double amount = this.itemsCurrentAmount.get(currItem);
+            if ( amount < currAmount){
+                if(amount == 0)
+                    shoppingBasket.removeItem ( currItem );
+                else
+                    shoppingBasket.updateQuantity ( amount, currItem );
+            }
+        }
     }
 }

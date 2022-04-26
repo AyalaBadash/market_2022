@@ -85,7 +85,7 @@ public class MarketService {
         return toReturn;
     }
 
-    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, int minPrice, int maxPrice) {
+    public ResponseT<List<ItemFacade>> filterItemByPrice(List<ItemFacade> items, double minPrice, double maxPrice) {
         List<Item> businessItems = new ArrayList<>();
         for (ItemFacade item : items)
             businessItems.add(item.toBusinessObject());
@@ -130,7 +130,7 @@ public class MarketService {
         }
     }
 
-    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, int amount, String shopName) {
+    public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         try{
             market.setItemCurrentAmount ( shopOwnerName,  new Item ( item ), amount, shopName);
             return new Response (  );
@@ -153,7 +153,7 @@ public class MarketService {
 
 
     public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
-                                  List<String> keywords, int amount, String shopName) {
+                                  List<String> keywords, double amount, String shopName) {
         Response response;
         try {
             market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
@@ -197,7 +197,6 @@ public class MarketService {
         return response;
     }
 
-    // TODO need to remove casting
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(String shopManagerName, String shopName) {
         ResponseT<List<AppointmentFacade>> toReturn;
         try {
@@ -205,10 +204,15 @@ public class MarketService {
             List <AppointmentFacade> employeesFacadeList = new ArrayList<>();
             for (Appointment appointment : employees){
                 AppointmentFacade employeeFacade;
-                if (appointment.isOwner())
-                    employeeFacade = new ShopOwnerAppointmentFacade((ShopOwnerAppointment) appointment);
-                else
-                    employeeFacade = new ShopManagerAppointmentFacade((ShopManagerAppointment) appointment);
+                if (appointment.isOwner()) {
+                    //employeeFacade = new ShopOwnerAppointmentFacade((ShopOwnerAppointment) appointment);
+                    employeeFacade = new ShopOwnerAppointmentFacade ( );
+                    employeeFacade = employeeFacade.toFacade ( appointment );
+                }
+                else {
+                    employeeFacade = new ShopManagerAppointmentFacade ( );
+                    employeeFacade = employeeFacade.toFacade ( appointment );
+                }
                 employeesFacadeList.add(employeeFacade);
             }
             return new ResponseT<>(employeesFacadeList);
