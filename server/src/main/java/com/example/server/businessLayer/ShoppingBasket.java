@@ -38,6 +38,7 @@ public class ShoppingBasket implements IHistory {
     public double getPrice() {
         return calculatePrice();
     }
+    //TODO - price should be up to 3 digits . Example : 3.14159265 -> 3.141
 
     private double calculatePrice() {
         double price = 0;
@@ -70,7 +71,7 @@ public class ShoppingBasket implements IHistory {
         items.put(item,amount);
     }
 
-    public void removeItem(Item item) throws MarketException {
+    public void removeItem(Item item) throws MarketException {//TODO delete throws exception
         if (!items.containsKey(item))
             return;
         else items.remove(item);

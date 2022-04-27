@@ -26,6 +26,7 @@ public class Shop implements IHistory {
     private int rankers;
     private List<StringBuilder> purchaseHistory;
 
+    //TODO - for ayala : how do we know who is shop founder. Why we arent getting it in constructor.
 
     public Shop(String name) {
         this.shopName = name;
@@ -61,7 +62,7 @@ public class Shop implements IHistory {
     //use case - Stock management
     public void editItem(Item newItem, String id) throws MarketException {
         if (newItem.getID ( ) != Integer.getInteger ( id ))
-            throw new MarketException ( "must not chance the item id" );
+            throw new MarketException ( "must not change the item id" );
         itemMap.put ( newItem.getID ( ), newItem );
     }
 
@@ -69,11 +70,13 @@ public class Shop implements IHistory {
     public void deleteItem(Item item) {
         itemMap.remove ( item.getName ( ) );
     }
+    //TODO change the remove - item.getName is string but key for itemMap is Integer
 
     public void addItem(Item item) throws MarketException {
         if (!itemMap.containsKey ( item.getName ( ) ))
             itemMap.put ( item.getID ( ), item );
         else throw new MarketException ( "Item name already exist" );
+        //TODO for ayala :  We are not getting item amount and do not it on itemCurrentAmount map - mistake?
     }
 
     public int getItemCurrentAmount(Item item) {
@@ -345,6 +348,7 @@ public class Shop implements IHistory {
         return review;
     }
 
+    //TODO why do we need this.
     public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
@@ -374,6 +378,7 @@ public class Shop implements IHistory {
             throw new MarketException ( "item does not exist in shop" );
         deleteItem ( oldItem );
         addItem ( updatedItem );
+        //TODO - for ayala : why do delete and add when we have editItem / Setter for field info.
     }
 
     public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
