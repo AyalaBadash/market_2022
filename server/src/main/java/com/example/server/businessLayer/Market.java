@@ -585,6 +585,7 @@ public class Market {
 
 
     public void addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws MarketException {
+        //TODO Check item amount >0
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -707,5 +708,6 @@ public class Market {
         if(shop == null)
             throw new MarketException ( "shop does not exist in the market" );
         shop.editItem ( newItem, id );
+        //TODO why do we send ID here
     }
 }
