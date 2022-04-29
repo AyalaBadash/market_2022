@@ -85,7 +85,6 @@ public class AcceptanceTestAll {
     public void setup() {
         try {
             initMarket();
-            SystemAcceptanceTest t = new SystemAcceptanceTest();
             // shop manager register
             VisitorFacade visitor =  guestLogin();
             register(shopManagerName, shopManagerPassword);
@@ -293,8 +292,6 @@ public class AcceptanceTestAll {
         }
     }
     //TODO to add tests:
-    //      logout -> check member saved
-    //      logout log in again
     //      double login
     //      check member exit system logs out
     //      add questions
