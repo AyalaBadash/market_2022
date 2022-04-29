@@ -20,8 +20,8 @@ public class Security {
 
     public static Security getInstance() {
         if (instance == null)
-            return new Security();
-        else return instance;
+            instance =  new Security();
+        return instance;
     }
 
     public void validateRegister(String name, String password) throws MarketException {

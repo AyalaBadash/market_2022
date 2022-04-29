@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Proxy implements IService  {
 
+
     @Override
     public Response firstInitMarket(InitMarketRequest request) {
         return null;
@@ -23,7 +24,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public Response exitSystem(String visitorName) {
+    public Response exitSystem(ExitSystemRequest request) {
         return null;
     }
 
@@ -38,7 +39,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> searchProductByName(String name) {
+    public ResponseT<List<ItemFacade>> searchProductByName(SearchProductByNameRequest request) {
         return null;
     }
 
@@ -48,7 +49,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord) {
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(SearchProductByNameRequest request) {
         return null;
     }
 
@@ -68,7 +69,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName) {
+    public ResponseT<ShoppingCartFacade> showShoppingCart(RequestVisitorName request) {
         return null;
     }
 
@@ -78,7 +79,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
+    public ResponseT<ShoppingCartFacade> calculateShoppingCart(RequestVisitorName request) {
         return null;
     }
 
@@ -98,7 +99,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public ResponseT<VisitorFacade> logout(String visitorName) {
+    public ResponseT<VisitorFacade> logout(RequestVisitorName request) {
         return null;
     }
 
@@ -178,7 +179,7 @@ public class Proxy implements IService  {
     }
 
     @Override
-    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName) {
+    public ResponseT<String> getAllSystemPurchaseHistory(GetAllSystemPurchaseHistoryRequest request) {
         return null;
     }
 

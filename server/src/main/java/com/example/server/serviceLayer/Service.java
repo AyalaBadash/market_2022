@@ -32,10 +32,6 @@ public class Service implements IService {
             service = new Service();
         return service;
     }
-//    @Override
-//    public Response initMarket() {
-//        return null;
-//    }
 
     @Override
     @RequestMapping(value = "/firstInitMarket")
@@ -56,8 +52,8 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/exitSystem")
     @CrossOrigin
-    public Response exitSystem(@RequestBody String visitorName) {
-        return this.userService.exitSystem(visitorName);
+    public Response exitSystem(@RequestBody ExitSystemRequest request) {
+        return this.userService.exitSystem(request.getVisitorName());
     }
 
     @Override
@@ -79,8 +75,8 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/searchProductByName")
     @CrossOrigin
-    public ResponseT<List<ItemFacade>> searchProductByName(@RequestBody String name) {
-        return marketService.searchProductByName(name);
+    public ResponseT<List<ItemFacade>> searchProductByName(@RequestBody SearchProductByNameRequest request) {
+        return marketService.searchProductByName(request.getProductName());
     }
 
     @Override
@@ -93,8 +89,8 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/searchProductByKeyword")
     @CrossOrigin
-    public ResponseT<List<ItemFacade>> searchProductByKeyword(@RequestBody String keyWord) {
-        return marketService.searchProductByKeyword(keyWord);
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(@RequestBody SearchProductByNameRequest request) {
+        return marketService.searchProductByKeyword(request.getProductName());
     }
 
     @Override
@@ -120,8 +116,8 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/showShoppingCart")
     @CrossOrigin
-    public ResponseT<ShoppingCartFacade> showShoppingCart(@RequestBody String visitorName) {
-        return purchaseService.showShoppingCart(visitorName);
+    public ResponseT<ShoppingCartFacade> showShoppingCart(@RequestBody RequestVisitorName request) {
+        return purchaseService.showShoppingCart(request.getName());
     }
     @Override
     @RequestMapping(value = "/editItemFromShoppingCart")
@@ -134,8 +130,8 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/calculateShoppingCart")
     @CrossOrigin
-    public ResponseT<ShoppingCartFacade> calculateShoppingCart(@RequestBody String visitorName) {
-        return purchaseService.calculateShoppingCart(visitorName);
+    public ResponseT<ShoppingCartFacade> calculateShoppingCart(@RequestBody RequestVisitorName request) {
+        return purchaseService.calculateShoppingCart(request.getName());
     }
 
     @Override
@@ -165,8 +161,8 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/logout")
     @CrossOrigin
-    public ResponseT<VisitorFacade> logout(@RequestBody String visitorName) {
-        return userService.logout(visitorName);
+    public ResponseT<VisitorFacade> logout(@RequestBody RequestVisitorName request) {
+        return userService.logout(request.getName());
     }
 
     @Override
@@ -287,8 +283,8 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getAllSystemPurchaseHistory")
     @CrossOrigin
-    public ResponseT<String> getAllSystemPurchaseHistory(@RequestBody String systemManagerName) {
-        return marketService.getAllSystemPurchaseHistory ( systemManagerName );
+    public ResponseT<String> getAllSystemPurchaseHistory(@RequestBody GetAllSystemPurchaseHistoryRequest request) {
+        return marketService.getAllSystemPurchaseHistory ( request.getSystemManagerName() );
     }
 
     @Override
