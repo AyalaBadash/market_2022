@@ -38,7 +38,7 @@ public interface IService {
     /**
      * if not a member - deletes from data
      */
-    public Response exitSystem(String visitorName);
+    public Response exitSystem(ExitSystemRequest request);
 
     /**
      *
@@ -56,10 +56,11 @@ public interface IService {
     public Response addPersonalQuery(AddPersonalQueryRequest request);
 
     /**
-     * @param name
+     * SearchProductByNameRequest request
+     * @param request
      * @return
      */
-    public ResponseT<List<ItemFacade>> searchProductByName(String name);
+    public ResponseT<List<ItemFacade>> searchProductByName(SearchProductByNameRequest request);
 
     /**
      * @param category
@@ -67,11 +68,13 @@ public interface IService {
      */
     public ResponseT<List<ItemFacade>> searchProductByCategory(Item.Category category);
 
+
     /**
-     * @param keyWord
+     *
+     * @param request
      * @return
      */
-    public ResponseT<List<ItemFacade>> searchProductByKeyword(String keyWord);
+    public ResponseT<List<ItemFacade>> searchProductByKeyword(SearchProductByNameRequest request);
 
     /**
      *
@@ -95,10 +98,11 @@ public interface IService {
     public Response addItemToShoppingCart(AddItemToShoppingCartRequest request);
 
     /**
-     * @param visitorName
+     *
+     * @param request
      * @return
      */
-    public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName);
+    public ResponseT<ShoppingCartFacade> showShoppingCart(RequestVisitorName request);
 
 
     /**
@@ -110,10 +114,10 @@ public interface IService {
 
     /**
      *
-     * @param visitorName
+     * @param request
      * @return
      */
-    public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName);
+    public ResponseT<ShoppingCartFacade> calculateShoppingCart(RequestVisitorName request);
 
     /**
      *
@@ -141,10 +145,11 @@ public interface IService {
     //************************* Member Use cases *************************************//
 
     /**
-     * @param visitorName
+     *
+     * @param request
      * @return
      */
-    public ResponseT<VisitorFacade> logout(String visitorName);
+    public ResponseT<VisitorFacade> logout(RequestVisitorName request);
 
     /**
      *
@@ -260,9 +265,11 @@ public interface IService {
     // ************************** System Manager use cases ********************************//
 
     /**
-     * @return Market purchase history
+     *
+     * @param request
+     * @return
      */
-    public ResponseT<String> getAllSystemPurchaseHistory(String SystemManagerName);
+    public ResponseT<String> getAllSystemPurchaseHistory(GetAllSystemPurchaseHistoryRequest request);
 
 
     /**

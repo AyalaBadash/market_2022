@@ -37,24 +37,7 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>bgu.market2022</groupId>-->
-<!--            <artifactId>market_2022</artifactId>-->
-<!--            <version>1.0-SNAPSHOT</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
-        <!--        <dependency>-->
-<!--            <groupId>bgu.market2022</groupId>-->
-<!--            <artifactId>market_2022</artifactId>-->
-<!--            <version>1.0-SNAPSHOT</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>bgu.market2022</groupId>-->
-<!--            <artifactId>market_2022</artifactId>-->
-<!--            <version>1.0-SNAPSHOT</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
+
     </dependencies>
 
     <build>

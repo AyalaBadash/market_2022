@@ -29,7 +29,8 @@ public class UserService {
     public ResponseT<VisitorFacade> guestLogin() {
         try{
             Visitor guest = this.market.guestLogin();
-            return new ResponseT<>(new VisitorFacade(guest));
+            VisitorFacade result = new VisitorFacade(guest);
+            return new ResponseT<>(result);
         }catch (Exception e){
             return new ResponseT(e.getMessage());
         }
@@ -81,6 +82,7 @@ public class UserService {
     public ResponseT<VisitorFacade> logout(String visitorName) {
         ResponseT<VisitorFacade> toReturn;
         try {
+            //  TODO cannot create visitor here! id must be re generated. also, cart cannot be null;
             VisitorFacade visitorFacade = new VisitorFacade(market.memberLogout(visitorName) , null, null);
             toReturn = new ResponseT<>(visitorFacade);
         } catch (Exception e) {

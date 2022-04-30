@@ -18,7 +18,10 @@ public class VisitorFacade implements FacadeObject<Visitor>{
 
     public VisitorFacade(Visitor visitor) {
         this.name = visitor.getName();
-        this.member = new MemberFacade(visitor.getMember());
+        this.member = null;
+        if (visitor.getMember() != null){
+            this.member = new MemberFacade(visitor.getMember());
+        }
         this.cart = new ShoppingCartFacade(visitor.getCart());
     }
 
