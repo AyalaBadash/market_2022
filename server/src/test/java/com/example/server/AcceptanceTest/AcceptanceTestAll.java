@@ -1,5 +1,8 @@
 package com.example.server.AcceptanceTest;
 
+import com.example.server.ResourcesObjects.Address;
+import com.example.server.ResourcesObjects.CreditCard;
+import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.ServerApplication;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
@@ -67,6 +70,9 @@ public class AcceptanceTestAll {
     String shopName = "kolbo";
     AcceptanceTestService config = new AcceptanceTestService();
     Double productAmount ;
+    Double productPrice;
+    CreditCard creditCard;
+    Address address;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -91,10 +97,12 @@ public class AcceptanceTestAll {
             // open shop
             openShop(shopManagerName, shopName);
             productAmount = 3.0;
-            addItemToShop(shopManagerName, "milk", 1.2,Item.Category.general,
+            productPrice = 1.2;
+            addItemToShop(shopManagerName, "milk", productPrice,Item.Category.general,
                     "soy",new ArrayList<>() , productAmount,shopName);
 
-
+            creditCard = new CreditCard("124","13/5" , "555");
+            address = new Address("Tel Aviv", "Super" , "1");
         } catch (Exception Ignored) {
         }
     }
@@ -252,6 +260,7 @@ public class AcceptanceTestAll {
                 ItemFacade milk = res.get(0);
                 Response response = addItemToCart(milk, 3, shopName, visitor.getName());
                 assert !response.isErrorOccurred();
+                assert !visitor.getCart().getCart().isEmpty();
                 exitMarket(visitor);
                 visitor = guestLogin();
                 assert visitor.getCart().getCart().isEmpty();
@@ -259,10 +268,93 @@ public class AcceptanceTestAll {
                 assert false;
             }
         }
-        // TODO to add tests:
-        //      buy shopping cart
-        //      buy shopping cart with no items
-        //      buy shopping cart with no items in shop
+
+        @Test
+        @DisplayName("add item to cart, 0 amount")
+        public void addZeroAmount() {
+            try{
+                VisitorFacade visitor = guestLogin();
+                List<ItemFacade> res = searchProductByName("milk");
+                ItemFacade milk = res.get(0);
+                Response response = addItemToCart(milk, 0, shopName, visitor.getName());
+                assert !response.isErrorOccurred();
+                assert visitor.getCart().getCart().isEmpty();
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+
+        @Test
+        @DisplayName("buy item, valid amount")
+        public void buyItemValid() {
+            try{
+                VisitorFacade visitor = guestLogin();
+                ShopFacade shop = getShopInfo(shopManagerName, shopName);
+                List<ItemFacade> res = searchProductByName("milk");
+                ItemFacade milk = res.get(0);
+                Double itemAmount = shop.getItemsCurrentAmount().get(milk);
+                double buyingAmount = itemAmount - 1;
+                Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
+                Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+                assert !result.isErrorOccurred();
+                shop = getShopInfo(shopManagerName, shopName);
+                Double newAMount = shop.getItemsCurrentAmount().get(milk);
+                assert newAMount == 1;
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("buy not existing item")
+        public void buyWithUnexpectedPrice() {
+            try{
+                VisitorFacade visitor = guestLogin();
+                ShopFacade shop = getShopInfo(shopManagerName, shopName);
+                List<ItemFacade> res = searchProductByName("milk");
+                ItemFacade milk = res.get(0);
+                Double itemAmount = shop.getItemsCurrentAmount().get(milk);
+                double buyingAmount = itemAmount + 1;
+                Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
+                // add not existing item shouldn't fail
+                assert !response.isErrorOccurred();
+                Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+                assert result.isErrorOccurred();
+                shop = getShopInfo(shopManagerName, shopName);
+                Double newAMount = shop.getItemsCurrentAmount().get(milk);
+                Assertions.assertEquals(newAMount,itemAmount);
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("buy cart with unexpected price")
+        public void buyNotExistingItem() {
+            try{
+                VisitorFacade visitor = guestLogin();
+                ShopFacade shop = getShopInfo(shopManagerName, shopName);
+                List<ItemFacade> res = searchProductByName("milk");
+                ItemFacade milk = res.get(0);
+                Double itemAmount = shop.getItemsCurrentAmount().get(milk);
+                double buyingAmount = itemAmount ;
+                Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
+                // add not existing item shouldn't fail
+                assert !response.isErrorOccurred();
+                Response result = buyShoppingCart(visitor.getName(), productPrice*buyingAmount + 1, creditCard, address);
+                assert result.isErrorOccurred();
+                shop = getShopInfo(shopManagerName, shopName);
+                Double newAMount = shop.getItemsCurrentAmount().get(milk);
+                Assertions.assertEquals(newAMount,itemAmount);
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
     }
 
     // ############################### MEMBER #######################################
@@ -573,6 +665,16 @@ public class AcceptanceTestAll {
         }.getType();
         ResponseT<ShopFacade> result = deserialize(res, type);
         return result.getValue();
+    }
+
+    public Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address) throws Exception {
+        BuyShoppingCartRequest request =  new BuyShoppingCartRequest(visitorName,expectedPrice,paymentMethod, address);
+        String methodCall = "/buyShoppingCart";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        return deserialize(res, Response.class);
     }
 
     public Response initMarket() throws Exception {
