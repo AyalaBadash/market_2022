@@ -1,8 +1,11 @@
 package com.example.server.IntegrationTests;
 
-import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
-import com.example.server.businessLayer.Shop;
+import com.example.server.ResourcesObjects.PaymentMethod;
+import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.ExternalServices.PaymentMock;
+import com.example.server.businessLayer.ExternalServices.PaymentService;
+import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
@@ -21,7 +24,6 @@ import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.when;
 
 public class MarketUnitTest {
-    @Mock
     Member member;
     Visitor notMemberVisitor;
     Visitor memberVisitor;
@@ -31,68 +33,125 @@ public class MarketUnitTest {
     String memberName;
     String visitorName;
     String shopName;
+    Security security;
+    Item item;
 
     @BeforeEach
     public void marketUnitTestInit(){
-        //TODO change
-        market = Mockito.mock ( Market.class );
-        member = Mockito.mock ( Member.class, CALLS_REAL_METHODS );
-        notMemberVisitor = Mockito.mock ( Visitor.class, CALLS_REAL_METHODS );
-        memberVisitor = Mockito.mock ( Visitor.class, CALLS_REAL_METHODS );
-        userController = Mockito.mock ( UserController.class);
-        shop = Mockito.mock ( Shop.class, CALLS_REAL_METHODS );
-        memberName = "member_name";
-        visitorName = "visitor_name";
-        shopName = "not_Existing_Shop_Name";
+        market = Market.getInstance();
+        security = Security.getInstance();
+        userController = UserController.getInstance();
+        try {
+            market.register("ayala","password");
+            market.memberLogin("ayala","password");
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     @Test
-    @DisplayName( "Open New Shop Use Case Test" )
-    public void testOpenNewShop() throws MarketException {
-        when(market.getShops ()).thenCallRealMethod();
-        market = Market.getInstance ();
-        ReflectionTestUtils.setField (market, "userController", userController );
-        when ( member.getName ()).thenReturn ( memberName );
-        when ( userController.isMember ( memberName ) ).thenReturn ( true );
-        when ( userController.isMember ( visitorName ) ).thenReturn ( false );
-        when ( userController.getMember (memberName) ).thenReturn ( new Member ( memberName ) );
-
-        market.openNewShop ( memberName, shopName );
-        Assertions.assertTrue ( market.getShops ().size () == 1 );
+    @DisplayName("First init market - good test")
+    public void initTest(){
+        PaymentService paymentService = new PaymentMock();
+        ProductsSupplyService supplyService = new SupplyMock();
         try{
-            market.openNewShop ( memberName, shopName );
-        } catch (MarketException marketException){
-            Assertions.assertEquals ( marketException.getMessage (), "Shop with the same shop name is already exists" );
+                    market.firstInitMarket(paymentService,supplyService,"raz","password");
+                    assert true;
         }
-        Assertions.assertTrue ( market.getShops ().size () == 1 );
-        try{
-            market.openNewShop ( visitorName, shopName );
-        } catch (MarketException marketException){
-            Assertions.assertEquals ( marketException.getMessage (), "You are not a member. Only members can open a new shop in the market" );
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            assert false;
         }
-        Assertions.assertTrue ( market.getShops ().size () == 1 );
-        shop = market.getShopByName ( shopName );
-        Assertions.assertTrue ( shop.isShopOwner ( memberName ) );
-        Assertions.assertTrue ( shop.getEmployees ().containsKey ( memberName ) );
     }
-
+    @Test
+    @DisplayName("First init market - fail test - one of the external service is null")
+    public void initFailTest(){
+        ProductsSupplyService supplyService = new SupplyMock();
+        try{
+            market.firstInitMarket(null,supplyService,"raz","password");
+            assert false;
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("First init market - fail test - one service already exist")
+    public void initFailTestOneServiceIsntNull(){
+        market.setPaymentService(new PaymentMock());
+        PaymentService paymentService = new PaymentMock();
+        ProductsSupplyService supplyService = new SupplyMock();
+        try{
+            market.firstInitMarket(paymentService,supplyService,"raz","password");
+            assert false;
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            assert true;
+        }
+    }
 
     @Test
-    @DisplayName("Market Unit Test - logout")
-    public void testLogout() throws IllegalAccessException, MarketException {
-        Market market = Mockito.mock(Market.class, CALLS_REAL_METHODS);
-        UserController userController = Mockito.mock(UserController.class);
-        ReflectionTestUtils.setField(market, "userController", userController);
-        Member member = Mockito.mock(Member.class);
-        Visitor visitor = Mockito.mock(Visitor.class);
-        String memberName = "memberName_test";
-        Map visitorsInMarket = new HashMap();
-        visitorsInMarket.put(memberName, visitor);
-        Map members = new HashMap();
-        members.put(memberName, member);
-        ReflectionTestUtils.setField(userController, "members", members);
-        ReflectionTestUtils.setField(userController, "visitorsInMarket", visitorsInMarket);
-        String newVisitor = market.memberLogout(memberName);
-        Assertions.assertFalse(userController.getVisitorsInMarket().containsKey(memberName));
+    @DisplayName("Register test - good test")
+    public void registerTest(){
+        try {
+            security.validateRegister("ido", "password");
+            userController.register("ido");
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            assert false;
+        }
     }
+    @Test
+    @DisplayName("Register test - fail test - valid")
+    public void registerFailTest(){
+        try {
+            security.validateRegister("ido", "password");
+            userController.register("ido");
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Member login - good test")
+    public void MemberLoginTest(){
+        try {
+            market.register("ido","password");
+            market.memberLogin("ido","password");
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("Guest login")
+    public void guestLogin(){
+        Visitor visitor = userController.guestLogin();
+        Assertions.assertNotNull(visitor);
+    }
+
+    @Test
+    @DisplayName("Calculate shopping cart - good test")
+    public void CalculateCart(){
+
+        //market.addItemToShoppingCart(item);
+
+    }
+    @Test
+    @DisplayName("Buy shopping cart test - good test")
+    public void BuyShoppingCart(){
+        assert false;
+    }
+
 }

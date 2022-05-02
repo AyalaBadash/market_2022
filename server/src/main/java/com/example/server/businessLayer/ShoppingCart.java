@@ -123,11 +123,20 @@ public class ShoppingCart implements IHistory {
     }
 
 
-    public int getItemQuantity(Item item) {
-        throw new UnsupportedOperationException();
+    public double getItemQuantity(Item item) {
+        for (Map.Entry<Shop,ShoppingBasket> entry: cart.entrySet())
+        {
+            if (entry.getValue().getItems().containsKey(item))
+                return entry.getValue().getItems().get(item);
+        }
+        return 0;
     }
 
     public Map<Shop, ShoppingBasket> getCart() {
         return cart;
+    }
+
+    public void setCart(Map<Shop, ShoppingBasket> cart) {
+        this.cart = cart;
     }
 }
