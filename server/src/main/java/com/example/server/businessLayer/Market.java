@@ -253,6 +253,7 @@ public class Market {
         return paymentService;
     }
 
+    //TODO make private and add authentication checks
     public void setPaymentService(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
