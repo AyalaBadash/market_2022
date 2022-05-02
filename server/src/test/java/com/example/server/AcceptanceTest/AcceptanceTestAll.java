@@ -5,6 +5,7 @@ import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.ServerApplication;
 import com.example.server.businessLayer.Item;
+import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
 import com.example.server.serviceLayer.Response;
@@ -64,14 +65,16 @@ public class AcceptanceTestAll {
     // common fields
     Gson gson = new Gson();
     VisitorFacade curVisitor;
-    String shopManagerName = "shaked";
-    String shopManagerPassword = "shaked1234";
+    String shopOwnerName = "shaked";
+    String shopOwnerPassword = "shaked1234";
     String shopName = "kolbo";
     AcceptanceTestService config = new AcceptanceTestService();
     Double productAmount;
     Double productPrice;
     CreditCard creditCard;
     Address address;
+    ItemFacade milk;
+
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -90,16 +93,17 @@ public class AcceptanceTestAll {
             initMarket();
             // shop manager register
             VisitorFacade visitor = guestLogin();
-            register(shopManagerName, shopManagerPassword);
-            List<String> questions = memberLogin(shopManagerName, shopManagerPassword);
-            validateSecurityQuestions(shopManagerName, new ArrayList<>(), visitor.getName());
+            register(shopOwnerName, shopOwnerPassword);
+            List<String> questions = memberLogin(shopOwnerName, shopOwnerPassword);
+            validateSecurityQuestions(shopOwnerName, new ArrayList<>(), visitor.getName());
             // open shop
-            openShop(shopManagerName, shopName);
+            openShop(shopOwnerName, shopName);
             productAmount = 3.0;
             productPrice = 1.2;
-            addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
+            addItemToShop(shopOwnerName, "milk", productPrice, Item.Category.general,
                     "soy", new ArrayList<>(), productAmount, shopName);
-
+            List<ItemFacade> res = searchProductByName("milk");
+            milk = res.get(0);
             creditCard = new CreditCard("124", "13/5", "555");
             address = new Address("Tel Aviv", "Super", "1");
         } catch (Exception Ignored) {
@@ -108,6 +112,7 @@ public class AcceptanceTestAll {
 
     @BeforeEach
     public void reset() throws Exception {
+        setItemCurrentAmount(shopOwnerName, milk, productAmount, shopName);
     }
     // ############################### TEST CLASSES #######################################
 
@@ -289,7 +294,7 @@ public class AcceptanceTestAll {
         public void buyItemValid() {
             try {
                 VisitorFacade visitor = guestLogin();
-                ShopFacade shop = getShopInfo(shopManagerName, shopName);
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
                 List<ItemFacade> res = searchProductByName("milk");
                 ItemFacade milk = res.get(0);
                 Double itemAmount = shop.getItemsCurrentAmount().get(milk);
@@ -297,9 +302,10 @@ public class AcceptanceTestAll {
                 Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
                 Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
                 assert !result.isErrorOccurred();
-                shop = getShopInfo(shopManagerName, shopName);
+                shop = getShopInfo(shopOwnerName, shopName);
                 Double newAMount = shop.getItemsCurrentAmount().get(milk);
                 assert newAMount == 1;
+                itemAmount = newAMount;
 
             } catch (Exception e) {
                 assert false;
@@ -311,7 +317,7 @@ public class AcceptanceTestAll {
         public void buyWithUnexpectedPrice() {
             try {
                 VisitorFacade visitor = guestLogin();
-                ShopFacade shop = getShopInfo(shopManagerName, shopName);
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
                 List<ItemFacade> res = searchProductByName("milk");
                 ItemFacade milk = res.get(0);
                 Double itemAmount = shop.getItemsCurrentAmount().get(milk);
@@ -321,7 +327,7 @@ public class AcceptanceTestAll {
                 assert !response.isErrorOccurred();
                 Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
                 assert result.isErrorOccurred();
-                shop = getShopInfo(shopManagerName, shopName);
+                shop = getShopInfo(shopOwnerName, shopName);
                 Double newAMount = shop.getItemsCurrentAmount().get(milk);
                 Assertions.assertEquals(newAMount, itemAmount);
 
@@ -335,7 +341,7 @@ public class AcceptanceTestAll {
         public void buyNotExistingItem() {
             try {
                 VisitorFacade visitor = guestLogin();
-                ShopFacade shop = getShopInfo(shopManagerName, shopName);
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
                 List<ItemFacade> res = searchProductByName("milk");
                 ItemFacade milk = res.get(0);
                 Double itemAmount = shop.getItemsCurrentAmount().get(milk);
@@ -345,7 +351,7 @@ public class AcceptanceTestAll {
                 assert !response.isErrorOccurred();
                 Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
                 assert result.isErrorOccurred();
-                shop = getShopInfo(shopManagerName, shopName);
+                shop = getShopInfo(shopOwnerName, shopName);
                 Double newAMount = shop.getItemsCurrentAmount().get(milk);
                 Assertions.assertEquals(newAMount, itemAmount);
 
@@ -513,13 +519,13 @@ public class AcceptanceTestAll {
 
         @Test
         @DisplayName("member exit system logs out")
-        public void memberExitSystem(){
+        public void memberExitSystem() {
             try {
                 Response response = exitMarket(testMember.getName());
                 assert !response.isErrorOccurred();
                 VisitorFacade visitor = guestLogin();
                 List<String> questions = memberLogin(testMemberName, testMemberPassword);
-                testMember = validateSecurityQuestions(testMemberName, new ArrayList<>(),visitor.getName());
+                testMember = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
                 assert testMember != null;
             } catch (Exception e) {
                 assert false;
@@ -529,7 +535,7 @@ public class AcceptanceTestAll {
 
         @Test
         @DisplayName("add question")
-        public void addQuestion(){
+        public void addQuestion() {
             try {
                 VisitorFacade visitor = guestLogin();
                 String currName = "questionsName";
@@ -537,17 +543,17 @@ public class AcceptanceTestAll {
                 ResponseT<Boolean> response = register(currName, password);
                 assert !response.isErrorOccurred();
                 List<String> questions = memberLogin(currName, password);
-                assert questions.size() ==0;
+                assert questions.size() == 0;
                 MemberFacade member = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
                 Response queryResponse = addPersonalQuery("whats your mother's name?", "idk", member.getName());
                 assert !queryResponse.isErrorOccurred();
                 visitor = logout(member.getName());
-                questions = memberLogin(currName,password);
+                questions = memberLogin(currName, password);
                 assert questions.size() == 1;
                 assert questions.contains("whats your mother's name?");
                 ArrayList<String> answers = new ArrayList<>();
                 answers.add("idk");
-                member = validateSecurityQuestions(currName, answers,member.getName());
+                member = validateSecurityQuestions(currName, answers, member.getName());
                 assert member != null;
 
             } catch (Exception e) {
@@ -557,7 +563,7 @@ public class AcceptanceTestAll {
 
         @Test
         @DisplayName("invalid authentication")
-        public void invalidAuthentication(){
+        public void invalidAuthentication() {
             try {
                 VisitorFacade visitor = guestLogin();
                 String currName = "questionsName2";
@@ -567,22 +573,24 @@ public class AcceptanceTestAll {
                 MemberFacade member = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
                 Response queryResponse = addPersonalQuery("whats your mother's name?", "idk", member.getName());
                 visitor = logout(member.getName());
-                questions = memberLogin(currName,"123");
-                try{
-                    questions = memberLogin(currName,"123");
+                questions = memberLogin(currName, "123");
+                try {
+                    questions = memberLogin(currName, "123");
                     assert false;
-                } catch (Exception ignored){}
-                questions = memberLogin(currName,password);
+                } catch (Exception ignored) {
+                }
+                questions = memberLogin(currName, password);
                 ArrayList<String> answers = new ArrayList<>();
                 answers.add("idk1");
-                try{
-                    member = validateSecurityQuestions(currName, answers,member.getName());
+                try {
+                    member = validateSecurityQuestions(currName, answers, member.getName());
                     assert member == null;
-                }catch (Exception ignored){}
+                } catch (Exception ignored) {
+                }
                 answers.clear();
                 answers.add("idk");
-                member = validateSecurityQuestions(currName, answers,member.getName());
-                assert  member != null;
+                member = validateSecurityQuestions(currName, answers, member.getName());
+                assert member != null;
             } catch (Exception e) {
                 assert false;
             }
@@ -592,40 +600,234 @@ public class AcceptanceTestAll {
 
     // ############################### SHOP OWNER #######################################
 
+    @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class ShopOwner {
 
-    @Test
-    @DisplayName("add new item")
-    public void addNewItem(){
-        try{
-            Response response = addItemToShop(shopManagerName, "steak", 10, Item.Category.meat,
-                    " best in town", new ArrayList<>(), 5.0, shopName);
-            assert !response.isErrorOccurred();
-            // TODO maybe add field to item - shop name. search would return a list of item where we
-            //  wouldn't know how to take it
-            ShopFacade shop = getShopInfo(shopManagerName, shopName);
-            boolean found = false;
-            for (Map.Entry<ItemFacade, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()){
-                ItemFacade item = itemAmount.getKey();
-                Double amount = itemAmount.getValue();
-                if (item.getName().equals("steak")){
-                    found = amount == 5.0;
-                    break;
+
+        @Test
+        @Order(1)
+        @DisplayName("add new item")
+        public void addNewItem() {
+            try {
+                Response response = addItemToShop(shopOwnerName, "steak", 10, Item.Category.meat,
+                        " best in town", new ArrayList<>(), 5.0, shopName);
+                assert !response.isErrorOccurred();
+                // TODO maybe add field to item - shop name. search would return a list of item where we
+                //  wouldn't know how to take it
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+                boolean found = false;
+                for (Map.Entry<ItemFacade, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
+                    ItemFacade item = itemAmount.getKey();
+                    Double amount = itemAmount.getValue();
+                    if (item.getName().equals("steak")) {
+                        found = amount.equals(5.0);
+                        break;
+                    }
                 }
-            }
-            assert found;
+                assert found;
 
-        } catch (Exception e) {
-            assert false;
+            } catch (Exception e) {
+                assert false;
+            }
         }
+
+        @Test
+        @Order(2)
+        @DisplayName("add existing item")
+        public void addExistingItem() {
+            try {
+                Response response = addItemToShop(shopOwnerName, "milk", productPrice, Item.Category.general,
+                        "soy", new ArrayList<>(), 10, shopName);
+                assert response.isErrorOccurred();
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+                boolean found = false;
+                for (Map.Entry<ItemFacade, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
+                    ItemFacade item = itemAmount.getKey();
+                    Double amount = itemAmount.getValue();
+                    if (item.getName().equals("steak")) {
+                        found = amount.equals(productAmount);
+                        break;
+                    }
+                }
+                assert found;
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @Order(3)
+        @DisplayName("set item amount - valid")
+        public void setValidItemAmount() {
+            try {
+
+                Response response = setItemCurrentAmount(shopOwnerName, milk, 8.0, shopName);
+                assert !response.isErrorOccurred();
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+                boolean found = false;
+                for (Map.Entry<ItemFacade, Double> itemToAmount : shop.getItemsCurrentAmount().entrySet()) {
+                    ItemFacade item = itemToAmount.getKey();
+                    Double amount = itemToAmount.getValue();
+                    if (found) break;
+                    found = item.getName().equals("milk") && amount.equals(8.0);
+                }
+                assert found;
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("set item amount 0")
+        public void setValidItemAmountZero() {
+            try {
+
+                Response response = setItemCurrentAmount(shopOwnerName, milk, 0, shopName);
+                assert !response.isErrorOccurred();
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+                boolean found = false;
+                for (Map.Entry<ItemFacade, Double> itemToAmount : shop.getItemsCurrentAmount().entrySet()) {
+                    ItemFacade item = itemToAmount.getKey();
+                    Double amount = itemToAmount.getValue();
+                    if (found) break;
+                    found = item.getName().equals("milk") && amount.equals(0.0);
+                }
+                assert found;
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("set item amount negative")
+        public void setValidItemAmountNegative() {
+            try {
+                Response response = setItemCurrentAmount(shopOwnerName, milk, -1, shopName);
+                assert response.isErrorOccurred();
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("change item info")
+        public void setItemInfo() {
+            try {
+                String newInfo = "out of Date!";
+                ItemFacade sourMilk = new ItemFacade(-1, milk.getName(), milk.getPrice(), milk.getCategory(), milk.getKeywords(), newInfo);
+                Response response = changeShopItemInfo(shopOwnerName, sourMilk, milk, shopName);
+                assert !response.isErrorOccurred();
+                ShopFacade newShop = getShopInfo(shopOwnerName, shopName);
+                boolean found = false;
+                for (Map.Entry<Integer, ItemFacade> idToItem : newShop.getItemMap().entrySet()) {
+                    ItemFacade item = idToItem.getValue();
+                    if (item.getName().equals(milk.getName())) {
+                        found = item.getInfo().equals(newInfo);
+                        break;
+                    }
+                }
+                assert found;
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("change item info to empty")
+        public void changeToEmptyInfo() {
+            try {
+                String newInfo = "";
+                ItemFacade sourMilk = new ItemFacade(-1, milk.getName(), milk.getPrice(), milk.getCategory(), milk.getKeywords(), newInfo);
+                Response response = changeShopItemInfo(shopOwnerName, sourMilk, milk, shopName);
+                assert !response.isErrorOccurred();
+                ShopFacade newShop = getShopInfo(shopOwnerName, shopName);
+                boolean found = false;
+                for (Map.Entry<Integer, ItemFacade> idToItem : newShop.getItemMap().entrySet()) {
+                    ItemFacade item = idToItem.getValue();
+                    if (item.getName().equals(milk.getName())) {
+                        found = item.getInfo().equals(newInfo);
+                        break;
+                    }
+                }
+                assert found;
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("appoint new shop owner")
+        public void appointOwner() {
+            try {
+                VisitorFacade nextOwner = guestLogin();
+                String nextOwnerName = "raz1";
+                String nextOwnerPass = "123";
+                Response response = register(nextOwnerName, nextOwnerPass);
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+                int prevAppoints = shop.getEmployees().size();
+                response = appointShopOwner(shopOwnerName, nextOwnerName, shopName);
+                assert !response.isErrorOccurred();
+                shop = getShopInfo(shopOwnerName, shopName);
+                assert shop.getEmployees().size() + 1 == prevAppoints;
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("appoint new shop manager")
+        public void appointShopManagerTest() {
+            try {
+                VisitorFacade nextOwner = guestLogin();
+                String nextOwnerName = "raz2";
+                String nextOwnerPass = "123";
+                Response response = register(nextOwnerName, nextOwnerPass);
+                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+                int prevAppoints = shop.getEmployees().size();
+                response = appointShopManager(shopOwnerName, nextOwnerName, shopName);
+                assert !response.isErrorOccurred();
+                shop = getShopInfo(shopOwnerName, shopName);
+                assert shop.getEmployees().size() + 1 == prevAppoints;
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+
+        @Test
+        @DisplayName("close shop")
+        public void closeShopTest() {
+            try{
+                VisitorFacade visitor = guestLogin();
+                String password = "9may";
+                String name = "razBam";
+                register(name, password);
+                List<String> questions = memberLogin(name, password);
+                validateSecurityQuestions(name, new ArrayList<>(), visitor.getName());
+                // open shop
+                String shopName = "RealMadrid_Fuckers";
+                openShop(name, shopName);
+                ShopFacade shop = getShopInfo(name,shopName);
+                Response response = closeShop(name, shopName);
+                assert !response.isErrorOccurred();
+                try{
+                    shop = getShopInfo(name,shopName);
+                    assert false;
+                }catch (Exception e){assert true;};
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
     }
-    // TODO to add tests
-    //      set item amount - copy paste
-    //      set item info
-    //      appoint new shop owner
-    //      appoint shop manager
-    //      close a shop
-    //      employees info
-    //      get purchase history
 
 
     // ############################### SHOP MANAGER #######################################
@@ -724,6 +926,19 @@ public class AcceptanceTestAll {
 
     }
 
+    public Response closeShop(String shopOwnerName, String shopName) throws Exception {
+        CloseShopRequest request = new CloseShopRequest(shopOwnerName, shopName);
+        String methodCall = "/closeShop";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Type type = new TypeToken<Response>() {
+        }.getType();
+        Response result = deserialize(res, type);
+        return result;
+    }
+
     public List<ItemFacade> searchProductByName(String productName) throws Exception {
         SearchProductByNameRequest request = new SearchProductByNameRequest(productName);
         String methodCall = "/searchProductByName";
@@ -804,7 +1019,7 @@ public class AcceptanceTestAll {
     }
 
     public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) throws Exception {
-        AddPersonalQueryRequest request = new AddPersonalQueryRequest(userAdditionalQueries,userAdditionalAnswers,member);
+        AddPersonalQueryRequest request = new AddPersonalQueryRequest(userAdditionalQueries, userAdditionalAnswers, member);
         String methodCall = "/addPersonalQuery";
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                         content(toHttpRequest(request)).contentType(contentType))
@@ -812,6 +1027,69 @@ public class AcceptanceTestAll {
                 .andReturn();
         Response result = deserialize(res, Response.class);
         return result;
+    }
+
+    public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount,
+                                         String shopName) throws Exception {
+        SetItemCurrentAmountRequest request = new SetItemCurrentAmountRequest(shopOwnerName, item,
+                amount, shopName);
+        String methodCall = "/setItemCurrentAmount";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Response result = deserialize(res, Response.class);
+        return result;
+
+    }
+
+    public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) throws Exception {
+        ChangeShopItemInfoRequest request = new ChangeShopItemInfoRequest(shopOwnerName, updatedItem,
+                oldItem, shopName);
+        String methodCall = "/changeShopItemInfo";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Response result = deserialize(res, Response.class);
+        return result;
+    }
+
+
+    public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws Exception {
+        AppointmentShopOwnerRequest request = new AppointmentShopOwnerRequest(shopOwnerName, appointedShopOwner, shopName);
+        String methodCall = "/appointShopOwner";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Response result = deserialize(res, Response.class);
+        return result;
+    }
+
+    public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) throws Exception {
+        AppointmentShopManagerRequest request = new AppointmentShopManagerRequest(shopOwnerName, appointedShopManager, shopName);
+        String methodCall = "/appointShopManager";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Response result = deserialize(res, Response.class);
+        return result;
+
+    }
+
+    public List<AppointmentFacade> getShopEmployeesInfo(String shopManagerName, String shopName) throws Exception {
+        GetShopEmployeesRequest request = new GetShopEmployeesRequest(shopManagerName, shopName);
+        String methodCall = "/getShopEmployeesInfo";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Type type = new TypeToken<ResponseT<List<AppointmentFacade>>>() {
+        }.getType();
+        ResponseT<List<AppointmentFacade>> appointmentFacadeList = deserialize(res, type);
+        return appointmentFacadeList.getValue();
     }
     public Response initMarket() throws Exception {
         InitMarketRequest request = new InitMarketRequest(config.systemManagerName, config.systemManagerPassword);
