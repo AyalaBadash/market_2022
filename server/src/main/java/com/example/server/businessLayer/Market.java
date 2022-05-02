@@ -162,8 +162,7 @@ public class Market {
     public void addSecurity() {
 
     }
-
-    public ShoppingCartFacade calculateShoppingCart(String visitorName) throws MarketException {
+    public ShoppingCart calculateShoppingCart(String visitorName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -171,8 +170,8 @@ public class Market {
         }
         ShoppingCart currentCart = userController.getVisitorsInMarket().get(visitorName).getCart();
         ShoppingCart updatedCart = validateCart(currentCart);
-        ShoppingCartFacade cartFacade = new ShoppingCartFacade(updatedCart);
-        return cartFacade;
+        //ShoppingCartFacade cartFacade = new ShoppingCartFacade(updatedCart);
+        return updatedCart;
     }
 
 
@@ -180,17 +179,7 @@ public class Market {
         return shops;
     }
 
-    public String getSystemManagerName() {
-        return systemManagerName;
-    }
 
-    public void setSystemManagerName(String systemManagerName) {
-        this.systemManagerName = systemManagerName;
-    }
-
-    public void setShops(Map<String, Shop> shops) {
-        this.shops = shops;
-    }
 
     public Map<Integer, String> getAllItemsInMarketToShop() {
         return allItemsInMarketToShop;
@@ -696,7 +685,7 @@ public class Market {
 
     private void updateMarketOnAddedItem(Item toAdd,String shopName) {
         allItemsInMarketToShop.put(toAdd.getID(),shopName);
-        if(itemByName.get ( toAdd.getName () ) == null)
+        if(itemByName.get ( toAdd.getName () ) == null)//TODO
             itemByName.put ( toAdd.getName (), new ArrayList<> (  ));
         itemByName.get ( toAdd.getName () ).add ( nextItemID - 1 );
     }
@@ -714,5 +703,17 @@ public class Market {
             itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
         }
         EventLog.getInstance().Log("Preparing to close the shop "+shopToClose.getShopName()+". Removed all shop items from market.");
+    }
+
+    public String getSystemManagerName() {
+        return systemManagerName;
+    }
+
+    public void setSystemManagerName(String systemManagerName) {
+        this.systemManagerName = systemManagerName;
+    }
+
+    public void setShops(Map<String, Shop> shops) {
+        this.shops = shops;
     }
 }

@@ -156,7 +156,7 @@ public class Service implements IService {
     @CrossOrigin
     public ResponseT<MemberFacade> validateSecurityQuestions(@RequestBody ValidateSecurityRequest request) {
         return userService.validateSecurityQuestions (request.getUserName(), request.getAnswers(), request.getVisitorName() );
-    }
+    }//TODO- where are we getting visitorName from
 
 
 
