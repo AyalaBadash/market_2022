@@ -19,7 +19,7 @@ public class Shop implements IHistory {
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, Appointment> shopManagers;     //<name, appointment>
     private Map<String, Appointment> shopOwners;     //<name, appointment>
-    private Map<Item, Double> itemsCurrentAmount;
+    private Map<Item, Double> itemsCurrentAmount;//TODO check if we want it double or int
     private boolean closed;
 
     private int rank;
@@ -72,15 +72,16 @@ public class Shop implements IHistory {
     }
     //TODO change the remove - item.getName is string but key for itemMap is Integer
 
-    public void addItem(Item item) throws MarketException {
+    private void addItem(Item item) throws MarketException {
         if (!itemMap.containsKey ( item.getName ( ) ))
             itemMap.put ( item.getID ( ), item );
         else throw new MarketException ( "Item name already exist" );
         //TODO for ayala :  We are not getting item amount and do not it on itemCurrentAmount map - mistake?
     }
 
-    public int getItemCurrentAmount(Item item) {
-        throw new UnsupportedOperationException ( );
+    public double getItemCurrentAmount(Item item) {
+        return itemsCurrentAmount.get(item);
+
     }
 
     public Map<Item, Double> getItemsCurrentAmountMap() {
@@ -131,6 +132,7 @@ public class Shop implements IHistory {
     }
 
     public void releaseItems(ShoppingBasket shoppingBasket) {
+        //todo - method test fails.
         Map<Item, Double> items = shoppingBasket.getItems ( );
         for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = itemAmount.getKey ( );
@@ -204,7 +206,7 @@ public class Shop implements IHistory {
 
     public Appointment getManagerAppointment(String shopOwnerName, String managerName) throws MarketException {
 
-        Appointment ownerAppointment = shopOwners.get ( shopOwnerName );
+        Appointment ownerAppointment = shopOwners.get ( shopOwnerName);
         if (ownerAppointment == null) {
             throw new MarketException ( String.format ( "%s: cannot find an owner '%s'", shopName, shopOwnerName ) );
         }
@@ -350,6 +352,7 @@ public class Shop implements IHistory {
 
     //TODO why do we need this.
     public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
+        //TODO check that there is no dup item name.
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
         if (amount < 0)
@@ -376,9 +379,7 @@ public class Shop implements IHistory {
             throw new MarketException ( "member is not shop owner so is not authorized to vhange item info" );
         if (!itemMap.containsValue ( oldItem ))
             throw new MarketException ( "item does not exist in shop" );
-        deleteItem ( oldItem );
-        addItem ( updatedItem );
-        //TODO - for ayala : why do delete and add when we have editItem / Setter for field info.
+        editItem(updatedItem, oldItem.getID().toString());
     }
 
     public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {

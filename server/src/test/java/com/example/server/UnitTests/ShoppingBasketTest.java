@@ -20,10 +20,10 @@ public class ShoppingBasketTest {
     @Test
     @DisplayName("Add item - good test")
     public void AddItemTest (){
-        item = Mockito.mock(Item.class,Mockito.CALLS_REAL_METHODS);
+        item = Mockito.mock(Item.class);
         basket.addItem(item,5);
         Assertions.assertEquals(1,basket.getItems().size());
-
+        Assertions.assertEquals(5.0,basket.getItems().get(item));
     }
 
     @Test

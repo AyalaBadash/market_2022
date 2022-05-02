@@ -144,57 +144,20 @@ public class Market {
     }
 
 
+    public List<String> memberLogin(String userName, String userPassword) throws MarketException {
+        Security security = Security.getInstance();
+        return security.validatePassword(userName,userPassword);
+    }
+
+
+    public Visitor guestLogin() {
+        return userController.guestLogin();
+    }
+
     public Shop getShopByName(String shopName) {
         return shops.get ( shopName );
     }
 
-
-
-
-
-    public void buyShoppingCart(String visitorName, double expectedPrice,
-                                PaymentMethod paymentMethod, Address address) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)){
-            ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
-        boolean succeed = true;
-        Visitor visitor = userController.getVisitor(visitorName);
-        ShoppingCart cart = visitor.getCart();
-        double actualPrice = cart.saveFromShops();
-
-        // checks the price is correct
-        if (actualPrice != expectedPrice){
-            ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("Shopping cart price has been changed for a costumer");
-            throw new MarketException(String.format("Sorry, the price cart price change\n" +
-                    "The new Price is: %f\nThe old Price was: %f\n",actualPrice,expectedPrice));
-        }
-        String supplyID = "";
-        // tries to pay if fails - return items to shops
-        try {
-            supplyID = this.supplyService.supply(address, LocalDateTime.now());
-            this.paymentService.pay(paymentMethod);
-            EventLog eventLog = EventLog.getInstance();
-            eventLog.Log("Supply has been set up for the costumer +"+visitorName+".\n Payment has been done.");
-        }catch (Exception e){
-            try {
-                if (!supplyID.equals("")) {
-                    supplyService.cancelSupply(supplyID);
-                    ErrorLog errorLog = ErrorLog.getInstance();
-                    errorLog.Log("Supply has been failed.");
-                }
-            }catch (Exception ignored){}
-            cart.cancelShopSave();
-            succeed = false;
-        }
-        if (succeed){
-            Member member = visitor.getMember ();
-            member.savePurchase(cart);
-            cart.clear();
-        }
-    }
 
     public void addSecurity() {
 
@@ -212,19 +175,6 @@ public class Market {
         return cartFacade;
     }
 
-    private ShoppingCart validateCart(ShoppingCart currentCart) {
-        ShoppingCart res = new ShoppingCart();
-        double cartPrice = 0;
-        Map<Shop, ShoppingBasket> baskets = currentCart.getCart();
-        for (Map.Entry<Shop,ShoppingBasket> basketEntry: baskets.entrySet())
-        {
-            ShoppingBasket updatedBasket = basketEntry.getKey().validateBasket(basketEntry.getValue());
-            basketEntry.setValue(updatedBasket);
-            cartPrice = cartPrice + updatedBasket.getPrice();
-        }
-        res.setCurrentPrice(cartPrice);
-        return res;
-    }
 
     public Map<String, Shop> getShops() {
         return shops;
@@ -321,11 +271,6 @@ public class Market {
         return temp;
     }
 
-    public List<String> memberLogin(String userName, String userPassword) throws MarketException {
-        Security security = Security.getInstance();
-        return security.validatePassword(userName,userPassword);
-    }
-
     public MemberFacade validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException{
         Security security = Security.getInstance();
         security.validateQuestions(userName,answers);
@@ -338,23 +283,6 @@ public class Market {
         return new MemberFacade(member.getName(),member.getMyCart(), appointmentByMeFacade, myAppointmentsFacades);
     }
 
-    private List<AppointmentFacade> appointmentToFacade(List<Appointment> appointments){
-        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
-        for (Appointment appointment: appointments)
-        {
-            if (appointment.isOwner()){
-                ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment;
-                ShopOwnerAppointmentFacade facade = new ShopOwnerAppointmentFacade(shopOwnerAppointment);
-                appointmentsFacades.add(facade);
-            }
-            else {
-                ShopManagerAppointment shopManagerAppointment = (ShopManagerAppointment) appointment;
-                ShopManagerAppointmentFacade facade = new ShopManagerAppointmentFacade(shopManagerAppointment);
-                appointmentsFacades.add(facade);
-            }
-        }
-        return appointmentsFacades;
-    }
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){
@@ -412,20 +340,6 @@ public class Market {
         }
     }
 
-    private void removeClosedShopItemsFromMarket(Shop shopToClose) {
-        for (Map.Entry<Integer,String> entry:allItemsInMarketToShop.entrySet())
-        {
-            if (entry.getValue().equals(shopToClose.getShopName()))
-                allItemsInMarketToShop.remove(entry.getKey());
-        }
-        Map<Integer,Item> itemMap = shopToClose.getItemMap();
-        for (Map.Entry<Integer,Item> entry : itemMap.entrySet())
-        {
-            //Get list of items by the name . then delete by the specific ID
-            itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
-        }
-        EventLog.getInstance().Log("Preparing to close the shop "+shopToClose.getShopName()+". Removed all shop items from market.");
-    }
 
     public void removeItemFromShop(String shopOwnerName, String itemName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
@@ -456,10 +370,6 @@ public class Market {
     }
 
 
-    private void updateMarketOnDeleteItem(Item itemToDelete) {
-        allItemsInMarketToShop.remove(itemToDelete.getID());
-        itemByName.get(itemToDelete.getName()).remove(itemToDelete.getID());
-    }
 
     public void addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
                               List<String> keywords, double amount, String shopName) throws MarketException {
@@ -479,12 +389,6 @@ public class Market {
         EventLog.getInstance().Log("Item added to shop "+shopName);
     }
 
-    private void updateMarketOnAddedItem(Item toAdd,String shopName) {
-        allItemsInMarketToShop.put(toAdd.getID(),shopName);
-        if(itemByName.get ( toAdd.getName () ) == null)
-            itemByName.put ( toAdd.getName (), new ArrayList<> (  ));
-        itemByName.get ( toAdd.getName () ).add ( nextItemID - 1 );
-    }
 
 
     public void setItemCurrentAmount(String shopOwnerName, Item item, double amount, String shopName) throws MarketException {
@@ -521,9 +425,6 @@ public class Market {
         security.addPersonalQuery(userAdditionalQueries,userAdditionalAnswers,member);
     }
 
-    public Visitor guestLogin() {
-        return userController.guestLogin();
-    }
 
     public Map<String, Appointment> getShopEmployeesInfo(String shopManagerName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopManagerName)){
@@ -584,7 +485,7 @@ public class Market {
 
 
 
-    public void addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws MarketException {
+    public void addItemToShoppingCart(Item item, double amount, String shopName, String visitorName) throws MarketException {
         //TODO Check item amount >0
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -597,12 +498,11 @@ public class Market {
             EventLog.getInstance().Log("Tried to add item to cart from non existing shop.");
             throw new MarketException("this shop does not exist in the market");
         }
-        Item item = curShop.getItem (itemToInsert);
         if(item == null) {
             ErrorLog.getInstance().Log("Tried to add null to cart.");
             throw new MarketException("this item does not exist in this shop");
         }
-        int curAmount = curShop.getItemCurrentAmount ( item );
+        double curAmount = curShop.getItemCurrentAmount ( item );
         if(curAmount < amount) {
             ErrorLog.getInstance().Log("Tried to item with amount bigger than what the shop holds.");
             throw new MarketException("the shop amount of this item is less then the wanted amount");
@@ -709,5 +609,110 @@ public class Market {
             throw new MarketException ( "shop does not exist in the market" );
         shop.editItem ( newItem, id );
         //TODO why do we send ID here
+    }
+
+    public void buyShoppingCart(String visitorName, double expectedPrice,
+                                PaymentMethod paymentMethod, Address address) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)){
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("you must be a visitor in the market in order to make actions");
+            throw new MarketException("you must be a visitor in the market in order to make actions");
+        }
+        boolean succeed = true;
+        Visitor visitor = userController.getVisitor(visitorName);
+        ShoppingCart cart = visitor.getCart();
+        double actualPrice = cart.saveFromShops();
+
+        // checks the price is correct
+        if (actualPrice != expectedPrice){
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Shopping cart price has been changed for a costumer");
+            throw new MarketException(String.format("Sorry, the price cart price change\n" +
+                    "The new Price is: %f\nThe old Price was: %f\n",actualPrice,expectedPrice));
+        }
+        String supplyID = "";
+        // tries to pay if fails - return items to shops
+        try {
+            supplyID = this.supplyService.supply(address, LocalDateTime.now());
+            this.paymentService.pay(paymentMethod);
+            EventLog eventLog = EventLog.getInstance();
+            eventLog.Log("Supply has been set up for the costumer +"+visitorName+".\n Payment has been done.");
+        }catch (Exception e){
+            try {
+                if (!supplyID.equals("")) {
+                    supplyService.cancelSupply(supplyID);
+                    ErrorLog errorLog = ErrorLog.getInstance();
+                    errorLog.Log("Supply has been failed.");
+                }
+            }catch (Exception ignored){}
+            cart.cancelShopSave();
+            succeed = false;
+        }
+        if (succeed){
+            Member member = visitor.getMember ();
+            member.savePurchase(cart);
+            cart.clear();
+        }
+    }
+
+
+    private List<AppointmentFacade> appointmentToFacade(List<Appointment> appointments){
+        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
+        for (Appointment appointment: appointments)
+        {
+            if (appointment.isOwner()){
+                ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment;
+                ShopOwnerAppointmentFacade facade = new ShopOwnerAppointmentFacade(shopOwnerAppointment);
+                appointmentsFacades.add(facade);
+            }
+            else {
+                ShopManagerAppointment shopManagerAppointment = (ShopManagerAppointment) appointment;
+                ShopManagerAppointmentFacade facade = new ShopManagerAppointmentFacade(shopManagerAppointment);
+                appointmentsFacades.add(facade);
+            }
+        }
+        return appointmentsFacades;
+    }
+
+    private ShoppingCart validateCart(ShoppingCart currentCart) {
+        ShoppingCart res = new ShoppingCart();
+        double cartPrice = 0;
+        Map<Shop, ShoppingBasket> baskets = currentCart.getCart();
+        for (Map.Entry<Shop,ShoppingBasket> basketEntry: baskets.entrySet())
+        {
+            ShoppingBasket updatedBasket = basketEntry.getKey().validateBasket(basketEntry.getValue());
+            basketEntry.setValue(updatedBasket);
+            cartPrice = cartPrice + updatedBasket.getPrice();
+        }
+        res.setCurrentPrice(cartPrice);
+        return res;
+    }
+
+
+    private void updateMarketOnDeleteItem(Item itemToDelete) {
+        allItemsInMarketToShop.remove(itemToDelete.getID());
+        itemByName.get(itemToDelete.getName()).remove(itemToDelete.getID());
+    }
+
+    private void updateMarketOnAddedItem(Item toAdd,String shopName) {
+        allItemsInMarketToShop.put(toAdd.getID(),shopName);
+        if(itemByName.get ( toAdd.getName () ) == null)
+            itemByName.put ( toAdd.getName (), new ArrayList<> (  ));
+        itemByName.get ( toAdd.getName () ).add ( nextItemID - 1 );
+    }
+
+    private void removeClosedShopItemsFromMarket(Shop shopToClose) {
+        for (Map.Entry<Integer,String> entry:allItemsInMarketToShop.entrySet())
+        {
+            if (entry.getValue().equals(shopToClose.getShopName()))
+                allItemsInMarketToShop.remove(entry.getKey());
+        }
+        Map<Integer,Item> itemMap = shopToClose.getItemMap();
+        for (Map.Entry<Integer,Item> entry : itemMap.entrySet())
+        {
+            //Get list of items by the name . then delete by the specific ID
+            itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
+        }
+        EventLog.getInstance().Log("Preparing to close the shop "+shopToClose.getShopName()+". Removed all shop items from market.");
     }
 }
