@@ -104,7 +104,9 @@ public class SystemManagerTests {
             try{
                 logoutMember(managerName);
             }
-            catch (Exception e){}
+            catch (Exception e){
+
+            }
             market.setPaymentService(paymentService2 );
             assert  false;
         } catch (Exception e) {
