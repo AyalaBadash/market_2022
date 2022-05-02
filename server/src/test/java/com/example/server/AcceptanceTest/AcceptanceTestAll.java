@@ -13,7 +13,6 @@ import com.example.server.serviceLayer.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.junit.Before;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -69,7 +68,7 @@ public class AcceptanceTestAll {
     String shopManagerPassword = "shaked1234";
     String shopName = "kolbo";
     AcceptanceTestService config = new AcceptanceTestService();
-    Double productAmount ;
+    Double productAmount;
     Double productPrice;
     CreditCard creditCard;
     Address address;
@@ -98,11 +97,11 @@ public class AcceptanceTestAll {
             openShop(shopManagerName, shopName);
             productAmount = 3.0;
             productPrice = 1.2;
-            addItemToShop(shopManagerName, "milk", productPrice,Item.Category.general,
-                    "soy",new ArrayList<>() , productAmount,shopName);
+            addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
+                    "soy", new ArrayList<>(), productAmount, shopName);
 
-            creditCard = new CreditCard("124","13/5" , "555");
-            address = new Address("Tel Aviv", "Super" , "1");
+            creditCard = new CreditCard("124", "13/5", "555");
+            address = new Address("Tel Aviv", "Super", "1");
         } catch (Exception Ignored) {
         }
     }
@@ -159,7 +158,7 @@ public class AcceptanceTestAll {
 
             VisitorFacade visitor = guestLogin();
             try {
-                Response result = exitMarket(visitor);
+                Response result = exitMarket(visitor.getName());
                 assert !result.isErrorOccurred();
                 VisitorFacade visitor2 = guestLogin();
                 assert !(visitor2.getName().equals(visitor.getName()));
@@ -192,7 +191,7 @@ public class AcceptanceTestAll {
                 VisitorFacade visitor = guestLogin();
                 ShopFacade res = getShopInfo(visitor.getName(), shopName);
                 assert res.getShopName().equals(shopName);
-                exitMarket(visitor);
+                exitMarket(visitor.getName());
             } catch (Exception e) {
                 assert false;
             }
@@ -207,11 +206,11 @@ public class AcceptanceTestAll {
 
         @Test
         @DisplayName("search item by name")
-        public void searchItemName(){
-            try{
+        public void searchItemName() {
+            try {
                 VisitorFacade visitor = guestLogin();
                 List<ItemFacade> res = searchProductByName("milk");
-                assert res.size() >0;
+                assert res.size() > 0;
                 assert res.get(0).getName().equals("milk");
             } catch (Exception e) {
                 assert false;
@@ -221,7 +220,7 @@ public class AcceptanceTestAll {
         @Test
         @DisplayName("add item to cart")
         public void addItemCart() {
-            try{
+            try {
                 VisitorFacade visitor = guestLogin();
                 List<ItemFacade> res = searchProductByName("milk");
                 ItemFacade milk = res.get(0);
@@ -232,7 +231,7 @@ public class AcceptanceTestAll {
 
                 //check shopping basket includes only the milk
                 assert visitor.getCart().getCart().size() == 1;
-                visitor.getCart().getCart().forEach((shop, basket) ->{
+                visitor.getCart().getCart().forEach((shop, basket) -> {
                     assert basket.getItems().size() == 1;
                     assert shop.getShopName().equals(shopName);
                     // check shop amount didn't change
@@ -243,7 +242,7 @@ public class AcceptanceTestAll {
                 // checks adding item
                 response = addItemToCart(milk, 6, shopName, visitor.getName());
                 assert !response.isErrorOccurred();
-                visitor.getCart().getCart().forEach((shop, basket) ->{
+                visitor.getCart().getCart().forEach((shop, basket) -> {
                     assert basket.getItems().get(milk).equals(9.0);
                 });
             } catch (Exception e) {
@@ -254,14 +253,14 @@ public class AcceptanceTestAll {
         @Test
         @DisplayName("add item to cart, exit - empty cart")
         public void emptyCartWhenExit() {
-            try{
+            try {
                 VisitorFacade visitor = guestLogin();
                 List<ItemFacade> res = searchProductByName("milk");
                 ItemFacade milk = res.get(0);
                 Response response = addItemToCart(milk, 3, shopName, visitor.getName());
                 assert !response.isErrorOccurred();
                 assert !visitor.getCart().getCart().isEmpty();
-                exitMarket(visitor);
+                exitMarket(visitor.getName());
                 visitor = guestLogin();
                 assert visitor.getCart().getCart().isEmpty();
             } catch (Exception e) {
@@ -272,7 +271,7 @@ public class AcceptanceTestAll {
         @Test
         @DisplayName("add item to cart, 0 amount")
         public void addZeroAmount() {
-            try{
+            try {
                 VisitorFacade visitor = guestLogin();
                 List<ItemFacade> res = searchProductByName("milk");
                 ItemFacade milk = res.get(0);
@@ -288,7 +287,7 @@ public class AcceptanceTestAll {
         @Test
         @DisplayName("buy item, valid amount")
         public void buyItemValid() {
-            try{
+            try {
                 VisitorFacade visitor = guestLogin();
                 ShopFacade shop = getShopInfo(shopManagerName, shopName);
                 List<ItemFacade> res = searchProductByName("milk");
@@ -310,7 +309,7 @@ public class AcceptanceTestAll {
         @Test
         @DisplayName("buy not existing item")
         public void buyWithUnexpectedPrice() {
-            try{
+            try {
                 VisitorFacade visitor = guestLogin();
                 ShopFacade shop = getShopInfo(shopManagerName, shopName);
                 List<ItemFacade> res = searchProductByName("milk");
@@ -324,7 +323,7 @@ public class AcceptanceTestAll {
                 assert result.isErrorOccurred();
                 shop = getShopInfo(shopManagerName, shopName);
                 Double newAMount = shop.getItemsCurrentAmount().get(milk);
-                Assertions.assertEquals(newAMount,itemAmount);
+                Assertions.assertEquals(newAMount, itemAmount);
 
             } catch (Exception e) {
                 assert false;
@@ -334,21 +333,21 @@ public class AcceptanceTestAll {
         @Test
         @DisplayName("buy cart with unexpected price")
         public void buyNotExistingItem() {
-            try{
+            try {
                 VisitorFacade visitor = guestLogin();
                 ShopFacade shop = getShopInfo(shopManagerName, shopName);
                 List<ItemFacade> res = searchProductByName("milk");
                 ItemFacade milk = res.get(0);
                 Double itemAmount = shop.getItemsCurrentAmount().get(milk);
-                double buyingAmount = itemAmount ;
+                double buyingAmount = itemAmount;
                 Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
                 // add not existing item shouldn't fail
                 assert !response.isErrorOccurred();
-                Response result = buyShoppingCart(visitor.getName(), productPrice*buyingAmount + 1, creditCard, address);
+                Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
                 assert result.isErrorOccurred();
                 shop = getShopInfo(shopManagerName, shopName);
                 Double newAMount = shop.getItemsCurrentAmount().get(milk);
-                Assertions.assertEquals(newAMount,itemAmount);
+                Assertions.assertEquals(newAMount, itemAmount);
 
             } catch (Exception e) {
                 assert false;
@@ -366,20 +365,36 @@ public class AcceptanceTestAll {
     class Member {
         MemberFacade testMember;
         String testMemberPassword;
+        String testMemberName;
 
         @BeforeAll
         public void setUpMember() {
             try {
-                String managerName = "managerTest";
-                VisitorFacade visitor = guestLogin();
+                testMemberName = "managerTest";
                 testMemberPassword = "1234";
-                register(managerName, testMemberPassword);
-                List<String> questions = memberLogin(managerName, testMemberPassword);
-                testMember = validateSecurityQuestions(managerName, new ArrayList<>(), visitor.getName());
 
             } catch (Exception ignored) {
 
             }
+        }
+
+        @BeforeEach
+        public void resetMember() {
+            try {
+                VisitorFacade visitor = guestLogin();
+                register(testMemberName, testMemberPassword);
+                List<String> questions = memberLogin(testMemberName, testMemberPassword);
+                testMember = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+        @AfterEach
+        public void endOfMemberTest() throws Exception {
+            logout(testMember.getName());
         }
 
         @Test
@@ -481,22 +496,130 @@ public class AcceptanceTestAll {
             }
 
         }
+
+        @Test
+        @DisplayName("login twice")
+        public void loginTwice() {
+            try {
+                VisitorFacade visitor = guestLogin();
+                List<String> questions = memberLogin(testMemberName, testMemberPassword);
+                MemberFacade newMember = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+                Assertions.assertNull(newMember);
+                assert false;
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("member exit system logs out")
+        public void memberExitSystem(){
+            try {
+                Response response = exitMarket(testMember.getName());
+                assert !response.isErrorOccurred();
+                VisitorFacade visitor = guestLogin();
+                List<String> questions = memberLogin(testMemberName, testMemberPassword);
+                testMember = validateSecurityQuestions(testMemberName, new ArrayList<>(),visitor.getName());
+                assert testMember != null;
+            } catch (Exception e) {
+                assert false;
+            }
+
+        }
+
+        @Test
+        @DisplayName("add question")
+        public void addQuestion(){
+            try {
+                VisitorFacade visitor = guestLogin();
+                String currName = "questionsName";
+                String password = "1234";
+                ResponseT<Boolean> response = register(currName, password);
+                assert !response.isErrorOccurred();
+                List<String> questions = memberLogin(currName, password);
+                assert questions.size() ==0;
+                MemberFacade member = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
+                Response queryResponse = addPersonalQuery("whats your mother's name?", "idk", member.getName());
+                assert !queryResponse.isErrorOccurred();
+                visitor = logout(member.getName());
+                questions = memberLogin(currName,password);
+                assert questions.size() == 1;
+                assert questions.contains("whats your mother's name?");
+                ArrayList<String> answers = new ArrayList<>();
+                answers.add("idk");
+                member = validateSecurityQuestions(currName, answers,member.getName());
+                assert member != null;
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("invalid authentication")
+        public void invalidAuthentication(){
+            try {
+                VisitorFacade visitor = guestLogin();
+                String currName = "questionsName2";
+                String password = "1234";
+                ResponseT<Boolean> response = register(currName, password);
+                List<String> questions = memberLogin(currName, password);
+                MemberFacade member = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
+                Response queryResponse = addPersonalQuery("whats your mother's name?", "idk", member.getName());
+                visitor = logout(member.getName());
+                questions = memberLogin(currName,"123");
+                try{
+                    questions = memberLogin(currName,"123");
+                    assert false;
+                } catch (Exception ignored){}
+                questions = memberLogin(currName,password);
+                ArrayList<String> answers = new ArrayList<>();
+                answers.add("idk1");
+                try{
+                    member = validateSecurityQuestions(currName, answers,member.getName());
+                    assert member == null;
+                }catch (Exception ignored){}
+                answers.clear();
+                answers.add("idk");
+                member = validateSecurityQuestions(currName, answers,member.getName());
+                assert  member != null;
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
     }
-    //TODO to add tests:
-    //      double login
-    //      check member exit system logs out
-    //      add questions
-    //      wrong password/questions
-    //      open a shop
-    //
-    //
 
     // ############################### SHOP OWNER #######################################
 
 
+    @Test
+    @DisplayName("add new item")
+    public void addNewItem(){
+        try{
+            Response response = addItemToShop(shopManagerName, "steak", 10, Item.Category.meat,
+                    " best in town", new ArrayList<>(), 5.0, shopName);
+            assert !response.isErrorOccurred();
+            // TODO maybe add field to item - shop name. search would return a list of item where we
+            //  wouldn't know how to take it
+            ShopFacade shop = getShopInfo(shopManagerName, shopName);
+            boolean found = false;
+            for (Map.Entry<ItemFacade, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()){
+                ItemFacade item = itemAmount.getKey();
+                Double amount = itemAmount.getValue();
+                if (item.getName().equals("steak")){
+                    found = amount == 5.0;
+                    break;
+                }
+            }
+            assert found;
+
+        } catch (Exception e) {
+            assert false;
+        }
+    }
     // TODO to add tests
-    //      add new item
-    //      set item amount
+    //      set item amount - copy paste
     //      set item info
     //      appoint new shop owner
     //      appoint shop manager
@@ -530,9 +653,9 @@ public class AcceptanceTestAll {
         return visitor;
     }
 
-    private Response exitMarket(VisitorFacade visitor) throws Exception {
+    private Response exitMarket(String name) throws Exception {
         String methodCall = "/exitSystem";
-        ExitSystemRequest request = new ExitSystemRequest(visitor.getName());
+        ExitSystemRequest request = new ExitSystemRequest(name);
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                         content(toHttpRequest(request)).contentType(contentType))
                 .andExpect(status().isOk())
@@ -601,7 +724,7 @@ public class AcceptanceTestAll {
 
     }
 
-    public List<ItemFacade> searchProductByName( String productName) throws Exception {
+    public List<ItemFacade> searchProductByName(String productName) throws Exception {
         SearchProductByNameRequest request = new SearchProductByNameRequest(productName);
         String methodCall = "/searchProductByName";
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
@@ -613,6 +736,7 @@ public class AcceptanceTestAll {
         ResponseT<List<ItemFacade>> result = deserialize(res, type);
         return result.getValue();
     }
+
     public Response addItemToShop(String shopOwnerName, String name, double price,
                                   Item.Category category, String info,
                                   List<String> keywords, double amount, String shopName) throws Exception {
@@ -623,20 +747,22 @@ public class AcceptanceTestAll {
                         content(toHttpRequest(request)).contentType(contentType))
                 .andExpect(status().isOk())
                 .andReturn();
-        Type type = new TypeToken<Response>() {        }.getType();
+        Type type = new TypeToken<Response>() {
+        }.getType();
         Response result = deserialize(res, type);
         return result;
 
     }
 
     public Response addItemToCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws Exception {
-        AddItemToShoppingCartRequest request = new AddItemToShoppingCartRequest(itemToInsert,amount,shopName,visitorName);
+        AddItemToShoppingCartRequest request = new AddItemToShoppingCartRequest(itemToInsert, amount, shopName, visitorName);
         String methodCall = "/addItemToShoppingCart";
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                         content(toHttpRequest(request)).contentType(contentType))
                 .andExpect(status().isOk())
                 .andReturn();
-        Type type = new TypeToken<Response>() {        }.getType();
+        Type type = new TypeToken<Response>() {
+        }.getType();
         Response result = deserialize(res, type);
         return result;
     }
@@ -668,7 +794,7 @@ public class AcceptanceTestAll {
     }
 
     public Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address) throws Exception {
-        BuyShoppingCartRequest request =  new BuyShoppingCartRequest(visitorName,expectedPrice,paymentMethod, address);
+        BuyShoppingCartRequest request = new BuyShoppingCartRequest(visitorName, expectedPrice, paymentMethod, address);
         String methodCall = "/buyShoppingCart";
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                         content(toHttpRequest(request)).contentType(contentType))
@@ -677,6 +803,16 @@ public class AcceptanceTestAll {
         return deserialize(res, Response.class);
     }
 
+    public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) throws Exception {
+        AddPersonalQueryRequest request = new AddPersonalQueryRequest(userAdditionalQueries,userAdditionalAnswers,member);
+        String methodCall = "/addPersonalQuery";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Response result = deserialize(res, Response.class);
+        return result;
+    }
     public Response initMarket() throws Exception {
         InitMarketRequest request = new InitMarketRequest(config.systemManagerName, config.systemManagerPassword);
         String methodCall = "/firstInitMarket";
@@ -708,4 +844,5 @@ public class AcceptanceTestAll {
         T result = gson.fromJson(json, classType);
         return result;
     }
+
 }
