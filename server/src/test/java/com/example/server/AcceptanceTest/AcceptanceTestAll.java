@@ -75,7 +75,21 @@ public class AcceptanceTestAll {
     Address address;
     ItemFacade milk;
 
+    double appleAmount;
+    String appleName ;
+    Item.Category appleCategory;
+    double applePrice ;
+    ArrayList<String> appleKeywords ;
+    String appleInfo;
+    ItemFacade apple;
 
+    double onePlusAmount;
+    String onePlusName;
+    Item.Category onePlusCategory;
+    double onePlusPrice;
+    List<String> onePlusKeywords;
+    String onePlusInfo;
+    ItemFacade onePlus;
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
         this.mappingJakson2HttpMessageConverter = Arrays.stream(converters)
@@ -104,6 +118,30 @@ public class AcceptanceTestAll {
                     "soy", new ArrayList<>(), productAmount, shopName);
             List<ItemFacade> res = searchProductByName("milk");
             milk = res.get(0);
+
+            appleAmount = 4.0;
+            appleName = "apple";
+            appleCategory = Item.Category.fruit;
+            applePrice = 10.0;
+            appleKeywords = new ArrayList<>();
+            appleKeywords.add("tasty");
+            appleKeywords.add("in sale");
+            appleInfo = "pink lady";
+            addItemToShop(shopOwnerName, appleName, applePrice, appleCategory,
+                    appleInfo, appleKeywords, appleAmount, shopName);
+            apple = searchProductByName("apple").get(0);
+
+            onePlusAmount = 2.0;
+            onePlusName = "onePlus";
+            onePlusCategory = Item.Category.cellular;
+            onePlusPrice = 1000;
+            onePlusKeywords = new ArrayList<>();
+            onePlusKeywords.add("best seller");
+            onePlusKeywords.add("in sale");
+            onePlusInfo = "9-5g";
+            addItemToShop(shopOwnerName, onePlusName, onePlusPrice, onePlusCategory,
+                    onePlusInfo, onePlusKeywords, onePlusAmount, shopName);
+            onePlus = searchProductByName(onePlusName).get(0);
             creditCard = new CreditCard("124", "13/5", "555");
             address = new Address("Tel Aviv", "Super", "1");
         } catch (Exception Ignored) {
@@ -213,10 +251,44 @@ public class AcceptanceTestAll {
         @DisplayName("search item by name")
         public void searchItemName() {
             try {
-                VisitorFacade visitor = guestLogin();
                 List<ItemFacade> res = searchProductByName("milk");
                 assert res.size() > 0;
                 assert res.get(0).getName().equals("milk");
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("search item by keyWord")
+        public void searchItemByKeyword(){
+            try {
+                List<ItemFacade> res = searchProductByKeyword("in sale");
+                assert res.size() > 1;
+                boolean onePLusFound = false;
+                boolean appleFound = false;
+                for (ItemFacade item: res){
+                    assert item.getKeywords().contains("in sale");
+                    appleFound = item.getName().equals(appleName) || appleFound;
+                    onePLusFound = item.getName().equals(onePlusName) || onePLusFound;
+                }
+                assert appleFound && onePLusFound;
+            } catch (Exception e) {
+                assert false;
+            }
+        }
+
+        @Test
+        @DisplayName("search item by Category")
+        public void searchItemByCategory(){
+            try {
+                List<ItemFacade> res = searchProductByCategory(Item.Category.fruit);
+                assert res.size() > 1;
+                boolean appleFound = false;
+                for (ItemFacade item: res){
+                    assert item.getCategory() == Item.Category.fruit;
+                    appleFound = appleFound || item.getName().equals(appleName);
+                }
             } catch (Exception e) {
                 assert false;
             }
@@ -231,9 +303,6 @@ public class AcceptanceTestAll {
                 ItemFacade milk = res.get(0);
                 Response response = addItemToCart(milk, 3, shopName, visitor.getName());
                 assert !response.isErrorOccurred();
-                // TODO need to think how to refresh visitor's cart
-                //  idea - return the new cart/visitor
-
                 //check shopping basket includes only the milk
                 assert visitor.getCart().getCart().size() == 1;
                 visitor.getCart().getCart().forEach((shop, basket) -> {
@@ -472,7 +541,7 @@ public class AcceptanceTestAll {
         @DisplayName("logout - check member saved")
         public void checkMemberSaved() {
             try {
-                // TODO need to add item to cart if setup first
+                addItemToCart(milk, productAmount-1,shopName,testMemberName);
                 ShoppingCartFacade prevCart = testMember.getMyCart();
                 VisitorFacade visitor = logout(testMember.getName());
                 assert visitor.getCart().getCart().isEmpty();
@@ -589,8 +658,8 @@ public class AcceptanceTestAll {
                 }
                 answers.clear();
                 answers.add("idk");
-                member = validateSecurityQuestions(currName, answers, member.getName());
                 assert member != null;
+                member = validateSecurityQuestions(currName, answers, member.getName());
             } catch (Exception e) {
                 assert false;
             }
@@ -605,17 +674,28 @@ public class AcceptanceTestAll {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class ShopOwner {
 
+        private String steakName;
+        int steakPrice = 10;
+        private Item.Category steakCategory;
+        private ArrayList<String> steakKeywords;
+        private String steakInfo;
 
+        @BeforeAll
+        public void shopSetup(){
+            steakName = "steak";
+            steakCategory = Item.Category.meat;
+            steakKeywords = new ArrayList<>();
+            steakInfo = " best in town";
+        }
         @Test
         @Order(1)
         @DisplayName("add new item")
         public void addNewItem() {
             try {
-                Response response = addItemToShop(shopOwnerName, "steak", 10, Item.Category.meat,
-                        " best in town", new ArrayList<>(), 5.0, shopName);
+
+                Response response = addItemToShop(shopOwnerName, steakName, steakPrice, steakCategory,
+                        steakInfo, steakKeywords, 5.0, shopName);
                 assert !response.isErrorOccurred();
-                // TODO maybe add field to item - shop name. search would return a list of item where we
-                //  wouldn't know how to take it
                 ShopFacade shop = getShopInfo(shopOwnerName, shopName);
                 boolean found = false;
                 for (Map.Entry<ItemFacade, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
@@ -701,6 +781,32 @@ public class AcceptanceTestAll {
             } catch (Exception e) {
                 assert false;
             }
+        }
+
+        @Test
+        @DisplayName("remove item from shop")
+        public void removeItemFromShopTest(){
+            try{
+                ShopFacade shop = getShopInfo(shopOwnerName,shopName);
+                ItemFacade steak = null;
+                for (Map.Entry<Integer, ItemFacade> items : shop.getItemMap().entrySet() ){
+                    if (items.getValue().getName().equals(steakName)){
+                        steak = items.getValue();
+                    }
+                }
+                assert steak != null;
+                Response response = removeItemFromShop(shopOwnerName , steak,shopName );
+                assert !response.isErrorOccurred();
+                shop = getShopInfo(shopOwnerName,shopName);
+                for (Map.Entry<Integer, ItemFacade> items : shop.getItemMap().entrySet() ){
+                    assert !items.getValue().getName().equals(steakName);
+                }
+
+
+            } catch (Exception e) {
+                assert false;
+            }
+
         }
 
         @Test
@@ -844,7 +950,6 @@ public class AcceptanceTestAll {
     //
     //########################################### SERVICE METHODS ##########################################3
 
-    // TODO go through all service methods - check everything is used
     public VisitorFacade guestLogin() throws Exception {
         String methodCall = "/guestLogin";
         MvcResult res = mvc.perform(post(methodCall)).andReturn();
@@ -952,12 +1057,54 @@ public class AcceptanceTestAll {
         return result.getValue();
     }
 
+    public List<ItemFacade> searchProductByCategory(Item.Category category) throws Exception {
+        Item.Category request = category;
+        String methodCall = "/searchProductByCategory";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Type type = new TypeToken<ResponseT<List<ItemFacade>>>() {
+        }.getType();
+        ResponseT<List<ItemFacade>> result = deserialize(res, type);
+        return result.getValue();
+    }
+
+    public List<ItemFacade> searchProductByKeyword(String keyword) throws Exception {
+        SearchProductByNameRequest request = new SearchProductByNameRequest(keyword);
+        String methodCall = "/searchProductByKeyword";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Type type = new TypeToken<ResponseT<List<ItemFacade>>>() {
+        }.getType();
+        ResponseT<List<ItemFacade>> result = deserialize(res, type);
+        return result.getValue();
+    }
+
+
+
     public Response addItemToShop(String shopOwnerName, String name, double price,
                                   Item.Category category, String info,
                                   List<String> keywords, double amount, String shopName) throws Exception {
         AddItemToShopRequest request = new AddItemToShopRequest(shopOwnerName, name, price,
                 category, info, keywords, amount, shopName);
         String methodCall = "/addItemToShop";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Type type = new TypeToken<Response>() {
+        }.getType();
+        Response result = deserialize(res, type);
+        return result;
+
+    }
+
+    public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) throws Exception {
+        RemoveItemFromShopRequest request = new RemoveItemFromShopRequest(shopOwnerName, item,  shopName);
+        String methodCall = "/removeItemFromShop";
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
                         content(toHttpRequest(request)).contentType(contentType))
                 .andExpect(status().isOk())
