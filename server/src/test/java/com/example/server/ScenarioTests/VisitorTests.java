@@ -8,6 +8,7 @@ import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
 import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.Response;
@@ -40,20 +41,23 @@ public class VisitorTests {
         try {
             market = Market.getInstance();
             market.firstInitMarket(paymentService, supplyService, userName, password);
-//            // shop manager register
-//            Visitor visitor = market.guestLogin();
-//            market.register(shopManagerName, shopManagerPassword);
-//            List<String> questions = market.memberLogin(shopManagerName, shopManagerPassword);
-//            market.validateSecurityQuestions(shopManagerName, new ArrayList<>(), visitor.getName());
-//            // open shop
-//            market.openNewShop(shopManagerName, shopName);
-//            productAmount = 3.0;
-//            productPrice = 1.2;
-//            market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
-//                    "soy",new ArrayList<>() , productAmount,shopName);
-//
-//            creditCard = new CreditCard("124","13/5" , "555");
-//            address = new Address("Tel Aviv", "Super" , "1");
+            // shop manager register
+            Visitor visitor = market.guestLogin();
+            market.register(shopManagerName, shopManagerPassword);
+            List<String> questions = market.memberLogin(shopManagerName, shopManagerPassword);
+            market.validateSecurityQuestions(shopManagerName, new ArrayList<>(), visitor.getName());
+            // open shop
+            market.openNewShop(shopManagerName, shopName);
+            productAmount = 3.0;
+            productPrice = 1.2;
+            List<String> keywords = new ArrayList<>();
+            keywords.add("in sale");
+            market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
+                    "soy",keywords , productAmount,shopName);
+
+            creditCard = new CreditCard("124","13/5" , "555");
+            address = new Address("Tel Aviv", "Super" , "1");
+
         } catch (Exception Ignored) {
         }
     }
@@ -101,17 +105,174 @@ public class VisitorTests {
         }
     }
 
-//    @Test
-//    @DisplayName("get shop info")
-//    public void shopInfoTest() {
+    @Test
+    @DisplayName("get shop info")
+    public void shopInfoTest() {
 //        String shopName = "shopTest";
-//        try {
-//            Visitor visitor = market.guestLogin();
-//            Shop res = market.getShopInfo(visitor.getName(), shopName);
-//            assert res.getShopName().equals(shopName);
-//            market.visitorExitSystem(visitor.getName());
-//        } catch (Exception e) {
-//            assert false;
-//        }
-//    }
+        try {
+            Visitor visitor = market.guestLogin();
+            Shop res = market.getShopInfo(visitor.getName(), shopName);
+            assert res.getShopName().equals(shopName);
+            market.visitorExitSystem(visitor.getName());
+            assert true;
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("search item by name")
+    public void searchItemName() {
+        try {
+            List<Item> res = market.getItemByName("milk");
+            assert res.size() > 0;
+            assert res.get(0).getName().equals("milk");
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("search item by keyWord")
+    public void searchItemByKeyword(){
+        try {
+            List<Item> res = market.getItemsByKeyword("in sale");
+            assert res.size() > 0;
+            boolean appleFound = false;
+            for (Item item: res){
+                assert item.getKeywords().contains("in sale");
+                appleFound = item.getName().equals("milk");
+            }
+            assert appleFound;
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("search item by Category")
+    public void searchItemByCategory(){
+        try {
+            List<Item> res = market.getItemByCategory(Item.Category.general);
+            assert res.size() > 0;
+            for (Item item: res){
+                assert item.getCategory() == Item.Category.general;
+            }
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("add item to cart")
+    public void addItemCart() {
+        try {
+            Visitor visitor = market.guestLogin();
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            market.addItemToShoppingCart(milk, 3, shopName, visitor.getName());
+            assert true;
+            //check shopping basket includes only the milk
+            assert visitor.getCart().getCart().size() == 1;
+            visitor.getCart().getCart().forEach((shop, basket) -> {
+                assert basket.getItems().size() == 1;
+                assert shop.getShopName().equals(shopName);
+                // check right amount added
+                assert basket.getItems().get(milk).equals(3.0);
+            });
+
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("add item to cart, exit - empty cart")
+    public void emptyCartWhenExit() {
+        try {
+            Visitor visitor = market.guestLogin();
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            market.addItemToShoppingCart(milk, 3, shopName, visitor.getName());
+            assert !visitor.getCart().getCart().isEmpty();
+            market.visitorExitSystem(visitor.getName());
+            visitor = market.guestLogin();
+            assert visitor.getCart().getCart().isEmpty();
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("add item to cart, 0 amount")
+    public void addZeroAmount() {
+        try {
+            Visitor visitor = market.guestLogin();
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            market.addItemToShoppingCart(milk, 0, shopName, visitor.getName());
+            assert visitor.getCart().getCart().isEmpty();
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("buy item, valid amount")
+    public void buyItemValid() {
+        try {
+            Visitor visitor = market.guestLogin();
+            Shop shop = market.getShopInfo(shopManagerName, shopName);
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            Double itemAmount = shop.getItemCurrentAmount(milk);
+            double buyingAmount = itemAmount - 1;
+            market.addItemToShoppingCart(milk, buyingAmount, shopName, visitor.getName());
+            market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+            shop = market.getShopInfo(shopManagerName, shopName);
+            Double newAMount = shop.getItemCurrentAmount(milk);
+            assert newAMount == 1;
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("buy not existing item")
+    public void buyWithUnexpectedPrice() {
+        try {
+            Visitor visitor = market.guestLogin();
+            Shop shop = market.getShopInfo(shopManagerName, shopName);
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            Double itemAmount = shop.getItemCurrentAmount(milk);
+            double buyingAmount = itemAmount + 1;
+            market.addItemToShoppingCart(milk, buyingAmount, shopName, visitor.getName());
+            market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+
+        } catch (Exception e) {
+            assert true;
+        }
+    }
+
+    @Test
+    @DisplayName("buy cart with unexpected price")
+    public void buyNotExistingItem() {
+        try {
+            Visitor visitor = market.guestLogin();
+            Shop shop = market.getShopInfo(shopManagerName, shopName);
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            Double itemAmount = shop.getItemCurrentAmount(milk);
+            double buyingAmount = itemAmount;
+            market.addItemToShoppingCart(milk, buyingAmount, shopName, visitor.getName());
+            // add not existing item shouldn't fail
+            market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
+            assert false;
+        } catch (Exception e) {
+            assert true;
+        }
+    }
+
+
 }

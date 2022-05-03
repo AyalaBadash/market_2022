@@ -457,6 +457,7 @@ public class Market {
         return shops.get(shopName).getShopInfo(member);
     }
 
+    //TODO check that shop name is not ""
     public boolean openNewShop(String visitorName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -649,6 +650,7 @@ public class Market {
             cart.cancelShopSave();
             succeed = false;
         }
+        //TODO check that member is not null
         if (succeed){
             Member member = visitor.getMember ();
             member.savePurchase(cart);
