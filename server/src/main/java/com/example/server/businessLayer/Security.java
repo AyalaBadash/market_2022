@@ -46,6 +46,7 @@ public class Security {
         return namesToLoginInfo;
     }
 
+    //TODO: enforce the user to add questions(no one add the questions right now)
     public void addNewMember(String name, String password, List<String> questions,
                              List<String> answers) throws MarketException {
         LoginCard card = new LoginCard(name, password,questions, answers);
