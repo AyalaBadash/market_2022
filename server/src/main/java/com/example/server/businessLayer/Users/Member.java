@@ -3,10 +3,8 @@ package com.example.server.businessLayer.Users;
 
 import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +35,7 @@ public class Member {
         this.myAppointments = myAppointments;
         this.purchaseHistory = purchaseHistory;
     }
+
 
     public String getName() {
         return name;
@@ -76,16 +75,20 @@ public class Member {
 
     public void addAppointmentToMe(Appointment app){ this.myAppointments.add(app);}
 
-    public StringBuilder getPurchaseHistory() {
+    public StringBuilder getPurchaseHistoryString() {
         StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
         int i = 1;
         for(ShoppingCart shoppingCart : purchaseHistory){
-            history.append ( String.format ( "purcase %d:\n%s", i, shoppingCart.getReview () ));
+            history.append ( String.format ( "purchase %d:\n%s", i, shoppingCart.getReview () ));
             i++;
         }
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("Pulled "+this.getName()+" history");
         return history;
+    }
+
+    public List<ShoppingCart> getPurchaseHistory() {
+        return purchaseHistory;
     }
 
     public void savePurchase(ShoppingCart cart) {

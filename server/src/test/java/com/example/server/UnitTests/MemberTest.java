@@ -5,21 +5,14 @@ import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import org.junit.jupiter.api.Test;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Users.Member;
-import com.example.server.businessLayer.Users.UserController;
-import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MemberTest {
@@ -101,12 +94,12 @@ class MemberTest {
 
     @Test
     void getPurchaseHistory() {
-        String test = member.getPurchaseHistory().toString();
+        String test = member.getPurchaseHistoryString().toString();
         Assertions.assertEquals(test,String.format ("%s:\n", member.getName ()));
         member.savePurchase(myCart);
         Mockito.when(myCart.getReview()).thenReturn(new StringBuilder().append("cart test"));
-        Assertions.assertTrue(member.getPurchaseHistory().toString().contains("cart test"));
-        Assertions.assertTrue(member.getPurchaseHistory().toString().contains(name));
+        Assertions.assertTrue(member.getPurchaseHistoryString().toString().contains("cart test"));
+        Assertions.assertTrue(member.getPurchaseHistoryString().toString().contains(name));
     }
 
     @Test
