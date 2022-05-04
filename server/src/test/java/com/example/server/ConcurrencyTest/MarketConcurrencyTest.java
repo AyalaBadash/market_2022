@@ -218,7 +218,7 @@ public class MarketConcurrencyTest {
             visitors[i.value ()] = visitor;
             market.register ( names[i.value () * 6], password );
             market.memberLogin ( names[i.value () * 6], password );
-            members[i.value ()] = market.validateSecurityQuestions ( names[i.value () * 6] , new ArrayList<> (  ), visitor.getName ()).toBusinessObject ();
+            members[i.value ()] = market.validateSecurityQuestions ( names[i.value () * 6] , new ArrayList<> (  ), visitor.getName ());
         }
     }
 
