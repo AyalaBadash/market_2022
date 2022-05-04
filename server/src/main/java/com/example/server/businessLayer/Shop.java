@@ -403,7 +403,7 @@ public class Shop implements IHistory {
             ErrorLog.getInstance ().Log ( "appointed shop owner is already a shop owner of the shop." );
             throw new MarketException ( "appointed shop owner is already a shop owner of the shop." );
         }
-        //TODO : check the is shop member check . makes some problem with instances.
+        //TODO : check the is shop member check . makes some problem with instances. change it to ==
         if (shopOwner != null || !isShopOwner ( shopOwner.getName ( ) )) {
             ErrorLog.getInstance ().Log ( "member is not a shop owner so is not authorized to appoint shop owner" );
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
