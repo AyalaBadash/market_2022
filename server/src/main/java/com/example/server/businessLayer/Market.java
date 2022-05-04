@@ -13,6 +13,7 @@ import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.Response;
 
 
 import java.time.LocalDateTime;
@@ -180,6 +181,7 @@ public class Market {
 
 
 
+
     public Map<Integer, String> getAllItemsInMarketToShop() {
         return allItemsInMarketToShop;
     }
@@ -241,6 +243,7 @@ public class Market {
         return paymentService;
     }
 
+    //TODO make private and add authentication checks
     public void setPaymentService(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
@@ -450,6 +453,7 @@ public class Market {
         return shops.get(shopName).getShopInfo(member);
     }
 
+    //TODO check that shop name is not ""
     public boolean openNewShop(String visitorName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -480,7 +484,6 @@ public class Market {
 
 
     public void addItemToShoppingCart(Item item, double amount, String shopName, String visitorName) throws MarketException {
-
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -647,6 +650,7 @@ public class Market {
             cart.cancelShopSave();
             succeed = false;
         }
+        //TODO check that member is not null
         if (succeed){
             Member member = visitor.getMember ();
             member.savePurchase(cart);
@@ -695,7 +699,7 @@ public class Market {
 
     private void updateMarketOnAddedItem(Item toAdd,String shopName) {
         allItemsInMarketToShop.put(toAdd.getID(),shopName);
-        if(itemByName.get ( toAdd.getName () ) == null)//TODO
+        if(itemByName.get ( toAdd.getName () ) == null)
             itemByName.put ( toAdd.getName (), new ArrayList<> (  ));
         itemByName.get ( toAdd.getName () ).add ( nextItemID - 1 );
     }

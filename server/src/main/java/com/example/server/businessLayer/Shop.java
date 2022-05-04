@@ -391,6 +391,7 @@ public class Shop implements IHistory {
     public void changeShopItemInfo(String shopOwnerName, Item updatedItem, Item oldItem) throws MarketException {
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not shop owner so is not authorized to vhange item info" );
+       //TODO : check the implementation and the contains(makes problem with the instances of the same item)
         if (!itemMap.containsValue ( oldItem ))
             throw new MarketException ( "item does not exist in shop" );
         editItem(updatedItem, oldItem.getID().toString());
@@ -416,6 +417,7 @@ public class Shop implements IHistory {
             ErrorLog.getInstance ().Log ( "appointed shop owner is already a shop owner of the shop." );
             throw new MarketException ( "appointed shop owner is already a shop owner of the shop." );
         }
+        //TODO : check the is shop member check . makes some problem with instances. change it to ==
         if (shopOwner != null || !isShopOwner ( shopOwner.getName ( ) )) {
             ErrorLog.getInstance ().Log ( "member is not a shop owner so is not authorized to appoint shop owner" );
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
@@ -436,7 +438,10 @@ public class Shop implements IHistory {
     }
 
     private boolean isShopManager(String name) {
-        return shopManagers.get ( name ) != null;
+
+        Appointment app= shopManagers.get ( name );
+
+        return app !=null;
     }
 
     public Map<String, Appointment> getShopOwners() {

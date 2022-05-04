@@ -18,6 +18,4 @@ public abstract class IPermission<T> {
             return (((IPermission) o).name).equals(this.name);
         return false;
     }
-
-
 }
