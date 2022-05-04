@@ -272,6 +272,7 @@ public class Market {
         return temp;
     }
 
+    //TODO change to member
     public MemberFacade validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException{
         Security security = Security.getInstance();
         security.validateQuestions(userName,answers);
