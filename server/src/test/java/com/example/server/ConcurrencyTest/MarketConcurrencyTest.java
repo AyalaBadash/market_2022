@@ -111,12 +111,7 @@ public class MarketConcurrencyTest {
     @DisplayName("Open new shop concurrency test")
     public void openNewShopConcurrencyTest() throws MarketException {
         int numOfExceptions = 0;
-        for ( i.reset (); i.value () < 5 ; i.increment () ) {
-            Visitor visitor = market.guestLogin ();
-            market.register ( names[i.value () * 6], password );
-            market.memberLogin ( names[i.value () * 6], password );
-            market.validateSecurityQuestions ( names[i.value () * 6] , new ArrayList<> (  ), visitor.getName ());
-        }
+        registerAndLogin ();
         for ( i.reset () ; i.value () < 5 ; i.increment () ) {
             threads[i.value ()] = new MyThread ( );
             threads[i.value ()].setRunnable ( new MyRunnable ( i.value () ) {
@@ -143,13 +138,7 @@ public class MarketConcurrencyTest {
     @DisplayName("Add an item to shop concurrency test")
     public void addItemToSHopShopConcurrencyTest() throws MarketException {
         int numOfExceptions = 0;
-        for ( i.reset (); i.value () < 5 ; i.increment () ) {
-            Visitor visitor = market.guestLogin ();
-            market.register ( names[i.value () * 6], password );
-            market.memberLogin ( names[i.value () * 6], password );
-            market.validateSecurityQuestions ( names[i.value () * 6] , new ArrayList<> (  ), visitor.getName ());
-        }
-        market.openNewShop ( names[0],  "shopName");
+        createShop ();
         for ( i.reset () ; i.value () < 5 ; i.increment () ) {
             if(i.value () != 0)
                 market.appointShopOwner ( names[0], names[i.value () * 6],  "shopName");
@@ -229,8 +218,13 @@ public class MarketConcurrencyTest {
             visitors[i.value ()] = visitor;
             market.register ( names[i.value () * 6], password );
             market.memberLogin ( names[i.value () * 6], password );
-            market.validateSecurityQuestions ( names[i.value () * 6] , new ArrayList<> (  ), visitor.getName ());
+            members[i.value ()] = market.validateSecurityQuestions ( names[i.value () * 6] , new ArrayList<> (  ), visitor.getName ()).toBusinessObject ();
         }
+    }
+
+    private void createShop() throws MarketException {
+        registerAndLogin ();
+        market.openNewShop ( names[0],  "shopName");
     }
 
 }
