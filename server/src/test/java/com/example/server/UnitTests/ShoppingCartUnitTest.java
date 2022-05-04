@@ -51,6 +51,7 @@ public class ShoppingCartUnitTest extends mainTest {
             Assertions.assertEquals(5, shoppingCart.getItemQuantity(item));
             Mockito.doNothing().when(basket).updateQuantity(15,item);
             Mockito.when(basket.getItems()).thenReturn(basket1Map);
+            Mockito.when(shop.getShopName()).thenReturn("shop");
             shoppingCart.editQuantity(15, item, shop.getShopName());
             HashMap<Item, Double> tempHash = new HashMap<>();
             tempHash.put(item,15.0);
@@ -90,7 +91,11 @@ public class ShoppingCartUnitTest extends mainTest {
     public void addItemTest(){
         Item testItem = Mockito.mock(Item.class);
         Shop newShop = Mockito.mock(Shop.class);
-        shoppingCart.addItem(newShop,testItem,1.0);
+        try {
+            shoppingCart.addItem(newShop,testItem,1.0);
+        } catch (Exception e) {
+            assert false;
+        }
         Assertions.assertEquals(3,shoppingCart.getCart().size());
     }
 }

@@ -86,7 +86,7 @@ public class ShoppingCart implements IHistory {
         this.cart.clear();
     }
 
-    public void addItem(Shop shop, Item item, double amount) {
+    public void addItem(Shop shop, Item item, double amount) throws MarketException {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
             shoppingBasket = new ShoppingBasket ();
