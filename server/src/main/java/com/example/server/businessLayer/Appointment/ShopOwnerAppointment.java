@@ -8,6 +8,7 @@ import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
 public class ShopOwnerAppointment extends Appointment {
     private boolean isShopFounder;
+    //TODO - check appoint is not null unless it is founder
     public ShopOwnerAppointment(Member appointed, Member appoint, Shop relatedShop,
                                 boolean isShopFounder) {
         super(appointed, appoint, relatedShop);

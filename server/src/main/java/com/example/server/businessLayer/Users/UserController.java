@@ -118,14 +118,8 @@ public class UserController {
         return newVisitorMember.getMember();
     }
 
-    public boolean isMember(String visitorName) {
-        return members.get ( visitorName ) != null;
-    }
 
-    public Member getMember(String visitorName) {
-        return members.get ( visitorName );
-    }
-
+    //TODO - Going through members after visitors in market will result in Exception ( removed item for members who visiting twice)
     public void updateVisitorsInRemoveOfItem(Shop shop, Item itemToRemove) throws MarketException {
         for ( Visitor visitor : visitorsInMarket.values ()){
             visitor.getCart ().removeItem ( shop, itemToRemove);
@@ -138,5 +132,12 @@ public class UserController {
 
     public boolean isLoggedIn(String visitorName) {
         return visitorsInMarket.containsKey ( visitorName );
+    }
+    public boolean isMember(String visitorName) {
+        return members.get ( visitorName ) != null;
+    }
+
+    public Member getMember(String visitorName) {
+        return members.get ( visitorName );
     }
 }

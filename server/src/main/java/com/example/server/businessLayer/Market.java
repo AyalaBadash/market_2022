@@ -130,7 +130,7 @@ public class Market {
             errorLog.Log("Tried to get history for a non existing member");
             throw new MarketException ( "member does not exist" );
         }
-        StringBuilder history = member.getPurchaseHistory();
+        StringBuilder history = member.getPurchaseHistoryString();
         return history;
     }
 
@@ -162,8 +162,7 @@ public class Market {
     public void addSecurity() {
 
     }
-
-    public ShoppingCartFacade calculateShoppingCart(String visitorName) throws MarketException {
+    public ShoppingCart calculateShoppingCart(String visitorName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -171,8 +170,8 @@ public class Market {
         }
         ShoppingCart currentCart = userController.getVisitorsInMarket().get(visitorName).getCart();
         ShoppingCart updatedCart = validateCart(currentCart);
-        ShoppingCartFacade cartFacade = new ShoppingCartFacade(updatedCart);
-        return cartFacade;
+        //ShoppingCartFacade cartFacade = new ShoppingCartFacade(updatedCart);
+        return updatedCart;
     }
 
 
@@ -180,17 +179,8 @@ public class Market {
         return shops;
     }
 
-    public String getSystemManagerName() {
-        return systemManagerName;
-    }
 
-    public void setSystemManagerName(String systemManagerName) {
-        this.systemManagerName = systemManagerName;
-    }
 
-    public void setShops(Map<String, Shop> shops) {
-        this.shops = shops;
-    }
 
     public Map<Integer, String> getAllItemsInMarketToShop() {
         return allItemsInMarketToShop;
@@ -272,8 +262,7 @@ public class Market {
         return temp;
     }
 
-    //TODO change to member
-    public MemberFacade validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException{
+    public Member validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException{
         Security security = Security.getInstance();
         security.validateQuestions(userName,answers);
         Member member =  userController.getMembers().get(userName);
@@ -282,7 +271,7 @@ public class Market {
         List<Appointment> myAppointments = member.getMyAppointments ();
         List<AppointmentFacade> myAppointmentsFacades = appointmentToFacade ( myAppointments );
         userController.finishLogin(userName, visitorName);
-        return new MemberFacade(member.getName(),member.getMyCart(), appointmentByMeFacade, myAppointmentsFacades);
+        return new Member(member.getName(),member.getMyCart(), appointmentByMe, myAppointments,member.getPurchaseHistory());//,member.getPurchaseHistory()
     }
 
 
@@ -330,7 +319,13 @@ public class Market {
             errorLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
         }
+
         Shop shopToClose = shops.get(shopName);
+        if (shopToClose == null)
+        {
+            ErrorLog.getInstance().Log("Tried to close shop named "+ shopName +" but there is no such shop.");
+            throw new MarketException("Tried to close non existing shop");
+        }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName))
         {
             shops.remove(shopName);
@@ -343,7 +338,7 @@ public class Market {
     }
 
 
-    public void removeItemFromShop(String shopOwnerName, String itemName, String shopName) throws MarketException {
+    public void removeItemFromShop(String shopOwnerName, int itemID, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -362,9 +357,9 @@ public class Market {
         //Check if user indeed is the shop owner
         if(!shop.isShopOwner(shopOwnerName)) {
             ErrorLog.getInstance().Log(shopOwnerName+" tried to remove item from the shop "+shopName+" but he is not a owner.");
-            throw new MarketException(shopOwnerName + " is not " + shopName + " owner . Removing " + itemName + " from shop has failed.");
+            throw new MarketException(shopOwnerName + " is not " + shopName + " owner . Removing item from shop has failed.");
         }
-        Item itemToDelete = shop.getItemMap().get(itemName);
+        Item itemToDelete = shop.getItemMap().get(itemID);
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         shop.deleteItem(itemToDelete);
         updateMarketOnDeleteItem(itemToDelete);
@@ -386,7 +381,7 @@ public class Market {
             throw new MarketException("shop does not exist in the market");
         }
         Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID );
-        nextItemID++;
+        this.nextItemID++;
         updateMarketOnAddedItem ( addedItem, shopName );
         EventLog.getInstance().Log("Item added to shop "+shopName);
     }
@@ -489,7 +484,6 @@ public class Market {
 
 
     public void addItemToShoppingCart(Item item, double amount, String shopName, String visitorName) throws MarketException {
-        //TODO Check item amount >0
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -509,6 +503,11 @@ public class Market {
         if(curAmount < amount) {
             ErrorLog.getInstance().Log("Tried to item with amount bigger than what the shop holds.");
             throw new MarketException("the shop amount of this item is less then the wanted amount");
+        }
+        if (amount<0)
+        {
+            ErrorLog.getInstance().Log("Cant add item with negative amount");
+            throw new MarketException("Cant add item with negative amount");
         }
         shoppingCart.addItem ( curShop, item, amount );
         EventLog.getInstance().Log(amount+" "+item+ " added to cart.");
@@ -611,7 +610,7 @@ public class Market {
         if(shop == null)
             throw new MarketException ( "shop does not exist in the market" );
         shop.editItem ( newItem, id );
-        //TODO why do we send ID here
+
     }
 
     public void buyShoppingCart(String visitorName, double expectedPrice,
@@ -627,7 +626,6 @@ public class Market {
         double actualPrice = cart.saveFromShops();
 
         // checks the price is correct
-        //TODO: check why there is exception
         if (actualPrice != expectedPrice){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Shopping cart price has been changed for a costumer");
@@ -719,5 +717,17 @@ public class Market {
             itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
         }
         EventLog.getInstance().Log("Preparing to close the shop "+shopToClose.getShopName()+". Removed all shop items from market.");
+    }
+
+    public String getSystemManagerName() {
+        return systemManagerName;
+    }
+
+    public void setSystemManagerName(String systemManagerName) {
+        this.systemManagerName = systemManagerName;
+    }
+
+    public void setShops(Map<String, Shop> shops) {
+        this.shops = shops;
     }
 }

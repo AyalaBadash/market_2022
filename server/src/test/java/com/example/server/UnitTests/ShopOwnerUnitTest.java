@@ -128,7 +128,7 @@ public class ShopOwnerUnitTest {
         ReflectionTestUtils.setField(item, "amount", amount);
         market2.addItemToShop(memberName, item.getName(), item.getPrice(), cat, " ", new ArrayList<>(), amount, shopName);
         Assertions.assertEquals(1, itemMap.size());
-        market2.removeItemFromShop(memberName, item.getName(), shopName);
+        market2.removeItemFromShop(memberName, item.getID(), shopName);
         Assertions.assertEquals(0, itemMap.size());
     }
 

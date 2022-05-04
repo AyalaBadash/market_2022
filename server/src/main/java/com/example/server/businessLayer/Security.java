@@ -108,6 +108,7 @@ public class Security {
             ErrorLog.getInstance ().Log ( "Cannot add a personal query cause there is no such user in the system " );
             throw new MarketException("Cannot add a personal query cause there is no such user in the system ");
         }
+        //TODO check if question or answer is null
         else {
             LoginCard card = namesToLoginInfo.get(name);
             Map<String,String> QA = card.getQandA();

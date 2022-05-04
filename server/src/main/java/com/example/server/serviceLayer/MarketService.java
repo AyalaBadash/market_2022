@@ -152,7 +152,7 @@ public class MarketService {
 
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
         try {
-            market.removeItemFromShop(shopOwnerName,item.getName(),shopName);
+            market.removeItemFromShop(shopOwnerName,item.getID(),shopName);
             return new Response();
         }
         catch (MarketException e)

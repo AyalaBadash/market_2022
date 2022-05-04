@@ -6,6 +6,7 @@ import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.*;
 
@@ -137,7 +138,8 @@ public class UserService {
 
     public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName)  {
         try{
-            MemberFacade memberLoggedIn = market.validateSecurityQuestions(userName,answers, visitorName);
+            Member member = market.validateSecurityQuestions(userName,answers, visitorName);
+            MemberFacade memberLoggedIn = new MemberFacade(member);
             return new ResponseT<> ( memberLoggedIn );
         }catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );

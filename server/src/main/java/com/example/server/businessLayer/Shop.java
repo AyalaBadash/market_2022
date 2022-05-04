@@ -22,12 +22,12 @@ public class Shop implements IHistory {
     private Map<Item, Double> itemsCurrentAmount;//TODO check if we want it double or int
     private boolean closed;
 
+    Member shopFounder;//todo
     private int rank;
     private int rankers;
     private List<StringBuilder> purchaseHistory;
 
-    //TODO - for ayala : how do we know who is shop founder. Why we arent getting it in constructor.
-
+    //TODO delete this
     public Shop(String name) {
         this.shopName = name;
         itemMap = new HashMap<> ( );
@@ -38,6 +38,18 @@ public class Shop implements IHistory {
         purchaseHistory = new ArrayList<> ( );
         rank = 1;
         rankers = 0;
+    }
+    public Shop(String name,Member founder) {
+        this.shopName = name;
+        itemMap = new HashMap<> ( );
+        shopManagers = new HashMap<> ( );
+        shopOwners = new HashMap<> ( );
+        itemsCurrentAmount = new HashMap<> ( );
+        this.closed = false;
+        purchaseHistory = new ArrayList<> ( );
+        rank = 1;
+        rankers = 0;
+        this.shopFounder = founder;
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
@@ -68,15 +80,13 @@ public class Shop implements IHistory {
 
 
     public void deleteItem(Item item) {
-        itemMap.remove ( item.getName ( ) );
+        itemMap.remove ( item.getID() );
     }
-    //TODO change the remove - item.getName is string but key for itemMap is Integer
 
     private void addItem(Item item) throws MarketException {
-        if (!itemMap.containsKey ( item.getName ( ) ))
+        if (!itemMap.containsKey ( item.getID ( ) ))
             itemMap.put ( item.getID ( ), item );
         else throw new MarketException ( "Item name already exist" );
-        //TODO for ayala :  We are not getting item amount and do not it on itemCurrentAmount map - mistake?
     }
 
     public double getItemCurrentAmount(Item item) {
@@ -174,6 +184,7 @@ public class Shop implements IHistory {
     public synchronized Map<Integer, Item> getItemMap() {
         return itemMap;
     }
+    //TODO - key for map is int but we are coding like key is string.
 
     public boolean isShopOwner(String memberName) {
         return shopOwners.containsKey ( memberName );
@@ -196,8 +207,8 @@ public class Shop implements IHistory {
     }
 
     public Member getShopFounder() {
-        throw new UnsupportedOperationException ( );
-    }
+        return this.shopFounder;
+    }//TODO
 
     @Override
     public boolean equals(Object obj) {
@@ -288,8 +299,11 @@ public class Shop implements IHistory {
                 if (newAppointment.isManager ( ))
                     throw new MarketException ( "this member is already a shop manager" );
                 shopOwners.put ( employeeName, newAppointment );
-            } else if (newAppointment.isOwner ( ))
-                shopOwners.put ( employeeName, newAppointment );
+            } else if (newAppointment.isOwner ( )) {
+                shopOwners.put(employeeName, newAppointment);
+
+            }
+
             else
                 shopManagers.put ( employeeName, newAppointment );
         }
@@ -428,5 +442,13 @@ public class Shop implements IHistory {
         Appointment app= shopManagers.get ( name );
 
         return app !=null;
+    }
+
+    public Map<String, Appointment> getShopOwners() {
+        return shopOwners;
+    }
+
+    public Map<String, Appointment> getShopManagers() {
+        return shopManagers;
     }
 }

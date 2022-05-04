@@ -55,7 +55,7 @@ public class PurchaseService {
 
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
         try {
-            ShoppingCartFacade cart = market.calculateShoppingCart(visitorName);
+            ShoppingCartFacade cart =new ShoppingCartFacade(market.calculateShoppingCart(visitorName));
             ResponseT<ShoppingCartFacade> responseT = new ResponseT<>(cart);
             return responseT;
         }
