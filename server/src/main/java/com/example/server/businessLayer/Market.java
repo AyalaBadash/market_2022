@@ -626,6 +626,7 @@ public class Market {
         double actualPrice = cart.saveFromShops();
 
         // checks the price is correct
+        //TODO: check why there is exception
         if (actualPrice != expectedPrice){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Shopping cart price has been changed for a costumer");
