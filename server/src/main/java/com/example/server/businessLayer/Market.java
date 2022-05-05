@@ -5,15 +5,12 @@ import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
-import com.example.server.serviceLayer.FacadeObjects.*;
-import com.example.server.serviceLayer.Response;
 
 
 import java.time.LocalDateTime;
@@ -170,7 +167,6 @@ public class Market {
         }
         ShoppingCart currentCart = userController.getVisitorsInMarket().get(visitorName).getCart();
         ShoppingCart updatedCart = validateCart(currentCart);
-        //ShoppingCartFacade cartFacade = new ShoppingCartFacade(updatedCart);
         return updatedCart;
     }
 
@@ -267,9 +263,7 @@ public class Market {
         security.validateQuestions(userName,answers);
         Member member =  userController.getMembers().get(userName);
         List<Appointment> appointmentByMe = member.getAppointedByMe();
-        List<AppointmentFacade> appointmentByMeFacade = appointmentToFacade ( appointmentByMe );
         List<Appointment> myAppointments = member.getMyAppointments ();
-        List<AppointmentFacade> myAppointmentsFacades = appointmentToFacade ( myAppointments );
         userController.finishLogin(userName, visitorName);
         return new Member(member.getName(),member.getMyCart(), appointmentByMe, myAppointments,member.getPurchaseHistory());//,member.getPurchaseHistory()
     }
@@ -658,24 +652,6 @@ public class Market {
         }
     }
 
-
-    private List<AppointmentFacade> appointmentToFacade(List<Appointment> appointments){
-        List<AppointmentFacade> appointmentsFacades= new ArrayList<>();
-        for (Appointment appointment: appointments)
-        {
-            if (appointment.isOwner()){
-                ShopOwnerAppointment shopOwnerAppointment = (ShopOwnerAppointment) appointment;
-                ShopOwnerAppointmentFacade facade = new ShopOwnerAppointmentFacade(shopOwnerAppointment);
-                appointmentsFacades.add(facade);
-            }
-            else {
-                ShopManagerAppointment shopManagerAppointment = (ShopManagerAppointment) appointment;
-                ShopManagerAppointmentFacade facade = new ShopManagerAppointmentFacade(shopManagerAppointment);
-                appointmentsFacades.add(facade);
-            }
-        }
-        return appointmentsFacades;
-    }
 
     private ShoppingCart validateCart(ShoppingCart currentCart) {
         ShoppingCart res = new ShoppingCart();

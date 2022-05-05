@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.Map;
+
 
 public class ShoppingBasketTest {
     ShoppingBasket basket = new ShoppingBasket();
@@ -53,7 +53,6 @@ public class ShoppingBasketTest {
             System.out.println(e.getMessage());
             assert false;
         }
-        Item otherItem = Mockito.mock(Item.class,Mockito.CALLS_REAL_METHODS);
         try {
             basket.updateQuantity(3,item);
             Assertions.assertEquals(3,basket.getItems().get(item));
@@ -178,12 +177,7 @@ public class ShoppingBasketTest {
         Mockito.when(item.getPrice()).thenReturn(5.0);
         Mockito.when(otherItem.getPrice()).thenReturn(3.0);
         Assertions.assertEquals(52,basket.getPrice());
-        try {
-            basket.removeItem(otherItem);
-        } catch (MarketException e) {
-            System.out.println(e.getMessage());
-            assert false;
-        }
+        basket.removeItem(otherItem);
         Assertions.assertEquals(25,basket.getPrice());
     }
 }

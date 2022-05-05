@@ -140,4 +140,8 @@ public class UserController {
     public Member getMember(String visitorName) {
         return members.get ( visitorName );
     }
+
+    public void setNextUniqueNumber(int nextUniqueNumber) {
+        this.nextUniqueNumber = nextUniqueNumber;
+    }
 }
