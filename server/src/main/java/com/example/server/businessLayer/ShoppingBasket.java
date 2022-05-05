@@ -2,7 +2,6 @@ package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 
-import javax.xml.transform.ErrorListener;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,10 +78,8 @@ public class ShoppingBasket implements IHistory {
         items.put(item,amount);
     }
 
-    public void removeItem(Item item) throws MarketException {//TODO delete throws exception
-        if (!items.containsKey(item))
-            return;
-        else items.remove(item);
+    public void removeItem(Item item) {
+        items.remove(item);
     }
 
 

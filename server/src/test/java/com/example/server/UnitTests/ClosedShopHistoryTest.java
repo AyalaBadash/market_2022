@@ -42,7 +42,7 @@ public class ClosedShopHistoryTest extends mainTest {
 
     @Test
     @DisplayName("History Unit Test - empty purchase")
-    public void testEmptyPurchaseHistory() throws IllegalAccessException {
+    public void testEmptyPurchaseHistory() {
         // empty item name
         String purchase = "";
         closedShopsHistory.addPurchaseHistory(purchase, shop);
@@ -54,7 +54,7 @@ public class ClosedShopHistoryTest extends mainTest {
             assert false;
         } catch (Exception ignored){}
         closedShopsHistory.addPurchaseHistory(purchase, shop);
-        Assertions.assertTrue(closedShopsHistory.getOverallHistory().toString().contains(purchase));
+        Assertions.assertTrue(closedShopsHistory.getOverallHistory().toString().contains("purchase"));
     }
 
     @Test

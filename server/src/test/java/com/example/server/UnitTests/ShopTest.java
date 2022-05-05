@@ -5,6 +5,7 @@ import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Users.Member;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,6 +36,7 @@ public class ShopTest {
         ownerAppointment = Mockito.mock(ShopOwnerAppointment.class);
         keywords = new ArrayList<>();
         keywords.add("fruit");
+        Mockito.when(item.getID()).thenReturn(1);
         Mockito.when(item.getName()).thenReturn("item_test");
         Mockito.when(memberFounder.getName()).thenReturn("The founder");
         Member otherMember = Mockito.mock(Member.class);
@@ -63,16 +65,17 @@ public class ShopTest {
     @DisplayName("Add item - good test")
     public void addItemTest() {
         try {
-            shop.addItem("The founder", item.getName(),item.getPrice(), item.getCategory(),item.getInfo(),keywords,1.0,item.getID());
             Assertions.assertEquals(1,shop.getItemMap().size());
+            shop.addItem("The founder", item.getName(),item.getPrice(), item.getCategory(),item.getInfo(),keywords,1.0,2);
+            Assertions.assertEquals(2,shop.getItemMap().size());
 
         } catch (Exception e) {
             assert false;
         }
     }
     @Test
-    @DisplayName("Add item - fail test - duplicate name")
-    public void addItemTestDupName(){
+    @DisplayName("Add item - fail test - ID taken")
+    public void addItemTestIDTaken(){
         try {
             shop.addItem("The founder", item.getName(),item.getPrice(), item.getCategory(),item.getInfo(),keywords,1.0,item.getID());
             assert false;
@@ -87,8 +90,9 @@ public class ShopTest {
         try {
             keywords.add("tasty");
             Mockito.when(item.getName()).thenReturn("itemTestNewName");
+            Mockito.when(item.getID()).thenReturn(1);
             shop.editItem(item,"1");
-            Assertions.assertEquals("itemTestNewName" , shop.getItemMap().get(1));
+            Assertions.assertEquals("itemTestNewName" , shop.getItemMap().get(0));
 
         } catch (Exception e) {
             System.out.println(e.getMessage());;
@@ -239,7 +243,10 @@ public class ShopTest {
     public void releaseItemsTest(){
         try {
             shop.setItemAmount("The founder",item,1);
-            Mockito.when(basket.getItems().get(item)).thenReturn(10.0);
+            Map<Item,Double> map = new HashMap<>();
+            map.put(item,1.0);
+            Mockito.when(basket.getItems()).thenReturn(map);
+            //Mockito.when(basket.getItems().get(item)).thenReturn(10.0);
             shop.releaseItems(basket);
             Assertions.assertEquals(11,shop.getItemCurrentAmount(item));
 

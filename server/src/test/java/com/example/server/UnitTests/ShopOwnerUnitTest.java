@@ -74,8 +74,6 @@ public class ShopOwnerUnitTest {
     @Test
     @DisplayName("Shop owner Unit Test - add item good case")
     public void AddItem() throws Exception {
-
-
         Item item = Mockito.mock(Item.class, CALLS_REAL_METHODS);
         String itemName = "item name";
         double amount = 15;

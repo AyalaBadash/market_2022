@@ -2,7 +2,6 @@ package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
-import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,6 @@ public class Security {
         return namesToLoginInfo;
     }
 
-    //TODO: enforce the user to add questions(no one add the questions right now)
     public void addNewMember(String name, String password, List<String> questions,
                              List<String> answers) throws MarketException {
         LoginCard card = new LoginCard(name, password,questions, answers);
@@ -108,12 +106,19 @@ public class Security {
             ErrorLog.getInstance ().Log ( "Cannot add a personal query cause there is no such user in the system " );
             throw new MarketException("Cannot add a personal query cause there is no such user in the system ");
         }
-        //TODO check if question or answer is null
+        if (userAdditionalQueries==null||userAdditionalAnswers==null||userAdditionalAnswers.equals("")||userAdditionalQueries.equals(""))
+        {
+            ErrorLog.getInstance().Log("User tried to add query with empty/null question/answer ");
+            throw new MarketException("Question and answer cant be null or empty string");
+        }
         else {
             LoginCard card = namesToLoginInfo.get(name);
             Map<String,String> QA = card.getQandA();
             QA.put(userAdditionalQueries,userAdditionalAnswers);
         }
+    }
 
+    public void setNamesToLoginInfo(Map<String, LoginCard> namesToLoginInfo) {
+        this.namesToLoginInfo = namesToLoginInfo;
     }
 }
