@@ -276,14 +276,19 @@ public class ShopTest {
 
     @Test
     @DisplayName("Buy basket - good test.")
-    public void buyBasketTest() {//TODO check with ido.
+    public void buyBasketTest() {
     Map<Item,Double> itemsMap = new HashMap<>();
     Item item2 = Mockito.mock(Item.class);
     itemsMap.put(item,5.0);
     itemsMap.put(item2,10.0);
+    Map<Item,Double> shopItems = new HashMap<>();
+    shopItems.put(item,20.0);
+    shopItems.put(item2,20.0);
+    shop.setItemsCurrentAmount(shopItems);
     Mockito.when(item.getPrice()).thenReturn(5.0);
     Mockito.when(item2.getPrice()).thenReturn(1.0);
     Mockito.when(basket.getItems()).thenReturn(itemsMap);
+    Mockito.when(basket.getPrice()).thenReturn(35.0);//todo check if can do
     try{
         shop.setItemAmount("The founder",item,10.0);
         shop.setItemAmount("The founder",item2,20.0);
@@ -300,20 +305,15 @@ public class ShopTest {
     public void validateBasketTest(){
         Map<Item,Double> items = new HashMap<>();
         Item item2 = Mockito.mock(Item.class);
-        items.put(item,5.0);
-        items.put(item2,5.0);
+        items.put(item,5.0);items.put(item2,5.0);
         Mockito.when(basket.getItems()).thenReturn(items);
-        try {
-            shop.setItemAmount("The founder",item,1.0);
-            shop.setItemAmount("The founder",item2,10.0);
-            shop.validateBasket(basket);
-            Assertions.assertEquals(1.0,basket.getItems().get(item));
-            Assertions.assertEquals(5.0,basket.getItems().get(item2));
-        }
-        catch (MarketException e){
-            System.out.println(e.getMessage());
-            assert false;
-        }
+        Map<Item,Double> shopItems = new HashMap<>();
+        shopItems.put(item,20.0);shopItems.put(item2,20.0);
+        shop.setItemsCurrentAmount(shopItems);
+        shop.validateBasket(basket);
+        //TODO fix this - basket.getItems return items from line 306 and not the updated from the method
+        Assertions.assertEquals(1.0,basket.getItems().get(item));
+        Assertions.assertEquals(5.0,basket.getItems().get(item2));
     }
     
     @Test

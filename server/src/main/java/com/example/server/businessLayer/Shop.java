@@ -448,4 +448,12 @@ public class Shop implements IHistory {
     public Map<String, Appointment> getShopManagers() {
         return shopManagers;
     }
+
+    public void setItemMap(Map<Integer, Item> itemMap) {
+        this.itemMap = itemMap;
+    }
+
+    public void setItemsCurrentAmount(Map<Item, Double> itemsCurrentAmount) {
+        this.itemsCurrentAmount = itemsCurrentAmount;
+    }
 }
