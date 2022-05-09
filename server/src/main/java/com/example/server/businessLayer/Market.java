@@ -13,6 +13,7 @@ import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Response;
 
 
@@ -26,6 +27,8 @@ public class Market {
     private UserController userController;
     private String systemManagerName;
     private Map<String, Shop> shops;                                 // <shopName, shop>
+
+    private Publisher publisher;
     private Map<Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<Integer>> itemByName;                   // <itemName ,List<itemID>>
     private int nextItemID;
@@ -40,6 +43,7 @@ public class Market {
         this.itemByName = new ConcurrentHashMap<>();
         this.userController = UserController.getInstance();
         nextItemID = 1;
+        publisher= Publisher.getInstance();
     }
 
 
