@@ -66,4 +66,9 @@ public class ClosedShopsHistory {
     public boolean isClosed(String shopName) {
         return closedShops.containsKey ( shopName );
     }
+
+    public void reset() {
+        closedShops = new HashMap<>();
+        overallHistory = new StringBuilder();
+    }
 }

@@ -15,6 +15,7 @@ import com.example.server.businessLayer.Users.Visitor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -240,7 +241,19 @@ public class Market {
     }
 
     //TODO make private and add authentication checks
-    public void setPaymentService(PaymentService paymentService) {
+    public void setPaymentService(PaymentService paymentService, String memberName) throws MarketException {
+        if(!userController.isLoggedIn(memberName)){
+            ErrorLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        if(!memberName.equals(systemManagerName)){
+            ErrorLog.getInstance().Log("Only a system manager can change the payment service");
+            throw new MarketException("Only a system manager can change the payment service");
+        }
+        if(paymentService == null) {
+            ErrorLog.getInstance().Log("Try to initiate payment service with null");
+            throw new MarketException("Try to initiate payment service with null");
+        }
         this.paymentService = paymentService;
     }
 
@@ -458,11 +471,11 @@ public class Market {
         if(userController.isMember(visitorName)){
             curMember = userController.getMember (visitorName);
             if(shops.get ( shopName ) == null) {
-                Shop shop = new Shop ( shopName );
-                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
-                shop.addEmployee(shopFounder);
+                Shop shop = new Shop ( shopName,  curMember);
+//                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
+//                shop.addEmployee(shopFounder);
                 shops.put ( shopName, shop );
-                curMember.addAppointmentToMe(shopFounder);
+
             } else {
                 ErrorLog.getInstance().Log(visitorName+" tried to open a shop with taken name.");
                 throw new MarketException("Shop with the same shop name is already exists");
@@ -597,7 +610,7 @@ public class Market {
     }
 
     public void editItem(Item newItem, String id) throws MarketException {
-        String shopName = allItemsInMarketToShop.get ( id );
+        String shopName = allItemsInMarketToShop.get ( Integer.parseInt(id) );
         if(shopName == null)
             throw new MarketException ( "item does not exist in the market" );
         Shop shop = shops.get ( shopName );
@@ -693,6 +706,25 @@ public class Market {
             itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
         }
         EventLog.getInstance().Log("Preparing to close the shop "+shopToClose.getShopName()+". Removed all shop items from market.");
+    }
+
+    public Item getItemByID (Integer id){
+        String itemShopName = allItemsInMarketToShop.get(id);
+        Shop itemShop = shops.get(itemShopName);
+        Item item = itemShop.getItemMap().get(id);
+        return item;
+    }
+
+    //TODO delete
+    public void reset() throws MarketException {
+        instance.shops = new HashMap<>();
+        instance.allItemsInMarketToShop = new HashMap<>();
+        instance.itemByName = new HashMap<>();
+        instance.nextItemID = 1;
+        Security.getInstance().reset();
+        userController.reset();
+        ClosedShopsHistory.getInstance().reset();
+        userController.register(systemManagerName);
     }
 
     public String getSystemManagerName() {

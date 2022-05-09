@@ -4,6 +4,7 @@ import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -120,5 +121,9 @@ public class Security {
 
     public void setNamesToLoginInfo(Map<String, LoginCard> namesToLoginInfo) {
         this.namesToLoginInfo = namesToLoginInfo;
+    }
+
+    public void reset() {
+        namesToLoginInfo = new HashMap<>();
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ShopTest {
-    Shop shop = new Shop("shop");
+    Shop shop;
     @Mock
     Appointment appointment;
     Appointment managerAppointment;
@@ -31,6 +31,7 @@ public class ShopTest {
     @BeforeEach
     public void reset(){
         memberFounder = Mockito.mock(Member.class);
+        shop = new Shop("shop", memberFounder);
         item = Mockito.mock(Item.class);
         basket = Mockito.mock(ShoppingBasket.class);
         managerAppointment = Mockito.mock(ShopManagerAppointment.class);
@@ -331,17 +332,6 @@ public class ShopTest {
             System.out.println(e.getMessage());
             assert false;
         }
-    }
-    
-    @Test
-    @DisplayName("removeItemMissing - good test.")
-    public void removeItemMissingTest(){
-        assert false;
-    }
-    @Test
-    @DisplayName("removeItemMissing - fail test - negative amount.")
-    public void removeItemMissingFailTest(){
-        assert false;
     }
 
 

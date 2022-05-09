@@ -86,10 +86,8 @@ public class SystemManagerTests {
     @DisplayName("system manager change services")
     public void changeServices() {
         try {
-
-
             loginManager(managerName,managerpassword);
-            market.setPaymentService(paymentService2 );
+            market.setPaymentService(paymentService2, managerName);
             assert  true;
         } catch (Exception e) {
             assert false;
@@ -99,17 +97,15 @@ public class SystemManagerTests {
     @Test
     @DisplayName("system manager change services bad case- not logged in")
     public void changeServicesFail() {
+        try{
+            logoutMember(managerName);
+        } catch (Exception e){
+            assert false;
+        }
         try {
-
-            try{
-                logoutMember(managerName);
-            }
-            catch (Exception e){
-
-            }
-            market.setPaymentService(paymentService2 );
-            assert  false;
-        } catch (Exception e) {
+            market.setPaymentService(paymentService2, managerName);
+            assert false;
+        } catch (MarketException e) {
             assert true;
         }
     }
@@ -117,11 +113,10 @@ public class SystemManagerTests {
     @DisplayName("system manager change services bad case- not system manager")
     public void changeServicesFail2() {
         try {
-
             String memberName = "bar1";
             String memberPassword = "pass1";
             loginManager(managerName,managerpassword);
-            market.setPaymentService(paymentService2 );
+            market.setPaymentService(paymentService2, "ayala" );
             assert  false;
         } catch (Exception e) {
             assert true;

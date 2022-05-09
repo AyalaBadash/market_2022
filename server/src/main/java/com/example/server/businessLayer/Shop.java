@@ -26,17 +26,17 @@ public class Shop implements IHistory {
     private List<StringBuilder> purchaseHistory;
 
     //TODO delete this
-    public Shop(String name) {
-        this.shopName = name;
-        itemMap = new HashMap<> ( );
-        shopManagers = new HashMap<> ( );
-        shopOwners = new HashMap<> ( );
-        itemsCurrentAmount = new HashMap<> ( );
-        this.closed = false;
-        purchaseHistory = new ArrayList<> ( );
-        rank = 1;
-        rankers = 0;
-    }
+//    public Shop(String name) {
+//        this.shopName = name;
+//        itemMap = new HashMap<> ( );
+//        shopManagers = new HashMap<> ( );
+//        shopOwners = new HashMap<> ( );
+//        itemsCurrentAmount = new HashMap<> ( );
+//        this.closed = false;
+//        purchaseHistory = new ArrayList<> ( );
+//        rank = 1;
+//        rankers = 0;
+//    }
     public Shop(String name,Member founder) {
         this.shopName = name;
         itemMap = new HashMap<> ( );
@@ -48,6 +48,9 @@ public class Shop implements IHistory {
         rank = 1;
         rankers = 0;
         this.shopFounder = founder;
+        ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
+        shopOwners.put(founder.getName(), shopOwnerAppointment);
+        founder.addAppointmentToMe(shopOwnerAppointment);
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
@@ -285,6 +288,8 @@ public class Shop implements IHistory {
             Item curItem = currentItem.getKey();
             Double curAmount = itemsCurrentAmount.get(curItem);
             if (currentItem.getValue ( ) > curAmount) {
+                if(curAmount == 0)
+                    basket.removeItem ( curItem );
                 currentItem.setValue ( itemsCurrentAmount.get ( currentItem.getKey ( ) ) );
             }
         }
@@ -400,20 +405,20 @@ public class Shop implements IHistory {
         editItem(updatedItem, oldItem.getID().toString());
     }
 
-    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
-        Map<Item, Double> items = shoppingBasket.getItems ( );
-        for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
-            Item currItem = itemAmount.getKey ( );
-            double currAmount = itemAmount.getValue ( );
-            double amount = this.itemsCurrentAmount.get ( currItem );
-            if (amount < currAmount) {
-                if (amount == 0)
-                    shoppingBasket.removeItem ( currItem );
-                else
-                    shoppingBasket.updateQuantity ( amount, currItem );
-            }
-        }
-    }
+//    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
+//        Map<Item, Double> items = shoppingBasket.getItems ( );
+//        for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
+//            Item currItem = itemAmount.getKey ( );
+//            double currAmount = itemAmount.getValue ( );
+//            double amount = this.itemsCurrentAmount.get ( currItem );
+//            if (amount < currAmount) {
+//                if (amount == 0)
+//                    shoppingBasket.removeItem ( currItem );
+//                else
+//                    shoppingBasket.updateQuantity ( amount, currItem );
+//            }
+//        }
+//    }
 
     public void appointShopOwner(Member shopOwner, Member appointedShopOwner) throws MarketException {
         if (isShopOwner ( appointedShopOwner.getName ( ) )){
@@ -421,7 +426,7 @@ public class Shop implements IHistory {
             throw new MarketException ( "appointed shop owner is already a shop owner of the shop." );
         }
         //TODO : check the is shop member check . makes some problem with instances. change it to ==
-        if (shopOwner != null || !isShopOwner ( shopOwner.getName ( ) )) {
+        if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) )) {
             ErrorLog.getInstance ().Log ( "member is not a shop owner so is not authorized to appoint shop owner" );
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         }
