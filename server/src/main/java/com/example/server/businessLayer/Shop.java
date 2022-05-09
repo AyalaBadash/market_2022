@@ -71,7 +71,9 @@ public class Shop implements IHistory {
 
     //use case - Stock management
     public void editItem(Item newItem, String id) throws MarketException {
-        if (!newItem.getID ( ).equals(Integer.getInteger ( id )))
+        int newItemId = newItem.getID();
+        int oldItemId = Integer.parseInt(id);
+        if (newItemId != oldItemId)
             throw new MarketException ( "must not change the item id" );
         itemMap.put ( newItem.getID ( ), newItem );
     }
@@ -141,11 +143,13 @@ public class Shop implements IHistory {
     */
 
 
-    public void releaseItems(ShoppingBasket shoppingBasket) {
+    public void releaseItems(ShoppingBasket shoppingBasket) throws MarketException {
         //todo - method test fails.
         Map<Item, Double> items = shoppingBasket.getItems ( );
         for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = itemAmount.getKey ( );
+            if(itemsCurrentAmount.get(currItem) == null)
+                throw new MarketException("shopping basket holds an item which does not exist in market");
             Double newAmount =this.itemsCurrentAmount.get ( currItem )+  itemAmount.getValue ( );//
             this.itemsCurrentAmount.put ( currItem, newAmount );
         }
@@ -278,7 +282,9 @@ public class Shop implements IHistory {
     public ShoppingBasket validateBasket(ShoppingBasket basket) {
         Map<Item, Double> items = basket.getItems ( );
         for ( Map.Entry<Item, Double> currentItem : items.entrySet ( ) ) {
-            if (currentItem.getValue ( ) > itemsCurrentAmount.get ( currentItem.getKey ( ) )) {
+            Item curItem = currentItem.getKey();
+            Double curAmount = itemsCurrentAmount.get(curItem);
+            if (currentItem.getValue ( ) > curAmount) {
                 currentItem.setValue ( itemsCurrentAmount.get ( currentItem.getKey ( ) ) );
             }
         }

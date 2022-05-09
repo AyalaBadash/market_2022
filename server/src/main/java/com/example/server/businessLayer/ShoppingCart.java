@@ -45,7 +45,7 @@ public class ShoppingCart implements IHistory {
         return this.currentPrice;
     }
 
-    public void cancelShopSave() {
+    public void cancelShopSave() throws MarketException {
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             shopToBasket.getKey().releaseItems(shopToBasket.getValue());
         }
