@@ -5,8 +5,6 @@ import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -301,6 +299,13 @@ public class Service implements IService {
     @CrossOrigin
     public ResponseT<String> getHistoryByMember(@RequestBody GetHistoryByMemberRequest request) {
         return marketService.getHistoryByMember (request.getSystemManagerName(), request.getMemberName() );
+    }
+
+    @Override
+    @RequestMapping(value = "/removeShopOwnerAppointment")
+    @CrossOrigin
+    public Response removeShopOwnerAppointment(removeAppointmentRequest request) {
+        return marketService.removeShopOwnerAppointment(request.getBoss(),request.getFiredAppointed(),request.getShopName());
     }
 
 

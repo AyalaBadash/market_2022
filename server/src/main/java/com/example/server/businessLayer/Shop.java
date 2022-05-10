@@ -443,4 +443,40 @@ public class Shop implements IHistory {
     public Map<String, Appointment> getShopManagers() {
         return shopManagers;
     }
+
+    public void removeShopOwnerAppointment(String boss, String firedAppointed) throws MarketException {
+        if (!this.shopOwners.containsKey(boss))
+        {
+            ErrorLog.getInstance().Log("You are not a shop owner in the shop:"+this.shopName+" so you cant remove a shop owner");
+            throw new MarketException("You are not a shop owner in the shop:"+this.shopName+" so you cant remove a shop owner");
+        }
+        if (!this.shopOwners.containsKey(firedAppointed))
+        {
+            ErrorLog.getInstance().Log(firedAppointed+" is not a shop owner in the shop:"+this.shopName+" so there no need to remove his appointment.");
+            throw new MarketException(firedAppointed+" is not a shop owner in the shop:"+this.shopName+" so there no need to remove his appointment.");
+        }
+        Appointment appointment = shopOwners.get(firedAppointed);
+        if (!appointment.getSuperVisor().getName().equals(boss))
+        {
+            ErrorLog.getInstance().Log(boss + " didnt appoint "+firedAppointed+" so he cant remove his appointment.");
+            throw new MarketException(boss + " didnt appoint "+firedAppointed+" so he cant remove his appointment.");
+        }
+
+
+        for (Map.Entry<String,Appointment> entry:shopOwners.entrySet())
+        {
+            Appointment toCheck = entry.getValue();
+            if (toCheck.getSuperVisor().getName().equals(firedAppointed))
+                removeShopOwnerAppointment(firedAppointed,toCheck.getAppointed().getName());
+        }
+        for (Map.Entry<String,Appointment> entry:shopManagers.entrySet())
+        {
+            Appointment toCheck = entry.getValue();
+            if (toCheck.getSuperVisor().getName().equals(firedAppointed))
+                shopManagers.remove(entry.getKey());
+        }
+        shopOwners.remove(firedAppointed);
+
+
+    }
 }

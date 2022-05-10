@@ -737,4 +737,15 @@ public class Market {
     public int getNextItemID() {
         return nextItemID.increment();
     }
+
+    public void removeShopOwnerAppointment(String boss, String firedAppointed, String shopName) throws MarketException{
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            ErrorLog.getInstance().Log("There is no shop named:"+shopName +". Removing shop owner has failed.");
+            throw new MarketException("There is no shop named:"+shopName +". Removing shop owner has failed.");
+        }
+        shop.removeShopOwnerAppointment(boss,firedAppointed);
+
+    }
 }
