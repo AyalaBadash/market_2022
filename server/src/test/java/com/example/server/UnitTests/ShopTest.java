@@ -31,30 +31,26 @@ public class ShopTest {
     @BeforeEach
     public void reset(){
         memberFounder = Mockito.mock(Member.class);
+        Mockito.when(memberFounder.getName()).thenReturn("The founder");
+        ownerAppointment = Mockito.mock(ShopOwnerAppointment.class);
+        Mockito.when(ownerAppointment.getAppointed()).thenReturn(memberFounder);
+        Mockito.when(ownerAppointment.getAppointed().getName()).thenReturn("The founder");
+        Mockito.when(ownerAppointment.isOwner()).thenReturn(true);
         shop = new Shop("shop", memberFounder);
         item = Mockito.mock(Item.class);
         basket = Mockito.mock(ShoppingBasket.class);
         managerAppointment = Mockito.mock(ShopManagerAppointment.class);
-        ownerAppointment = Mockito.mock(ShopOwnerAppointment.class);
         keywords = new ArrayList<>();
         keywords.add("fruit");
         Mockito.when(item.getID()).thenReturn(1);
         Mockito.when(item.getName()).thenReturn("item_test");
-        Mockito.when(memberFounder.getName()).thenReturn("The founder");
         Member otherMember = Mockito.mock(Member.class);
         Mockito.when(otherMember.getName()).thenReturn("The twin");
-        Mockito.when(ownerAppointment.getAppointed()).thenReturn(memberFounder);
-        Mockito.when(ownerAppointment.getAppointed().getName()).thenReturn("The founder");
-        Mockito.when(ownerAppointment.isOwner()).thenReturn(true);
         Mockito.when(managerAppointment.getAppointed()).thenReturn(otherMember);
         Mockito.when(managerAppointment.getAppointed().getName()).thenReturn("The twin");
         Mockito.when(managerAppointment.getSuperVisor()).thenReturn(memberFounder);
         Mockito.when(managerAppointment.getSuperVisor().getName()).thenReturn("The founder");
-
-
-
         try{
-            shop.addEmployee(ownerAppointment);
             shop.addItem("The founder", item.getName(),item.getPrice(), item.getCategory(),item.getInfo(),keywords,1.0,item.getID());
         }
         catch (MarketException e)
@@ -247,7 +243,14 @@ public class ShopTest {
             Item item2 = Mockito.mock(Item.class);
             Mockito.when(item2.getName()).thenReturn("item2");
             Mockito.when(item2.getID()).thenReturn(2);
-            shop.setItemAmount("The founder",item2,10);
+            Map<Integer, Item> items = new HashMap<>();
+            items.put(item.getID(), item);
+            items.put(item2.getID(), item2);
+            ReflectionTestUtils.setField(shop, "itemMap", items);
+            Map<Item, Double> currAmount = new HashMap<>();
+            currAmount.put(item, 1.0);
+            currAmount.put(item2, 10.0);
+            ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
             Map<Item,Double> map = new HashMap<>();
             map.put(item2,1.0);
             Mockito.when(basket.getItems()).thenReturn(map);
@@ -255,7 +258,6 @@ public class ShopTest {
             //Mockito.when(basket.getItems().get(item)).thenReturn(10.0);
             shop.releaseItems(basket);
             Assertions.assertEquals(11,shop.getItemCurrentAmount(item2));
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;
@@ -287,33 +289,38 @@ public class ShopTest {
     @Test
     @DisplayName("Buy basket - good test.")
     public void buyBasketTest() {//TODO check with ido.
-    Map<Item,Double> itemsMap = new HashMap<>();
-    Item item1 = Mockito.mock(Item.class);
-    Item item2 = Mockito.mock(Item.class);
-    itemsMap.put(item1,5.0);
-    itemsMap.put(item2,10.0);
-    Mockito.when(item1.getID()).thenReturn(555);
-    Mockito.when(item2.getID()).thenReturn(666);
-    Mockito.when(item1.getPrice()).thenReturn(5.0);
-    Mockito.when(item2.getPrice()).thenReturn(1.0);
-    Mockito.when(basket.getItems()).thenReturn(itemsMap);
-    Mockito.when(basket.getPrice()).thenCallRealMethod();
-    ReflectionTestUtils.setField(basket, "items", itemsMap);
-    try{
-        shop.setItemAmount("The founder",item1,10.0);
-        shop.setItemAmount("The founder",item2,20.0);
-        Assertions.assertEquals(35.0,shop.buyBasket(basket, memberFounder.getName()));
-    }
-    catch (MarketException e){
-        System.out.println(e.getMessage());
-        assert false;
-    }
+        Map<Item,Double> itemsMap = new HashMap<>();
+        Item item1 = Mockito.mock(Item.class);
+        Item item2 = Mockito.mock(Item.class);
+        itemsMap.put(item1,5.0);
+        itemsMap.put(item2,10.0);
+        Mockito.when(item1.getID()).thenReturn(555);
+        Mockito.when(item2.getID()).thenReturn(666);
+        Mockito.when(item1.getPrice()).thenReturn(5.0);
+        Mockito.when(item2.getPrice()).thenReturn(1.0);
+        Mockito.when(basket.getItems()).thenReturn(itemsMap);
+        Mockito.when(basket.getPrice()).thenCallRealMethod();
+        ReflectionTestUtils.setField(basket, "items", itemsMap);
+        Map<Integer, Item> items = new HashMap<>();
+        items.put(item1.getID(), item1);
+        items.put(item2.getID(), item2);
+        ReflectionTestUtils.setField(shop, "itemMap", items);
+        Map<Item, Double> currAmount = new HashMap<>();
+        currAmount.put(item1, 10.0);
+        currAmount.put(item2, 20.0);
+        ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
+        try {
+            Assertions.assertEquals(35.0,shop.buyBasket(basket, memberFounder.getName()));
+        } catch (MarketException e) {
+            System.out.println(e.getMessage());
+            assert false;
+        }
     }
 
     @Test
     @DisplayName("Validate basket - good test.")
-    public void validateBasketTest(){
-        Map<Item,Double> items = new HashMap<>();
+    public void validateBasketTest() {
+        Map<Item, Double> items = new HashMap<>();
         Item item1 = Mockito.mock(Item.class);
         Mockito.when(item1.getID()).thenReturn(555);
         Mockito.when(item1.getID()).thenReturn(666);
@@ -321,17 +328,17 @@ public class ShopTest {
         items.put(item1, 5.0);
         items.put(item2, 5.0);
         Mockito.when(basket.getItems()).thenReturn(items);
-        try {
-            shop.setItemAmount("The founder",item1,1.0);
-            shop.setItemAmount("The founder",item2,10.0);
-            shop.validateBasket(basket);
-            Assertions.assertEquals(1.0,basket.getItems().get(item1));
-            Assertions.assertEquals(5.0,basket.getItems().get(item2));
-        }
-        catch (MarketException e){
-            System.out.println(e.getMessage());
-            assert false;
-        }
+        Map<Integer, Item> itemsInShop = new HashMap<>();
+        itemsInShop.put(item1.getID(), item1);
+        itemsInShop.put(item2.getID(), item2);
+        ReflectionTestUtils.setField(shop, "itemMap", items);
+        Map<Item, Double> currAmount = new HashMap<>();
+        currAmount.put(item1, 1.0);
+        currAmount.put(item2, 10.0);
+        ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
+        shop.validateBasket(basket);
+        Assertions.assertEquals(1.0, basket.getItems().get(item1));
+        Assertions.assertEquals(5.0, basket.getItems().get(item2));
     }
 
 

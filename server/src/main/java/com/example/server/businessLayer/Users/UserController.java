@@ -74,8 +74,7 @@ public class UserController {
 
 
     private synchronized String getNextUniqueName() {
-        String name = "@visitor" + nextUniqueNumber;
-        nextUniqueNumber.increment();
+        String name = "@visitor" + nextUniqueNumber.increment();
         return name;
     }
 
@@ -151,8 +150,7 @@ public class UserController {
 
   
     public void setNextUniqueNumber(int nextUniqueNumber) {
-        //TODO
-//        this.nextUniqueNumber = 0;
+        this.nextUniqueNumber.setValue(nextUniqueNumber);
     }
 
     public void reset() {
