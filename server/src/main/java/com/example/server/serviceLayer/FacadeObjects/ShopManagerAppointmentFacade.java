@@ -4,8 +4,10 @@ import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.Permissions.IPermission;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Member;
+import com.example.server.businessLayer.Users.UserController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,8 @@ public class ShopManagerAppointmentFacade extends AppointmentFacade {
 
     public ShopManagerAppointmentFacade(){super();}
     public ShopManagerAppointmentFacade(Member appointed, Member superVisor, Shop relatedShop, List<PermissionFacade> permissions) {
-        super(appointed, superVisor, relatedShop, permissions);
+        super(appointed, relatedShop, permissions);
+        this.superVisor = superVisor.getName();
     }
 
     @Override
@@ -34,13 +37,17 @@ public class ShopManagerAppointmentFacade extends AppointmentFacade {
     }
 
     public ShopManagerAppointmentFacade(ShopManagerAppointment appointment) {
-        super(appointment.getAppointed(),appointment.getSuperVisor(),appointment.getRelatedShop(), new ArrayList<>());
+        super(appointment.getAppointed(), appointment.getRelatedShop(), new ArrayList<>());
+        this.superVisor = appointment.getSuperVisor().getName();
         permissions.addAll(appointment.getPermissions().stream().map(PermissionFacade::new).toList());
     }
 
     @Override
     public Appointment toBusinessObject() {
         List<IPermission> busiPermissions = permissions.stream().map(PermissionFacade::toBusinessObject).toList();
-        return new ShopManagerAppointment(this.appointed,this.superVisor,this.relatedShop,busiPermissions);
+        Member appointed = UserController.getInstance().getMember(this.appointed);
+        Member superVisor = UserController.getInstance().getMember(this.superVisor);
+        Shop relatedShop = Market.getInstance().getShopByName(this.relatedShop);
+        return new ShopManagerAppointment(appointed,superVisor,relatedShop,busiPermissions);
     }
 }

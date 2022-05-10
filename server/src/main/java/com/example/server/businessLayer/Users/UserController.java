@@ -2,12 +2,14 @@ package com.example.server.businessLayer.Users;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
+import com.example.server.ResourcesObjects.SynchronizedCounter;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.serviceLayer.Notifications.Notification;
 
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserController {
     private Map<String, Member> members;
     private Map<String, Visitor> visitorsInMarket;
-
-    private int nextUniqueNumber;
+    //TODO synchronized next
+    private SynchronizedCounter nextUniqueNumber;
     private static UserController instance;
 
     public synchronized static UserController getInstance() {
@@ -29,7 +31,7 @@ public class UserController {
     private UserController() {
         members = new ConcurrentHashMap<>();
         visitorsInMarket = new ConcurrentHashMap<>();
-        nextUniqueNumber = 1;
+        nextUniqueNumber = new SynchronizedCounter();
     }
 
     /**
@@ -73,7 +75,7 @@ public class UserController {
 
     private synchronized String getNextUniqueName() {
         String name = "@visitor" + nextUniqueNumber;
-        nextUniqueNumber++;
+        nextUniqueNumber.increment();
         return name;
     }
 
@@ -114,8 +116,10 @@ public class UserController {
             return newVisitorName;
         }
     }
-    public Member finishLogin(String userName, String visitorName) {
+    public synchronized Member finishLogin(String userName, String visitorName) throws MarketException {
         Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
+        if(visitorsInMarket.containsKey(userName))
+            throw new MarketException("member is already logged in");
         visitorsInMarket.put(userName,newVisitorMember);
         visitorsInMarket.remove ( visitorName );
         EventLog.getInstance().Log(userName+" logged in successfully.");
@@ -145,5 +149,16 @@ public class UserController {
         return members.get ( visitorName );
     }
 
+  
+    public void setNextUniqueNumber(int nextUniqueNumber) {
+        //TODO
+//        this.nextUniqueNumber = 0;
+    }
+
+    public void reset() {
+        members = new HashMap<>();
+        visitorsInMarket = new HashMap<>();
+        nextUniqueNumber.reset();
+    }
 
 }

@@ -45,7 +45,7 @@ public class ShoppingCart implements IHistory {
         return this.currentPrice;
     }
 
-    public void cancelShopSave() {
+    public void cancelShopSave() throws MarketException {
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             shopToBasket.getKey().releaseItems(shopToBasket.getValue());
         }
@@ -57,7 +57,8 @@ public class ShoppingCart implements IHistory {
      * @throws MarketException if one or more shops cannot supply all items -> returns to original state
      *                         return all items to shops, MarketException message include missing items
      */
-    public double saveFromShops(String buyer) throws MarketException {
+
+    public synchronized double saveFromShops() throws MarketException {
         boolean succeeded = true;
         List<Shop> succeedShops = new ArrayList<>();
         StringBuilder missing = new StringBuilder();
@@ -68,7 +69,7 @@ public class ShoppingCart implements IHistory {
                 succeedShops.add(shopToBasket.getKey());
             } catch (Exception e) {
                 succeeded = false;
-                shopToBasket.getKey ().removeItemMissing ( shopToBasket.getValue () );
+                shopToBasket.getKey ().validateBasket ( shopToBasket.getValue () );
                 missing.append(e.getMessage());
                 missing.append("\n");
             }
@@ -86,7 +87,7 @@ public class ShoppingCart implements IHistory {
         this.cart.clear();
     }
 
-    public void addItem(Shop shop, Item item, double amount) {
+    public void addItem(Shop shop, Item item, double amount) throws MarketException {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
             shoppingBasket = new ShoppingBasket ();

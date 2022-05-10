@@ -9,42 +9,41 @@ import com.example.server.businessLayer.Users.Member;
 import java.util.List;
 
 public abstract class AppointmentFacade implements FacadeObject<Appointment> {
-    protected Member appointed;       //  the actual appointed member
-    protected Member superVisor;      //  member appointedMe
-    protected Shop relatedShop;
+    protected String appointed;       //  the actual appointed member
+    protected String superVisor;      //  member appointedMe
+    protected String relatedShop;
     List<PermissionFacade> permissions;
 
     public AppointmentFacade(){}
 
-    public AppointmentFacade(Member appointed, Member superVisor, Shop relatedShop,
+    public AppointmentFacade(Member appointed, Shop relatedShop,
                              List<PermissionFacade> permissions) {
-        this.appointed = appointed;
-        this.superVisor = superVisor;
-        this.relatedShop = relatedShop;
+        this.appointed = appointed.getName();
+        this.relatedShop = relatedShop.getShopName();
         this.permissions = permissions;
     }
 
-    public Member getAppointed() {
+    public String getAppointed() {
         return appointed;
     }
 
-    public void setAppointed(Member appointed) {
+    public void setAppointed(String appointed) {
         this.appointed = appointed;
     }
 
-    public Member getSuperVisor() {
+    public String getSuperVisor() {
         return superVisor;
     }
 
-    public void setSuperVisor(Member superVisor) {
+    public void setSuperVisor(String superVisor) {
         this.superVisor = superVisor;
     }
 
-    public Shop getRelatedShop() {
+    public String getRelatedShop() {
         return relatedShop;
     }
 
-    public void setRelatedShop(Shop relatedShop) {
+    public void setRelatedShop(String relatedShop) {
         this.relatedShop = relatedShop;
     }
 

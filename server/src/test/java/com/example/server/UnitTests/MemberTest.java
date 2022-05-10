@@ -66,19 +66,19 @@ class MemberTest {
 
     @BeforeEach
     @Test
-    void getName() {
+    public void getName() {
         Assertions.assertEquals(member.getName(),name);
     }
 
 
     @Test
-    void getMyCart() {
+    public void getMyCart() {
         Assertions.assertEquals(member.getMyCart(), myCart);
     }
 
 
     @Test
-    void addAppointmentByMe() {
+    public void addAppointmentByMe() {
 
         ShopOwnerAppointment shopOwnerAppointment = Mockito.mock(ShopOwnerAppointment.class);
         member.addAppointmentByMe(shopOwnerAppointment);
@@ -86,14 +86,14 @@ class MemberTest {
     }
 
     @Test
-    void addAppointmentToMe() {
+    public void addAppointmentToMe() {
         ShopOwnerAppointment shopOwnerAppointment = Mockito.mock(ShopOwnerAppointment.class);
         member.addAppointmentToMe(shopOwnerAppointment);
         assertEquals(1, member.getMyAppointments().size());
     }
 
     @Test
-    void getPurchaseHistory() {
+    public void getPurchaseHistory() {
         String test = member.getPurchaseHistoryString().toString();
         Assertions.assertEquals(test,String.format ("%s:\n", member.getName ()));
         member.savePurchase(myCart);
@@ -102,11 +102,4 @@ class MemberTest {
         Assertions.assertTrue(member.getPurchaseHistoryString().toString().contains(name));
     }
 
-    @Test
-    void savePurchase() {
-    }
-
-    @Test
-    void updateAmountInCart() {
-    }
 }

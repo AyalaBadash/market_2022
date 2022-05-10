@@ -6,13 +6,12 @@ import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Users.Member;
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class Shop implements IHistory {
@@ -28,29 +27,20 @@ public class Shop implements IHistory {
     private int rankers;
     private List<StringBuilder> purchaseHistory;
 
-    //TODO delete this
-    public Shop(String name) {
-        this.shopName = name;
-        itemMap = new HashMap<> ( );
-        shopManagers = new HashMap<> ( );
-        shopOwners = new HashMap<> ( );
-        itemsCurrentAmount = new HashMap<> ( );
-        this.closed = false;
-        purchaseHistory = new ArrayList<> ( );
-        rank = 1;
-        rankers = 0;
-    }
     public Shop(String name,Member founder) {
         this.shopName = name;
         itemMap = new HashMap<> ( );
-        shopManagers = new HashMap<> ( );
-        shopOwners = new HashMap<> ( );
-        itemsCurrentAmount = new HashMap<> ( );
+        shopManagers = new ConcurrentHashMap<> ( );
+        shopOwners = new ConcurrentHashMap<> ( );
+        itemsCurrentAmount = new ConcurrentHashMap<>( );
         this.closed = false;
         purchaseHistory = new ArrayList<> ( );
         rank = 1;
         rankers = 0;
         this.shopFounder = founder;
+        ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
+        shopOwners.put(founder.getName(), shopOwnerAppointment);
+        founder.addAppointmentToMe(shopOwnerAppointment);
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
@@ -77,7 +67,9 @@ public class Shop implements IHistory {
 
     //use case - Stock management
     public void editItem(Item newItem, String id) throws MarketException {
-        if (newItem.getID ( ) != Integer.getInteger ( id ))
+        int newItemId = newItem.getID();
+        int oldItemId = Integer.parseInt(id);
+        if (newItemId != oldItemId)
             throw new MarketException ( "must not change the item id" );
         itemMap.put ( newItem.getID ( ), newItem );
     }
@@ -86,16 +78,15 @@ public class Shop implements IHistory {
     public void deleteItem(Item item) {
         itemMap.remove ( item.getID() );
     }
-
+    /*
     private void addItem(Item item) throws MarketException {
         if (!itemMap.containsKey ( item.getID ( ) ))
             itemMap.put ( item.getID ( ), item );
         else throw new MarketException ( "Item name already exist" );
-    }
+    }*/
 
     public double getItemCurrentAmount(Item item) {
         return itemsCurrentAmount.get(item);
-
     }
 
     public Map<Item, Double> getItemsCurrentAmountMap() {
@@ -110,13 +101,11 @@ public class Shop implements IHistory {
         if (amount < 0)
             throw new MarketException ( "amount cannot be negative" );
         if (itemMap.get ( item.getID ( ) ) == null) {
-            itemMap.put ( item.getID ( ), item );
-            itemsCurrentAmount.put ( item, amount );
-        } else {
-            itemsCurrentAmount.replace ( item, amount );
+            throw new MarketException("item does not exist in the shop");
         }
+        itemsCurrentAmount.replace ( item, amount );
     }
-
+    /*
     public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
         if (isClosed ( )) {
             boolean hasPermission = false;
@@ -144,14 +133,17 @@ public class Shop implements IHistory {
         }
 
     }
+    */
 
-    public void releaseItems(ShoppingBasket shoppingBasket) {
 
+    public void releaseItems(ShoppingBasket shoppingBasket) throws MarketException {
         //todo - method test fails.
         Map<Item, Double> items = shoppingBasket.getItems ( );
         for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = itemAmount.getKey ( );
-            Double newAmount = this.itemsCurrentAmount.get ( currItem ) + itemAmount.getValue ( );
+            if(itemsCurrentAmount.get(currItem) == null)
+                throw new MarketException("shopping basket holds an item which does not exist in market");
+            Double newAmount =this.itemsCurrentAmount.get ( currItem )+  itemAmount.getValue ( );//
             this.itemsCurrentAmount.put ( currItem, newAmount );
         }
     }
@@ -198,14 +190,13 @@ public class Shop implements IHistory {
     }
 
 
-    public List<Item> getAllItemsByPrice(double minPrice, double maxPrice) {
+    public List<Item> getAllItemsByPrice(double minPrice, double maxPrice) {//TODO - do we need this?
         throw new UnsupportedOperationException ( );
     }
 
     public synchronized Map<Integer, Item> getItemMap() {
         return itemMap;
     }
-    //TODO - key for map is int but we are coding like key is string.
 
     public boolean isShopOwner(String memberName) {
         return shopOwners.containsKey ( memberName );
@@ -221,7 +212,7 @@ public class Shop implements IHistory {
 
     //TODO need to check if works
     public Map<String, Appointment> getEmployees() {
-        Map employees = new HashMap ( );
+        Map<String,Appointment> employees = new HashMap<>( );
         employees.putAll ( shopOwners );
         employees.putAll ( shopManagers );
         return employees;
@@ -229,7 +220,7 @@ public class Shop implements IHistory {
 
     public Member getShopFounder() {
         return this.shopFounder;
-    }//TODO
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -300,7 +291,11 @@ public class Shop implements IHistory {
     public ShoppingBasket validateBasket(ShoppingBasket basket) {
         Map<Item, Double> items = basket.getItems ( );
         for ( Map.Entry<Item, Double> currentItem : items.entrySet ( ) ) {
-            if (currentItem.getValue ( ) > itemsCurrentAmount.get ( currentItem.getKey ( ) )) {
+            Item curItem = currentItem.getKey();
+            Double curAmount = itemsCurrentAmount.get(curItem);
+            if (currentItem.getValue ( ) > curAmount) {
+                if(curAmount == 0)
+                    basket.removeItem ( curItem );
                 currentItem.setValue ( itemsCurrentAmount.get ( currentItem.getKey ( ) ) );
             }
         }
@@ -322,9 +317,7 @@ public class Shop implements IHistory {
                 shopOwners.put ( employeeName, newAppointment );
             } else if (newAppointment.isOwner ( )) {
                 shopOwners.put(employeeName, newAppointment);
-
             }
-
             else
                 shopManagers.put ( employeeName, newAppointment );
         }
@@ -346,10 +339,6 @@ public class Shop implements IHistory {
                 toReturn.add ( item );
         }
         return toReturn;
-    }
-
-    public Item getItem(ItemFacade item) {
-        return itemMap.get ( item );
     }
 
     public boolean isManager(String shopManagerName) {
@@ -381,17 +370,19 @@ public class Shop implements IHistory {
             i++;
         }
         EventLog eventLog = EventLog.getInstance ( );
-        eventLog.Log ( "A user recived the shop: " + this.shopName + " history." );
+        eventLog.Log ( "A user received the shop: " + this.shopName + " history." );
         return review;
     }
 
     //TODO why do we need this.
     public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
-        //TODO check that there is no dup item name.
+
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
         if (amount < 0)
             throw new MarketException ( "amount has to be positive" );
+        if (itemMap.containsKey(id))
+            throw new MarketException("ID is taken by other item");
         if (category == null)
             category = Item.Category.general;
         Item addedItem = new Item ( id, itemName, price, info, category, keywords );
@@ -409,29 +400,29 @@ public class Shop implements IHistory {
         return rank;
     }
 
-    public void changeShopItemInfo(String shopOwnerName, Item updatedItem, Item oldItem) throws MarketException {
+    public void changeShopItemInfo(String shopOwnerName, String info, Integer oldItemID) throws MarketException {
         if (!isShopOwner ( shopOwnerName ))
-            throw new MarketException ( "member is not shop owner so is not authorized to vhange item info" );
-       //TODO : check the implementation and the contains(makes problem with the instances of the same item)
-        if (!itemMap.containsValue ( oldItem ))
+            throw new MarketException ( "member is not shop owner so is not authorized to change item info" );
+        Item item = itemMap.get(oldItemID);
+        if (item == null)
             throw new MarketException ( "item does not exist in shop" );
-        editItem(updatedItem, oldItem.getID().toString());
+        item.setInfo(info);
     }
 
-    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
-        Map<Item, Double> items = shoppingBasket.getItems ( );
-        for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
-            Item currItem = itemAmount.getKey ( );
-            double currAmount = itemAmount.getValue ( );
-            double amount = this.itemsCurrentAmount.get ( currItem );
-            if (amount < currAmount) {
-                if (amount == 0)
-                    shoppingBasket.removeItem ( currItem );
-                else
-                    shoppingBasket.updateQuantity ( amount, currItem );
-            }
-        }
-    }
+//    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
+//        Map<Item, Double> items = shoppingBasket.getItems ( );
+//        for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
+//            Item currItem = itemAmount.getKey ( );
+//            double currAmount = itemAmount.getValue ( );
+//            double amount = this.itemsCurrentAmount.get ( currItem );
+//            if (amount < currAmount) {
+//                if (amount == 0)
+//                    shoppingBasket.removeItem ( currItem );
+//                else
+//                    shoppingBasket.updateQuantity ( amount, currItem );
+//            }
+//        }
+//    }
 
     public void appointShopOwner(Member shopOwner, Member appointedShopOwner) throws MarketException {
         if (isShopOwner ( appointedShopOwner.getName ( ) )){
@@ -439,7 +430,7 @@ public class Shop implements IHistory {
             throw new MarketException ( "appointed shop owner is already a shop owner of the shop." );
         }
         //TODO : check the is shop member check . makes some problem with instances. change it to ==
-        if (shopOwner != null || !isShopOwner ( shopOwner.getName ( ) )) {
+        if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) )) {
             ErrorLog.getInstance ().Log ( "member is not a shop owner so is not authorized to appoint shop owner" );
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         }

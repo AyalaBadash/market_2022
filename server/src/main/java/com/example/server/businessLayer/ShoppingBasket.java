@@ -1,5 +1,8 @@
 package com.example.server.businessLayer;
 
+import com.example.server.ResourcesObjects.ErrorLog;
+
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,6 +49,8 @@ public class ShoppingBasket implements IHistory {
         {
             price = price + currItem.getValue()*currItem.getKey().getPrice();
         }
+        DecimalFormat format = new DecimalFormat("#.###");
+        price = Double.parseDouble(format.format(price));
         setPrice(price);
         return price;
     }
@@ -67,22 +72,27 @@ public class ShoppingBasket implements IHistory {
         return items;
     }
 
-    public void addItem(Item item, double amount) {
+    public void addItem(Item item, double amount) throws MarketException {
+        if (amount<0)
+            throw new MarketException("Cant add negative amount of item to basket.");
         items.put(item,amount);
     }
 
-    public void removeItem(Item item) throws MarketException {//TODO delete throws exception
-        if (!items.containsKey(item))
-            return;
-        else items.remove(item);
+    public void removeItem(Item item) {
+        items.remove(item);
     }
 
 
-    public void updateQuantity(double amount, Item itemFacade) throws MarketException {
-        if(!items.containsKey(itemFacade)){
+    public void updateQuantity(double amount, Item item) throws MarketException {
+        if(!items.containsKey(item)){
             throw new MarketException("Item is not in cart. cannot update amount");
         }
-        items.remove(itemFacade);
-        items.put(itemFacade, Double.valueOf(amount));
+        if (amount<0)
+        {
+            ErrorLog.getInstance().Log("Visitor tried to update negative amount for item.");
+            throw new MarketException("Cant put negative amount for item");
+        }
+        items.remove(item);
+        items.put(item, amount);
     }
 }

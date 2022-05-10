@@ -9,11 +9,9 @@ import com.example.server.businessLayer.Users.SystemManager;
 public class SystemManagerFacade implements FacadeObject<SystemManager> {
 
     private MemberFacade member;
-    private ClosedShopsHistory history;
 
     public SystemManagerFacade(Member member) {
         this.member = new MemberFacade (member);
-        this.history = ClosedShopsHistory.getInstance();
     }
 
     public MemberFacade getMember() {
@@ -22,14 +20,6 @@ public class SystemManagerFacade implements FacadeObject<SystemManager> {
 
     public void setMember(MemberFacade member) {
         this.member = member;
-    }
-
-    public ClosedShopsHistory getHistory() {
-        return history;
-    }
-
-    public void setHistory(ClosedShopsHistory closedShopsHistory) {
-        this.history = closedShopsHistory;
     }
 
     @Override

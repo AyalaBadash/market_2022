@@ -39,7 +39,9 @@ public class ClosedShopsHistory {
         closedShops.put (closedShop.getShopName (), closedShop);
     }
 
-    public void addPurchaseHistory(String purchaseReview, Shop shop){
+    public void addPurchaseHistory(String purchaseReview, Shop shop) throws MarketException {
+        if(shop == null)
+            throw new MarketException("cannot add a purchase history of non defined shop (null)");
         if (purchaseReview != null && purchaseReview != ""){
             overallHistory.append("\n").append(purchaseReview);
         }
@@ -63,5 +65,10 @@ public class ClosedShopsHistory {
 
     public boolean isClosed(String shopName) {
         return closedShops.containsKey ( shopName );
+    }
+
+    public void reset() {
+        closedShops = new HashMap<>();
+        overallHistory = new StringBuilder();
     }
 }

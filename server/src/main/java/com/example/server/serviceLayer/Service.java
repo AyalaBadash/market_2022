@@ -212,7 +212,7 @@ public class Service implements IService {
     @RequestMapping(value = "/changeShopItemInfo")
     @CrossOrigin
     public Response changeShopItemInfo(@RequestBody ChangeShopItemInfoRequest request) {
-        return marketService.changeShopItemInfo (request.getShopOwnerName(), request.getUpdatedItem(),
+        return marketService.changeShopItemInfo (request.getShopOwnerName(), request.getUpdatedInfo(),
                 request.getOldItem(), request.getShopName() );
     }
 

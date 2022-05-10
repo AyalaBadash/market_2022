@@ -2,6 +2,7 @@ package com.example.server.businessLayer;
 
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Item implements IHistory {
@@ -24,6 +25,8 @@ public class Item implements IHistory {
     private List<String> keywords;
     public Item(Integer ID, String name, double price, String info,
                 Category category, List<String> keywords) throws MarketException {
+        if (ID <1)
+            throw new MarketException("Item id must be a positive number");
         this.ID = ID;
         this.name = name;
         if(price < 0)
@@ -31,7 +34,7 @@ public class Item implements IHistory {
         this.price = price;
         this.keywords = keywords;
         this.info = info;
-        this.category = category;
+        this.category = Objects.requireNonNullElse(category, Category.general);
         rank= 1;
         rankers=0;
     }

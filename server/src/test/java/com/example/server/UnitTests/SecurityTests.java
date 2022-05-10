@@ -5,6 +5,7 @@ import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Security;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,6 +17,13 @@ public class SecurityTests {
     Security security = Security.getInstance();
     @Mock
     LoginCard loginCard;
+
+    @BeforeEach
+    public void init(){
+        Map<String,LoginCard> emptyMap = new HashMap<>();
+        security.setNamesToLoginInfo(emptyMap);
+    }
+
     @Test
     @DisplayName("Valid register")
     public void ValidRegisterTest(){
@@ -82,7 +90,7 @@ public class SecurityTests {
             security.validatePassword("raz","123");
             assert true;
         }
-        catch (MarketException e){
+        catch (Exception e){
             assert false;
         }
     }
