@@ -12,7 +12,7 @@ public class RealTimeNotifications extends Notification{
     public void createMembershipDeniedMessage(){
         message= "Unfortunately, your membership has been denied.";
     }
-    public void createOtherMessage(String mess){
+    public void createAnotherMessage(String mess){
         message= mess;
     }
 
