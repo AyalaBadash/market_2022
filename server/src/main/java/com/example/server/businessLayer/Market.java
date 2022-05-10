@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class Market {
     private UserController userController;
@@ -317,6 +318,7 @@ public class Market {
         shop.editManagerPermission ( shopOwnerName, managerName, updatedAppointment );
     }
 
+    //TODO:Add reopen to a shop method.
     public void closeShop(String shopOwnerName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -337,6 +339,11 @@ public class Market {
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
             history.closeShop(shopToClose);
+            //send notifications to shop owners:
+            publisher.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
+                    .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
+                    .collect(Collectors.toList())),shopName);
+            //
             EventLog.getInstance().Log("The shop " +shopName+ " has been closed.");
         }
     }
@@ -627,7 +634,7 @@ public class Market {
         boolean succeed = true;
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart cart = visitor.getCart();
-        double actualPrice = cart.saveFromShops();
+        double actualPrice = cart.saveFromShops(visitorName);
 
         // checks the price is correct
         if (actualPrice != expectedPrice){

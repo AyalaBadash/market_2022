@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Shop implements IHistory {
     private String shopName;
@@ -53,6 +54,8 @@ public class Shop implements IHistory {
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
+
+
         Appointment ownerAppointment = shopOwners.get ( superVisorName );
         if (ownerAppointment == null) {
             ErrorLog.getInstance ( ).Log ( String.format ( "%s: cannot find an owner '%s'", shopName, superVisorName ) );
@@ -67,6 +70,7 @@ public class Shop implements IHistory {
             ErrorLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
+        //TODO: check the ability to remove permission(not update).
         this.shopManagers.put ( managerName, appointment );
     }
 
@@ -142,6 +146,7 @@ public class Shop implements IHistory {
     }
 
     public void releaseItems(ShoppingBasket shoppingBasket) {
+
         //todo - method test fails.
         Map<Item, Double> items = shoppingBasket.getItems ( );
         for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
@@ -151,13 +156,26 @@ public class Shop implements IHistory {
         }
     }
 
-    public synchronized double buyBasket(ShoppingBasket shoppingBasket) throws MarketException {
+    //Bar: adding the parameter buyer name for the notification send.
+    public synchronized double buyBasket(ShoppingBasket shoppingBasket,String buyer) throws MarketException {
+        //the notification to the shop owners publisher.
+        Publisher publisher= Publisher.getInstance();
+        ArrayList<String> names = new ArrayList<>(getShopOwners().values().stream().collect(Collectors.toList()).stream()
+                .map(appointment -> appointment.getAppointed().getName()).collect(Collectors.toList()));
+        String shopName = getShopName();
+        ArrayList<String> itemsNames =new ArrayList<>();
+        ArrayList<Double> prices =new ArrayList<>();
+        //
         Map<Item, Double> items = shoppingBasket.getItems ( );
         StringBuilder missingMessage = new StringBuilder ( );
         boolean failed = false;
         missingMessage.append ( String.format ( "%s: cannot complete your purchase because some items are missing:\n", this.shopName ) );
         for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = itemAmount.getKey ( );
+            //for notifications:
+            itemsNames.add(currItem.getName());
+            prices.add(currItem.getPrice());
+            //
             double currAmount = itemAmount.getValue ( );
             if (this.itemsCurrentAmount.get ( currItem ) < currAmount) {
                 failed = true;
@@ -173,6 +191,9 @@ public class Shop implements IHistory {
             this.itemsCurrentAmount.put ( currItem, newAmount );
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
+        //send notifications to shop owners:
+        publisher.sendItemBaughtNotificationsBatch(names,shopName,itemsNames,prices);
+        //
         return shoppingBasket.getPrice ( );
     }
 

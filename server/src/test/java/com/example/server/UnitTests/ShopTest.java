@@ -280,7 +280,7 @@ public class ShopTest {
     try{
         shop.setItemAmount("The founder",item,10.0);
         shop.setItemAmount("The founder",item2,20.0);
-        Assertions.assertEquals(35.0,shop.buyBasket(basket));
+        Assertions.assertEquals(35.0,shop.buyBasket(basket, memberFounder.getName()));
     }
     catch (MarketException e){
         System.out.println(e.getMessage());
