@@ -72,9 +72,10 @@ public class ShoppingCartUnitTest extends mainTest {
     public void saveFromShopsTest()
     {
             try{
-                Mockito.when(shop.buyBasket(basket)).thenReturn(25.0);
-                Mockito.when(shop2.buyBasket(basket2)).thenReturn(30.0);
-                double x = shoppingCart.saveFromShops();
+
+                Mockito.when(shop.buyBasket(basket,"some buyer name")).thenReturn(25.0);
+                Mockito.when(shop2.buyBasket(basket2, "some buyer name")).thenReturn(30.0);
+                double x = shoppingCart.saveFromShops("some buyer name");
                 Assertions.assertEquals(55.0,x);
             }
             catch (MarketException e){

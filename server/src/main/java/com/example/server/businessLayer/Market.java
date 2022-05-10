@@ -9,6 +9,9 @@ import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import org.yaml.snakeyaml.error.Mark;
+import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.Notifications.Notification;
+import com.example.server.serviceLayer.Response;
 
 
 import java.time.LocalDateTime;
@@ -17,11 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class Market {
     private UserController userController;
     private String systemManagerName;
     private Map<String, Shop> shops;                                 // <shopName, shop>
+
+    private Publisher publisher;
     private Map<Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<Integer>> itemByName;                   // <itemName ,List<itemID>>
     private SynchronizedCounter nextItemID;
@@ -36,6 +42,7 @@ public class Market {
         this.itemByName = new ConcurrentHashMap<>();
         this.userController = UserController.getInstance();
         nextItemID = new SynchronizedCounter();
+        publisher= Publisher.getInstance();
     }
 
 
@@ -312,6 +319,7 @@ public class Market {
         shop.editManagerPermission ( shopOwnerName, managerName, updatedAppointment );
     }
 
+    //TODO:Add reopen to a shop method.
     public void closeShop(String shopOwnerName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -332,6 +340,11 @@ public class Market {
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
             history.closeShop(shopToClose);
+            //send notifications to shop owners:
+            publisher.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
+                    .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
+                    .collect(Collectors.toList())),shopName);
+            //
             EventLog.getInstance().Log("The shop " +shopName+ " has been closed.");
         }
     }
@@ -625,7 +638,7 @@ public class Market {
         boolean succeed = true;
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart cart = visitor.getCart();
-        double actualPrice = cart.saveFromShops();
+        double actualPrice = cart.saveFromShops(visitorName);
 
         // checks the price is correct
         if (actualPrice != expectedPrice){

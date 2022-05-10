@@ -150,5 +150,19 @@ public class SecurityTests {
             assert true;
         }
     }
-
+    @Test
+    @DisplayName("encode - decode test")
+    public void EncoderAndDecoder(){
+        try {
+            String str = "Hello world! its a test.";
+            String res1= security.encode(str);
+            Assertions.assertNotEquals(res1,str);
+            String res2= security.decode(res1);
+            Assertions.assertNotEquals(res1,res2);
+            Assertions.assertEquals(str,res2);
+        }
+        catch (Exception e){
+            assert false;
+        }
+    }
 }

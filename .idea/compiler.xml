@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="market_2022" target="19" />
+      <module name="market_2022" target="17" />
       <module name="server" target="16" />
     </bytecodeTargetLevel>
   </component>

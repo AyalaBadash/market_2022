@@ -7,8 +7,11 @@ import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingCart;
+import com.example.server.serviceLayer.Notifications.Notification;
 
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -146,6 +149,7 @@ public class UserController {
         return members.get ( visitorName );
     }
 
+  
     public void setNextUniqueNumber(int nextUniqueNumber) {
         //TODO
 //        this.nextUniqueNumber = 0;
@@ -156,4 +160,5 @@ public class UserController {
         visitorsInMarket = new HashMap<>();
         nextUniqueNumber.reset();
     }
+
 }
