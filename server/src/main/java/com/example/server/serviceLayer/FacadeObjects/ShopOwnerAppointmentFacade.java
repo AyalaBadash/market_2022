@@ -4,8 +4,10 @@ import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.Permissions.IPermission;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Member;
+import com.example.server.businessLayer.Users.UserController;
 
 
 import java.util.ArrayList;
@@ -18,12 +20,17 @@ public class ShopOwnerAppointmentFacade extends AppointmentFacade {
 
     public ShopOwnerAppointmentFacade(Member appointed, Member superVisor,
                                       Shop relatedShop, List<PermissionFacade> permissions, boolean isShopFounder) {
-        super(appointed, superVisor, relatedShop, permissions);
+        super(appointed, relatedShop, permissions);
+        if(!isShopFounder) {
+            this.superVisor = superVisor.getName();
+        }
         this.isShopFounder = isShopFounder;
     }
 
     public ShopOwnerAppointmentFacade(ShopOwnerAppointment appointment) {
-        super(appointment.getAppointed(),appointment.getSuperVisor(),appointment.getRelatedShop(), new ArrayList<>());
+        super(appointment.getAppointed(),appointment.getRelatedShop(), new ArrayList<>());
+        if(!appointment.isShopFounder())
+            this.superVisor = appointment.getSuperVisor().getName();
         permissions.addAll(appointment.getPermissions().stream().map(PermissionFacade::new).toList());
         this.isShopFounder = appointment.isShopFounder();
     }
@@ -32,22 +39,12 @@ public class ShopOwnerAppointmentFacade extends AppointmentFacade {
         return isShopFounder;
     }
 
-    public void setShopFounder(boolean shopFounder) {
-        isShopFounder = shopFounder;
-    }
-
     public AppointmentFacade toFacade(ShopManagerAppointment appointment) {
         return null;
     }
 
     public AppointmentFacade toFacade(ShopOwnerAppointment appointment) {
         return new ShopOwnerAppointmentFacade ( appointment );
-//        List<IPermission> myPermissions = appointment.getPermissions ();
-//        List<PermissionFacade> facadePermissions = new ArrayList<> (  );
-//        for(IPermission permission : myPermissions){
-//            facadePermissions.add ( new PermissionFacade ( permission ) );
-//        }
-//        return new ShopOwnerAppointmentFacade (appointment.getAppointed (), appointment.getSuperVisor (), appointment.getRelatedShop (), facadePermissions, appointment.isShopFounder () );
     }
 
     @Override
@@ -58,6 +55,9 @@ public class ShopOwnerAppointmentFacade extends AppointmentFacade {
 
     @Override
     public Appointment toBusinessObject() {
-        return new ShopOwnerAppointment(this.appointed,this.superVisor, this.relatedShop,this.isShopFounder);
+        Member appointed = UserController.getInstance().getMember(this.appointed);
+        Member superVisor = UserController.getInstance().getMember(this.superVisor);
+        Shop relatedShop = Market.getInstance().getShopByName(this.relatedShop);
+        return new ShopOwnerAppointment(appointed, superVisor, relatedShop, this.isShopFounder);
     }
 }

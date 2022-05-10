@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Users;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
+import com.example.server.ResourcesObjects.SynchronizedCounter;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
@@ -14,7 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserController {
     private Map<String, Member> members;
     private Map<String, Visitor> visitorsInMarket;
-    private int nextUniqueNumber;
+    //TODO synchronized next
+    private SynchronizedCounter nextUniqueNumber;
     private static UserController instance;
 
     public synchronized static UserController getInstance() {
@@ -26,7 +28,7 @@ public class UserController {
     private UserController() {
         members = new ConcurrentHashMap<>();
         visitorsInMarket = new ConcurrentHashMap<>();
-        nextUniqueNumber = 1;
+        nextUniqueNumber = new SynchronizedCounter();
     }
 
     /**
@@ -70,7 +72,7 @@ public class UserController {
 
     private synchronized String getNextUniqueName() {
         String name = "@visitor" + nextUniqueNumber;
-        nextUniqueNumber++;
+        nextUniqueNumber.increment();
         return name;
     }
 
@@ -145,12 +147,13 @@ public class UserController {
     }
 
     public void setNextUniqueNumber(int nextUniqueNumber) {
-        this.nextUniqueNumber = nextUniqueNumber;
+        //TODO
+//        this.nextUniqueNumber = 0;
     }
 
     public void reset() {
         members = new HashMap<>();
         visitorsInMarket = new HashMap<>();
-        nextUniqueNumber = 1;
+        nextUniqueNumber.reset();
     }
 }

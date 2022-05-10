@@ -141,7 +141,7 @@ public class MarketService {
 
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         try{
-            Item itemBL = new Item(item.getID(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
+            Item itemBL = new Item(item.getId(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
             market.setItemCurrentAmount ( shopOwnerName,  itemBL, amount, shopName);
             return new Response (  );
         } catch (MarketException e){
@@ -152,7 +152,7 @@ public class MarketService {
 
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
         try {
-            market.removeItemFromShop(shopOwnerName,item.getID(),shopName);
+            market.removeItemFromShop(shopOwnerName,item.getId(),shopName);
             return new Response();
         }
         catch (MarketException e)
@@ -178,7 +178,7 @@ public class MarketService {
 
     public Response setItemCurrentAmount(String shopOwnerName,ItemFacade item, double amount, String shopName){
         try{
-            Item itemBL = new Item(item.getID(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
+            Item itemBL = new Item(item.getId(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
             market.setItemCurrentAmount(shopOwnerName, itemBL ,amount,shopName);
             return new Response (  );
         }catch (MarketException e){
@@ -188,7 +188,7 @@ public class MarketService {
 
     public Response changeShopItemInfo(String shopOwnerName, String info, ItemFacade oldItem, String shopName) {
         try{
-            market.changeShopItemInfo(shopOwnerName, info, oldItem.getID(), shopName);
+            market.changeShopItemInfo(shopOwnerName, info, oldItem.getId(), shopName);
             return new Response (  );
         }catch (MarketException e){
             return new Response ( e.getMessage () );

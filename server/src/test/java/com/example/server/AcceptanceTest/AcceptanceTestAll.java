@@ -15,6 +15,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.*;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +27,6 @@ import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class AcceptanceTestAll {
             Charset.forName("utf8"));
     protected HttpMessageConverter mappingJakson2HttpMessageConverter;
     protected String tokenStr;
-
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private MockMvc mvc;
 
@@ -144,13 +145,18 @@ public class AcceptanceTestAll {
             onePlus = searchProductByName(onePlusName).get(0);
             creditCard = new CreditCard("124", "13/5", "555");
             address = new Address("Tel Aviv", "Super", "1");
-        } catch (Exception Ignored) {
+        } catch (Exception e) {
+            String msg = e.getMessage();
         }
     }
 
     @BeforeEach
-    public void reset() throws Exception {
-        setItemCurrentAmount(shopOwnerName, milk, productAmount, shopName);
+    public void reset() {
+        try {
+            setItemCurrentAmount(shopOwnerName, milk, productAmount, shopName);
+        } catch (Exception e) {
+            String msg = e.getMessage();
+        }
     }
     // ############################### TEST CLASSES #######################################
 
@@ -243,7 +249,7 @@ public class AcceptanceTestAll {
         @Test
         @DisplayName("get item info")
         public void itemInfoTest() {
-            // not implemented in service while requirement number 2.1 demands it
+            //TODO not implemented in service while requirement number 2.1 demands it
             assert false;
         }
 
@@ -307,9 +313,10 @@ public class AcceptanceTestAll {
                 assert visitor.getCart().getCart().size() == 1;
                 visitor.getCart().getCart().forEach((shop, basket) -> {
                     assert basket.getItems().size() == 1;
-                    assert shop.getShopName().equals(shopName);
+                    assert shop.equals(shopName);
                     // check shop amount didn't change
-                    assert shop.getItemsCurrentAmount().get(milk).equals(productAmount);
+                    ShopFacade shopFacade = getShopInfo(visitor.getName(), shopName);
+                    assert shopFacade.getItemsCurrentAmount().get(milk).equals(productAmount);
                     // check right amount added
                     assert basket.getItems().get(milk).equals(3.0);
                 });
@@ -1140,16 +1147,26 @@ public class AcceptanceTestAll {
         return result.getValue();
     }
 
-    public ShopFacade getShopInfo(String name, String shopName) throws Exception {
+    public ShopFacade getShopInfo(String name, String shopName) {
         TwoStringRequest request = new TwoStringRequest(name, shopName);
         String methodCall = "/getShopInfo";
-        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
-                        content(toHttpRequest(request)).contentType(contentType))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult res = null;
+        try {
+            res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                            content(toHttpRequest(request)).contentType(contentType))
+                    .andExpect(status().isOk())
+                    .andReturn();
+        } catch (Exception e) {
+            assert false;
+        }
         Type type = new TypeToken<ResponseT<ShopFacade>>() {
         }.getType();
-        ResponseT<ShopFacade> result = deserialize(res, type);
+        ResponseT<ShopFacade> result = null;
+        try {
+            result = deserialize(res, type);
+        } catch (Exception e) {
+            assert false;
+        }
         return result.getValue();
     }
 

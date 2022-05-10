@@ -7,21 +7,23 @@ import java.util.List;
 
 public class ItemFacade implements FacadeObject<Item>{
     private String info;
-    private Integer ID;
+    private Integer id;
     private String name;
-    private double price;
+    private Double price;
     private Item.Category category;
+
     private List<String> keywords;
 
     private int rank;
+
     private int rankers;
 
-
+    public ItemFacade(){}
 
     public ItemFacade(Integer ID, String name, double price,
                       Item.Category category, List<String> keywords,
                       String info) {
-        this.ID = ID;
+        this.id = ID;
         this.name = name;
         this.price = price;
         this.category = category;
@@ -33,7 +35,7 @@ public class ItemFacade implements FacadeObject<Item>{
     }
 
     public ItemFacade(Item item) {
-        this.ID = item.getID();
+        this.id = item.getID();
         this.name = item.getName();
         this.price = item.getPrice();
         this.category = item.getCategory();
@@ -52,12 +54,12 @@ public class ItemFacade implements FacadeObject<Item>{
         this.info = info;
     }
 
-    public void setID(Integer ID) {
-        this.ID = ID;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Integer getID() {
-        return ID;
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
@@ -92,9 +94,13 @@ public class ItemFacade implements FacadeObject<Item>{
         this.keywords = keywords;
     }
 
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     @Override
     public Item toBusinessObject() throws MarketException {
-        Item item = new Item(this.ID,this.name,this.price,this.info,this.category,this.keywords);
+        Item item = new Item(this.id,this.name,this.price,this.info,this.category,this.keywords);
         return item;
     }
 
