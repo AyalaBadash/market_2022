@@ -302,6 +302,6 @@ public class Service implements IService {
     public ResponseT<String> getHistoryByMember(@RequestBody GetHistoryByMemberRequest request) {
         return marketService.getHistoryByMember (request.getSystemManagerName(), request.getMemberName() );
     }
-
+ //TODO: add the check notifications request.
 
 }
