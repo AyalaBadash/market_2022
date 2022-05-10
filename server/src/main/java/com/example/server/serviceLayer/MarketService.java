@@ -186,11 +186,9 @@ public class MarketService {
         }
     }
 
-    public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
+    public Response changeShopItemInfo(String shopOwnerName, String info, ItemFacade oldItem, String shopName) {
         try{
-            Item oldItemBL = new Item(oldItem.getID(),oldItem.getName(),oldItem.getPrice(),oldItem.getInfo(),oldItem.getCategory(),oldItem.getKeywords());
-            Item updatedItemBL = new Item(updatedItem.getID(),updatedItem.getName(),updatedItem.getPrice(),updatedItem.getInfo(),updatedItem.getCategory(),updatedItem.getKeywords());
-            market.changeShopItemInfo(shopOwnerName, updatedItemBL, oldItemBL, shopName);
+            market.changeShopItemInfo(shopOwnerName, info, oldItem.getID(), shopName);
             return new Response (  );
         }catch (MarketException e){
             return new Response ( e.getMessage () );

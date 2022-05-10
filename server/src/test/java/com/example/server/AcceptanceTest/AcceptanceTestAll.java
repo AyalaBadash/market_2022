@@ -825,8 +825,7 @@ public class AcceptanceTestAll {
         public void setItemInfo() {
             try {
                 String newInfo = "out of Date!";
-                ItemFacade sourMilk = new ItemFacade(-1, milk.getName(), milk.getPrice(), milk.getCategory(), milk.getKeywords(), newInfo);
-                Response response = changeShopItemInfo(shopOwnerName, sourMilk, milk, shopName);
+                Response response = changeShopItemInfo(shopOwnerName, newInfo, milk, shopName);
                 assert !response.isErrorOccurred();
                 ShopFacade newShop = getShopInfo(shopOwnerName, shopName);
                 boolean found = false;
@@ -849,8 +848,7 @@ public class AcceptanceTestAll {
         public void changeToEmptyInfo() {
             try {
                 String newInfo = "";
-                ItemFacade sourMilk = new ItemFacade(-1, milk.getName(), milk.getPrice(), milk.getCategory(), milk.getKeywords(), newInfo);
-                Response response = changeShopItemInfo(shopOwnerName, sourMilk, milk, shopName);
+                Response response = changeShopItemInfo(shopOwnerName, newInfo, milk, shopName);
                 assert !response.isErrorOccurred();
                 ShopFacade newShop = getShopInfo(shopOwnerName, shopName);
                 boolean found = false;
@@ -1190,8 +1188,8 @@ public class AcceptanceTestAll {
 
     }
 
-    public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) throws Exception {
-        ChangeShopItemInfoRequest request = new ChangeShopItemInfoRequest(shopOwnerName, updatedItem,
+    public Response changeShopItemInfo(String shopOwnerName, String info, ItemFacade oldItem, String shopName) throws Exception {
+        ChangeShopItemInfoRequest request = new ChangeShopItemInfoRequest(shopOwnerName, info,
                 oldItem, shopName);
         String methodCall = "/changeShopItemInfo";
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).

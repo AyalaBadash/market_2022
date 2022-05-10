@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Shop implements IHistory {
     private String shopName;
@@ -25,24 +26,12 @@ public class Shop implements IHistory {
     private int rankers;
     private List<StringBuilder> purchaseHistory;
 
-    //TODO delete this
-//    public Shop(String name) {
-//        this.shopName = name;
-//        itemMap = new HashMap<> ( );
-//        shopManagers = new HashMap<> ( );
-//        shopOwners = new HashMap<> ( );
-//        itemsCurrentAmount = new HashMap<> ( );
-//        this.closed = false;
-//        purchaseHistory = new ArrayList<> ( );
-//        rank = 1;
-//        rankers = 0;
-//    }
     public Shop(String name,Member founder) {
         this.shopName = name;
         itemMap = new HashMap<> ( );
-        shopManagers = new HashMap<> ( );
-        shopOwners = new HashMap<> ( );
-        itemsCurrentAmount = new HashMap<> ( );
+        shopManagers = new ConcurrentHashMap<> ( );
+        shopOwners = new ConcurrentHashMap<> ( );
+        itemsCurrentAmount = new ConcurrentHashMap<>( );
         this.closed = false;
         purchaseHistory = new ArrayList<> ( );
         rank = 1;
@@ -94,7 +83,6 @@ public class Shop implements IHistory {
 
     public double getItemCurrentAmount(Item item) {
         return itemsCurrentAmount.get(item);
-
     }
 
     public Map<Item, Double> getItemsCurrentAmountMap() {
@@ -109,11 +97,9 @@ public class Shop implements IHistory {
         if (amount < 0)
             throw new MarketException ( "amount cannot be negative" );
         if (itemMap.get ( item.getID ( ) ) == null) {
-            itemMap.put ( item.getID ( ), item );
-            itemsCurrentAmount.put ( item, amount );
-        } else {
-            itemsCurrentAmount.replace ( item, amount );
+            throw new MarketException("item does not exist in the shop");
         }
+        itemsCurrentAmount.replace ( item, amount );
     }
     /*
     public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
@@ -311,9 +297,7 @@ public class Shop implements IHistory {
                 shopOwners.put ( employeeName, newAppointment );
             } else if (newAppointment.isOwner ( )) {
                 shopOwners.put(employeeName, newAppointment);
-
             }
-
             else
                 shopManagers.put ( employeeName, newAppointment );
         }
@@ -396,13 +380,13 @@ public class Shop implements IHistory {
         return rank;
     }
 
-    public void changeShopItemInfo(String shopOwnerName, Item updatedItem, Item oldItem) throws MarketException {
+    public void changeShopItemInfo(String shopOwnerName, String info, Integer oldItemID) throws MarketException {
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not shop owner so is not authorized to change item info" );
-       //TODO : check the implementation and the contains(makes problem with the instances of the same item)
-        if (!itemMap.containsValue ( oldItem ))
+        Item item = itemMap.get(oldItemID);
+        if (item == null)
             throw new MarketException ( "item does not exist in shop" );
-        editItem(updatedItem, oldItem.getID().toString());
+        item.setInfo(info);
     }
 
 //    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {

@@ -111,8 +111,10 @@ public class UserController {
             return newVisitorName;
         }
     }
-    public Member finishLogin(String userName, String visitorName) {
+    public synchronized Member finishLogin(String userName, String visitorName) throws MarketException {
         Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
+        if(visitorsInMarket.containsKey(userName))
+            throw new MarketException("member is already logged in");
         visitorsInMarket.put(userName,newVisitorMember);
         visitorsInMarket.remove ( visitorName );
         EventLog.getInstance().Log(userName+" logged in successfully.");

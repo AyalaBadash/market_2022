@@ -29,9 +29,9 @@ public class MemberTests {
     SupplyMock supplyService = new SupplyMock();
     String userName = "userTest";
     String password = "passTest";
-    String shopManagerName = "shaked";
+    String shopManagerName = "shakedMember";
     String shopManagerPassword = "shaked1234";
-    String shopName = "kolbo";
+    String shopName = "kolbo2";
     Double productAmount;
     Double productPrice;
     CreditCard creditCard;
@@ -42,7 +42,8 @@ public class MemberTests {
     public void setUpMember() {
         try {
             market = Market.getInstance();
-            market.firstInitMarket(paymentService, supplyService, userName, password);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, userName, password);
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);
@@ -58,22 +59,29 @@ public class MemberTests {
                     "soy",keywords , productAmount,shopName);
             List<Item> res = market.getItemByName("milk");
             milk = res.get(0);
-
-            creditCard = new CreditCard("124","13/5" , "555");
-            address = new Address("Tel Aviv", "Super" , "1");
             testMemberName = "managerTest";
             testMemberPassword = "1234";
+            Visitor visitor2 = market.guestLogin();
+            market.register(testMemberName, testMemberPassword);
+            market.memberLogin(testMemberName, testMemberPassword);
+            market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor2.getName());
+            creditCard = new CreditCard("124","13/5" , "555");
+            address = new Address("Tel Aviv", "Super" , "1");
 
-        } catch (Exception ignored) {}
+
+        } catch (Exception ignored) {
+            System.out.printf(ignored.getMessage());
+        }
     }
 
     @BeforeEach
     public void resetMember() {
         try {
-            Visitor visitor = market.guestLogin();
-            market.register(testMemberName, testMemberPassword);
-            List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
-            market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+            if (!UserController.getInstance().isLoggedIn(testMemberName)) {
+                Visitor visitor = market.guestLogin();
+                List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
+                market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+            }
             testMember = UserController.getInstance().getMember(testMemberName);
 
         } catch (Exception e) {
@@ -91,7 +99,7 @@ public class MemberTests {
     @DisplayName("open new shop")
     public void openNewShop() {
         try {
-            String shopTest = "shopTest";
+            String shopTest = "shopNewName";
             market.openNewShop(testMember.getName(), shopTest);
             assert true;
         } catch (Exception e) {

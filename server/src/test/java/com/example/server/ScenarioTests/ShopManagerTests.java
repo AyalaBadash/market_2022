@@ -4,9 +4,11 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
 
+import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,8 @@ public class ShopManagerTests {
             productAmount = 3;
             productPrice = 1.2;
             newAmount=10;
-            market.firstInitMarket(paymentService, supplyService, userName, password);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, userName, password);
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop
@@ -51,8 +54,13 @@ public class ShopManagerTests {
     @DisplayName("get shop purchase history")
     public void purchaseHistory() {
         try {
-            market.appointShopManager(shopOwnerName,managerName,shopName);
+            loginMember(shopOwnerName, shopOwnerPassword);
+            try {
+                market.appointShopManager(shopOwnerName,managerName,shopName);
+            }catch (MarketException e){}
+            String visitorName = market.memberLogout(shopOwnerName);
             loginMember(managerName,managerPassword);
+            market.validateSecurityQuestions(managerName, new ArrayList<>(), visitorName);
             String  str = new String( market.getShopPurchaseHistory(managerName,shopName));
             Assertions.assertNotNull(str);
             assert true;
@@ -87,14 +95,15 @@ public class ShopManagerTests {
 
 
     public void loginMember(String shopOwnerN, String shopOwnerP) throws MarketException {
+        Visitor visitor = market.guestLogin();
         market.memberLogin(shopOwnerN,shopOwnerP);
+        List<String> questions = market.memberLogin(shopOwnerName, shopOwnerPassword);
+        market.validateSecurityQuestions(shopOwnerName, new ArrayList<>(), visitor.getName());
     }
     public void registerVisitor(String name, String pass) throws MarketException {
         // shop manager register
         Visitor visitor = market.guestLogin();
         market.register(name, pass);
-        List<String> questions = market.memberLogin(name, pass);
-        market.validateSecurityQuestions(name, new ArrayList<>(), visitor.getName());
     }
 
     private void openShop() throws MarketException {

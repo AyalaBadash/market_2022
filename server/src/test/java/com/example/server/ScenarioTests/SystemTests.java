@@ -18,7 +18,8 @@ public class SystemTests {
     public void setUp(){
         try {
             market = Market.getInstance();
-            market.firstInitMarket (paymentService, supplyService, userName, password );
+            if (market.getPaymentService()==null)
+                market.firstInitMarket (paymentService, supplyService, userName, password );
         }
         catch (Exception e){}
     }

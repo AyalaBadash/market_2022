@@ -57,7 +57,7 @@ public class ShoppingCart implements IHistory {
      * @throws MarketException if one or more shops cannot supply all items -> returns to original state
      *                         return all items to shops, MarketException message include missing items
      */
-    public double saveFromShops() throws MarketException {
+    public synchronized double saveFromShops() throws MarketException {
         boolean succeeded = true;
         List<Shop> succeedShops = new ArrayList<>();
         StringBuilder missing = new StringBuilder();

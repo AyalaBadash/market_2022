@@ -31,7 +31,8 @@ public class SystemManagerTests {
     public void setUp() {
         try {
             market = Market.getInstance();
-            market.firstInitMarket(paymentService, supplyService, managerName, managerpassword);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, managerName, managerpassword);
         } catch (Exception Ignored) {
         }
     }

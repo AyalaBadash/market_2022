@@ -79,10 +79,10 @@ public class Security {
     }
 
     public void validateQuestions(String userName, List<String> answers) throws MarketException{
-        if(answers == null)
-            return;
         LoginCard card = namesToLoginInfo.get(userName);
         Map<String, String> QsAndAns = card.getQandA();
+        if(answers == null && (QsAndAns == null || QsAndAns.size() == 0))
+            return;
         if (answers.size()!=QsAndAns.size()) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Member didnt gave number of answers equal to questions number");

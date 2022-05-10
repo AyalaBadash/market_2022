@@ -6,6 +6,7 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
+import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
@@ -40,7 +41,8 @@ public class VisitorTests {
     public void setUp() {
         try {
             market = Market.getInstance();
-            market.firstInitMarket(paymentService, supplyService, userName, password);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, userName, password);
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);
@@ -54,7 +56,8 @@ public class VisitorTests {
             keywords.add("in sale");
             market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
                     "soy",keywords , productAmount,shopName);
-
+            market.addItemToShop(shopManagerName, "chocolate", productPrice, Item.Category.general,
+                    "soy",keywords , productAmount,shopName);
             creditCard = new CreditCard("124","13/5" , "555");
             address = new Address("Tel Aviv", "Super" , "1");
 
@@ -138,12 +141,15 @@ public class VisitorTests {
         try {
             List<Item> res = market.getItemsByKeyword("in sale");
             assert res.size() > 0;
-            boolean appleFound = false;
+            boolean milkFound = false;
             for (Item item: res){
                 assert item.getKeywords().contains("in sale");
-                appleFound = item.getName().equals("milk");
+                if (item.getName().equals("milk")) {
+                    milkFound = true;
+                    break;
+                }
             }
-            assert appleFound;
+            assert milkFound;
         } catch (Exception e) {
             assert false;
         }
@@ -211,8 +217,10 @@ public class VisitorTests {
             List<Item> res = market.getItemByName("milk");
             Item milk = res.get(0);
             market.addItemToShoppingCart(milk, 0, shopName, visitor.getName());
-            assert visitor.getCart().getCart().isEmpty();
-        } catch (Exception e) {
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        } catch (Exception e){
             assert false;
         }
     }
@@ -223,14 +231,14 @@ public class VisitorTests {
         try {
             Visitor visitor = market.guestLogin();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
-            List<Item> res = market.getItemByName("milk");
-            Item milk = res.get(0);
-            Double itemAmount = shop.getItemCurrentAmount(milk);
+            List<Item> res = market.getItemByName("chocolate");
+            Item chocolate = res.get(0);
+            Double itemAmount = shop.getItemCurrentAmount(chocolate);
             double buyingAmount = itemAmount - 1;
-            market.addItemToShoppingCart(milk, buyingAmount, shopName, visitor.getName());
+            market.addItemToShoppingCart(chocolate, buyingAmount, shopName, visitor.getName());
             market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             shop = market.getShopInfo(shopManagerName, shopName);
-            Double newAMount = shop.getItemCurrentAmount(milk);
+            Double newAMount = shop.getItemCurrentAmount(chocolate);
             assert newAMount == 1;
         } catch (Exception e) {
             assert false;
