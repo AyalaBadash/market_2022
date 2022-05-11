@@ -20,4 +20,8 @@ public class SynchronizedCounter {
         c = 1;
     }
 
+    public synchronized void setValue(int value)
+    {
+        c = value;
+    }
 }

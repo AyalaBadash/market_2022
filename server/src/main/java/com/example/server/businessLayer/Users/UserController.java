@@ -7,8 +7,11 @@ import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingCart;
+import com.example.server.serviceLayer.Notifications.Notification;
 
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -71,8 +74,7 @@ public class UserController {
 
 
     private synchronized String getNextUniqueName() {
-        String name = "@visitor" + nextUniqueNumber;
-        nextUniqueNumber.increment();
+        String name = "@visitor" + nextUniqueNumber.increment();
         return name;
     }
 
@@ -146,9 +148,9 @@ public class UserController {
         return members.get ( visitorName );
     }
 
+  
     public void setNextUniqueNumber(int nextUniqueNumber) {
-        //TODO
-//        this.nextUniqueNumber = 0;
+        this.nextUniqueNumber.setValue(nextUniqueNumber);
     }
 
     public void reset() {
@@ -156,4 +158,5 @@ public class UserController {
         visitorsInMarket = new HashMap<>();
         nextUniqueNumber.reset();
     }
+
 }

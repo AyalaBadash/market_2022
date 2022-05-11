@@ -57,14 +57,15 @@ public class ShoppingCart implements IHistory {
      * @throws MarketException if one or more shops cannot supply all items -> returns to original state
      *                         return all items to shops, MarketException message include missing items
      */
-    public synchronized double saveFromShops() throws MarketException {
+
+    public synchronized double saveFromShops(String buyer) throws MarketException {
         boolean succeeded = true;
         List<Shop> succeedShops = new ArrayList<>();
         StringBuilder missing = new StringBuilder();
         double price = 0;
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             try {
-                price += shopToBasket.getKey().buyBasket(shopToBasket.getValue());
+                price += shopToBasket.getKey().buyBasket(shopToBasket.getValue(),buyer);
                 succeedShops.add(shopToBasket.getKey());
             } catch (Exception e) {
                 succeeded = false;
