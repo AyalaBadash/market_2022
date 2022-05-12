@@ -285,4 +285,6 @@ public interface IService {
     public ResponseT<String> getHistoryByMember(GetHistoryByMemberRequest request);
 
     public Response removeShopOwnerAppointment(removeAppointmentRequest request);
+
+    public Response removeMember(removeMemberRequest request);
 }

@@ -308,5 +308,10 @@ public class Service implements IService {
         return marketService.removeShopOwnerAppointment(request.getBoss(),request.getFiredAppointed(),request.getShopName());
     }
 
+    @Override
+    public Response removeMember(removeMemberRequest request) {
+        return marketService.removeMember(request.getManager(),request.getMemberToRemove());
+    }
+
 
 }

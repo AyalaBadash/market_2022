@@ -322,4 +322,18 @@ public class MarketService {
         return response;
 
     }
+
+    public Response removeMember(String manager, String memberToRemove) {
+        Response response;
+        try
+        {
+            market.removeMember(manager,memberToRemove);
+            response = new Response();
+        }
+        catch (MarketException e)
+        {
+            response = new Response(e.getMessage());
+        }
+        return response;
+    }
 }

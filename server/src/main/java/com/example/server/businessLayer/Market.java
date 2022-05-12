@@ -761,4 +761,32 @@ public class Market {
         shop.removeShopOwnerAppointment(boss,firedAppointed);
 
     }
+
+    public void removeMember(String manager, String memberToRemove) throws MarketException{
+        if (manager.equals(memberToRemove))
+        {
+            ErrorLog.getInstance().Log("You cant remove yourself.");
+            throw new MarketException("You cant remove yourself.");
+        }
+        if (!manager.equals(this.systemManagerName))
+        {
+            ErrorLog.getInstance().Log("You are not the market manager. You cant remove a member.");
+            throw new MarketException("You are not the market manager. You cant remove a member.");
+        }
+        for (Map.Entry<String,Shop> entry:shops.entrySet())
+        {
+            Shop shop = entry.getValue();
+            if (shop.isShopOwner(memberToRemove)|| shop.isManager(memberToRemove)) {
+                ErrorLog.getInstance().Log("You cant remove this member - He works in the market.");
+                throw new MarketException("You cant remove this member - He works in the market.");
+            }
+        }
+        if (userController.getVisitorsInMarket().containsKey(memberToRemove))
+        {
+            ErrorLog.getInstance().Log(memberToRemove+" is in market. You can't remove him");
+            throw new MarketException(memberToRemove+" is in market. You can't remove him");
+        }
+        Security security = Security.getInstance();
+        security.removeMember(memberToRemove);
+    }
 }
