@@ -51,6 +51,7 @@ public class MarketUnitTest {
     @BeforeEach
     public void marketUnitTestInit(){
         try {
+            //todo - check why after reset there is no ido member in security , while he exist in userController.(needs to be in both)
             Market.getInstance().reset();
         } catch (Exception e){}
         List<String> keywords = new ArrayList<>();
@@ -819,8 +820,105 @@ public class MarketUnitTest {
             System.out.println(ex.getMessage());
             assert false;
         }
-
     }
+
+    @Test
+    @DisplayName("Remove member - good test")
+    public void removeMemberTest(){
+        try {
+            market.register("shaked", "password");
+            market.appointShopOwner("raz", "ayala", "razShop");
+        }
+        catch (Exception e)
+        {
+            assert false;
+        }
+        try {
+            market.removeMember("Ido","shaked");
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Remove member - fail test - trying to remove employee")
+    public void removeMemberFailTestRemoveEmployee(){
+        try {
+            market.register("shaked", "password");
+            market.appointShopOwner("raz", "ayala", "razShop");
+        }
+        catch (Exception e)
+        {
+            assert false;
+        }
+        try {
+            market.removeMember("Ido","ayala");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Remove member - fail test - trying to remove system manager")
+    public void removeMemberFailTestRemoveSysManager(){
+        try {
+            market.register("shaked", "password");
+            market.appointShopOwner("raz", "ayala", "razShop");
+        }
+        catch (Exception e)
+        {
+            assert false;
+        }
+        try {
+            market.removeMember("raz","Ido");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Remove member - fail test - trying to remove myself")
+    public void removeMemberFailTestRemoveMyself(){
+        try {
+            market.register("shaked", "password");
+            market.appointShopOwner("raz", "ayala", "razShop");
+        }
+        catch (Exception e)
+        {
+            assert false;
+        }
+        try {
+            market.removeMember("Ido","Ido");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+
 
 
 }

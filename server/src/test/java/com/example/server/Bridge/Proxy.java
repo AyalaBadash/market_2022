@@ -197,4 +197,9 @@ public class Proxy implements IService  {
     public Response removeShopOwnerAppointment(removeAppointmentRequest request) {
         return null;
     }
+
+    @Override
+    public Response removeMember(removeMemberRequest request) {
+        return null;
+    }
 }

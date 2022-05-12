@@ -211,4 +211,7 @@ public class Security {
         }
     }
 
+    public void removeMember(String memberToRemove) {
+        this.namesToLoginInfo.remove(memberToRemove);
+    }
 }
