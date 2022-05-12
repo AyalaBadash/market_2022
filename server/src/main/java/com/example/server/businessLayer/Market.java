@@ -628,6 +628,7 @@ public class Market {
 
     }
 
+    //TODO  - use acquisition class.
     public void buyShoppingCart(String visitorName, double expectedPrice,
                                 PaymentMethod paymentMethod, Address address) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){

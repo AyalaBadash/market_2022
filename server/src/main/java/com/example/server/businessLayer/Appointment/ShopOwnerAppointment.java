@@ -11,7 +11,7 @@ public class ShopOwnerAppointment extends Appointment {
     //TODO - check appoint is not null unless it is founder
     public ShopOwnerAppointment(Member appointed, Member appoint, Shop relatedShop,
                                 boolean isShopFounder) {
-        super(appointed, appoint, relatedShop);
+        super(appointed, appoint, relatedShop,"ShopOwnerAppointment");
         this.isShopFounder = isShopFounder;
 
     }
