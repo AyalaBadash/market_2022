@@ -778,9 +778,49 @@ public class MarketUnitTest {
     @DisplayName("Buy Shopping Cart - fail test")
     public void buyShoppingCartFailTest(){}//TODO
 
+    @Test
+    @DisplayName("Remove shop owner - good test - valid shop")
+    public void removeShopOwnerTest(){
+        try {
+            market.appointShopOwner("raz","ayala","razShop");
+        } catch (Exception e) {
+            assert false;
+        }
+        try{
+            market.removeShopOwnerAppointment("raz","ayala","razShop");
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
 
+    @Test
+    @DisplayName("Remove shop owner - fail test - no such shop")
+    public void removeShopOwnerFailTest(){
+        try {
+            market.appointShopOwner("raz","ayala","razShop");
+        } catch (Exception e) {
+            assert false;
+        }
+        try{
+            market.removeShopOwnerAppointment("raz","ayala","stamShop");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            System.out.println(e.getMessage());
+            assert true;
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+            assert false;
+        }
 
-
+    }
 
 
 }

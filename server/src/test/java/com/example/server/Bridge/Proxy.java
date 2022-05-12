@@ -192,4 +192,9 @@ public class Proxy implements IService  {
     public ResponseT<String> getHistoryByMember(GetHistoryByMemberRequest request) {
         return null;
     }
+
+    @Override
+    public Response removeShopOwnerAppointment(removeAppointmentRequest request) {
+        return null;
+    }
 }

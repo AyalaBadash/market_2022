@@ -283,4 +283,6 @@ public interface IService {
      * @return Member purchase history
      */
     public ResponseT<String> getHistoryByMember(GetHistoryByMemberRequest request);
+
+    public Response removeShopOwnerAppointment(removeAppointmentRequest request);
 }

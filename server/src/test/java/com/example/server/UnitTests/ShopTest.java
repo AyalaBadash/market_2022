@@ -341,5 +341,63 @@ public class ShopTest {
         Assertions.assertEquals(5.0, basket.getItems().get(item2));
     }
 
+    @Test
+    @DisplayName("Remove shop owner - good test")
+    public void removeShopOwnerTest(){
+        ShopOwnerAppointment app1 = Mockito.mock(ShopOwnerAppointment.class);
+        Mockito.when(app1.getSuperVisor()).thenReturn(memberFounder);
+        Mockito.when(app1.getSuperVisor().getName()).thenReturn("The founder");
+        Member remove = Mockito.mock(Member.class);
+        Mockito.when(remove.getName()).thenReturn("Remove owner");
+        Mockito.when(app1.getAppointed()).thenReturn(remove);
+        Mockito.when(app1.getAppointed().getName()).thenReturn("Remove owner");
+        Mockito.when(app1.isOwner()).thenReturn(true);
+        try {
+            shop.addEmployee(app1);
+        } catch (MarketException e) {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+        try {
+            shop.removeShopOwnerAppointment(memberFounder.getName(),remove.getName());
+            Assertions.assertFalse(shop.getShopOwners().containsKey(remove.getName()));
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("Remove shop owner - fail test ")
+    public void removeShopOwnerFailTest(){
+        ShopOwnerAppointment app1 = Mockito.mock(ShopOwnerAppointment.class);
+        Mockito.when(app1.getSuperVisor()).thenReturn(memberFounder);
+        Mockito.when(app1.getSuperVisor().getName()).thenReturn("The founder");
+        Member member = Mockito.mock(Member.class);
+        Mockito.when(member.getName()).thenReturn("Remove owner");
+        Mockito.when(app1.getAppointed()).thenReturn(member);
+        Mockito.when(app1.getAppointed().getName()).thenReturn("Remove owner");
+        Mockito.when(app1.isOwner()).thenReturn(true);
+        try {
+            shop.addEmployee(app1);
+        } catch (MarketException e) {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+        try {
+            shop.removeShopOwnerAppointment(memberFounder.getName(),"Ido who isn't an owner");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            assert true;
+        }
+        catch (Exception ex){
+            assert false;
+        }
+    }
+
 
 }

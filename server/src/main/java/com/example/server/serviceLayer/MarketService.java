@@ -308,4 +308,18 @@ public class MarketService {
         }
         return toReturn;
     }
+
+    public Response removeShopOwnerAppointment(String boss, String firedAppointed, String shopName){
+        Response response;
+        try{
+            market.removeShopOwnerAppointment(boss,firedAppointed,shopName);
+            response = new Response();
+        }
+        catch (MarketException e)
+        {
+            response = new Response(e.getMessage());
+        }
+        return response;
+
+    }
 }
