@@ -19,20 +19,23 @@ public abstract class Appointment {
     private Member superVisor;      //  member appointedMe
     private Shop relatedShop;
     List<IPermission> permissions;
+    String type;
 
-    public Appointment(Member appointed, Member appoint, Shop relatedShop) {
+    public Appointment(Member appointed, Member appoint, Shop relatedShop,String type) {
         this.appointed = appointed;
         this.superVisor = appoint;
         this.relatedShop = relatedShop;
         permissions= new CopyOnWriteArrayList<>();
         addAllPermissions();
+        this.type =type;
     }
 
-    public Appointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
+    public Appointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions,String type) {
         this.appointed = appointed;
         this.superVisor = superVisor;
         this.relatedShop = relatedShop;
         this.permissions = permissions;
+        this.type = type;
     }
 
     public void addAllPermissions(){
