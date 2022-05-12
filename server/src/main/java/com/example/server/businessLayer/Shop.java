@@ -483,11 +483,11 @@ public class Shop implements IHistory {
             throw new MarketException(boss + " didnt appoint "+firedAppointed+" so he cant remove his appointment.");
         }
 
-
         for (Map.Entry<String,Appointment> entry:shopOwners.entrySet())
         {
             Appointment toCheck = entry.getValue();
-            if (toCheck.getSuperVisor().getName().equals(firedAppointed))
+            Member appMember = toCheck.getSuperVisor();
+            if (appMember!=null &&toCheck.getSuperVisor().getName().equals(firedAppointed))
                 removeShopOwnerAppointment(firedAppointed,toCheck.getAppointed().getName());
         }
         for (Map.Entry<String,Appointment> entry:shopManagers.entrySet())
