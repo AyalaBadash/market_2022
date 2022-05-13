@@ -42,11 +42,10 @@ public class ShoppingBasket implements IHistory {
     public double getPrice() {
         return calculatePrice();
     }
-    //TODO - price should be up to 3 digits . Example : 3.14159265 -> 3.141
 
     //TODO - add calculationOfDiscount
     public double getPriceWithDiscount() {
-        return calculatePrice();
+        throw new UnsupportedOperationException();
     }
 
     private double calculatePrice() {
