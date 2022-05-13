@@ -126,7 +126,8 @@ public class Publisher {
             }
         }
         catch (Exception e){
-            throw e;
+            //TODO - implement
+//            throw e;
         }
     }
     public void sendShopReopenedBatchNotificationsBatch(ArrayList<String> name ,String shopName) throws MarketException {

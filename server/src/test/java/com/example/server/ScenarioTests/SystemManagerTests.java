@@ -8,6 +8,7 @@ import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
+import org.yaml.snakeyaml.error.Mark;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,11 @@ public class SystemManagerTests {
             String str= new String(market.getAllSystemPurchaseHistory(managerName));
             Assertions.assertNotNull(str);
             assert  true;
+            try{
+                logoutMember(managerName);
+            }catch (MarketException e){
+                System.out.println(e.getMessage());
+            }
         } catch (Exception e) {
             assert false;
         }
@@ -70,16 +76,27 @@ public class SystemManagerTests {
     @Test
     @DisplayName("system manager get purchases history bad case- not system manager")
     public void PurchaseHistoryFail2() {
+        String memberName = "bar1";
+        String memberPassword = "pass1";
         try {
-
-            String memberName = "bar1";
-            String memberPassword = "pass1";
             registerVisitor(memberName,memberPassword);
             loginManager(managerName,managerpassword);
             market.getAllSystemPurchaseHistory(memberName);
             assert  false;
+            try {
+                logoutMember(managerName);
+                logoutMember(memberName);
+            }catch (MarketException ex){
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                logoutMember(managerName);
+                logoutMember(memberName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -90,6 +107,11 @@ public class SystemManagerTests {
             loginManager(managerName,managerpassword);
             market.setPaymentService(paymentService2, managerName);
             assert  true;
+            try {
+                logoutMember(managerName);
+            }catch (MarketException ex){
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert false;
         }
@@ -98,11 +120,6 @@ public class SystemManagerTests {
     @Test
     @DisplayName("system manager change services bad case- not logged in")
     public void changeServicesFail() {
-        try{
-            logoutMember(managerName);
-        } catch (Exception e){
-            assert false;
-        }
         try {
             market.setPaymentService(paymentService2, managerName);
             assert false;
@@ -119,8 +136,18 @@ public class SystemManagerTests {
             loginManager(managerName,managerpassword);
             market.setPaymentService(paymentService2, "ayala" );
             assert  false;
+            try {
+                logoutMember(managerName);
+            }catch (MarketException ex){
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                logoutMember(managerName);
+            } catch (MarketException ex) {
+                System.out.printf(ex.getMessage());
+            }
         }
     }
     public void loginManager(String managerName, String managerPass) throws MarketException {

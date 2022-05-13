@@ -5,6 +5,7 @@ import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Policies.Discount.DiscountPolicy;
 import com.example.server.businessLayer.Users.Member;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class Shop implements IHistory {
     private int rank;
     private int rankers;
     private List<StringBuilder> purchaseHistory;
+    //TODO getter,setter,constructor
+    private DiscountPolicy discountPolicy;
 
     public Shop(String name,Member founder) {
         this.shopName = name;
