@@ -38,10 +38,16 @@ public class ShoppingBasket implements IHistory {
         this.price = price;
     }
 
+    //TODO - needs to stay without checking the discount
     public double getPrice() {
         return calculatePrice();
     }
     //TODO - price should be up to 3 digits . Example : 3.14159265 -> 3.141
+
+    //TODO - add calculationOfDiscount
+    public double getPriceWithDiscount() {
+        return calculatePrice();
+    }
 
     private double calculatePrice() {
         double price = 0;

@@ -21,11 +21,11 @@ public class ShopManagerTests {
     String password = "passTest";
     PaymentMock paymentService = new PaymentMock();
     SupplyMock supplyService = new SupplyMock();
-    String shopOwnerName = "bar";
-    String shopOwnerPassword = "pass";
-    String managerName = "bar1";
-    String managerPassword = "pass1";
-    String shopName = "store";
+    String shopOwnerName = "bar3";
+    String shopOwnerPassword = "pass3";
+    String managerName = "bar4";
+    String managerPassword = "pass4";
+    String shopName = "foodStore";
     int productAmount;
     Double productPrice;
     double newAmount;
@@ -43,10 +43,9 @@ public class ShopManagerTests {
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop
-            openShop();
             registerVisitor(managerName,managerPassword);
             loginMember(shopOwnerName,shopOwnerPassword);
-
+            openShop();
         } catch (Exception Ignored) {
         }
     }
@@ -54,18 +53,22 @@ public class ShopManagerTests {
     @DisplayName("get shop purchase history")
     public void purchaseHistory() {
         try {
-            loginMember(shopOwnerName, shopOwnerPassword);
             try {
                 market.appointShopManager(shopOwnerName,managerName,shopName);
             }catch (MarketException e){}
             String visitorName = market.memberLogout(shopOwnerName);
-            loginMember(managerName,managerPassword);
+            market.memberLogin(managerName,managerPassword);
             market.validateSecurityQuestions(managerName, new ArrayList<>(), visitorName);
             String  str = new String( market.getShopPurchaseHistory(managerName,shopName));
             Assertions.assertNotNull(str);
             assert true;
         } catch (Exception e) {
             assert false;
+        }
+        try {
+            market.memberLogout(managerName);
+        }catch (MarketException ex){
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -76,8 +79,18 @@ public class ShopManagerTests {
             loginMember(managerName,managerPassword);
             market.getShopPurchaseHistory(managerName,shopName);
             assert false;
+            try {
+                market.memberLogout(managerName);
+            }catch (MarketException ex){
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                market.memberLogout(managerName);
+            }catch (MarketException ex){
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -88,17 +101,27 @@ public class ShopManagerTests {
             loginMember(managerName,managerPassword);
             market.getShopPurchaseHistory(managerName,"not a real shop name");
             assert false;
+            try {
+                market.memberLogout(managerName);
+            }catch (MarketException ex){
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                market.memberLogout(managerName);
+            }catch (MarketException ex){
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
 
-    public void loginMember(String shopOwnerN, String shopOwnerP) throws MarketException {
+    public void loginMember(String memberName, String memberP) throws MarketException {
         Visitor visitor = market.guestLogin();
-        market.memberLogin(shopOwnerN,shopOwnerP);
-        List<String> questions = market.memberLogin(shopOwnerName, shopOwnerPassword);
-        market.validateSecurityQuestions(shopOwnerName, new ArrayList<>(), visitor.getName());
+        market.memberLogin(memberName,memberP);
+        List<String> questions = market.memberLogin(memberName, memberP);
+        market.validateSecurityQuestions(memberName, new ArrayList<>(), visitor.getName());
     }
     public void registerVisitor(String name, String pass) throws MarketException {
         // shop manager register
@@ -107,9 +130,6 @@ public class ShopManagerTests {
     }
 
     private void openShop() throws MarketException {
-
-        loginMember(shopOwnerName,shopOwnerPassword);
         market.openNewShop(shopOwnerName, shopName);
-
     }
 }
