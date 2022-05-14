@@ -668,8 +668,10 @@ public class Market {
         }
         if (succeed){
             Member member = visitor.getMember ();
-            if( member != null)
-                member.savePurchase(cart);
+            if( member != null) {
+                Acquisition acq = new Acquisition(cart,member.getName());
+                member.savePurchase(acq);
+            }
             cart.clear();
         }
     }

@@ -14,6 +14,27 @@ public class DiscountPolicy {
 
     //TODO - create for each rule
     public void createDiscountWithXor(List<DiscountType> discountTypes){
+        //By default - will take the best discount
+        throw new UnsupportedOperationException();
+    }
+
+    public void createDiscountWithOr(List<DiscountType> discountTypes){
+        //By default - will take the best discount
+        throw new UnsupportedOperationException();
+    }
+
+    public void createDiscountWithAnd(List<DiscountType> discountTypes){
+        //By default - will take the best discount
+        throw new UnsupportedOperationException();
+    }
+
+    public void createMaxDiscount(List<DiscountType> discountTypes){
+        //By default - will take the best discount
+        throw new UnsupportedOperationException();
+    }
+
+    public void createAddedDiscount(List<DiscountType> discountTypes){
+        //By default - will take the best discount
         throw new UnsupportedOperationException();
     }
 }
