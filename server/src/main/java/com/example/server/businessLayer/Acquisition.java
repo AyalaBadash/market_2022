@@ -69,10 +69,11 @@ public class Acquisition {
         for (Map.Entry<Shop,ShoppingBasket> entry:cart.getCart().entrySet())
         {
             String curShop = entry.getKey().getShopName();
-            for (Map.Entry<Item,Double> bask: entry.getValue().getItems().entrySet())
+            for (Map.Entry<Integer,Double> bask: entry.getValue().getItems().entrySet())
             {
-                double curPrice = bask.getKey().getPrice()*bask.getValue();
-                ItemAcquisition acq = new ItemAcquisition(curShop,bask.getKey().getName(), bask.getValue(),curPrice);
+                Item curItem = entry.getKey().getItemMap().get(bask.getKey());
+                double curPrice = curItem.getPrice()*bask.getValue();
+                ItemAcquisition acq = new ItemAcquisition(curShop,curItem.getName(), bask.getValue(),curPrice);
                 ItemAcquisitions.add(acq);
             }
         }

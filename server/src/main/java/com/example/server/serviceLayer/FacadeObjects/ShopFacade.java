@@ -14,11 +14,11 @@ public class ShopFacade implements FacadeObject<Shop> {
     private String shopName;
     private Map<Integer, ItemFacade> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, AppointmentFacade> employees;     //<name, appointment>
-    private Map<ItemFacade, Double> itemsCurrentAmount;
+    private Map<Integer, Double> itemsCurrentAmount;
     private boolean closed;
 
     public ShopFacade(String shopName, Map<Integer, Item> itemMap, Map<String,
-            Appointment> employees, Map<Item, Double> itemsCurrentAmount, boolean closed) {
+            Appointment> employees, Map<Integer, Double> itemsCurrentAmount, boolean closed) {
         this.shopName = shopName;
         updateItemMap ( itemMap );
         updateEmployees ( employees );
@@ -48,10 +48,9 @@ public class ShopFacade implements FacadeObject<Shop> {
         }
     }
 
-    private void updateItemsAmount(Map<Item, Double> itemsAmount){
-        for (Map.Entry<Item, Double> entry: itemsAmount.entrySet()){
-            ItemFacade item = new ItemFacade(entry.getKey());
-            itemsCurrentAmount.put(item, entry.getValue());
+    private void updateItemsAmount(Map<Integer, Double> itemsAmount){
+        for (Map.Entry<Integer, Double> entry: itemsAmount.entrySet()){
+            itemsCurrentAmount.put(entry.getKey(), entry.getValue());
         }
     }
 
@@ -79,11 +78,11 @@ public class ShopFacade implements FacadeObject<Shop> {
         this.employees = employees;
     }
 
-    public void setItemsCurrentAmount(Map<ItemFacade, Double> itemsCurrentAmount) {
+    public void setItemsCurrentAmount(Map<Integer, Double> itemsCurrentAmount) {
         this.itemsCurrentAmount = itemsCurrentAmount;
     }
 
-    public Map<ItemFacade, Double> getItemsCurrentAmount() {
+    public Map<Integer, Double> getItemsCurrentAmount() {
         return itemsCurrentAmount;
     }
 

@@ -20,7 +20,7 @@ public class Shop implements IHistory {
     private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, Appointment> shopManagers;     //<name, appointment>
     private Map<String, Appointment> shopOwners;     //<name, appointment>
-    private Map<Item, Double> itemsCurrentAmount;//TODO check if we want it double or int
+    private Map<Integer, Double> itemsCurrentAmount;
     private boolean closed;
 
     Member shopFounder;//todo
@@ -92,18 +92,18 @@ public class Shop implements IHistory {
         return itemsCurrentAmount.get(itemMap.get(item.getID()));
     }
 
-    public Map<Item, Double> getItemsCurrentAmountMap() {
+    public Map<Integer, Double> getItemsCurrentAmountMap() {
         return itemsCurrentAmount;
     }
 
 
-    public void setItemAmount(String shopOwnerName, Item item, double amount) throws MarketException {
+    public void setItemAmount(String shopOwnerName, Integer item, double amount) throws MarketException {
         if (!isShopOwner ( shopOwnerName )) {
             throw new MarketException ( "member is not the shop owner and is not authorized to effect the inventory." );
         }
         if (amount < 0)
             throw new MarketException ( "amount cannot be negative" );
-        if (itemMap.get ( item.getID ( ) ) == null) {
+        if (itemMap.get ( item ) == null) {
             throw new MarketException("item does not exist in the shop");
         }
         itemsCurrentAmount.replace ( item, amount );
@@ -140,14 +140,13 @@ public class Shop implements IHistory {
 
 
     public void releaseItems(ShoppingBasket shoppingBasket) throws MarketException {
-        //todo - method test fails.
-        Map<Item, Double> items = shoppingBasket.getItems ( );
-        for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
-            Item currItem = itemAmount.getKey ( );
-            if(itemsCurrentAmount.get(currItem) == null)
+        Map<Integer, Double> items = shoppingBasket.getItems ( );
+        for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
+//            Item currItem = itemAmount.getKey ( );
+            if(itemsCurrentAmount.get(itemAmount.getKey()) == null)
                 throw new MarketException("shopping basket holds an item which does not exist in market");
-            Double newAmount =this.itemsCurrentAmount.get ( currItem )+  itemAmount.getValue ( );//
-            this.itemsCurrentAmount.put ( currItem, newAmount );
+            Double newAmount =this.itemsCurrentAmount.get ( itemAmount.getKey() )+  itemAmount.getValue ( );//
+            this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
         }
     }
 
@@ -161,12 +160,12 @@ public class Shop implements IHistory {
         ArrayList<String> itemsNames =new ArrayList<>();
         ArrayList<Double> prices =new ArrayList<>();
         //
-        Map<Item, Double> items = shoppingBasket.getItems ( );
+        Map<Integer, Double> items = shoppingBasket.getItems ( );
         StringBuilder missingMessage = new StringBuilder ( );
         boolean failed = false;
         missingMessage.append ( String.format ( "%s: cannot complete your purchase because some items are missing:\n", this.shopName ) );
-        for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
-            Item currItem = itemAmount.getKey ( );
+        for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
+            Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());
             //for notifications:
             itemsNames.add(currItem.getName());
             prices.add(currItem.getPrice());
@@ -180,10 +179,10 @@ public class Shop implements IHistory {
         if (failed) {
             throw new MarketException ( missingMessage );
         }
-        for ( Map.Entry<Item, Double> itemAmount : items.entrySet ( ) ) {
-            Item currItem = itemAmount.getKey ( );
+        for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
+            Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());
             double newAmount = this.itemsCurrentAmount.get ( currItem ) - itemAmount.getValue ( );
-            this.itemsCurrentAmount.put ( currItem, newAmount );
+            this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
@@ -293,9 +292,9 @@ public class Shop implements IHistory {
     }
 
     public ShoppingBasket validateBasket(ShoppingBasket basket) {
-        Map<Item, Double> items = basket.getItems ( );
-        for ( Map.Entry<Item, Double> currentItem : items.entrySet ( ) ) {
-            Item curItem = currentItem.getKey();
+        Map<Integer, Double> items = basket.getItems ( );
+        for ( Map.Entry<Integer, Double> currentItem : items.entrySet ( ) ) {
+            Item curItem = basket.getItemMap().get(currentItem.getKey());;
             Double curAmount = itemsCurrentAmount.get(curItem);
             if (currentItem.getValue ( ) > curAmount) {
                 if(curAmount == 0)
@@ -391,7 +390,7 @@ public class Shop implements IHistory {
             category = Item.Category.general;
         Item addedItem = new Item ( id, itemName, price, info, category, keywords );
         itemMap.put ( id, addedItem );
-        itemsCurrentAmount.put ( addedItem, amount );
+        itemsCurrentAmount.put ( id, amount );
         return addedItem;
     }
 

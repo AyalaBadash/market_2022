@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class Appointment {
+public abstract class
+Appointment {
     private Member appointed;       //  the actual appointed member
     private Member superVisor;      //  member appointedMe
     private Shop relatedShop;
+    //TODO - needs to be not an object? :O
     List<IPermission> permissions;
     String type;
 
