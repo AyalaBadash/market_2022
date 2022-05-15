@@ -2,13 +2,8 @@ package com.example.server.AcceptanceTest;
 
 import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
-import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.Item;
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
-import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
-import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
-import com.example.server.serviceLayer.Requests.*;
+import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.ResponseT;
 import com.example.server.serviceLayer.Service;
@@ -16,6 +11,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class VisitorAcceptanceTests extends AcceptanceTests {
 
@@ -53,7 +49,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             // shop manager register
             VisitorFacade visitor = guestLogin();
             register(shopOwnerName, shopOwnerPassword);
-            List<String> questions = memberLogin(shopOwnerName, shopOwnerPassword);
+            List<String> questions = memberLogin(shopOwnerName, shopOwnerPassword).getValue();
             validateSecurityQuestions(shopOwnerName, new ArrayList<>(), visitor.getName());
             // open shop
             openShop(shopOwnerName, shopName);
@@ -158,7 +154,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void shopInfoTest() {
         try {
             VisitorFacade visitor = guestLogin();
-            ShopFacade res = getShopInfo(visitor.getName(), shopName);
+            ShopFacade res = getShopInfo(visitor.getName(), shopName).getValue();
             assert res.getShopName().equals(shopName);
             exitMarket(visitor.getName());
         } catch (Exception e) {
@@ -169,8 +165,14 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     @Test
     @DisplayName("get item info")
     public void itemInfoTest() {
-        //TODO not implemented in service while requirement number 2.1 demands it
-        assert false;
+        try {
+            VisitorFacade visitor = guestLogin();
+            ItemFacade res = getItemInfo(visitor.getName(), milk.getId());
+            assert res.getName().equals(milk.getName());
+            exitMarket(visitor.getName());
+        } catch (Exception e) {
+            assert false;
+        }
     }
 
     @Test
@@ -209,7 +211,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void searchItemByCategory() {
         try {
             List<ItemFacade> res = searchProductByCategory(Item.Category.fruit);
-            assert res.size() > 1;
+            assert res.size() >= 1;
             boolean appleFound = false;
             for (ItemFacade item : res) {
                 assert item.getCategory() == Item.Category.fruit;
@@ -230,22 +232,24 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             Response response = addItemToCart(milk, 3, shopName, visitor.getName());
             assert !response.isErrorOccurred();
             //check shopping basket includes only the milk
+            visitor = getVisitor(visitor.getName());
             assert visitor.getCart().getCart().size() == 1;
-            visitor.getCart().getCart().forEach((shop, basket) -> {
-                assert basket.getItems().size() == 1;
-                assert shop.equals(shopName);
+            for (Map.Entry<String, ShoppingBasketFacade> entry : visitor.getCart().getCart().entrySet()){
+                assert entry.getValue().getItems().size() == 1;
+                assert entry.getKey().equals(shopName);
                 // check shop amount didn't change
-                ShopFacade shopFacade = getShopInfo(visitor.getName(), shopName);
-                assert shopFacade.getItemsCurrentAmount().get(milk).equals(productAmount);
+                ShopFacade shopFacade = getShopInfo(visitor.getName(), shopName).getValue();
+                assert shopFacade.getItemsCurrentAmount().get(milk.getId()).equals(productAmount);
                 // check right amount added
-                assert basket.getItems().get(milk).equals(3.0);
-            });
+                assert entry.getValue().getItems().get(milk.getId()).equals(3.0);
+            }
             // checks adding item
-            response = addItemToCart(milk, 6, shopName, visitor.getName());
+            response = addItemToCart(milk, 2, shopName, visitor.getName());
+            visitor = getVisitor(visitor.getName());
             assert !response.isErrorOccurred();
-            visitor.getCart().getCart().forEach((shop, basket) -> {
-                assert basket.getItems().get(milk).equals(9.0);
-            });
+            for(Map.Entry<String, ShoppingBasketFacade> entry:visitor.getCart().getCart().entrySet()){
+                assert entry.getValue().getItems().get(milk.getId()).equals(5.0);
+            }
         } catch (Exception e) {
             assert false;
         }
@@ -260,6 +264,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             ItemFacade milk = res.get(0);
             Response response = addItemToCart(milk, 3, shopName, visitor.getName());
             assert !response.isErrorOccurred();
+            visitor = getVisitor(visitor.getName());
             assert !visitor.getCart().getCart().isEmpty();
             exitMarket(visitor.getName());
             visitor = guestLogin();
@@ -277,7 +282,8 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             List<ItemFacade> res = searchProductByName("milk");
             ItemFacade milk = res.get(0);
             Response response = addItemToCart(milk, 0, shopName, visitor.getName());
-            assert !response.isErrorOccurred();
+            assert response.isErrorOccurred();
+            visitor = getVisitor(visitor.getName());
             assert visitor.getCart().getCart().isEmpty();
         } catch (Exception e) {
             assert false;
@@ -290,16 +296,16 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void buyItemValid() {
         try {
             VisitorFacade visitor = guestLogin();
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("milk");
             ItemFacade milk = res.get(0);
-            Double itemAmount = shop.getItemsCurrentAmount().get(milk);
+            Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
             double buyingAmount = itemAmount - 1;
             Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
             Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             assert !result.isErrorOccurred();
-            shop = getShopInfo(shopOwnerName, shopName);
-            Double newAMount = shop.getItemsCurrentAmount().get(milk);
+            shop = getShopInfo(shopOwnerName, shopName).getValue();
+            Double newAMount = shop.getItemsCurrentAmount().get(milk.getId());
             assert newAMount == 1;
             itemAmount = newAMount;
 
@@ -313,18 +319,18 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void buyWithUnexpectedPrice() {
         try {
             VisitorFacade visitor = guestLogin();
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("milk");
             ItemFacade milk = res.get(0);
-            Double itemAmount = shop.getItemsCurrentAmount().get(milk);
+            Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
             double buyingAmount = itemAmount + 1;
             Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
             // add not existing item shouldn't fail
             assert !response.isErrorOccurred();
             Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             assert result.isErrorOccurred();
-            shop = getShopInfo(shopOwnerName, shopName);
-            Double newAMount = shop.getItemsCurrentAmount().get(milk);
+            shop = getShopInfo(shopOwnerName, shopName).getValue();
+            Double newAMount = shop.getItemsCurrentAmount().get(milk.getId());
             Assertions.assertEquals(newAMount, itemAmount);
 
         } catch (Exception e) {
@@ -337,18 +343,18 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void buyNotExistingItem() {
         try {
             VisitorFacade visitor = guestLogin();
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("milk");
             ItemFacade milk = res.get(0);
-            Double itemAmount = shop.getItemsCurrentAmount().get(milk);
+            Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
             double buyingAmount = itemAmount;
             Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
             // add not existing item shouldn't fail
             assert !response.isErrorOccurred();
             Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
             assert result.isErrorOccurred();
-            shop = getShopInfo(shopOwnerName, shopName);
-            Double newAMount = shop.getItemsCurrentAmount().get(milk);
+            shop = getShopInfo(shopOwnerName, shopName).getValue();
+            Double newAMount = shop.getItemsCurrentAmount().get(milk.getId());
             Assertions.assertEquals(newAMount, itemAmount);
 
         } catch (Exception e) {

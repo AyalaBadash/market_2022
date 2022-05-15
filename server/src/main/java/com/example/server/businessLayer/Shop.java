@@ -89,7 +89,7 @@ public class Shop implements IHistory {
     }*/
 
     public double getItemCurrentAmount(Item item) {
-        return itemsCurrentAmount.get(itemMap.get(item.getID()));
+        return itemsCurrentAmount.get(item.getID());
     }
 
     public Map<Integer, Double> getItemsCurrentAmountMap() {
@@ -171,7 +171,7 @@ public class Shop implements IHistory {
             prices.add(currItem.getPrice());
             //
             double currAmount = itemAmount.getValue ( );
-            if (this.itemsCurrentAmount.get ( currItem ) < currAmount) {
+            if (this.itemsCurrentAmount.get ( currItem.getID() ) < currAmount) {
                 failed = true;
                 missingMessage.append ( String.format ( "%s X %f", currItem.getName ( ), currAmount ) );
             }
@@ -181,7 +181,7 @@ public class Shop implements IHistory {
         }
         for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());
-            double newAmount = this.itemsCurrentAmount.get ( currItem ) - itemAmount.getValue ( );
+            double newAmount = this.itemsCurrentAmount.get ( currItem.getID() ) - itemAmount.getValue ( );
             this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
@@ -379,7 +379,6 @@ public class Shop implements IHistory {
 
     //TODO why do we need this.
     public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
-
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
         if (amount < 0)
@@ -388,10 +387,20 @@ public class Shop implements IHistory {
             throw new MarketException("ID is taken by other item");
         if (category == null)
             category = Item.Category.general;
+        if(itemNameExists(itemName))
+            throw new MarketException("different item with the same name already exists in this shop");
         Item addedItem = new Item ( id, itemName, price, info, category, keywords );
         itemMap.put ( id, addedItem );
         itemsCurrentAmount.put ( id, amount );
         return addedItem;
+    }
+
+    private boolean itemNameExists(String itemName) {
+        for(Item item: itemMap.values()){
+            if(item.getName().equals(itemName))
+                return true;
+        }
+        return false;
     }
 
     public void addRank(int rankN) {

@@ -16,13 +16,16 @@ public class MemberAcceptanceTests extends AcceptanceTests {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class Member {
         MemberFacade testMember;
+        MemberFacade testMemberToSaveTest;
         static String testMemberPassword;
         static String testMemberName;
+        static String testMemberNameToSaveTest;
 
         @BeforeAll
         public static void setUpMember() {
             try {
                 testMemberName = "managerTest";
+                testMemberNameToSaveTest = "ayalaTest";
                 testMemberPassword = "1234";
 
             } catch (Exception ignored) {
@@ -35,8 +38,11 @@ public class MemberAcceptanceTests extends AcceptanceTests {
             try {
                 VisitorFacade visitor = guestLogin();
                 register(testMemberName, testMemberPassword);
-                List<String> questions = memberLogin(testMemberName, testMemberPassword);
-                testMember = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+                register(testMemberNameToSaveTest, testMemberPassword);
+                List<String> questions = memberLogin(testMemberName, testMemberPassword).getValue();
+                testMember = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName()).getValue();
+                questions = memberLogin(testMemberNameToSaveTest, testMemberPassword).getValue();
+                testMemberToSaveTest = validateSecurityQuestions(testMemberNameToSaveTest, new ArrayList<>(), visitor.getName()).getValue();
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -118,26 +124,26 @@ public class MemberAcceptanceTests extends AcceptanceTests {
         @DisplayName("logout - check member saved")
         public void checkMemberSaved() {
             try {
-                addItemToCart(milk, productAmount - 1, shopName, testMemberName);
-                testMember = getMember(testMemberName);
-                ShoppingCartFacade prevCart = getMember(testMember.getName()).getMyCart();
-                VisitorFacade visitor = logout(testMember.getName());
+                addItemToCart(milk, productAmount - 1, shopName, testMemberNameToSaveTest);
+                testMemberToSaveTest = getMember(testMemberNameToSaveTest);
+                ShoppingCartFacade prevCart = getMember(testMemberToSaveTest.getName()).getMyCart();
+                VisitorFacade visitor = logout(testMemberToSaveTest.getName());
                 assert visitor.getCart().getCart().isEmpty();
-                List<String> questions = memberLogin(testMember.getName(), testMemberPassword);
-                MemberFacade returnedMember = validateSecurityQuestions(testMember.getName(), new ArrayList<>(),
-                        visitor.getName());
-                Assertions.assertEquals(returnedMember.getAppointedByMe(), testMember.getAppointedByMe());
-                Assertions.assertEquals(returnedMember.getName(), testMember.getName());
-                Assertions.assertEquals(returnedMember.getMyAppointments(), testMember.getMyAppointments());
-                if (testMember.getMyCart() != returnedMember.getMyCart()) {
-                    assert testMember.getMyCart().getCart().size() == returnedMember.getMyCart().getCart().size();
+                List<String> questions = memberLogin(testMemberToSaveTest.getName(), testMemberPassword).getValue();
+                MemberFacade returnedMember = validateSecurityQuestions(testMemberToSaveTest.getName(), new ArrayList<>(),
+                        visitor.getName()).getValue();
+                Assertions.assertEquals(returnedMember.getAppointedByMe(), testMemberToSaveTest.getAppointedByMe());
+                Assertions.assertEquals(returnedMember.getName(), testMemberToSaveTest.getName());
+                Assertions.assertEquals(returnedMember.getMyAppointments(), testMemberToSaveTest.getMyAppointments());
+                if (testMemberToSaveTest.getMyCart() != returnedMember.getMyCart()) {
+                    assert testMemberToSaveTest.getMyCart().getCart().size() == returnedMember.getMyCart().getCart().size();
                     // for each shop - check equals
-                    ShoppingCartFacade shoppingCartFacade = testMember.getMyCart();
+                    ShoppingCartFacade shoppingCartFacade = testMemberToSaveTest.getMyCart();
                     for(Map.Entry<String,ShoppingBasketFacade> entry : shoppingCartFacade.getCart().entrySet()){
                         assert returnedMember.getMyCart().getCart().containsKey(entry.getKey());
                         ShoppingBasketFacade shoppingBasket = returnedMember.getMyCart().getCart().get(entry.getKey());
                         assert shoppingBasket.getItems().size() == entry.getValue().getItems().size();
-                        for(Map.Entry<ItemFacade, Double> entry1 : entry.getValue().getItems().entrySet()){
+                        for(Map.Entry<Integer, Double> entry1 : entry.getValue().getItems().entrySet()){
                             assert shoppingBasket.getItems().containsKey(entry1.getKey());
                             assert shoppingBasket.getItems().get(entry1.getKey()).equals(entry1.getValue());
                         }
@@ -165,10 +171,9 @@ public class MemberAcceptanceTests extends AcceptanceTests {
         public void loginTwice() {
             try {
                 VisitorFacade visitor = guestLogin();
-                List<String> questions = memberLogin(testMemberName, testMemberPassword);
-                MemberFacade newMember = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
-                Assertions.assertNull(newMember);
-                assert false;
+                List<String> questions = memberLogin(testMemberName, testMemberPassword).getValue();
+                ResponseT<MemberFacade> responseT = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+                assert responseT.isErrorOccurred();
             } catch (Exception e) {
                 assert false;
             }
@@ -181,8 +186,8 @@ public class MemberAcceptanceTests extends AcceptanceTests {
                 Response response = exitMarket(testMember.getName());
                 assert !response.isErrorOccurred();
                 VisitorFacade visitor = guestLogin();
-                List<String> questions = memberLogin(testMemberName, testMemberPassword);
-                testMember = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+                List<String> questions = memberLogin(testMemberName, testMemberPassword).getValue();
+                testMember = validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName()).getValue();
                 assert testMember != null;
             } catch (Exception e) {
                 assert false;
@@ -199,18 +204,18 @@ public class MemberAcceptanceTests extends AcceptanceTests {
                 String password = "1234";
                 ResponseT<Boolean> response = register(currName, password);
                 assert !response.isErrorOccurred();
-                List<String> questions = memberLogin(currName, password);
+                List<String> questions = memberLogin(currName, password).getValue();
                 assert questions.size() == 0;
-                MemberFacade member = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
+                MemberFacade member = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName()).getValue();
                 Response queryResponse = addPersonalQuery("whats your mother's name?", "idk", member.getName());
                 assert !queryResponse.isErrorOccurred();
                 visitor = logout(member.getName());
-                questions = memberLogin(currName, password);
+                questions = memberLogin(currName, password).getValue();
                 assert questions.size() == 1;
                 assert questions.contains("whats your mother's name?");
                 ArrayList<String> answers = new ArrayList<>();
                 answers.add("idk");
-                member = validateSecurityQuestions(currName, answers, member.getName());
+                member = validateSecurityQuestions(currName, answers, member.getName()).getValue();
                 assert member != null;
 
             } catch (Exception e) {
@@ -226,28 +231,25 @@ public class MemberAcceptanceTests extends AcceptanceTests {
                 String currName = "questionsName2";
                 String password = "1234";
                 ResponseT<Boolean> response = register(currName, password);
-                List<String> questions = memberLogin(currName, password);
-                MemberFacade member = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
+                ResponseT<List<String>> responseQuestions = memberLogin(currName, password);
+                ResponseT<MemberFacade> responseMember = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
+                MemberFacade member = responseMember.getValue();
                 Response queryResponse = addPersonalQuery("whats your mother's name?", "idk", member.getName());
                 visitor = logout(member.getName());
-                questions = memberLogin(currName, "123");
-                try {
-                    questions = memberLogin(currName, "123");
-                    assert false;
-                } catch (Exception ignored) {
-                }
-                questions = memberLogin(currName, password);
+                memberLogin(currName, "123");
+                responseQuestions = memberLogin(currName, "123");
+                assert responseQuestions.isErrorOccurred();
+                responseQuestions = memberLogin(currName, password);
                 ArrayList<String> answers = new ArrayList<>();
                 answers.add("idk1");
-                try {
-                    member = validateSecurityQuestions(currName, answers, member.getName());
-                    assert member == null;
-                } catch (Exception ignored) {
-                }
+                responseMember = validateSecurityQuestions(currName, answers, member.getName());
+                assert responseMember.isErrorOccurred();
                 answers.clear();
                 answers.add("idk");
+                responseMember = validateSecurityQuestions(currName, answers, member.getName());
+                member = responseMember.getValue();
+                assert !responseMember.isErrorOccurred();
                 assert member != null;
-                member = validateSecurityQuestions(currName, answers, member.getName());
             } catch (Exception e) {
                 assert false;
             }

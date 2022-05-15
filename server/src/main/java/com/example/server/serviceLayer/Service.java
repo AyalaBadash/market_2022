@@ -4,6 +4,7 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Users.Member;
+import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -193,7 +194,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addItemToShop")
     @CrossOrigin
-    public Response addItemToShop(@RequestBody AddItemToShopRequest request) {
+    public ResponseT<ItemFacade> addItemToShop(@RequestBody AddItemToShopRequest request) {
         return marketService.addItemToShop(request.getShopOwnerName(), request.getName(), request.getPrice(),
                 request.getCategory(), request.getInfo(), request.getKeywords(), request.getAmount(), request.getShopName());
     }
@@ -234,7 +235,7 @@ public class Service implements IService {
     @RequestMapping(value = "/appointShopManager")
     @CrossOrigin
     public Response appointShopManager(@RequestBody AppointmentShopManagerRequest request) {
-        return null;
+        return userService.appointShopManager(request.getShopOwnerName(),request.getAppointedShopManager(),request.getShopName());
     }
 
     @Override
@@ -310,17 +311,29 @@ public class Service implements IService {
     }
 
     @Override
+    @RequestMapping(value = "/removeMember")
+    @CrossOrigin
     public Response removeMember(removeMemberRequest request) {
         return marketService.removeMember(request.getManager(),request.getMemberToRemove());
     }
 
+    @Override
+    @RequestMapping(value = "/getItemInfo")
+    @CrossOrigin
+    public ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request) {
+        return marketService.getItemInfo(request.getName(), request.getItemId());
+    }
+
 
     public ResponseT<MemberFacade> getMember(String memberName) {
-        try {
-            Member member = userService.getMember(memberName);
-            return new ResponseT<>(new MemberFacade(member));
-        }catch (Exception e){
-            return new ResponseT<>(e.getMessage());
-        }
+        return userService.getMember(memberName);
+    }
+
+    public ResponseT<VisitorFacade> getVisitor(String name) {
+        return userService.getVisitor(name);
+    }
+
+    public ResponseT<ItemFacade> getItemById(int id) {
+        return marketService.getItemById(id);
     }
 }

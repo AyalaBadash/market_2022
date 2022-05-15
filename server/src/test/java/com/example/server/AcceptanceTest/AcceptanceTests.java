@@ -4,6 +4,7 @@ import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -51,7 +52,7 @@ public class AcceptanceTests {
             // shop manager register
             VisitorFacade visitor = guestLogin();
             register(shopOwnerName, shopOwnerPassword);
-            List<String> questions = memberLogin(shopOwnerName, shopOwnerPassword);
+            List<String> questions = memberLogin(shopOwnerName, shopOwnerPassword).getValue();
             validateSecurityQuestions(shopOwnerName, new ArrayList<>(), visitor.getName());
             // open shop
             openShop(shopOwnerName, shopName);
@@ -100,10 +101,10 @@ public class AcceptanceTests {
         }
     }
 
-    protected static MemberFacade validateSecurityQuestions(String userName, List<String> answers, String visitorName) {
+    protected static ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName) {
         ValidateSecurityRequest request = new ValidateSecurityRequest(userName, answers, visitorName);
         ResponseT<MemberFacade> result = Service.getInstance().validateSecurityQuestions(request);
-        return result.getValue();
+        return result;
     }
 
     protected Response addItemToCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws Exception {
@@ -118,18 +119,24 @@ public class AcceptanceTests {
         return res;
     }
 
-    protected static Response addItemToShop(String shopOwnerName, String name, double price,
+    protected static ResponseT<ItemFacade> addItemToShop(String shopOwnerName, String name, double price,
                                    Item.Category category, String info,
                                    List<String> keywords, double amount, String shopName) throws Exception {
         AddItemToShopRequest request = new AddItemToShopRequest(shopOwnerName, name, price,
                 category, info, keywords, amount, shopName);
-        Response result = Service.getInstance().addItemToShop(request);
+        ResponseT<ItemFacade> result = Service.getInstance().addItemToShop(request);
         return result;
     }
 
-    protected ShopFacade getShopInfo(String name, String shopName) {
+    protected ResponseT<ShopFacade> getShopInfo(String name, String shopName) {
         TwoStringRequest request = new TwoStringRequest(name, shopName);
         ResponseT<ShopFacade> result = Service.getInstance().getShopInfo(request);
+        return result;
+    }
+
+    protected ItemFacade getItemInfo(String name, int itemId) {
+        GetItemInfoRequest request = new GetItemInfoRequest(name, itemId);
+        ResponseT<ItemFacade> result = Service.getInstance().getItemInfo(request);
         return result.getValue();
     }
 
@@ -190,10 +197,10 @@ public class AcceptanceTests {
         return result;
     }
 
-    protected static List<String> memberLogin(String name, String password) throws Exception {
+    protected static ResponseT<List<String>> memberLogin(String name, String password) throws Exception {
         NamePasswordRequest request = new NamePasswordRequest(name, password);
         ResponseT<List<String>> result = Service.getInstance().memberLogin(request);
-        return result.getValue();
+        return result;
     }
 
     protected Response closeShop(String shopOwnerName, String shopName) throws Exception {
@@ -250,6 +257,14 @@ public class AcceptanceTests {
 
     protected MemberFacade getMember(String memberName){
         return Service.getInstance().getMember(memberName).getValue();
+    }
+
+    protected VisitorFacade getVisitor(String name){
+        return Service.getInstance().getVisitor(name).getValue();
+    }
+
+    protected ItemFacade getItemById(int id){
+        return Service.getInstance().getItemById(id).getValue();
     }
 
 

@@ -49,6 +49,7 @@ public class ShopFacade implements FacadeObject<Shop> {
     }
 
     private void updateItemsAmount(Map<Integer, Double> itemsAmount){
+        itemsCurrentAmount = new HashMap<>();
         for (Map.Entry<Integer, Double> entry: itemsAmount.entrySet()){
             itemsCurrentAmount.put(entry.getKey(), entry.getValue());
         }

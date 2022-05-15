@@ -86,8 +86,11 @@ public class UserController {
         throw new UnsupportedOperationException();
     }
 
-    public Visitor getVisitor(String visitorName){
-        return this.visitorsInMarket.get(visitorName);
+    public Visitor getVisitor(String visitorName) throws MarketException {
+        Visitor visitor = this.visitorsInMarket.get(visitorName);
+        if (visitor == null)
+            throw new MarketException("no such visitor in the market");
+        return visitor;
     }
     public Map<String, Visitor> getVisitorsInMarket() {
         return visitorsInMarket;

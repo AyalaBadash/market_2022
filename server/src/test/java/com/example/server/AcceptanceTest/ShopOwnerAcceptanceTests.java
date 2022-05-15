@@ -5,6 +5,8 @@ import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
 import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.Response;
+import com.example.server.serviceLayer.ResponseT;
+import com.example.server.serviceLayer.Service;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -41,13 +43,13 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     public void addNewItem() {
         try {
 
-            Response response = addItemToShop(shopOwnerName, steakName, steakPrice, steakCategory,
+            ResponseT<ItemFacade> response = addItemToShop(shopOwnerName, steakName, steakPrice, steakCategory,
                     steakInfo, steakKeywords, 5.0, shopName);
             assert !response.isErrorOccurred();
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             boolean found = false;
-            for (Map.Entry<ItemFacade, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
-                ItemFacade item = itemAmount.getKey();
+            for (Map.Entry<Integer, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
+                ItemFacade item = getItemById(itemAmount.getKey());
                 Double amount = itemAmount.getValue();
                 if (item.getName().equals("steak")) {
                     found = amount.equals(5.0);
@@ -66,15 +68,15 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     @DisplayName("add existing item")
     public void addExistingItem() {
         try {
-            Response response = addItemToShop(shopOwnerName, "milk", productPrice, Item.Category.general,
+            ResponseT<ItemFacade> response = addItemToShop(shopOwnerName, "milk", productPrice, Item.Category.general,
                     "soy", new ArrayList<>(), 10, shopName);
             assert response.isErrorOccurred();
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             boolean found = false;
-            for (Map.Entry<ItemFacade, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
-                ItemFacade item = itemAmount.getKey();
+            for (Map.Entry<Integer, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
+                ItemFacade item = getItemById(itemAmount.getKey());
                 Double amount = itemAmount.getValue();
-                if (item.getName().equals("steak")) {
+                if (item.getName().equals("milk")) {
                     found = amount.equals(productAmount);
                     break;
                 }
@@ -94,13 +96,13 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
             Response response = setItemCurrentAmount(shopOwnerName, milk, 8.0, shopName);
             assert !response.isErrorOccurred();
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             boolean found = false;
-            for (Map.Entry<ItemFacade, Double> itemToAmount : shop.getItemsCurrentAmount().entrySet()) {
-                ItemFacade item = itemToAmount.getKey();
+            for (Map.Entry<Integer, Double> itemToAmount : shop.getItemsCurrentAmount().entrySet()) {
+                ItemFacade item = getItemById(itemToAmount.getKey());
                 Double amount = itemToAmount.getValue();
-                if (found) break;
                 found = item.getName().equals("milk") && amount.equals(8.0);
+                if (found) break;
             }
             assert found;
 
@@ -116,10 +118,10 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
             Response response = setItemCurrentAmount(shopOwnerName, milk, 0, shopName);
             assert !response.isErrorOccurred();
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             boolean found = false;
-            for (Map.Entry<ItemFacade, Double> itemToAmount : shop.getItemsCurrentAmount().entrySet()) {
-                ItemFacade item = itemToAmount.getKey();
+            for (Map.Entry<Integer, Double> itemToAmount : shop.getItemsCurrentAmount().entrySet()) {
+                ItemFacade item = getItemById(itemToAmount.getKey());
                 Double amount = itemToAmount.getValue();
                 if (found) break;
                 found = item.getName().equals("milk") && amount.equals(0.0);
@@ -135,7 +137,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     @DisplayName("remove item from shop")
     public void removeItemFromShopTest() {
         try {
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             ItemFacade steak = null;
             for (Map.Entry<Integer, ItemFacade> items : shop.getItemMap().entrySet()) {
                 if (items.getValue().getName().equals(steakName)) {
@@ -145,7 +147,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             assert steak != null;
             Response response = removeItemFromShop(shopOwnerName, steak, shopName);
             assert !response.isErrorOccurred();
-            shop = getShopInfo(shopOwnerName, shopName);
+            shop = getShopInfo(shopOwnerName, shopName).getValue();
             for (Map.Entry<Integer, ItemFacade> items : shop.getItemMap().entrySet()) {
                 assert !items.getValue().getName().equals(steakName);
             }
@@ -175,7 +177,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             String newInfo = "out of Date!";
             Response response = changeShopItemInfo(shopOwnerName, newInfo, milk, shopName);
             assert !response.isErrorOccurred();
-            ShopFacade newShop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade newShop = getShopInfo(shopOwnerName, shopName).getValue();
             boolean found = false;
             for (Map.Entry<Integer, ItemFacade> idToItem : newShop.getItemMap().entrySet()) {
                 ItemFacade item = idToItem.getValue();
@@ -198,7 +200,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             String newInfo = "";
             Response response = changeShopItemInfo(shopOwnerName, newInfo, milk, shopName);
             assert !response.isErrorOccurred();
-            ShopFacade newShop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade newShop = getShopInfo(shopOwnerName, shopName).getValue();
             boolean found = false;
             for (Map.Entry<Integer, ItemFacade> idToItem : newShop.getItemMap().entrySet()) {
                 ItemFacade item = idToItem.getValue();
@@ -222,12 +224,12 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             String nextOwnerName = "raz1";
             String nextOwnerPass = "123";
             Response response = register(nextOwnerName, nextOwnerPass);
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             int prevAppoints = shop.getEmployees().size();
             response = appointShopOwner(shopOwnerName, nextOwnerName, shopName);
             assert !response.isErrorOccurred();
-            shop = getShopInfo(shopOwnerName, shopName);
-            assert shop.getEmployees().size() + 1 == prevAppoints;
+            shop = getShopInfo(shopOwnerName, shopName).getValue();
+            assert shop.getEmployees().size() - 1 == prevAppoints;
         } catch (Exception e) {
             assert false;
         }
@@ -241,12 +243,12 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             String nextOwnerName = "raz2";
             String nextOwnerPass = "123";
             Response response = register(nextOwnerName, nextOwnerPass);
-            ShopFacade shop = getShopInfo(shopOwnerName, shopName);
+            ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             int prevAppoints = shop.getEmployees().size();
             response = appointShopManager(shopOwnerName, nextOwnerName, shopName);
             assert !response.isErrorOccurred();
-            shop = getShopInfo(shopOwnerName, shopName);
-            assert shop.getEmployees().size() + 1 == prevAppoints;
+            shop = getShopInfo(shopOwnerName, shopName).getValue();
+            assert shop.getEmployees().size() - 1 == prevAppoints;
         } catch (Exception e) {
             assert false;
         }
@@ -261,22 +263,16 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             String password = "9may";
             String name = "razBam";
             register(name, password);
-            List<String> questions = memberLogin(name, password);
+            List<String> questions = memberLogin(name, password).getValue();
             validateSecurityQuestions(name, new ArrayList<>(), visitor.getName());
             // open shop
             String shopName = "RealMadrid_Fuckers";
             openShop(name, shopName);
-            ShopFacade shop = getShopInfo(name, shopName);
+            ShopFacade shop = getShopInfo(name, shopName).getValue();
             Response response = closeShop(name, shopName);
             assert !response.isErrorOccurred();
-            try {
-                shop = getShopInfo(name, shopName);
-                assert false;
-            } catch (Exception e) {
-                assert true;
-            }
-            ;
-
+            ResponseT<ShopFacade> responseShop = getShopInfo(name, shopName);
+            assert responseShop.isErrorOccurred();
         } catch (Exception e) {
             assert false;
         }

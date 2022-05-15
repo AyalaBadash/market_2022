@@ -302,6 +302,11 @@ public class MarketUnitTest {
         List<String> ans = new ArrayList<>();
         ans.add("1995");
         try {
+            market.memberLogout("raz");
+        } catch (MarketException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
             Member test= market.validateSecurityQuestions("raz",ans,"@visitor1");
             Assertions.assertNotNull(test);
 

@@ -57,7 +57,7 @@ public class UserService {
         }
         catch (MarketException e)
         {
-            responseT = new ResponseT<>(false);
+            responseT = new ResponseT<>(e.getMessage());
         }
         return responseT;
     }
@@ -149,8 +149,21 @@ public class UserService {
         }
     }
 
-    public Member getMember(String memberName) {
-        return UserController.getInstance().getMember(memberName);
+    public ResponseT<MemberFacade> getMember(String memberName) {
+        try {
+            Member member = UserController.getInstance().getMember(memberName);
+            return new ResponseT<>(new MemberFacade(member));
+        }catch (Exception e){
+            return new ResponseT<>(e.getMessage());
+        }    }
+
+    public ResponseT<VisitorFacade> getVisitor(String name) {
+        try {
+            Visitor visitor = UserController.getInstance().getVisitor(name);
+            return new ResponseT<>(new VisitorFacade(visitor));
+        }catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
     }
 
     //  public ResponseT<String> checkNotifications(String userName, ){
