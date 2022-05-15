@@ -7,15 +7,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBasket implements IHistory {
-    private Map<Item, Double> items;//<Item,quantity>
+    private Map<Integer, Double> items;//<Item,quantity>
+    private Map<Integer, Item> itemMap;
     private double price;
 
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
         price = 0;
     }
-    public ShoppingBasket(Map<Item,Double> items , double price){
+    public ShoppingBasket(Map<Integer,Double> items ,Map<Integer,Item> itemMap , double price){
         this.items = items;
+        this.itemMap = itemMap;
         this.price = price;
     }
 
@@ -23,8 +25,8 @@ public class ShoppingBasket implements IHistory {
     @Override
     public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();
-        for (Map.Entry<Item, Double> itemToAmount : items.entrySet()) {
-            Item item = itemToAmount.getKey();
+        for (Map.Entry<Integer, Double> itemToAmount : items.entrySet()) {
+            Item item = itemMap.get(itemToAmount.getKey());
             Double amount = itemToAmount.getValue();
             if (amount > 0) {
                 review.append(String.format("%s, amount: %f\n", item.getReview(), amount));
@@ -51,9 +53,9 @@ public class ShoppingBasket implements IHistory {
 
     private double calculatePrice() {
         double price = 0;
-        for (Map.Entry<Item,Double> currItem:items.entrySet())
+        for (Map.Entry<Integer,Double> currItem:items.entrySet())
         {
-            price = price + currItem.getValue()*currItem.getKey().getPrice();
+            price = price + currItem.getValue()*itemMap.get(currItem.getKey()).getPrice();
         }
         DecimalFormat format = new DecimalFormat("#.###");
         price = Double.parseDouble(format.format(price));
@@ -65,7 +67,7 @@ public class ShoppingBasket implements IHistory {
         if (this.items == null || this.items.isEmpty()) {
             return true;
         } else {
-            for (Map.Entry<Item, Double> itemDoubleEntry : items.entrySet()) {
+            for (Map.Entry<Integer, Double> itemDoubleEntry : items.entrySet()) {
                 if (itemDoubleEntry.getValue() > 0) {
                     return false;
                 }
@@ -74,14 +76,15 @@ public class ShoppingBasket implements IHistory {
         return true;
     }
 
-    public Map<Item, Double> getItems() {
+    public Map<Integer, Double> getItems() {
         return items;
     }
 
     public void addItem(Item item, double amount) throws MarketException {
         if (amount<0)
             throw new MarketException("Cant add negative amount of item to basket.");
-        items.put(item,amount);
+        itemMap.put(item.getID(), item);
+        items.put(item.getID(),amount);
     }
 
     public void removeItem(Item item) {
@@ -90,7 +93,7 @@ public class ShoppingBasket implements IHistory {
 
 
     public void updateQuantity(double amount, Item item) throws MarketException {
-        if(!items.containsKey(item)){
+        if(!items.containsKey(item.getID())){
             throw new MarketException("Item is not in cart. cannot update amount");
         }
         if (amount<0)
@@ -98,7 +101,14 @@ public class ShoppingBasket implements IHistory {
             ErrorLog.getInstance().Log("Visitor tried to update negative amount for item.");
             throw new MarketException("Cant put negative amount for item");
         }
-        items.remove(item);
-        items.put(item, amount);
+        items.replace(item.getID(), amount);
+    }
+
+    public Map<Integer, Item> getItemMap() {
+        return itemMap;
+    }
+
+    public void setItemMap(Map<Integer, Item> itemMap) {
+        this.itemMap = itemMap;
     }
 }

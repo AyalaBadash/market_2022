@@ -24,16 +24,16 @@ public class ShoppingCartUnitTest extends mainTest {
     ShoppingBasket basket2 = Mockito.mock(ShoppingBasket.class);
     ShoppingCart shoppingCart = new ShoppingCart();
     Map<Shop,ShoppingBasket> cart;
-    Map<Item,Double> basket1Map;
-    Map<Item,Double> basket2Map;
+    Map<Integer,Double> basket1Map;
+    Map<Integer,Double> basket2Map;
 
     @BeforeEach
     public void reset (){
         basket1Map = new HashMap<>();
         basket2Map = new HashMap<>();
-        basket1Map.put(item,5.0);
-        Map<Item,Double> basket2Map=new HashMap<>();
-        basket1Map.put(item2,5.0);
+        basket1Map.put(item.getID(),5.0);
+        Map<Integer,Double> basket2Map=new HashMap<>();
+        basket1Map.put(item2.getID(),5.0);
         Mockito.when(basket.getItems()).thenReturn(basket1Map);
         Mockito.when(basket2.getItems()).thenReturn(basket2Map);
         cart = new HashMap<>();
