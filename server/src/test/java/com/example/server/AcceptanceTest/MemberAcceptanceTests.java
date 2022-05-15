@@ -1,15 +1,14 @@
 package com.example.server.AcceptanceTest;
 
-import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShoppingBasketFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
-import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
+import com.example.server.businessLayer.ShoppingBasket;
+import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.ResponseT;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MemberAcceptanceTests extends AcceptanceTests {
     @Nested
@@ -120,7 +119,8 @@ public class MemberAcceptanceTests extends AcceptanceTests {
         public void checkMemberSaved() {
             try {
                 addItemToCart(milk, productAmount - 1, shopName, testMemberName);
-                ShoppingCartFacade prevCart = testMember.getMyCart();
+                testMember = getMember(testMemberName);
+                ShoppingCartFacade prevCart = getMember(testMember.getName()).getMyCart();
                 VisitorFacade visitor = logout(testMember.getName());
                 assert visitor.getCart().getCart().isEmpty();
                 List<String> questions = memberLogin(testMember.getName(), testMemberPassword);
@@ -129,23 +129,33 @@ public class MemberAcceptanceTests extends AcceptanceTests {
                 Assertions.assertEquals(returnedMember.getAppointedByMe(), testMember.getAppointedByMe());
                 Assertions.assertEquals(returnedMember.getName(), testMember.getName());
                 Assertions.assertEquals(returnedMember.getMyAppointments(), testMember.getMyAppointments());
-                if (!(testMember.getMyCart() == returnedMember.getMyCart())) {
+                if (testMember.getMyCart() != returnedMember.getMyCart()) {
                     assert testMember.getMyCart().getCart().size() == returnedMember.getMyCart().getCart().size();
                     // for each shop - check equals
-                    prevCart.getCart().forEach((shop, prevBasket) -> {
-                        assert returnedMember.getMyCart().getCart().containsKey(shop);
-                        ShoppingBasketFacade newBasket = returnedMember.getMyCart().getCart().get(shop);
-                        // for each item in shopping basket
-                        prevBasket.getItems().forEach((item, amount) -> {
-                            assert newBasket.getItems().size() == prevBasket.getItems().size();
-                            assert newBasket.getItems().containsKey(item);
-                            assert newBasket.getItems().get(item).equals(amount);
-                        });
-                    });
+                    ShoppingCartFacade shoppingCartFacade = testMember.getMyCart();
+                    for(Map.Entry<String,ShoppingBasketFacade> entry : shoppingCartFacade.getCart().entrySet()){
+                        assert returnedMember.getMyCart().getCart().containsKey(entry.getKey());
+                        ShoppingBasketFacade shoppingBasket = returnedMember.getMyCart().getCart().get(entry.getKey());
+                        assert shoppingBasket.getItems().size() == entry.getValue().getItems().size();
+                        for(Map.Entry<ItemFacade, Double> entry1 : entry.getValue().getItems().entrySet()){
+                            assert shoppingBasket.getItems().containsKey(entry1.getKey());
+                            assert shoppingBasket.getItems().get(entry1.getKey()).equals(entry1.getValue());
+                        }
+                    }
+//                    prevCart.getCart().forEach((shop, prevBasket) -> {
+//                        assert returnedMember.getMyCart().getCart().containsKey(shop);
+//                        ShoppingBasketFacade newBasket = returnedMember.getMyCart().getCart().get(shop);
+//                        // for each item in shopping basket
+//                        prevBasket.getItems().forEach((item, amount) -> {
+//                            assert newBasket.getItems().size() == prevBasket.getItems().size();
+//                            assert newBasket.getItems().containsKey(item);
+//                            assert newBasket.getItems().get(item).equals(amount);
+//                        });
+//                    });
                 }
                 // for each shopping basket - checks equals
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                assert false;
             }
 
         }

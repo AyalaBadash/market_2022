@@ -248,8 +248,9 @@ public class AcceptanceTests {
         return result.getValue();
     }
 
-
-
+    protected MemberFacade getMember(String memberName){
+        return Service.getInstance().getMember(memberName).getValue();
+    }
 
 
 }

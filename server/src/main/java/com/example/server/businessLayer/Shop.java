@@ -89,7 +89,7 @@ public class Shop implements IHistory {
     }*/
 
     public double getItemCurrentAmount(Item item) {
-        return itemsCurrentAmount.get(item);
+        return itemsCurrentAmount.get(itemMap.get(item.getID()));
     }
 
     public Map<Item, Double> getItemsCurrentAmountMap() {

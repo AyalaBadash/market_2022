@@ -101,4 +101,8 @@ public class Item implements IHistory {
     public int getRank(){return rank;}
     public int getRankers(){return rankers;}
 
+    public boolean equals(Item itemToCompare){
+        return  itemToCompare.ID == ID;
+    }
+
 }

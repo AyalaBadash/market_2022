@@ -3,6 +3,7 @@ package com.example.server.serviceLayer;
 import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Users.Member;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -314,4 +315,12 @@ public class Service implements IService {
     }
 
 
+    public ResponseT<MemberFacade> getMember(String memberName) {
+        try {
+            Member member = userService.getMember(memberName);
+            return new ResponseT<>(new MemberFacade(member));
+        }catch (Exception e){
+            return new ResponseT<>(e.getMessage());
+        }
+    }
 }
