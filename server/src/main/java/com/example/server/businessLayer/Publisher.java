@@ -116,6 +116,17 @@ public class Publisher {
         }
     }
 
+    public void sendAppointmentRemovedNotification(String name,String shopsName) throws MarketException {
+
+        try {
+
+            RealTimeNotifications not = new RealTimeNotifications();
+            not.createShopPermissionDeniedMessage(name, shopsName);
+            sendImmediateNotification(name, not);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
     public void sendItemBaughtNotificationsBatch(ArrayList<String> name, String shopName, ArrayList<String> itemName, ArrayList<Double> price) throws MarketException {
 
         try {
@@ -147,12 +158,9 @@ public class Publisher {
 
         }
         catch (Exception e){
-            //TODO - implement
-            throw e;
         }
     }
 
-    //Todo: Add to reopened shop method in market
     public void sendShopReOpenedBatchNotificationsBatch(ArrayList<String> name, String shopName) throws MarketException {
 
         try {
@@ -169,7 +177,6 @@ public class Publisher {
         }
     }
 
-    //Todo: Add to shop shop closed permanently method in market
     public void sendShopClosedPermanentlyBatchNotificationsBatch(ArrayList<String> name, String shopName) throws MarketException {
 
         try {

@@ -63,7 +63,6 @@ public class Shop implements IHistory {
             ErrorLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
-        //TODO: check the ability to remove permission(not update).
         this.shopManagers.put ( managerName, appointment );
     }
 

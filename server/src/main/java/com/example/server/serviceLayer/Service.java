@@ -316,19 +316,6 @@ public class Service implements IService {
         return marketService.getHistoryByMember (request.getSystemManagerName(), request.getMemberName() );
     }
 
-    //TODO:ADD USER WHEN LOGIN
-    @GetMapping("/registration/{username}")
-    public ResponseEntity<Void> registerUser(@PathVariable String userName){
-        try{
-            Publisher.getInstance().addAddress(userName);
-        }
-        catch(Exception e){
-
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok().build();
-    }
-
     @Override
     @RequestMapping(value = "/removeShopOwnerAppointment")
     @CrossOrigin
