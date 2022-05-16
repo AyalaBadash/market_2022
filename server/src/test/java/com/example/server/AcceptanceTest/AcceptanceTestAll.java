@@ -705,7 +705,7 @@
 //                assert !response.isErrorOccurred();
 //                ShopFacade shop = getShopInfo(shopOwnerName, shopName);
 //                boolean found = false;
-//                for (Map.Entry<Integer, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
+//                for (Map.Entry<ItemFacade, Double> itemAmount : shop.getItemsCurrentAmount().entrySet()) {
 //                    ItemFacade item = itemAmount.getKey();
 //                    Double amount = itemAmount.getValue();
 //                    if (item.getName().equals("steak")) {

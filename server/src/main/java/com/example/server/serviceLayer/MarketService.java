@@ -162,15 +162,15 @@ public class MarketService {
     }
 
 
-    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
+    public ResponseT<ItemFacade> addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
                                   List<String> keywords, double amount, String shopName) {
-        Response response;
+        ResponseT<ItemFacade> response;
         try {
-            market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
-            response = new Response();
+            Item item = market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
+            response = new ResponseT(new ItemFacade(item));
         }
         catch (MarketException e){
-            response = new Response(e.getMessage());
+            response = new ResponseT(e.getMessage());
         }
         return response;
 
@@ -335,5 +335,23 @@ public class MarketService {
             response = new Response(e.getMessage());
         }
         return response;
+    }
+
+    public ResponseT<ItemFacade> getItemInfo(String name, int itemId) {
+        try {
+            Item item = market.getItemById(name, itemId);
+            return new ResponseT<>(new ItemFacade(item));
+        } catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
+    }
+
+    public ResponseT<ItemFacade> getItemById(int id) {
+        try {
+            Item item = market.getItemByID(id);
+            return new ResponseT<>(new ItemFacade(item));
+        }catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
     }
 }

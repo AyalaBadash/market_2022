@@ -184,7 +184,7 @@ public class VisitorTests {
                 assert basket.getItems().size() == 1;
                 assert shop.getShopName().equals(shopName);
                 // check right amount added
-                assert basket.getItems().get(milk).equals(3.0);
+                assert basket.getItems().get(milk.getID()).equals(3.0);
             });
 
         } catch (Exception e) {

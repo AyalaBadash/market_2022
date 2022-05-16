@@ -6,11 +6,14 @@ import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.businessLayer.Users.Member;
+import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.*;
 
 
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.List;
 
 public class UserService {
@@ -54,7 +57,7 @@ public class UserService {
         }
         catch (MarketException e)
         {
-            responseT = new ResponseT<>(false);
+            responseT = new ResponseT<>(e.getMessage());
         }
         return responseT;
     }
@@ -84,7 +87,7 @@ public class UserService {
         ResponseT<VisitorFacade> toReturn;
         try {
             //  TODO cannot create visitor here! id must be re generated. also, cart cannot be null;
-            VisitorFacade visitorFacade = new VisitorFacade(market.memberLogout(visitorName) , null, null);
+            VisitorFacade visitorFacade = new VisitorFacade(market.memberLogout(visitorName) , null, new ShoppingCartFacade(new ShoppingCart()));
             toReturn = new ResponseT<>(visitorFacade);
         } catch (Exception e) {
             toReturn = new ResponseT<>(e.getMessage());
@@ -143,6 +146,23 @@ public class UserService {
             return new ResponseT<> ( memberLoggedIn );
         }catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );
+        }
+    }
+
+    public ResponseT<MemberFacade> getMember(String memberName) {
+        try {
+            Member member = UserController.getInstance().getMember(memberName);
+            return new ResponseT<>(new MemberFacade(member));
+        }catch (Exception e){
+            return new ResponseT<>(e.getMessage());
+        }    }
+
+    public ResponseT<VisitorFacade> getVisitor(String name) {
+        try {
+            Visitor visitor = UserController.getInstance().getVisitor(name);
+            return new ResponseT<>(new VisitorFacade(visitor));
+        }catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
         }
     }
 

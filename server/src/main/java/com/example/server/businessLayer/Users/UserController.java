@@ -86,8 +86,11 @@ public class UserController {
         throw new UnsupportedOperationException();
     }
 
-    public Visitor getVisitor(String visitorName){
-        return this.visitorsInMarket.get(visitorName);
+    public Visitor getVisitor(String visitorName) throws MarketException {
+        Visitor visitor = this.visitorsInMarket.get(visitorName);
+        if (visitor == null)
+            throw new MarketException("no such visitor in the market");
+        return visitor;
     }
     public Map<String, Visitor> getVisitorsInMarket() {
         return visitorsInMarket;
@@ -102,18 +105,16 @@ public class UserController {
             ErrorLog.getInstance().Log("Non member tried to logout");
             throw new MarketException("no such member");
         }
-        else if (!visitorsInMarket.containsKey(member)) {
+        if (!visitorsInMarket.containsKey(member)) {
             ErrorLog.getInstance().Log("member who is not visiting tried to logout");
             throw new MarketException("not currently visiting the shop");
         }
-        else{
-            visitorsInMarket.remove(member);
-            String newVisitorName = getNextUniqueName();
-            Visitor newVisitor = new Visitor(newVisitorName);
-            visitorsInMarket.put(newVisitorName, newVisitor);
-            EventLog.getInstance().Log("Our beloved member "+member+" logged out.");
-            return newVisitorName;
-        }
+        visitorsInMarket.remove(member);
+        String newVisitorName = getNextUniqueName();
+        Visitor newVisitor = new Visitor(newVisitorName);
+        visitorsInMarket.put(newVisitorName, newVisitor);
+        EventLog.getInstance().Log("Our beloved member " + member + " logged out.");
+        return newVisitorName;
     }
     public synchronized Member finishLogin(String userName, String visitorName) throws MarketException {
         Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());

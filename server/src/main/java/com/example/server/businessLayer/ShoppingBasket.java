@@ -13,6 +13,7 @@ public class ShoppingBasket implements IHistory {
 
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
+        itemMap = new ConcurrentHashMap<>();
         price = 0;
     }
     public ShoppingBasket(Map<Integer,Double> items ,Map<Integer,Item> itemMap , double price){
@@ -44,11 +45,10 @@ public class ShoppingBasket implements IHistory {
     public double getPrice() {
         return calculatePrice();
     }
-    //TODO - price should be up to 3 digits . Example : 3.14159265 -> 3.141
 
     //TODO - add calculationOfDiscount
     public double getPriceWithDiscount() {
-        return calculatePrice();
+        throw new UnsupportedOperationException();
     }
 
     private double calculatePrice() {
@@ -83,12 +83,15 @@ public class ShoppingBasket implements IHistory {
     public void addItem(Item item, double amount) throws MarketException {
         if (amount<0)
             throw new MarketException("Cant add negative amount of item to basket.");
-        itemMap.put(item.getID(), item);
+        if(itemMap.get(item.getID()) == null)
+            itemMap.put(item.getID(), item);
+        else
+            amount += items.get(item.getID());
         items.put(item.getID(),amount);
     }
 
     public void removeItem(Item item) {
-        items.remove(item);
+        items.remove(item.getID());
     }
 
 
