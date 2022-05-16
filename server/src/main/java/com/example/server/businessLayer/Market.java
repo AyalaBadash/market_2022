@@ -639,7 +639,7 @@ public class Market {
     }
 
     //TODO  - use acquisition class.
-    public void buyShoppingCart(String visitorName, double expectedPrice,
+    public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice,
                                 PaymentMethod paymentMethod, Address address) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -658,8 +658,9 @@ public class Market {
             }
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Shopping cart price has been changed for a costumer");
-            throw new MarketException(String.format("Sorry, the price cart price change\n" +
-                    "The new Price is: %f\nThe old Price was: %f\n",actualPrice,expectedPrice));
+//            throw new MarketException(String.format("Sorry, the price cart price change\n" +
+//                    "The new Price is: %f\nThe old Price was: %f\n",actualPrice,expectedPrice));
+            return cart;
         }
         String supplyID = "";
         // tries to pay if fails - return items to shops
@@ -687,6 +688,7 @@ public class Market {
             }
             cart.clear();
         }
+        return null;
     }
 
 
