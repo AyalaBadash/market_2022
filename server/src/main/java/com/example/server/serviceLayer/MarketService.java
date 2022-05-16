@@ -354,4 +354,13 @@ public class MarketService {
             return new ResponseT<>(e.getMessage());
         }
     }
+
+    public ResponseT<String> getMarketInfo(String sysManager) {
+        try{
+            return new ResponseT<>(market.getMarketInfo(sysManager));
+        }
+        catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
+    }
 }

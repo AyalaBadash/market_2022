@@ -207,4 +207,9 @@ public class Proxy implements IService  {
     public ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request) {
         return null;
     }
+
+    @Override
+    public ResponseT<String> getMarketInfo(GetMarketInfoRequest request) {
+        return null;
+    }
 }
