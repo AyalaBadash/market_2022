@@ -2,12 +2,9 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
+import com.example.server.businessLayer.*;
 import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.ShoppingBasket;
-import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
@@ -34,6 +31,7 @@ public class MemberTests {
     CreditCard creditCard;
     Address address;
     Item milk;
+    Item cookies;
 
     @BeforeAll
     public void setUpMember() {
@@ -52,10 +50,10 @@ public class MemberTests {
             productPrice = 1.2;
             List<String> keywords = new ArrayList<>();
             keywords.add("in sale");
-            market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
+            milk = market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
                     "soy",keywords , productAmount,shopName);
-            List<Item> res = market.getItemByName("milk");
-            milk = res.get(0);
+            cookies = market.addItemToShop(shopManagerName, "cookies", productPrice, Item.Category.general, "",
+                    keywords, productAmount, shopName);
             testMemberName = "managerTest";
             testMemberPassword = "1234";
             Visitor visitor2 = market.guestLogin();
@@ -160,13 +158,13 @@ public class MemberTests {
     public void checkMemberSaved() {
         try {
             market.addItemToShoppingCart(milk, productAmount-1,shopName,testMemberName);
+            testMember = UserController.getInstance().getMember(testMemberName);
             ShoppingCart prevCart = testMember.getMyCart();
             String visitorName = market.memberLogout(testMember.getName());
             Visitor visitor = UserController.getInstance().getVisitor(visitorName);
             List<String> questions = market.memberLogin(testMember.getName(), testMemberPassword);
-            market.validateSecurityQuestions(testMember.getName(), new ArrayList<>(),
+            Member returnedMember = market.validateSecurityQuestions(testMember.getName(), new ArrayList<>(),
                     visitorName);
-            Member returnedMember = visitor.getMember();
             Assertions.assertEquals(returnedMember.getAppointedByMe(), testMember.getAppointedByMe());
             Assertions.assertEquals(returnedMember.getName(), testMember.getName());
             Assertions.assertEquals(returnedMember.getMyAppointments(), testMember.getMyAppointments());
@@ -198,10 +196,13 @@ public class MemberTests {
             Visitor visitor = market.guestLogin();
             List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
             Member newMember = market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
-            Assertions.assertNull(newMember);
+            Assertions.assertNotNull(newMember);
+            visitor = market.guestLogin();
+            questions = market.memberLogin(testMemberName, testMemberPassword);
+            newMember = market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
             assert false;
         } catch (Exception e) {
-            assert false;
+            assert true;
         }
     }
 
@@ -257,25 +258,49 @@ public class MemberTests {
             Member member = market.validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
             market.addPersonalQuery("whats your mother's name?", "idk", member.getName());
             String visitorName = market.memberLogout(member.getName());
-            questions = market.memberLogin(currName, "123");
             try {
                 questions = market.memberLogin(currName, "123");
                 assert false;
-            } catch (Exception ignored) {
+            }catch (MarketException e){
+                assert true;
             }
-            questions = market.memberLogin(currName, password);
             ArrayList<String> answers = new ArrayList<>();
             answers.add("idk1");
             try {
                 member = market.validateSecurityQuestions(currName, answers, member.getName());
-                assert member == null;
             } catch (Exception ignored) {
+                assert true;
             }
             answers.clear();
             answers.add("idk");
-            assert member != null;
             member = market.validateSecurityQuestions(currName, answers, member.getName());
+            Assertions.assertNotNull(member);
         } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("login-addToCart-logout-addToCart-buy")
+    public void loginAndLogoutSenario() {
+        String memberName = "Kim";
+        String password = "guideDog";
+        Visitor visitor = market.guestLogin();
+        try {
+            market.register(memberName, password);
+            market.memberLogin(memberName, password);
+            Member member = market.validateSecurityQuestions(memberName, null, visitor.getName());
+            market.addItemToShoppingCart(milk, 1, shopName, memberName);
+            String visitorName = market.memberLogout(memberName);
+            market.addItemToShoppingCart(cookies, 1, shopName, visitorName);
+            visitor = UserController.getInstance().getVisitor(visitorName);
+            assert visitor.getCart().getItemQuantity(milk) == 0;
+            assert visitor.getCart().getItemQuantity(cookies) == 1;
+            market.memberLogin(memberName, password);
+            member = market.validateSecurityQuestions(memberName, null, visitorName);
+            assert member.getMyCart().getItemQuantity(milk) == 1;
+            assert member.getMyCart().getItemQuantity(cookies) == 0;
+        }catch (MarketException e){
             assert false;
         }
     }
