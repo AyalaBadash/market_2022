@@ -144,8 +144,7 @@ public class Publisher {
                 sendImmediateNotification(name.get(i), not);
 
             }
-        } catch (Exception e) {
-            throw e;
+
         }
         catch (Exception e){
             //TODO - implement

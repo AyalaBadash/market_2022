@@ -338,9 +338,12 @@ public class Market {
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
             history.closeShop(shopToClose);
             //send notifications to shop owners:
-            publisher.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
-                    .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
-                    .collect(Collectors.toList())),shopName);
+            try{
+                publisher.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
+                        .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
+                        .collect(Collectors.toList())),shopName);
+            }
+            catch(Exception e){}
             //
             EventLog.getInstance().Log("The shop " +shopName+ " has been closed.");
         }

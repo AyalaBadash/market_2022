@@ -190,9 +190,10 @@ public class Shop implements IHistory {
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
-        //TODO cancel comment
-//        publisher.sendItemBaughtNotificationsBatch(names,shopName,itemsNames,prices);
-        //
+        try{
+            publisher.sendItemBaughtNotificationsBatch(names,shopName,itemsNames,prices);
+        }
+        catch (Exception e){}
         return shoppingBasket.getPrice ( );
     }
 
