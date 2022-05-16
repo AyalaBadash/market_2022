@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Users;
 
 
 import com.example.server.ResourcesObjects.EventLog;
+import com.example.server.businessLayer.Acquisition;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
@@ -15,7 +16,8 @@ public class Member {
     private ShoppingCart myCart;
     private List<Appointment> appointedByMe;
     private List<Appointment> myAppointments;
-    private List<ShoppingCart> purchaseHistory;
+    private List<Acquisition> purchaseHistory;
+
 
 
     public Member(String name) throws MarketException {
@@ -28,7 +30,7 @@ public class Member {
         purchaseHistory = new ArrayList<> (  );
     }
 
-    public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<ShoppingCart> purchaseHistory ){
+    public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<Acquisition> purchaseHistory ){
         this.name = name;
         myCart = shoppingCart;
         this.appointedByMe = appointmentedByME;
@@ -78,8 +80,8 @@ public class Member {
     public StringBuilder getPurchaseHistoryString() {
         StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
         int i = 1;
-        for(ShoppingCart shoppingCart : purchaseHistory){
-            history.append ( String.format ( "purchase %d:\n%s", i, shoppingCart.getReview () ));
+        for(Acquisition acquisition : purchaseHistory){
+            history.append ( String.format ( "purchase %d:\n%s", i, acquisition.toString () ));//TODO - Check if shoppingCart.getReview is same as acq.tostring
             i++;
         }
         EventLog eventLog = EventLog.getInstance();
@@ -87,11 +89,11 @@ public class Member {
         return history;
     }
 
-    public List<ShoppingCart> getPurchaseHistory() {
+    public List<Acquisition> getPurchaseHistory() {
         return purchaseHistory;
     }
 
-    public void savePurchase(ShoppingCart cart) {
-        purchaseHistory.add ( cart );
+    public void savePurchase(Acquisition acquisition) {
+        purchaseHistory.add ( acquisition );
     }
 }

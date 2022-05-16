@@ -3,9 +3,12 @@ package com.example.server.businessLayer.Policies.Discount;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.ShoppingBasket;
 
+import java.util.Map;
+
 public class AmountOfItemCondition extends Condition{
     private double amountNeeded;
     private Item itemNeeded;
+
 
     public AmountOfItemCondition(double amountNeeded, Item itemNeeded) {
         this.amountNeeded = amountNeeded;
@@ -19,6 +22,7 @@ public class AmountOfItemCondition extends Condition{
      */
     @Override
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) {
-        throw new UnsupportedOperationException();
+        Map<Item,Double> map = shoppingBasket.getItems();
+        return (map.containsKey(itemNeeded)&&map.get(itemNeeded)>=amountNeeded);
     }
 }
