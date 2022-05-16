@@ -65,7 +65,6 @@ public class Shop implements IHistory {
             ErrorLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
-        //TODO: check the ability to remove permission(not update).
         this.shopManagers.put ( managerName, appointment );
     }
 
@@ -192,9 +191,10 @@ public class Shop implements IHistory {
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
-        //TODO cancel comment
-//        publisher.sendItemBaughtNotificationsBatch(names,shopName,itemsNames,prices);
-        //
+        try{
+            publisher.sendItemBaughtNotificationsBatch(names,shopName,itemsNames,prices);
+        }
+        catch (Exception e){}
         return shoppingBasket.getPrice ( );
     }
 
