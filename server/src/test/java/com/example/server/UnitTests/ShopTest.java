@@ -201,7 +201,7 @@ public class ShopTest {
     @DisplayName("Set item amount - good test")
     public void setItemAmountTest(){
         try {
-            shop.setItemAmount("The founder",item,10);
+            shop.setItemAmount("The founder",item.getID(),10);
             Assertions.assertEquals(1,shop.getItemMap().size());
 
         } catch (Exception e) {
@@ -214,7 +214,7 @@ public class ShopTest {
     @DisplayName("Set item amount - fail test - negative amount")
     public void setItemAmountFailTest(){
         try {
-            shop.setItemAmount("The founder",item,-10);
+            shop.setItemAmount("The founder",item.getID(),-10);
             assert false;
 
         } catch (Exception e) {
@@ -227,7 +227,7 @@ public class ShopTest {
     public void setItemZeroAmountTest(){
         try {
 
-            shop.setItemAmount("The founder",item,0);
+            shop.setItemAmount("The founder",item.getID(),0);
             Assertions.assertEquals(1,shop.getItemMap().size());
 
         } catch (Exception e) {
@@ -251,8 +251,8 @@ public class ShopTest {
             currAmount.put(item, 1.0);
             currAmount.put(item2, 10.0);
             ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
-            Map<Item,Double> map = new HashMap<>();
-            map.put(item2,1.0);
+            Map<Integer,Double> map = new HashMap<>();
+            map.put(item2.getID(),1.0);
             Mockito.when(basket.getItems()).thenReturn(map);
             ReflectionTestUtils.setField(basket, "items", map);
             //Mockito.when(basket.getItems().get(item)).thenReturn(10.0);
@@ -289,11 +289,11 @@ public class ShopTest {
     @Test
     @DisplayName("Buy basket - good test.")
     public void buyBasketTest() {//TODO check with ido.
-        Map<Item,Double> itemsMap = new HashMap<>();
+        Map<Integer,Double> itemsMap = new HashMap<>();
         Item item1 = Mockito.mock(Item.class);
         Item item2 = Mockito.mock(Item.class);
-        itemsMap.put(item1,5.0);
-        itemsMap.put(item2,10.0);
+        itemsMap.put(item1.getID(),5.0);
+        itemsMap.put(item2.getID(),10.0);
         Mockito.when(item1.getID()).thenReturn(555);
         Mockito.when(item2.getID()).thenReturn(666);
         Mockito.when(item1.getPrice()).thenReturn(5.0);
@@ -320,13 +320,13 @@ public class ShopTest {
     @Test
     @DisplayName("Validate basket - good test.")
     public void validateBasketTest() {
-        Map<Item, Double> items = new HashMap<>();
+        Map<Integer, Double> items = new HashMap<>();
         Item item1 = Mockito.mock(Item.class);
         Mockito.when(item1.getID()).thenReturn(555);
         Mockito.when(item1.getID()).thenReturn(666);
         Item item2 = Mockito.mock(Item.class);
-        items.put(item1, 5.0);
-        items.put(item2, 5.0);
+        items.put(item1.getID(), 5.0);
+        items.put(item2.getID(), 5.0);
         Mockito.when(basket.getItems()).thenReturn(items);
         Map<Integer, Item> itemsInShop = new HashMap<>();
         itemsInShop.put(item1.getID(), item1);

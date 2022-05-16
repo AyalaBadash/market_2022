@@ -380,7 +380,7 @@ public class Market {
 
 
 
-    public void addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
+    public int addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
                               List<String> keywords, double amount, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -392,9 +392,10 @@ public class Market {
             ErrorLog.getInstance().Log("Tried to add item to a non existing shop.");
             throw new MarketException("shop does not exist in the market");
         }
-        Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment() );
+        Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.value() );
         updateMarketOnAddedItem ( addedItem, shopName );
         EventLog.getInstance().Log("Item added to shop "+shopName);
+        return nextItemID.increment();
     }
 
 
@@ -410,7 +411,7 @@ public class Market {
             ErrorLog.getInstance().Log("Tried to edit item on a non existing shop.");
             throw new MarketException ( "shop does not exist in system" );
         }
-        shop.setItemAmount(shopOwnerName,item,amount);
+        shop.setItemAmount(shopOwnerName,item.getID(),amount);
         EventLog.getInstance().Log("Item "+ item.getName() +" amount has been updated." );
     }
 
