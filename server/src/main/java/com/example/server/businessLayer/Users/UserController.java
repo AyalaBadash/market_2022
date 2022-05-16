@@ -128,6 +128,7 @@ public class UserController {
             throw new MarketException("member is already logged in");
         visitorsInMarket.put(userName,newVisitorMember);
         visitorsInMarket.remove ( visitorName );
+
         EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();
     }

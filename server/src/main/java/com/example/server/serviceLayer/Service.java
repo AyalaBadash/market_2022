@@ -1,19 +1,33 @@
 package com.example.server.serviceLayer;
 
+import com.example.server.WebSocket.Message;
 import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Publisher;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @RestController
+@CrossOrigin
 public class Service implements IService {
     private static Service service = null;
     MarketService marketService;
@@ -146,6 +160,7 @@ public class Service implements IService {
     @RequestMapping(value = "/memberLogin")
     @CrossOrigin
     public ResponseT<List<String>> memberLogin(@RequestBody NamePasswordRequest request) {
+
         return userService.memberLogin(request.getName(),request.getPassword());
     }
 
@@ -154,7 +169,7 @@ public class Service implements IService {
     @CrossOrigin
     public ResponseT<MemberFacade> validateSecurityQuestions(@RequestBody ValidateSecurityRequest request) {
         return userService.validateSecurityQuestions (request.getUserName(), request.getAnswers(), request.getVisitorName() );
-    }//TODO- where are we getting visitorName from
+    }
 
 
 

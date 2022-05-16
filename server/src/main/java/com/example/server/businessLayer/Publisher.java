@@ -1,186 +1,239 @@
 package com.example.server.businessLayer;
 
+import com.example.server.businessLayer.Users.UserController;
+import com.example.server.serviceLayer.FacadeObjects.OutputMessage;
+import com.example.server.serviceLayer.MessageController;
 import com.example.server.serviceLayer.Notifications.DelayedNotifications;
+import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@RestController
 public class Publisher {
 
     //singleton to avoid resending notifications and to control all notifications from one instance of one object.
-    private static Publisher instance= null;
+    private static Publisher instance = null;
 
-    //holds notifications to send to each member
+    //holds notifications to send to each domain(by the member name)
     private Map<String, List<DelayedNotifications>> membersNotifications;
 
-    private Map<String, String> memberToDomain;
-    private Map <String ,String>  addressBook;
-    private Publisher(){
-        membersNotifications= new ConcurrentHashMap<>();
-        addressBook= new ConcurrentHashMap<>();
-        memberToDomain=new ConcurrentHashMap<>();
-    }
+    //adapt the member name to the name given to the socket when the visitor signed in
+    private Map<String, String> memberNameToSocketName;
 
 
-    public static Publisher getInstance(){
+    //the sending message rest controller
+    private MessageController controller;
+    private Security security;
 
-        if(instance==null){
-            instance=new Publisher();
+
+    public static synchronized Publisher getInstance() {
+
+        if (instance == null) {
+            instance = new Publisher();
         }
         return instance;
     }
 
-
-    public void addNotification(String memberName , DelayedNotifications not){
-        if(!membersNotifications.containsKey(memberName)){
-            membersNotifications.put(memberName,new ArrayList<>());
-        }
-        membersNotifications.get(memberName).add(not);
+    private Publisher() {
+        membersNotifications = new ConcurrentHashMap<>();
+        controller = new MessageController();
+        memberNameToSocketName = new ConcurrentHashMap<>();
+        security= Security.getInstance();
     }
 
-        public List<DelayedNotifications> getMembersNotifications(String memberName){
-        if(!membersNotifications.containsKey(memberName)){
-            return new ArrayList<>();
+    //add new notification to the list in case member not logged in.
+    //the name is the members name.
+    public void addNotification(String name, DelayedNotifications not) {
+
+        //get the members name
+        if (!membersNotifications.containsKey(name)) {
+            membersNotifications.put(name, new ArrayList<>());
         }
-        else {
-            List<DelayedNotifications> ret=membersNotifications.get(memberName);
-            membersNotifications.remove(memberName);
+        membersNotifications.get(name).add(not);
+    }
+
+    //Get all notification of a member by its name.
+    public List<DelayedNotifications> getNotifications(String Name) {
+        if (!membersNotifications.containsKey(Name)) {
+            return new ArrayList<>();
+        } else {
+            List<DelayedNotifications> ret = membersNotifications.get(Name);
+            membersNotifications.remove(Name);
             return ret;
         }
     }
-    public String getAddressByDomain(String domain) throws MarketException {
-        if(!addressBook.containsKey(domain)){
+
+    //Return the socket name of a member.
+    public String getAddress(String memberName) throws MarketException {
+        if (!memberNameToSocketName.containsKey(memberName)) {
             throw new MarketException("Domain does not exist in system right now.");
         }
-        return addressBook.get(domain);
+        return memberNameToSocketName.get(memberName);
     }
-    public void addAddressToBook(String name,String domain, String address){
-        if(memberToDomain.containsKey(name)){
-            memberToDomain.remove(name);
-            addressBook.remove(domain);
+
+    //check if visitor/member is logged by the socket name.
+    public boolean isExists(String user) {
+        return memberNameToSocketName.containsKey(user);
+    }
+
+    //Add new socket. when guest logged in both values will be the visitor name.
+    public void addAddress(String name) {
+        if (memberNameToSocketName.containsKey(name)) {
+            memberNameToSocketName.remove(name);
         }
-        memberToDomain.put(name,domain);
-        addressBook.put(domain, address);
+        memberNameToSocketName.put(name, name);
     }
-    public void removeAddress(String name){
 
-        if(memberToDomain.containsKey(name)) {
+    //Remove socket name from list when logged out of the system.
+    public void removeAddress(String name) {
 
-            String dom= memberToDomain.get(name);
-            memberToDomain.remove(name);
-            addressBook.remove(dom);
+        if (memberNameToSocketName.containsKey(name)) {
+
+            memberNameToSocketName.remove(name);
         }
 
     }
 
-    private void sendImmediateNotification(String name , RealTimeNotifications not) throws MarketException {
+    private void sendImmediateNotification(String name, RealTimeNotifications not) throws MarketException {
 
-        //TODO : finish implement when the websocket is ready.
-        try{
+        try {
 
-            if(memberToDomain.containsKey(name) && addressBook.containsKey(memberToDomain.get(name))) {
-                String address = addressBook.get(memberToDomain.get(name));
-                //send the notification to the given address.
+            //get the socket name of a member/visitor.
+            String address = getAddress(name);
+            //send the notification to the given address.
+            controller.sendMessage(address, new OutputMessage(not.getMessage()));
+
+        } catch (Exception e) {
+            if (e.getMessage().equals("Domain does not exist in system right now.")) {
+                //if the member not logged in. check if we need to save notification.
+                if (security.isMember(name)) {
+                    addNotification(name, new DelayedNotifications(not.getMessage()));
+                }
             }
-            else{
-                //real time notifications will not be saved for non-connected visitor.
-                throw new MarketException("There is no address to send this notification right now.");
-            }
-        }
-        catch (Exception e){
             throw e;
         }
     }
-    public void sendItemBaughtNotificationsBatch(ArrayList<String> name ,String shopName, ArrayList<String> itemName, ArrayList<Double> price) throws MarketException {
 
-        //TODO : finish implement when the websocket is ready.
-        try{
+    public void sendAppointmentRemovedNotification(String name,String shopsName) throws MarketException {
+
+        try {
 
             RealTimeNotifications not = new RealTimeNotifications();
-            for(int i =0; i< itemName.size() ; i++) {
+            not.createShopPermissionDeniedMessage(name, shopsName);
+            sendImmediateNotification(name, not);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    public void sendItemBaughtNotificationsBatch(ArrayList<String> name, String shopName, ArrayList<String> itemName, ArrayList<Double> price) throws MarketException {
 
-                for(String owner : name) {
+        try {
+
+            RealTimeNotifications not = new RealTimeNotifications();
+            for (int i = 0; i < itemName.size(); i++) {
+
+                for (String owner : name) {
                     not.createBuyingOfferMessage(owner, shopName, itemName.get(i), price.get(i));
                     sendImmediateNotification(owner, not);
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
-    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> name ,String shopName) throws MarketException {
 
-        //TODO : finish implement when the websocket is ready.
-        try{
+    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> name, String shopName) throws MarketException {
+
+        try {
 
             RealTimeNotifications not = new RealTimeNotifications();
             not.createShopClosedMessage(shopName);
-            for(int i =0; i< name.size() ; i++) {
+            for (int i = 0; i < name.size(); i++) {
 
                 sendImmediateNotification(name.get(i), not);
 
             }
+
         }
         catch (Exception e){
-            //TODO - implement
-//            throw e;
         }
     }
-    public void sendShopReopenedBatchNotificationsBatch(ArrayList<String> name ,String shopName) throws MarketException {
 
-        //TODO : finish implement when the websocket is ready.
-        try{
+    public void sendShopReOpenedBatchNotificationsBatch(ArrayList<String> name, String shopName) throws MarketException {
+
+        try {
 
             RealTimeNotifications not = new RealTimeNotifications();
             not.createShopOpenedMessage(shopName);
-            for(int i =0; i< name.size() ; i++) {
+            for (int i = 0; i < name.size(); i++) {
 
                 sendImmediateNotification(name.get(i), not);
 
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
-    public void sendShopClosedPermanentlyBatchNotificationsBatch(ArrayList<String> name ,String shopName) throws MarketException {
 
-        //TODO : finish implement when the websocket is ready.
-        try{
+    public void sendShopClosedPermanentlyBatchNotificationsBatch(ArrayList<String> name, String shopName) throws MarketException {
+
+        try {
 
             RealTimeNotifications not = new RealTimeNotifications();
             not.createShopClosedPermanentlyMessage(shopName);
-            for(int i =0; i< name.size() ; i++) {
+            for (int i = 0; i < name.size(); i++) {
                 sendImmediateNotification(name.get(i), not);
 
             }
-        }
-        catch (Exception e){
-            throw e;
-        }
-    }
-    public void sendDelayedNotification(String name,DelayedNotifications not ){
-
-        //TODO : finish implement when the websocket is ready.
-        try{
-
-            //first try to find the address. else add to list.
-            if(memberToDomain.containsKey(name) && addressBook.containsKey(memberToDomain.get(name))) {
-                String address = addressBook.get(memberToDomain.get(name));
-                //send the notification to the given address.
-            }
-            else{
-                addNotification(name, not);
-            }
-
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
 
+    //Method to send all delayed notifications when the member logged in.
+    public void sendDelayedNotification(String name, DelayedNotifications not) throws MarketException {
+
+        try {
+
+            //get the socket name of a member/visitor.
+            String address = getAddress(name);
+            //send the notification to the given address.
+            controller.sendMessage(address, new OutputMessage(not.getMessage()));
+
+
+        } catch (Exception e) {
+            if (e.getMessage().equals("Domain does not exist in system right now.")) {
+                //if the member not logged in. check if we need to save notification.
+                if (security.isMember(name)) {
+                    addNotification(name, new DelayedNotifications(not.getMessage()));
+                }
+            }
+            throw e;
+        }
+    }
+
+    //sends the notifications to member that just logged in.
+    public void sendAllNotifications(String memberName) throws MarketException {
+
+        List<DelayedNotifications> nots = getNotifications(memberName);
+        for(DelayedNotifications not : nots){
+            sendDelayedNotification(memberName,not);
+        }
+    }
+    //Method to update the member name in the map when the member is logged in.
+    public void updateName(String Name, String memberName) throws MarketException {
+
+        if (memberNameToSocketName.containsKey(Name)) {
+            memberNameToSocketName.remove(Name);
+            memberNameToSocketName.put(memberName, Name);
+        }
+        //after the member logged in, send its notifications.
+        sendAllNotifications(memberName);
+    }
 }
+
+
+
+   

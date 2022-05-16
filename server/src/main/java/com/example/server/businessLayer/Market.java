@@ -316,7 +316,6 @@ public class Market {
         shop.editManagerPermission ( shopOwnerName, managerName, updatedAppointment );
     }
 
-    //TODO:Add reopen to a shop method.
     public void closeShop(String shopOwnerName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -338,9 +337,12 @@ public class Market {
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
             history.closeShop(shopToClose);
             //send notifications to shop owners:
-            publisher.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
-                    .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
-                    .collect(Collectors.toList())),shopName);
+            try{
+                publisher.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
+                        .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
+                        .collect(Collectors.toList())),shopName);
+            }
+            catch(Exception e){}
             //
             EventLog.getInstance().Log("The shop " +shopName+ " has been closed.");
         }
@@ -776,8 +778,13 @@ public class Market {
             throw new MarketException("There is no shop named:"+shopName +". Removing shop owner has failed.");
         }
         shop.removeShopOwnerAppointment(boss,firedAppointed);
+        try{
+            Publisher.getInstance().sendAppointmentRemovedNotification(firedAppointed,shopName);
+        }
+        catch (Exception e){}
 
     }
+
 
     public void removeMember(String manager, String memberToRemove) throws MarketException{
         if (manager.equals(memberToRemove))
