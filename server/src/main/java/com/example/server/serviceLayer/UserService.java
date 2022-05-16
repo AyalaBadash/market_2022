@@ -126,7 +126,7 @@ public class UserService {
         }
     }
 
-    public ResponseT getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) {
+    public ResponseT<AppointmentFacade> getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) {
         try {
 
             Appointment appointment = (market.getManagerAppointment(shopOwnerName, managerName, relatedShop));
