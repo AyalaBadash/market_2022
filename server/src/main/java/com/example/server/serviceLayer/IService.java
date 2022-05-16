@@ -287,4 +287,6 @@ public interface IService {
     public Response removeShopOwnerAppointment(removeAppointmentRequest request);
 
     public Response removeMember(removeMemberRequest request);
+
+    ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request);
 }

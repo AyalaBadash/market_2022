@@ -74,7 +74,7 @@ public class Security {
         List<String> questions = new ArrayList<>();
         LoginCard card = namesToLoginInfo.get(userName);
         for (Map.Entry<String, String> entry : card.getQandA().entrySet()) {
-            questions.add(entry.getValue());
+            questions.add(entry.getKey());
         }
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("Prepared security questions for member.");

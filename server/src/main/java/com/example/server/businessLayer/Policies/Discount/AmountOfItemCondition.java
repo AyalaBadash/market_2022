@@ -7,7 +7,8 @@ import java.util.Map;
 
 public class AmountOfItemCondition extends Condition{
     private double amountNeeded;
-    private Item itemNeeded;//TODO verify we change it to Item?
+    private Item itemNeeded;
+
 
     public AmountOfItemCondition(double amountNeeded, Item itemNeeded) {
         this.amountNeeded = amountNeeded;

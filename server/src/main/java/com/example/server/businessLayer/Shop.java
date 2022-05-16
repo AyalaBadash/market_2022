@@ -88,8 +88,11 @@ public class Shop implements IHistory {
         else throw new MarketException ( "Item name already exist" );
     }*/
 
-    public double getItemCurrentAmount(Item item) {
-        return itemsCurrentAmount.get(item);
+    public double getItemCurrentAmount(Item item) throws MarketException {
+        Double amount = itemsCurrentAmount.get(item.getID());
+        if(amount == null)
+            throw new MarketException("no such item in this shop");
+        return amount;
     }
 
     public Map<Integer, Double> getItemsCurrentAmountMap() {
@@ -165,13 +168,14 @@ public class Shop implements IHistory {
         boolean failed = false;
         missingMessage.append ( String.format ( "%s: cannot complete your purchase because some items are missing:\n", this.shopName ) );
         for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
-            Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());
+            Integer id = itemAmount.getKey();
+            Item currItem = shoppingBasket.getItemMap().get(id);
             //for notifications:
             itemsNames.add(currItem.getName());
             prices.add(currItem.getPrice());
             //
             double currAmount = itemAmount.getValue ( );
-            if (this.itemsCurrentAmount.get ( currItem ) < currAmount) {
+            if (this.itemsCurrentAmount.get ( currItem.getID() ) < currAmount) {
                 failed = true;
                 missingMessage.append ( String.format ( "%s X %f", currItem.getName ( ), currAmount ) );
             }
@@ -181,7 +185,7 @@ public class Shop implements IHistory {
         }
         for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());
-            double newAmount = this.itemsCurrentAmount.get ( currItem ) - itemAmount.getValue ( );
+            double newAmount = this.itemsCurrentAmount.get ( currItem.getID() ) - itemAmount.getValue ( );
             this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
@@ -295,7 +299,7 @@ public class Shop implements IHistory {
         Map<Integer, Double> items = basket.getItems ( );
         for ( Map.Entry<Integer, Double> currentItem : items.entrySet ( ) ) {
             Item curItem = basket.getItemMap().get(currentItem.getKey());;
-            Double curAmount = itemsCurrentAmount.get(curItem);
+            Double curAmount = itemsCurrentAmount.get(currentItem.getKey());
             if (currentItem.getValue ( ) > curAmount) {
                 if(curAmount == 0)
                     basket.removeItem ( curItem );
@@ -379,7 +383,6 @@ public class Shop implements IHistory {
 
     //TODO why do we need this.
     public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
-
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
         if (amount < 0)
@@ -388,10 +391,23 @@ public class Shop implements IHistory {
             throw new MarketException("ID is taken by other item");
         if (category == null)
             category = Item.Category.general;
-        Item addedItem = new Item ( id, itemName, price, info, category, keywords );
-        itemMap.put ( id, addedItem );
+        Item addedItem;
+        synchronized (this) {
+            if (itemNameExists(itemName))
+                throw new MarketException("different item with the same name already exists in this shop");
+            addedItem = new Item(id, itemName, price, info, category, keywords);
+            itemMap.put ( id, addedItem );
+        }
         itemsCurrentAmount.put ( id, amount );
         return addedItem;
+    }
+
+    private boolean itemNameExists(String itemName) {
+        for(Item item: itemMap.values()){
+            if(item.getName().equals(itemName))
+                return true;
+        }
+        return false;
     }
 
     public void addRank(int rankN) {

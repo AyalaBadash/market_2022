@@ -34,6 +34,7 @@ public class ShopOwnerTests {
     String loggedInmemberPassword = "pass2";
     String shopName = "store";
     String ItemName= "item1";
+    Item itemAdded;
     int productAmount;
     Double productPrice;
     double newAmount;
@@ -62,6 +63,7 @@ public class ShopOwnerTests {
     private void openShop() throws MarketException {
         loginMember(shopOwnerName,shopOwnerPassword);
         market.openNewShop(shopOwnerName, shopName);
+        itemAdded = market.addItemToShop(shopOwnerName, ItemName, productPrice, Item.Category.electricity, "", new ArrayList<>(), productAmount, shopName);
         logoutMember(shopOwnerName);
     }
 
@@ -71,8 +73,8 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName, shopOwnerPassword);
-            market.addItemToShop(shopOwnerName, ItemName, productPrice, Item.Category.general,"some info"
-                    ,new ArrayList<>() , productAmount,shopName);
+            market.addItemToShop(shopOwnerName, "bikini", 150.99, Item.Category.general,"big size"
+                    ,new ArrayList<>() , 3,shopName);
             Assertions.assertTrue(market.getItemByName(ItemName).size()>=1);
             try {
                 logoutMember(shopOwnerName);
@@ -143,11 +145,9 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
-            Item it= market.getItemByName(ItemName).get(0);
-            market.setItemCurrentAmount(shopOwnerName,it,newAmount,shopName);
-            assert true;
+            market.setItemCurrentAmount(shopOwnerName,itemAdded,newAmount,shopName);
+            assert market.getItemCurrentAmount(itemAdded.getID()).equals(newAmount);
             try {
                 logoutMember(shopOwnerName);
             } catch (MarketException ex) {
@@ -195,7 +195,7 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
+            addItem(shopOwnerName,"newName",productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
             Item it= market.getItemByName(ItemName).get(0);
             market.setItemCurrentAmount(loggedInmemberName,it,newAmount,shopName);
@@ -221,11 +221,9 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
-            Item it= market.getItemByName(ItemName).get(0);
-            market.changeShopItemInfo(shopOwnerName,"another info",it.getID(),shopName);
-            assert true;
+            market.changeShopItemInfo(shopOwnerName,"another info",itemAdded.getID(),shopName);
+            assert market.getItemByID(itemAdded.getID()).getInfo().equals("another info");
             try {
                 logoutMember(shopOwnerName);
             } catch (MarketException ex) {
@@ -575,8 +573,8 @@ public class ShopOwnerTests {
         Visitor visitor = market.guestLogin();
         market.register(name, pass);
     }
-    public void addItem(String son, String in, double pp ,Item.Category cat, String inf, List<String> lis, int am, String sn) throws MarketException {
-        market.addItemToShop(son, in, pp, cat,
+    public Item addItem(String son, String in, double pp ,Item.Category cat, String inf, List<String> lis, int am, String sn) throws MarketException {
+        return market.addItemToShop(son, in, pp, cat,
                 inf,lis , am,sn);
     }
 }

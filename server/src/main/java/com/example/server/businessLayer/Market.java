@@ -380,7 +380,7 @@ public class Market {
 
 
 
-    public int addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
+    public Item addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
                               List<String> keywords, double amount, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -392,13 +392,25 @@ public class Market {
             ErrorLog.getInstance().Log("Tried to add item to a non existing shop.");
             throw new MarketException("shop does not exist in the market");
         }
-        Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.value() );
-        updateMarketOnAddedItem ( addedItem, shopName );
-        EventLog.getInstance().Log("Item added to shop "+shopName);
-        return nextItemID.increment();
+        try {
+            Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment() );
+            updateMarketOnAddedItem ( addedItem, shopName );
+            EventLog.getInstance().Log("Item added to shop "+shopName);
+            return addedItem;
+        }catch (MarketException e){
+            nextItemID.decrement();
+            throw e;
+        }
     }
 
 
+    public Double getItemCurrentAmount(int id) throws MarketException {
+        String shopName = allItemsInMarketToShop.get(id);
+        if(shopName == null)
+            throw new MarketException("not such item in the market");
+        Item item = getItemByID(id);
+        return shops.get(shopName).getItemCurrentAmount(item);
+    }
 
     public void setItemCurrentAmount(String shopOwnerName, Item item, double amount, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
@@ -456,12 +468,16 @@ public class Market {
             errorLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
         }
-        if (!shops.containsKey(shopName) && !ClosedShopsHistory.getInstance ().isClosed(shopName)) {
-            EventLog.getInstance().Log(String.format ("Asked for shop info while shop %s does not exist", shopName));
-            throw new MarketException("shop does not exist in the market");
+        if (!shops.containsKey(shopName)){
+            if(!ClosedShopsHistory.getInstance ().isClosed(shopName)) {
+                EventLog.getInstance().Log(String.format("Asked for shop info while shop %s does not exist", shopName));
+                throw new MarketException("shop does not exist in the market");
+            }
+            if(member.equals ( systemManagerName )){
+                return ClosedShopsHistory.getInstance().getClosedShops().get(shopName);
+            }
+            throw new MarketException("only a system manager can get information about a closed shop");
         }
-        if(member.equals ( systemManagerName ))
-            return shops.get ( shopName );
         return shops.get(shopName).getShopInfo(member);
     }
 
@@ -499,6 +515,7 @@ public class Market {
 
 
 
+    //TODO -delete shop name
     public void addItemToShoppingCart(Item item, double amount, String shopName, String visitorName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -506,7 +523,7 @@ public class Market {
             throw new MarketException("you must be a visitor in the market in order to make actions");
         }
         ShoppingCart shoppingCart = userController.getVisitor ( visitorName ).getCart ();
-        Shop curShop = shops.get ( shopName );
+        Shop curShop = shops.get ( allItemsInMarketToShop.get(item.getID()) );
         if(curShop == null) {
             EventLog.getInstance().Log("Tried to add item to cart from non existing shop.");
             throw new MarketException("this shop does not exist in the market");
@@ -514,11 +531,6 @@ public class Market {
         if(item == null) {
             ErrorLog.getInstance().Log("Tried to add null to cart.");
             throw new MarketException("this item does not exist in this shop");
-        }
-        double curAmount = curShop.getItemCurrentAmount ( item );
-        if(curAmount < amount) {
-            ErrorLog.getInstance().Log("Tried to item with amount bigger than what the shop holds.");
-            throw new MarketException("the shop amount of this item is less then the wanted amount");
         }
         if (amount<0 || amount == 0)
         {
@@ -644,6 +656,9 @@ public class Market {
 
         // checks the price is correct
         if (actualPrice != expectedPrice){
+            for (Shop shop : cart.getCart().keySet()) {
+                shop.releaseItems(cart.getCart().get(shop));
+            }
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Shopping cart price has been changed for a costumer");
             throw new MarketException(String.format("Sorry, the price cart price change\n" +
@@ -706,22 +721,21 @@ public class Market {
     }
 
     private void removeClosedShopItemsFromMarket(Shop shopToClose) {
-        for (Map.Entry<Integer,String> entry:allItemsInMarketToShop.entrySet())
+        for (Map.Entry<Integer,Item> entry:shopToClose.getItemMap().entrySet())
         {
-            if (entry.getValue().equals(shopToClose.getShopName()))
-                allItemsInMarketToShop.remove(entry.getKey());
-        }
-        Map<Integer,Item> itemMap = shopToClose.getItemMap();
-        for (Map.Entry<Integer,Item> entry : itemMap.entrySet())
-        {
-            //Get list of items by the name . then delete by the specific ID
-            itemByName.get(entry.getValue().getName()).remove(entry.getValue().getID());
+            allItemsInMarketToShop.remove(entry.getKey());
+            String itemName = entry.getValue().getName();
+            if(itemByName.containsKey(itemName)){
+                itemByName.get(itemName).remove(entry.getKey());
+            }
         }
         EventLog.getInstance().Log("Preparing to close the shop "+shopToClose.getShopName()+". Removed all shop items from market.");
     }
 
-    public Item getItemByID (Integer id){
+    public Item getItemByID (Integer id) throws MarketException {
         String itemShopName = allItemsInMarketToShop.get(id);
+        if(itemShopName == null)
+            throw new MarketException("no such item in market");
         Shop itemShop = shops.get(itemShopName);
         Item item = itemShop.getItemMap().get(id);
         return item;
@@ -772,7 +786,7 @@ public class Market {
             ErrorLog.getInstance().Log("You cant remove yourself.");
             throw new MarketException("You cant remove yourself.");
         }
-        if (!manager.equals(this.systemManagerName))
+        if (!manager.equals(systemManagerName))
         {
             ErrorLog.getInstance().Log("You are not the market manager. You cant remove a member.");
             throw new MarketException("You are not the market manager. You cant remove a member.");
@@ -792,5 +806,13 @@ public class Market {
         }
         Security security = Security.getInstance();
         security.removeMember(memberToRemove);
+    }
+
+    public Item getItemById(String name, int itemId) throws MarketException {
+        if (!userController.isLoggedIn(name))
+            throw new MarketException("only visitors in market can get an item's info");
+        if(allItemsInMarketToShop.get(itemId) == null)
+            throw new MarketException("there is no such an item with this id");
+        return shops.get(allItemsInMarketToShop.get(itemId)).getItemMap().get(itemId);
     }
 }

@@ -202,4 +202,9 @@ public class Proxy implements IService  {
     public Response removeMember(removeMemberRequest request) {
         return null;
     }
+
+    @Override
+    public ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request) {
+        return null;
+    }
 }
