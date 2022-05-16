@@ -162,8 +162,8 @@ public class MarketService {
     }
 
 
-    public ResponseT<ItemFacade> addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
-                                  List<String> keywords, double amount, String shopName) {
+    public ResponseT<ItemFacade> addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info,
+                                               List<String> keywords, double amount, String shopName) {
         ResponseT<ItemFacade> response;
         try {
             Item item = market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);

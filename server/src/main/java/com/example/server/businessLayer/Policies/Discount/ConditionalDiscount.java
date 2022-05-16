@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Policies.Discount;
 
+import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingBasket;
 
 public class ConditionalDiscount extends DiscountType{
@@ -11,7 +12,7 @@ public class ConditionalDiscount extends DiscountType{
     }
 
     @Override
-    public boolean isDiscountHeld(ShoppingBasket shoppingBasket) {
+    public boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException {
         return condition.isDiscountHeld(shoppingBasket);
     }
 }

@@ -9,14 +9,7 @@ import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Visitor;
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
-import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
-import com.example.server.serviceLayer.Response;
-import com.example.server.serviceLayer.ResponseT;
-import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.*;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;

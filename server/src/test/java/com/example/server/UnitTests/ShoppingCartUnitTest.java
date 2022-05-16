@@ -1,13 +1,13 @@
 package com.example.server.UnitTests;
 
 import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.Item;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.ArgumentMatchers.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,15 +24,15 @@ public class ShoppingCartUnitTest extends mainTest {
     ShoppingBasket basket2 = Mockito.mock(ShoppingBasket.class);
     ShoppingCart shoppingCart = new ShoppingCart();
     Map<Shop,ShoppingBasket> cart;
-    Map<Integer,Double> basket1Map;
-    Map<Integer,Double> basket2Map;
+    Map<java.lang.Integer,Double> basket1Map;
+    Map<java.lang.Integer,Double> basket2Map;
 
     @BeforeEach
     public void reset (){
         basket1Map = new HashMap<>();
         basket2Map = new HashMap<>();
         basket1Map.put(item.getID(),5.0);
-        Map<Integer,Double> basket2Map=new HashMap<>();
+        Map<java.lang.Integer,Double> basket2Map=new HashMap<>();
         basket1Map.put(item2.getID(),5.0);
         Mockito.when(basket.getItems()).thenReturn(basket1Map);
         Mockito.when(basket2.getItems()).thenReturn(basket2Map);

@@ -3,7 +3,6 @@ package com.example.server.businessLayer;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Item implements IHistory {
 
@@ -15,7 +14,7 @@ public class Item implements IHistory {
         electricity
     }
 
-    private Integer ID;
+    private java.lang.Integer ID;
     private String name;
     private double price;
     private String info;
@@ -23,7 +22,7 @@ public class Item implements IHistory {
     private int rankers;
     private Category category;
     private List<String> keywords;
-    public Item(Integer ID, String name, double price, String info,
+    public Item(java.lang.Integer ID, String name, double price, String info,
                 Category category, List<String> keywords) throws MarketException {
         if (ID <1)
             throw new MarketException("Item id must be a positive number");
@@ -53,7 +52,7 @@ public class Item implements IHistory {
     }
 
 
-    public Integer getID() {
+    public java.lang.Integer getID() {
         return ID;
     }
 

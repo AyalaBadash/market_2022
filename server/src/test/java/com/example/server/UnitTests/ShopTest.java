@@ -4,8 +4,8 @@ import com.example.server.businessLayer.*;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Users.Member;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -243,15 +243,15 @@ public class ShopTest {
             Item item2 = Mockito.mock(Item.class);
             Mockito.when(item2.getName()).thenReturn("item2");
             Mockito.when(item2.getID()).thenReturn(2);
-            Map<Integer, Item> items = new HashMap<>();
+            Map<java.lang.Integer, Item> items = new HashMap<>();
             items.put(item.getID(), item);
             items.put(item2.getID(), item2);
             ReflectionTestUtils.setField(shop, "itemMap", items);
-            Map<Integer, Double> currAmount = new HashMap<>();
+            Map<java.lang.Integer, Double> currAmount = new HashMap<>();
             currAmount.put(item.getID(), 1.0);
             currAmount.put(item2.getID(), 10.0);
             ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
-            Map<Integer,Double> map = new HashMap<>();
+            Map<java.lang.Integer,Double> map = new HashMap<>();
             map.put(item2.getID(),1.0);
             Mockito.when(basket.getItems()).thenReturn(map);
             ReflectionTestUtils.setField(basket, "items", map);
@@ -269,7 +269,7 @@ public class ShopTest {
     public void releaseItemsTestNoRelevantItem(){
         try {
             Item item2 = Mockito.mock(Item.class);
-            Map <Item, Integer>basketItems = new HashMap();
+            Map <Item, java.lang.Integer>basketItems = new HashMap();
             basketItems.put(item2, 10);
             Mockito.when(item2.getName()).thenReturn("item2");
             Mockito.when(item2.getID()).thenReturn(2);
@@ -289,7 +289,7 @@ public class ShopTest {
     @Test
     @DisplayName("Buy basket - good test.")
     public void buyBasketTest() {//TODO check with ido.
-        Map<Integer,Double> itemsMap = new HashMap<>();
+        Map<java.lang.Integer,Double> itemsMap = new HashMap<>();
         Item item1 = Mockito.mock(Item.class);
         Item item2 = Mockito.mock(Item.class);
         Mockito.when(item1.getID()).thenReturn(555);
@@ -301,13 +301,13 @@ public class ShopTest {
         ReflectionTestUtils.setField(basket, "items", itemsMap);
         Mockito.when(basket.getItems()).thenReturn(itemsMap);
         Mockito.when(basket.getPrice()).thenCallRealMethod();
-        Map<Integer, Item> itemMap = new HashMap<>();
+        Map<java.lang.Integer, Item> itemMap = new HashMap<>();
         itemMap.put(item1.getID(), item1);
         itemMap.put(item2.getID(), item2);
         ReflectionTestUtils.setField(shop, "itemMap", itemMap);
         ReflectionTestUtils.setField(basket, "itemMap", itemMap);
         Mockito.when(basket.getItemMap()).thenCallRealMethod();
-        Map<Integer, Double> currAmount = new HashMap<>();
+        Map<java.lang.Integer, Double> currAmount = new HashMap<>();
         currAmount.put(item1.getID(), 10.0);
         currAmount.put(item2.getID(), 20.0);
         ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
@@ -322,7 +322,7 @@ public class ShopTest {
     @Test
     @DisplayName("Validate basket - good test.")
     public void validateBasketTest() {
-        Map<Integer, Double> items = new HashMap<>();
+        Map<java.lang.Integer, Double> items = new HashMap<>();
         Item item1 = Mockito.mock(Item.class);
         Mockito.when(item1.getID()).thenReturn(555);
         Mockito.when(item1.getID()).thenReturn(666);
@@ -330,11 +330,11 @@ public class ShopTest {
         items.put(item1.getID(), 5.0);
         items.put(item2.getID(), 5.0);
         Mockito.when(basket.getItems()).thenReturn(items);
-        Map<Integer, Item> itemsInShop = new HashMap<>();
+        Map<java.lang.Integer, Item> itemsInShop = new HashMap<>();
         itemsInShop.put(item1.getID(), item1);
         itemsInShop.put(item2.getID(), item2);
         ReflectionTestUtils.setField(shop, "itemMap", items);
-        Map<Integer, Double> currAmount = new HashMap<>();
+        Map<java.lang.Integer, Double> currAmount = new HashMap<>();
         currAmount.put(item1.getID(), 1.0);
         currAmount.put(item2.getID(), 10.0);
         ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
