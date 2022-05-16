@@ -2,12 +2,9 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
+import com.example.server.businessLayer.*;
 import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
-import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
 
@@ -268,8 +265,8 @@ public class VisitorTests {
             double buyingAmount = itemAmount;
             market.addItemToShoppingCart(milk, buyingAmount, shopName, visitor.getName());
             // add not existing item shouldn't fail
-            market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
-            assert false;
+            ShoppingCart shoppingCart = market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
+            assert !shoppingCart.getCart().isEmpty();
         } catch (Exception e) {
             assert true;
         }
