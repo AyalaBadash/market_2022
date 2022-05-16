@@ -3,11 +3,11 @@ package com.example.server.businessLayer.Policies.Discount;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingBasket;
 
-public class ConditionalDiscount extends DiscountType{
+public class ConditionalDiscount extends CompositeDiscount{
     private Condition condition;
 
-    public ConditionalDiscount(int percentageOfDiscount, DiscountLevelState discountLevelState, Condition condition) {
-        super(percentageOfDiscount, discountLevelState);
+    public ConditionalDiscount(int percentageOfDiscount, DiscountLevelState discountLevelState, DiscountType discountType, CompositeDiscountType compositeDiscountType) {
+        super(percentageOfDiscount, discountLevelState, discountType, compositeDiscountType);
         this.condition = condition;
     }
 

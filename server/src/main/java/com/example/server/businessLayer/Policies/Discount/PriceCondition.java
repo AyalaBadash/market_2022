@@ -6,7 +6,7 @@ import com.example.server.businessLayer.ShoppingBasket;
 public class PriceCondition extends CompositeCondition{
     private double priceNeeded;
 
-    public PriceCondition(Condition baseCond, CompositeType compositeType, double priceNeeded) {
+    public PriceCondition(Condition baseCond, CompositeConditionType compositeType, double priceNeeded) {
         super(baseCond, compositeType);
         this.priceNeeded = priceNeeded;
     }

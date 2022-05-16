@@ -7,10 +7,11 @@ import com.example.server.businessLayer.ShoppingBasket;
 
 import java.util.Map;
 
-public class CategoryLevelState implements DiscountLevelState{
+public class CategoryLevelState extends CompositeDiscountLevelState {
     private Item.Category category;
 
-    public CategoryLevelState(Item.Category category) {
+    public CategoryLevelState(DiscountLevelState discountLevelState, CompositeDiscountLevelType compositeDiscountLevelType, Item.Category category) {
+        super(discountLevelState, compositeDiscountLevelType);
         this.category = category;
     }
 
@@ -21,11 +22,14 @@ public class CategoryLevelState implements DiscountLevelState{
         double discount = 0;
         for (Map.Entry<java.lang.Integer, Double> entry : items.entrySet()) {
             Item item = Market.getInstance().getItemByID(entry.getKey());
+            double amount = entry.getValue();
             if (item.getCategory().equals(this.category))
-                discount = item.getPrice() * entry.getValue() * ((100 - percentageOfDiscount) / 100);
+                discount = item.getPrice() * amount * (percentageOfDiscount / 100);
             generalDiscount += discount;
         }
-        return shoppingBasket.getPrice() - generalDiscount;
+        double basePrice = discountLevelState.calculateDiscount(shoppingBasket, percentageOfDiscount);
+        double baseDiscount = shoppingBasket.getPrice() - basePrice;
+        return calculateBothDiscount(shoppingBasket.getPrice(), baseDiscount, generalDiscount);
 
     }
 }

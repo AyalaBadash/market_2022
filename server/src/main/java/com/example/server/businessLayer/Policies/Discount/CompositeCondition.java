@@ -6,14 +6,14 @@ import com.example.server.businessLayer.ShoppingBasket;
 public class CompositeCondition extends Condition{
 
 
-    public enum CompositeType {
+    public enum CompositeConditionType {
         ORType,
         XORType,
         ANDType;
     }
     protected Condition baseCond;
-    protected CompositeType compositeType;
-    public CompositeCondition(Condition baseCond, CompositeType compositeType) {
+    protected CompositeConditionType compositeType;
+    public CompositeCondition(Condition baseCond, CompositeConditionType compositeType) {
         this.baseCond = baseCond;
         this.compositeType = compositeType;
     }
@@ -26,11 +26,11 @@ public class CompositeCondition extends Condition{
         this.baseCond = baseCond;
     }
 
-    public CompositeType getCompositeType() {
+    public CompositeConditionType getCompositeType() {
         return compositeType;
     }
 
-    public void setCompositeType(CompositeType compositeType) {
+    public void setCompositeType(CompositeConditionType compositeType) {
         this.compositeType = compositeType;
     }
 

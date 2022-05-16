@@ -9,7 +9,7 @@ public class AmountOfItemCondition extends CompositeCondition{
     private double amountNeeded;
     private Integer itemNeeded;
 
-    public AmountOfItemCondition(Condition baseCond, CompositeType compositeType, double amountNeeded, Integer itemNeeded) {
+    public AmountOfItemCondition(Condition baseCond, CompositeConditionType compositeType, double amountNeeded, Integer itemNeeded) {
         super(baseCond, compositeType);
         this.amountNeeded = amountNeeded;
         this.itemNeeded = itemNeeded;
