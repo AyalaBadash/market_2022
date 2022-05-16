@@ -1,9 +1,6 @@
 package com.example.server.businessLayer.Policies.Discount;
 
-import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.ShoppingBasket;
-
-import java.util.Map;
 
 public class ShopLevelState implements DiscountLevelState{
     @Override
