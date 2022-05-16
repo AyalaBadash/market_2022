@@ -21,23 +21,21 @@ Appointment {
     private Shop relatedShop;
     //TODO - needs to be not an object? :O
     List<IPermission> permissions;
-    String type;
 
-    public Appointment(Member appointed, Member appoint, Shop relatedShop,String type) {
+    public Appointment(Member appointed, Member appoint, Shop relatedShop) {
         this.appointed = appointed;
         this.superVisor = appoint;
         this.relatedShop = relatedShop;
         permissions= new CopyOnWriteArrayList<>();
         addAllPermissions();
-        this.type =type;
     }
 
-    public Appointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions,String type) {
+    public Appointment(){}
+    public Appointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
         this.appointed = appointed;
         this.superVisor = superVisor;
         this.relatedShop = relatedShop;
         this.permissions = permissions;
-        this.type = type;
     }
 
     public void addAllPermissions(){
@@ -97,6 +95,12 @@ Appointment {
                 return true;
         }
         return false;
+    }
+
+
+
+    public void setPermissions(List<IPermission> permissions) {
+        this.permissions = permissions;
     }
 
     public abstract AppointmentFacade visitToFacade(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade);

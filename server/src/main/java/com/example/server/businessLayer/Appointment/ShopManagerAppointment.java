@@ -13,11 +13,11 @@ public class ShopManagerAppointment extends Appointment {
 
 
     public ShopManagerAppointment(Member appointed, Member appoint, Shop relatedShop) {
-        super(appointed, appoint, relatedShop,"ShopManagerAppointment");
+        super(appointed, appoint, relatedShop );
     }
 
     public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
-        super(appointed, superVisor, relatedShop, permissions,"ShopManagerAppointment");
+        super(appointed, superVisor, relatedShop, permissions);
     }
 
     @Override
