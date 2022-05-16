@@ -17,6 +17,9 @@ public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
 
     public ShoppingCartFacade(ShoppingCart cart) {
         this.cart = new HashMap<>();
+        price = cart.getCurrentPrice();
+        if(cart.getCart() == null || cart.getCart().size() == 0)
+            return;
         for (Map.Entry<Shop, ShoppingBasket> fromCart: cart.getCart().entrySet()){
             ShoppingBasketFacade toBasket = new ShoppingBasketFacade(fromCart.getValue());
             this.cart.put(fromCart.getKey().getShopName(),toBasket);

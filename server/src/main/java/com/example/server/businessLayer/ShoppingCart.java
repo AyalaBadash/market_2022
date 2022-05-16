@@ -67,7 +67,7 @@ public class ShoppingCart implements IHistory {
             try {
                 price += shopToBasket.getKey().buyBasket(shopToBasket.getValue(),buyer);
                 succeedShops.add(shopToBasket.getKey());
-            } catch (Exception e) {
+            } catch (MarketException e) {
                 succeeded = false;
                 shopToBasket.getKey ().validateBasket ( shopToBasket.getValue () );
                 missing.append(e.getMessage());

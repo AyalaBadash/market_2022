@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class ShoppingCartUnitTest{
 
-
     @Mock
     Item item = Mockito.mock(Item.class);
     Item item2 = Mockito.mock(Item.class);

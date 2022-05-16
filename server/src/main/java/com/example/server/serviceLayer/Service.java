@@ -137,7 +137,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/buyShoppingCart")
     @CrossOrigin
-    public Response buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
+    public ResponseT<ShoppingCartFacade> buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
         return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
                 request.getPaymentMethod(), request.getAddress());
     }
@@ -247,7 +247,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getManagerPermission")
     @CrossOrigin
-    public ResponseT getManagerPermission(@RequestBody GetManagerPermissionRequest request){
+    public ResponseT<AppointmentFacade> getManagerPermission(@RequestBody GetManagerPermissionRequest request){
         return this.userService.getManagerAppointment(request.getShopOwnerName(),
                 request.getManagerName(), request.getRelatedShop());
     }
