@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
-public class ClosedShopHistoryTest extends mainTest {
+public class ClosedShopHistoryTest{
 
     @Mock
     Shop shop;

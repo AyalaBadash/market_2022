@@ -63,7 +63,7 @@ public class MarketUnitTest {
             market.validateSecurityQuestions("raz",new ArrayList<>(),"@visitor1");
             market.openNewShop("raz","razShop");
             shop = market.getShopByName("razShop");
-            item = market.addItemToShop("raz","milk", 5.0, Item.Category.general,"",keywords,10.0,"razShop");
+            item = market.addItemToShopItem("raz","milk", 5.0, Item.Category.general,"",keywords,10.0,"razShop");
         }
         catch (Exception e)
         {
@@ -225,10 +225,10 @@ public class MarketUnitTest {
         keywords.add("fruit");
         Item item1 = null;
         try {
-            item1 = market.addItemToShop("raz","apple",2.5, Item.Category.fruit, "red apple",
+            item1 = market.addItemToShopItem("raz","apple",2.5, Item.Category.fruit, "red apple",
                     keywords,5.0,"razShop");
             market.openNewShop("raz","razShop2");
-            Item item2 = market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),"On shop 2 we have info",item.getKeywords(),3.0,"razShop2");
+            Item item2 = market.addItemToShopItem("raz",item.getName(),item.getPrice(),item.getCategory(),"On shop 2 we have info",item.getKeywords(),3.0,"razShop2");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

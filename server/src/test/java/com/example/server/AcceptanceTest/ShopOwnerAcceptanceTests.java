@@ -1,6 +1,7 @@
 package com.example.server.AcceptanceTest;
 
 import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Shop;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
 import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
@@ -42,7 +43,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     public void addNewItem() {
         try {
 
-            ResponseT<ItemFacade> response = addItemToShop(shopOwnerName, steakName, steakPrice, steakCategory,
+            ResponseT<ShopFacade> response = addItemToShop(shopOwnerName, steakName, steakPrice, steakCategory,
                     steakInfo, steakKeywords, 5.0, shopName);
             assert !response.isErrorOccurred();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
@@ -67,7 +68,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     @DisplayName("add existing item")
     public void addExistingItem() {
         try {
-            ResponseT<ItemFacade> response = addItemToShop(shopOwnerName, "yogurt", productPrice, Item.Category.general,
+            ResponseT<ShopFacade> response = addItemToShop(shopOwnerName, "yogurt", productPrice, Item.Category.general,
                     "soy", new ArrayList<>(), 10, shopName);
             assert response.isErrorOccurred();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();

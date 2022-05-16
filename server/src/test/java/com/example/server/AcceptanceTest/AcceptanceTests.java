@@ -4,6 +4,7 @@ import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Shop;
 import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -118,12 +119,12 @@ public class AcceptanceTests {
         return res;
     }
 
-    protected static ResponseT<ItemFacade> addItemToShop(String shopOwnerName, String name, double price,
+    protected static ResponseT<ShopFacade> addItemToShop(String shopOwnerName, String name, double price,
                                                          Item.Category category, String info,
                                                          List<String> keywords, double amount, String shopName) throws Exception {
         AddItemToShopRequest request = new AddItemToShopRequest(shopOwnerName, name, price,
                 category, info, keywords, amount, shopName);
-        ResponseT<ItemFacade> result = Service.getInstance().addItemToShop(request);
+        ResponseT<ShopFacade> result = Service.getInstance().addItemToShop(request);
         return result;
     }
 
