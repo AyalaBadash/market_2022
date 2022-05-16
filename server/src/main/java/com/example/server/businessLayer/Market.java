@@ -2,16 +2,11 @@ package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.*;
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
-import org.yaml.snakeyaml.error.Mark;
-import com.example.server.serviceLayer.FacadeObjects.*;
-import com.example.server.serviceLayer.Notifications.Notification;
-import com.example.server.serviceLayer.Response;
 
 
 import java.time.LocalDateTime;
@@ -28,8 +23,8 @@ public class Market {
     private Map<String, Shop> shops;                                 // <shopName, shop>
 
     private Publisher publisher;
-    private Map<Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
-    private Map<String, List<Integer>> itemByName;                   // <itemName ,List<itemID>>
+    private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
+    private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
     private SynchronizedCounter nextItemID;
     private PaymentService paymentService;
     private ProductsSupplyService supplyService;
@@ -184,7 +179,7 @@ public class Market {
 
 
 
-    public Map<Integer, String> getAllItemsInMarketToShop() {
+    public Map<java.lang.Integer, String> getAllItemsInMarketToShop() {
         return allItemsInMarketToShop;
     }
 
@@ -193,7 +188,7 @@ public class Market {
             return new ArrayList<> (  );
         }
         List<Item> toReturn = new ArrayList<>();
-        List<Integer> itemIds =  itemByName.get(name);
+        List<java.lang.Integer> itemIds =  itemByName.get(name);
         for (int item : itemIds){
             String shopStr = allItemsInMarketToShop.get(item);
             Shop shop = shops.get(shopStr);
@@ -606,7 +601,7 @@ public class Market {
     }
 
 
-    public void changeShopItemInfo(String shopOwnerName, String info, Integer oldItem, String shopName) throws MarketException {
+    public void changeShopItemInfo(String shopOwnerName, String info, java.lang.Integer oldItem, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -631,7 +626,7 @@ public class Market {
     }
 
     public void editItem(Item newItem, String id) throws MarketException {
-        String shopName = allItemsInMarketToShop.get ( Integer.parseInt(id) );
+        String shopName = allItemsInMarketToShop.get ( java.lang.Integer.parseInt(id) );
         if(shopName == null)
             throw new MarketException ( "item does not exist in the market" );
         Shop shop = shops.get ( shopName );
@@ -713,7 +708,7 @@ public class Market {
         itemByName.get(itemToDelete.getName()).remove(itemToDelete.getID());
     }
 
-    private void updateMarketOnAddedItem(Item toAdd,String shopName) {
+    private void updateMarketOnAddedItem(Item toAdd, String shopName) {
         allItemsInMarketToShop.put(toAdd.getID(),shopName);
         if(itemByName.get ( toAdd.getName () ) == null)
             itemByName.put ( toAdd.getName (), new ArrayList<> (  ));
@@ -721,7 +716,7 @@ public class Market {
     }
 
     private void removeClosedShopItemsFromMarket(Shop shopToClose) {
-        for (Map.Entry<Integer,Item> entry:shopToClose.getItemMap().entrySet())
+        for (Map.Entry<java.lang.Integer, Item> entry:shopToClose.getItemMap().entrySet())
         {
             allItemsInMarketToShop.remove(entry.getKey());
             String itemName = entry.getValue().getName();
@@ -732,7 +727,7 @@ public class Market {
         EventLog.getInstance().Log("Preparing to close the shop "+shopToClose.getShopName()+". Removed all shop items from market.");
     }
 
-    public Item getItemByID (Integer id) throws MarketException {
+    public Item getItemByID (java.lang.Integer id) throws MarketException {
         String itemShopName = allItemsInMarketToShop.get(id);
         if(itemShopName == null)
             throw new MarketException("no such item in market");

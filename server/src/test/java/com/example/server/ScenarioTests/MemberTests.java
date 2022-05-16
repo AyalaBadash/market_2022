@@ -6,14 +6,9 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.ShoppingBasket;
-import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
-import com.example.server.serviceLayer.FacadeObjects.*;
-import com.example.server.serviceLayer.Response;
-import com.example.server.serviceLayer.ResponseT;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;

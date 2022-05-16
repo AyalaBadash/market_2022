@@ -119,8 +119,8 @@ public class AcceptanceTests {
     }
 
     protected static ResponseT<ItemFacade> addItemToShop(String shopOwnerName, String name, double price,
-                                   Item.Category category, String info,
-                                   List<String> keywords, double amount, String shopName) throws Exception {
+                                                         Item.Category category, String info,
+                                                         List<String> keywords, double amount, String shopName) throws Exception {
         AddItemToShopRequest request = new AddItemToShopRequest(shopOwnerName, name, price,
                 category, info, keywords, amount, shopName);
         ResponseT<ItemFacade> result = Service.getInstance().addItemToShop(request);

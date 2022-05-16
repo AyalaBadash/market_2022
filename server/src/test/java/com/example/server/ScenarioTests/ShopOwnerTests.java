@@ -195,7 +195,7 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,"newName",productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
+            addItem(shopOwnerName,"newName",productPrice, Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
             Item it= market.getItemByName(ItemName).get(0);
             market.setItemCurrentAmount(loggedInmemberName,it,newAmount,shopName);
@@ -268,7 +268,7 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
+            addItem(shopOwnerName,ItemName,productPrice, Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
             Item it= market.getItemByName(ItemName).get(0);
             market.changeShopItemInfo(shopOwnerName,"another info",it.getID(),"not real shop name");
@@ -573,7 +573,7 @@ public class ShopOwnerTests {
         Visitor visitor = market.guestLogin();
         market.register(name, pass);
     }
-    public Item addItem(String son, String in, double pp ,Item.Category cat, String inf, List<String> lis, int am, String sn) throws MarketException {
+    public Item addItem(String son, String in, double pp , Item.Category cat, String inf, List<String> lis, int am, String sn) throws MarketException {
         return market.addItemToShop(son, in, pp, cat,
                 inf,lis , am,sn);
     }

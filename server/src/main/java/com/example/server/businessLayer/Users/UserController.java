@@ -7,11 +7,8 @@ import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingCart;
-import com.example.server.serviceLayer.Notifications.Notification;
 
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

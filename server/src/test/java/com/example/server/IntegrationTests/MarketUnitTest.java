@@ -6,20 +6,16 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
+import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.when;
 
 public class MarketUnitTest {
     Member member;
@@ -67,7 +63,7 @@ public class MarketUnitTest {
             market.validateSecurityQuestions("raz",new ArrayList<>(),"@visitor1");
             market.openNewShop("raz","razShop");
             shop = market.getShopByName("razShop");
-            item = market.addItemToShop("raz","milk", 5.0,Item.Category.general,"",keywords,10.0,"razShop");
+            item = market.addItemToShop("raz","milk", 5.0, Item.Category.general,"",keywords,10.0,"razShop");
         }
         catch (Exception e)
         {

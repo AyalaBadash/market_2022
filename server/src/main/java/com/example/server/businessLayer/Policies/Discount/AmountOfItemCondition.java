@@ -5,15 +5,16 @@ import com.example.server.businessLayer.ShoppingBasket;
 
 import java.util.Map;
 
-public class AmountOfItemCondition extends Condition{
+public class AmountOfItemCondition extends CompositeCondition{
     private double amountNeeded;
-    private Item itemNeeded;
+    private Integer itemNeeded;
 
-
-    public AmountOfItemCondition(double amountNeeded, Item itemNeeded) {
+    public AmountOfItemCondition(Condition baseCond, CompositeConditionType compositeType, double amountNeeded, Integer itemNeeded) {
+        super(baseCond, compositeType);
         this.amountNeeded = amountNeeded;
         this.itemNeeded = itemNeeded;
     }
+
 
     /**
      *
@@ -22,8 +23,7 @@ public class AmountOfItemCondition extends Condition{
      */
     @Override
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) {
-//        Map<Item,Double> map = shoppingBasket.getItems();
-//        return (map.containsKey(itemNeeded)&&map.get(itemNeeded)>=amountNeeded);
-        return false;
+        Map<Integer,Double> map = shoppingBasket.getItems();
+        return (map.containsKey(itemNeeded)&&map.get(itemNeeded)>=amountNeeded);
     }
 }

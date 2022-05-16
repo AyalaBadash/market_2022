@@ -1,6 +1,7 @@
 package com.example.server.UnitTests;
 
 import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.Item;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

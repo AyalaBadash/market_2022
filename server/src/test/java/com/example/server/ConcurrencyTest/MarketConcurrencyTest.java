@@ -10,7 +10,6 @@ import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.support.ManagedArray;
 
 import java.util.ArrayList;
 import java.util.List;

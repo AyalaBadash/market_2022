@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 public class Shop implements IHistory {
     private String shopName;
-    private Map<Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
+    private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, Appointment> shopManagers;     //<name, appointment>
     private Map<String, Appointment> shopOwners;     //<name, appointment>
-    private Map<Integer, Double> itemsCurrentAmount;
+    private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
 
     Member shopFounder;//todo
@@ -71,7 +71,7 @@ public class Shop implements IHistory {
     //use case - Stock management
     public void editItem(Item newItem, String id) throws MarketException {
         int newItemId = newItem.getID();
-        int oldItemId = Integer.parseInt(id);
+        int oldItemId = java.lang.Integer.parseInt(id);
         if (newItemId != oldItemId)
             throw new MarketException ( "must not change the item id" );
         itemMap.put ( newItem.getID ( ), newItem );
@@ -95,12 +95,12 @@ public class Shop implements IHistory {
         return amount;
     }
 
-    public Map<Integer, Double> getItemsCurrentAmountMap() {
+    public Map<java.lang.Integer, Double> getItemsCurrentAmountMap() {
         return itemsCurrentAmount;
     }
 
 
-    public void setItemAmount(String shopOwnerName, Integer item, double amount) throws MarketException {
+    public void setItemAmount(String shopOwnerName, java.lang.Integer item, double amount) throws MarketException {
         if (!isShopOwner ( shopOwnerName )) {
             throw new MarketException ( "member is not the shop owner and is not authorized to effect the inventory." );
         }
@@ -143,8 +143,8 @@ public class Shop implements IHistory {
 
 
     public void releaseItems(ShoppingBasket shoppingBasket) throws MarketException {
-        Map<Integer, Double> items = shoppingBasket.getItems ( );
-        for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
+        Map<java.lang.Integer, Double> items = shoppingBasket.getItems ( );
+        for ( Map.Entry<java.lang.Integer, Double> itemAmount : items.entrySet ( ) ) {
 //            Item currItem = itemAmount.getKey ( );
             if(itemsCurrentAmount.get(itemAmount.getKey()) == null)
                 throw new MarketException("shopping basket holds an item which does not exist in market");
@@ -163,12 +163,12 @@ public class Shop implements IHistory {
         ArrayList<String> itemsNames =new ArrayList<>();
         ArrayList<Double> prices =new ArrayList<>();
         //
-        Map<Integer, Double> items = shoppingBasket.getItems ( );
+        Map<java.lang.Integer, Double> items = shoppingBasket.getItems ( );
         StringBuilder missingMessage = new StringBuilder ( );
         boolean failed = false;
         missingMessage.append ( String.format ( "%s: cannot complete your purchase because some items are missing:\n", this.shopName ) );
-        for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
-            Integer id = itemAmount.getKey();
+        for ( Map.Entry<java.lang.Integer, Double> itemAmount : items.entrySet ( ) ) {
+            java.lang.Integer id = itemAmount.getKey();
             Item currItem = shoppingBasket.getItemMap().get(id);
             //for notifications:
             itemsNames.add(currItem.getName());
@@ -183,7 +183,7 @@ public class Shop implements IHistory {
         if (failed) {
             throw new MarketException ( missingMessage );
         }
-        for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
+        for ( Map.Entry<java.lang.Integer, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());
             double newAmount = this.itemsCurrentAmount.get ( currItem.getID() ) - itemAmount.getValue ( );
             this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
@@ -201,7 +201,7 @@ public class Shop implements IHistory {
         throw new UnsupportedOperationException ( );
     }
 
-    public synchronized Map<Integer, Item> getItemMap() {
+    public synchronized Map<java.lang.Integer, Item> getItemMap() {
         return itemMap;
     }
 
@@ -296,8 +296,8 @@ public class Shop implements IHistory {
     }
 
     public ShoppingBasket validateBasket(ShoppingBasket basket) {
-        Map<Integer, Double> items = basket.getItems ( );
-        for ( Map.Entry<Integer, Double> currentItem : items.entrySet ( ) ) {
+        Map<java.lang.Integer, Double> items = basket.getItems ( );
+        for ( Map.Entry<java.lang.Integer, Double> currentItem : items.entrySet ( ) ) {
             Item curItem = basket.getItemMap().get(currentItem.getKey());;
             Double curAmount = itemsCurrentAmount.get(currentItem.getKey());
             if (currentItem.getValue ( ) > curAmount) {
@@ -419,7 +419,7 @@ public class Shop implements IHistory {
         return rank;
     }
 
-    public void changeShopItemInfo(String shopOwnerName, String info, Integer oldItemID) throws MarketException {
+    public void changeShopItemInfo(String shopOwnerName, String info, java.lang.Integer oldItemID) throws MarketException {
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not shop owner so is not authorized to change item info" );
         Item item = itemMap.get(oldItemID);
