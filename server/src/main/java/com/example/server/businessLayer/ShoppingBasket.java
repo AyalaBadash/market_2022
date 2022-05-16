@@ -91,7 +91,7 @@ public class ShoppingBasket implements IHistory {
     }
 
     public void removeItem(Item item) {
-        items.remove(item);
+        items.remove(item.getID());
     }
 
 

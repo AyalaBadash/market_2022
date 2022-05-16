@@ -228,7 +228,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
         try {
             VisitorFacade visitor = guestLogin();
             List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(0);
+            ItemFacade milk = res.get(1);
             Response response = addItemToCart(milk, 3, shopName, visitor.getName());
             assert !response.isErrorOccurred();
             //check shopping basket includes only the milk
@@ -298,7 +298,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(0);
+            ItemFacade milk = res.get(1);
             Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
             double buyingAmount = itemAmount - 1;
             Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
@@ -321,7 +321,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(0);
+            ItemFacade milk = res.get(1);
             Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
             double buyingAmount = itemAmount + 1;
             Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
@@ -345,7 +345,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(0);
+            ItemFacade milk = res.get(1);
             Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
             double buyingAmount = itemAmount;
             Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());

@@ -20,7 +20,7 @@ public class SystemAcceptanceTests extends AcceptanceTests {
     @BeforeEach
     public void reset() {
         try {
-            setItemCurrentAmount(shopOwnerName, milk, productAmount, shopName);
+            setItemCurrentAmount(shopOwnerName, yogurt, productAmount, shopName);
         } catch (Exception e) {
             String msg = e.getMessage();
         }

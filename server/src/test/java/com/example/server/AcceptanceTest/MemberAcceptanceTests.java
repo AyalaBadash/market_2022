@@ -1,6 +1,5 @@
 package com.example.server.AcceptanceTest;
 
-import com.example.server.businessLayer.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.ResponseT;
@@ -124,7 +123,7 @@ public class MemberAcceptanceTests extends AcceptanceTests {
         @DisplayName("logout - check member saved")
         public void checkMemberSaved() {
             try {
-                addItemToCart(milk, productAmount - 1, shopName, testMemberNameToSaveTest);
+                addItemToCart(yogurt, productAmount - 1, shopName, testMemberNameToSaveTest);
                 testMemberToSaveTest = getMember(testMemberNameToSaveTest);
                 ShoppingCartFacade prevCart = getMember(testMemberToSaveTest.getName()).getMyCart();
                 VisitorFacade visitor = logout(testMemberToSaveTest.getName());

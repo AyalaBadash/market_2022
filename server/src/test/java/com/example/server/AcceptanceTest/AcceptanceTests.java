@@ -4,7 +4,6 @@ import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -21,13 +20,13 @@ public class AcceptanceTests {
 
     static String shopOwnerName = "shaked";
     static String shopOwnerPassword = "shaked1234";
-    static String shopName = "kolbo";
+    static String shopName = "Shufersal";
     static AcceptanceTestService config = new AcceptanceTestService();
     static Double productAmount;
     static Double productPrice;
     static CreditCard creditCard;
     static Address address;
-    static ItemFacade milk;
+    static ItemFacade yogurt;
 
     static double appleAmount;
     static String appleName;
@@ -58,10 +57,10 @@ public class AcceptanceTests {
             openShop(shopOwnerName, shopName);
             productAmount = 3.0;
             productPrice = 1.2;
-            addItemToShop(shopOwnerName, "milk", productPrice, Item.Category.general,
+            addItemToShop(shopOwnerName, "yogurt", productPrice, Item.Category.general,
                     "soy", new ArrayList<>(), productAmount, shopName);
-            List<ItemFacade> res = searchProductByName("milk");
-            milk = res.get(0);
+            List<ItemFacade> res = searchProductByName("yogurt");
+            yogurt = res.get(0);
 
             appleAmount = 4.0;
             appleName = "apple";
@@ -95,7 +94,7 @@ public class AcceptanceTests {
     @BeforeEach
     public void reset() {
         try {
-            setItemCurrentAmount(shopOwnerName, milk, productAmount, shopName);
+            setItemCurrentAmount(shopOwnerName, yogurt, productAmount, shopName);
         } catch (Exception e) {
             String msg = e.getMessage();
         }

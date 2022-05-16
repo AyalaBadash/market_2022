@@ -72,7 +72,7 @@ class UserControllerTest {
     public void RegisterTest(){
         try {
             controller.register("shaked");
-            Assertions.assertEquals(1,controller.getMembers().size());
+            Assertions.assertNotNull(controller.getMembers().get("shaked"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;
