@@ -30,6 +30,7 @@ public class Market {
     private ProductsSupplyService supplyService;
 
     private static Market instance;
+    Map<String,Integer> numOfAcqsPerShop;
 
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -38,6 +39,7 @@ public class Market {
         this.userController = UserController.getInstance();
         nextItemID = new SynchronizedCounter();
         publisher= Publisher.getInstance();
+        this.numOfAcqsPerShop = new HashMap<>();
     }
 
 
@@ -809,5 +811,27 @@ public class Market {
         if(allItemsInMarketToShop.get(itemId) == null)
             throw new MarketException("there is no such an item with this id");
         return shops.get(allItemsInMarketToShop.get(itemId)).getItemMap().get(itemId);
+    }
+    private String getBuyingStats(){
+        StringBuilder s = new StringBuilder("How many customers bought per shop:\n");
+        for (Map.Entry<String,Integer> entry:this.numOfAcqsPerShop.entrySet())
+        {
+            s.append(entry.getKey()).append(entry.getValue());
+            s.append("\n");
+        }
+        s.append("----------------------------------------------");
+        return s.toString();
+    }
+
+    public String getMarketInfo(String systemManagerName) throws MarketException{
+        if (!systemManagerName.equals(this.systemManagerName)){
+            ErrorLog.getInstance().Log("Only the system manager can get info about the market.");
+            throw new MarketException("Only the system manager can get info about the market.");
+        }
+        StringBuilder s = new StringBuilder("Getting market info");
+        s.append(getBuyingStats());
+        s.append(userController.getUsersInfo());
+        return s.toString();
+
     }
 }
