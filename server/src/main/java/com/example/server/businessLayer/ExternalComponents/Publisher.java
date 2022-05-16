@@ -1,5 +1,6 @@
-package com.example.server.businessLayer;
+package com.example.server.businessLayer.ExternalComponents;
 
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 

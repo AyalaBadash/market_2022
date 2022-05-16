@@ -1,9 +1,8 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.businessLayer.ExternalServices.PaymentMock;
-import com.example.server.businessLayer.ExternalServices.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.SupplyMock;
 import com.example.server.businessLayer.Market;
-import com.example.server.serviceLayer.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

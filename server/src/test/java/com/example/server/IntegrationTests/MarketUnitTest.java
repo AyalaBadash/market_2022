@@ -1,11 +1,9 @@
 package com.example.server.IntegrationTests;
 
 
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalServices.PaymentMock;
-import com.example.server.businessLayer.ExternalServices.PaymentService;
-import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
-import com.example.server.businessLayer.ExternalServices.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.*;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;

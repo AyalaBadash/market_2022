@@ -1,7 +1,7 @@
 package com.example.server.UnitTests;
 
 import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.ShoppingBasket;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -2,12 +2,11 @@ package com.example.server.businessLayer;
 
 
 import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.MarketException;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ClosedShopsHistory {
     private Map<String, Shop> closedShops;

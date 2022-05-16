@@ -4,7 +4,7 @@ package com.example.server.businessLayer.Users;
 import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Acquisition;
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package com.example.server.businessLayer.Appointment;
 import com.example.server.businessLayer.Appointment.Permissions.EmployeesPermission;
 import com.example.server.businessLayer.Appointment.Permissions.IPermission;
 import com.example.server.businessLayer.Appointment.Permissions.PurchaseHistoryPermission;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;

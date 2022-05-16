@@ -1,7 +1,6 @@
-package com.example.server.businessLayer.ExternalServices;
+package com.example.server.businessLayer.ExternalComponents;
 
 import com.example.server.ResourcesObjects.Address;
-import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 
 import java.time.LocalDateTime;
 

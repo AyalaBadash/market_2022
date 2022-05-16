@@ -1,7 +1,5 @@
 package com.example.server.UnitTests;
 
-import com.example.server.businessLayer.MarketException;
-import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.Assertions;
@@ -13,8 +11,6 @@ import org.mockito.Mockito;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     @Mock

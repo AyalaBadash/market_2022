@@ -1,14 +1,12 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.businessLayer.ExternalServices.PaymentMock;
-import com.example.server.businessLayer.ExternalServices.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.SupplyMock;
 import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
-import com.example.server.businessLayer.Users.UserController;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
 
-import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,6 +1,7 @@
 package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.MarketException;
 
 import java.text.DecimalFormat;
 import java.util.Map;

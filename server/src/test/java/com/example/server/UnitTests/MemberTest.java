@@ -1,5 +1,6 @@
 package com.example.server.UnitTests;
 
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import org.junit.jupiter.api.Test;

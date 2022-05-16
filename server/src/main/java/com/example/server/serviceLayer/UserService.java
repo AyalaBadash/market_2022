@@ -5,7 +5,7 @@ import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
@@ -13,7 +13,6 @@ import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.*;
 
 
-import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.List;
 
 public class UserService {

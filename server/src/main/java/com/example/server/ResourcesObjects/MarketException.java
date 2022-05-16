@@ -1,4 +1,4 @@
-package com.example.server.businessLayer;
+package com.example.server.ResourcesObjects;
 
 
 public class MarketException extends Exception{

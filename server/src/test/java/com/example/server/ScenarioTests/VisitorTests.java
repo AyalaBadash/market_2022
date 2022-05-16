@@ -2,9 +2,10 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalServices.PaymentMock;
-import com.example.server.businessLayer.ExternalServices.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.SupplyMock;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
 

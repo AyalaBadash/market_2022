@@ -4,13 +4,12 @@ import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.ResourcesObjects.SynchronizedCounter;
 import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingCart;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

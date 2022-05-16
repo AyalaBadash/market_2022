@@ -2,11 +2,11 @@ package com.example.server.serviceLayer;
 
 
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.ExternalServices.PaymentService;
-import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalComponents.PaymentService;
+import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.serviceLayer.FacadeObjects.*;
 

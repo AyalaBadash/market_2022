@@ -1,7 +1,7 @@
 package com.example.server.businessLayer.Users;
 
 import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
 
 public class Visitor {

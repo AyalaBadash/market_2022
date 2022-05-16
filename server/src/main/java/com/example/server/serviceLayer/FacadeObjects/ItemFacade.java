@@ -1,7 +1,7 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
 import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 
 import java.util.List;
 

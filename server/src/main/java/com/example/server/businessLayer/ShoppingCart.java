@@ -1,5 +1,7 @@
 package com.example.server.businessLayer;
 
+import com.example.server.ResourcesObjects.MarketException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
