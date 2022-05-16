@@ -207,7 +207,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addItemToShop")
     @CrossOrigin
-    public ResponseT<ItemFacade> addItemToShop(@RequestBody AddItemToShopRequest request) {
+    public ResponseT<ShopFacade> addItemToShop(@RequestBody AddItemToShopRequest request) {
         return marketService.addItemToShop(request.getShopOwnerName(), request.getName(), request.getPrice(),
                 request.getCategory(), request.getInfo(), request.getKeywords(), request.getAmount(), request.getShopName());
     }

@@ -12,8 +12,7 @@ import org.mockito.Mockito;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShoppingCartUnitTest {
-
+public class ShoppingCartUnitTest{
 
     @Mock
     Item item = Mockito.mock(Item.class);

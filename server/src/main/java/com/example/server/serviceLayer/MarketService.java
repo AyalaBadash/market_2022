@@ -162,12 +162,12 @@ public class MarketService {
     }
 
 
-    public ResponseT<ItemFacade> addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info,
+    public ResponseT<ShopFacade> addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info,
                                                List<String> keywords, double amount, String shopName) {
-        ResponseT<ItemFacade> response;
+        ResponseT<ShopFacade> response;
         try {
-            Item item = market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
-            response = new ResponseT(new ItemFacade(item));
+            Shop shop = market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
+            response = new ResponseT(new ShopFacade(shop));
         }
         catch (MarketException e){
             response = new ResponseT(e.getMessage());
