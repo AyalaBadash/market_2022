@@ -17,7 +17,7 @@ public class ShopManagerAppointmentFacade extends AppointmentFacade {
 
     public ShopManagerAppointmentFacade(){super();}
     public ShopManagerAppointmentFacade(Member appointed, Member superVisor, Shop relatedShop, List<PermissionFacade> permissions) {
-        super(appointed, relatedShop, permissions);
+        super(appointed, relatedShop, permissions, "ShopManagerAppointmentFacade");
         this.superVisor = superVisor.getName();
     }
 
@@ -37,7 +37,7 @@ public class ShopManagerAppointmentFacade extends AppointmentFacade {
     }
 
     public ShopManagerAppointmentFacade(ShopManagerAppointment appointment) {
-        super(appointment.getAppointed(), appointment.getRelatedShop(), new ArrayList<>());
+        super(appointment.getAppointed(), appointment.getRelatedShop(), new ArrayList<>(), "ShopManagerAppointmentFacade");
         this.superVisor = appointment.getSuperVisor().getName();
         permissions.addAll(appointment.getPermissions().stream().map(PermissionFacade::new).toList());
     }

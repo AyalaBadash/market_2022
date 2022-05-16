@@ -13,14 +13,15 @@ public abstract class AppointmentFacade implements FacadeObject<Appointment> {
     protected String superVisor;      //  member appointedMe
     protected String relatedShop;
     List<PermissionFacade> permissions;
-
+    protected String type;
     public AppointmentFacade(){}
 
     public AppointmentFacade(Member appointed, Shop relatedShop,
-                             List<PermissionFacade> permissions) {
+                             List<PermissionFacade> permissions, String type) {
         this.appointed = appointed.getName();
         this.relatedShop = relatedShop.getShopName();
         this.permissions = permissions;
+        this.type = type;
     }
 
     public String getAppointed() {
@@ -61,4 +62,11 @@ public abstract class AppointmentFacade implements FacadeObject<Appointment> {
 
     public abstract AppointmentFacade toFacade(Appointment appointment);
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

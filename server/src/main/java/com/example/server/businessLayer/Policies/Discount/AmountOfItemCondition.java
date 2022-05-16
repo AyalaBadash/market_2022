@@ -22,7 +22,8 @@ public class AmountOfItemCondition extends Condition{
      */
     @Override
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) {
-        Map<Item,Double> map = shoppingBasket.getItems();
-        return (map.containsKey(itemNeeded)&&map.get(itemNeeded)>=amountNeeded);
+//        Map<Item,Double> map = shoppingBasket.getItems();
+//        return (map.containsKey(itemNeeded)&&map.get(itemNeeded)>=amountNeeded);
+        return false;
     }
 }
