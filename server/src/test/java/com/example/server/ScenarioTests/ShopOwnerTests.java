@@ -6,6 +6,7 @@ import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
@@ -63,7 +64,7 @@ public class ShopOwnerTests {
     private void openShop() throws MarketException {
         loginMember(shopOwnerName,shopOwnerPassword);
         market.openNewShop(shopOwnerName, shopName);
-        itemAdded = market.addItemToShop(shopOwnerName, ItemName, productPrice, Item.Category.electricity, "", new ArrayList<>(), productAmount, shopName);
+        itemAdded = market.addItemToShopItem(shopOwnerName, ItemName, productPrice, Item.Category.electricity, "", new ArrayList<>(), productAmount, shopName);
         logoutMember(shopOwnerName);
     }
 
@@ -574,7 +575,7 @@ public class ShopOwnerTests {
         market.register(name, pass);
     }
     public Item addItem(String son, String in, double pp , Item.Category cat, String inf, List<String> lis, int am, String sn) throws MarketException {
-        return market.addItemToShop(son, in, pp, cat,
-                inf,lis , am,sn);
+        return market.addItemToShopItem(son, in, pp, cat,
+                inf, lis , am,sn);
     }
 }

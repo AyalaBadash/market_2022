@@ -377,7 +377,7 @@ public class Market {
 
 
 
-    public Item addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
+    public Shop addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
                               List<String> keywords, double amount, String shopName) throws MarketException {
         if (!userController.isLoggedIn(shopOwnerName)){
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -393,7 +393,7 @@ public class Market {
             Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment() );
             updateMarketOnAddedItem ( addedItem, shopName );
             EventLog.getInstance().Log("Item added to shop "+shopName);
-            return addedItem;
+            return shop;
         }catch (MarketException e){
             nextItemID.decrement();
             throw e;
@@ -835,5 +835,11 @@ public class Market {
         s.append(userController.getUsersInfo());
         return s.toString();
 
+    }
+
+    public Item addItemToShopItem(String shopOwnerName, String itemName, Double productPrice, Item.Category electricity, String info, List<String > keyWords, double productAmount, String shopName) throws MarketException {
+        addItemToShop(shopOwnerName, itemName, productPrice, electricity, info, keyWords, productAmount,shopName);
+        Item itemAdded = getItemByID(nextItemID.value() - 1);
+        return itemAdded;
     }
 }

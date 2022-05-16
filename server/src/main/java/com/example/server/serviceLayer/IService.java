@@ -187,7 +187,7 @@ public interface IService {
      * @param addItemToShopRequest
      * @return
      */
-    public ResponseT<ItemFacade> addItemToShop(AddItemToShopRequest addItemToShopRequest);
+    public ResponseT<ShopFacade> addItemToShop(AddItemToShopRequest addItemToShopRequest);
 
 
     /**

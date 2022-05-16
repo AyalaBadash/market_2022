@@ -50,9 +50,9 @@ public class MemberTests {
             productPrice = 1.2;
             List<String> keywords = new ArrayList<>();
             keywords.add("in sale");
-            milk = market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
+            milk = market.addItemToShopItem(shopManagerName, "milk", productPrice, Item.Category.general,
                     "soy",keywords , productAmount,shopName);
-            cookies = market.addItemToShop(shopManagerName, "cookies", productPrice, Item.Category.general, "",
+            cookies = market.addItemToShopItem(shopManagerName, "cookies", productPrice, Item.Category.general, "",
                     keywords, productAmount, shopName);
             testMemberName = "managerTest";
             testMemberPassword = "1234";
