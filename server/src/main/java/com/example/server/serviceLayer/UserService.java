@@ -6,6 +6,7 @@ import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.Publisher;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.*;
@@ -31,6 +32,7 @@ public class UserService {
         try{
             Visitor guest = this.market.guestLogin();
             VisitorFacade result = new VisitorFacade(guest);
+            Publisher.getInstance().addAddress(result.getName());
             return new ResponseT<>(result);
         }catch (Exception e){
             return new ResponseT(e.getMessage());
@@ -140,6 +142,8 @@ public class UserService {
         try{
             Member member = market.validateSecurityQuestions(userName,answers, visitorName);
             MemberFacade memberLoggedIn = new MemberFacade(member);
+            //Sent the delayed notifications to the logged user
+            Publisher.getInstance().updateName(visitorName,userName);
             return new ResponseT<> ( memberLoggedIn );
         }catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );

@@ -199,4 +199,8 @@ public class Security {
         }
     }
 
+    //Method for notifications.
+    //check if there is need to save the notification in case the visitor is member.
+    public boolean isMember(String name){ return namesToLoginInfo.containsKey(name);}
+
 }

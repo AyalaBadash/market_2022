@@ -325,10 +325,4 @@ public class Service implements IService {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/fetchAllUsers")
-    public Collection<String> fetchAll(){
-        return Publisher.getInstance().getUsers();
-    }
-
-
 }

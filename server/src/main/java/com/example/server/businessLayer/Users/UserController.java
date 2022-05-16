@@ -118,6 +118,7 @@ public class UserController {
         Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
         visitorsInMarket.put(userName,newVisitorMember);
         visitorsInMarket.remove ( visitorName );
+
         EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();
     }
