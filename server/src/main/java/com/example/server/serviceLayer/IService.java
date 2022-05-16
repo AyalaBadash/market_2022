@@ -289,4 +289,6 @@ public interface IService {
     public Response removeMember(removeMemberRequest request);
 
     ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request);
+
+    ResponseT<String> getMarketInfo(GetMarketInfoRequest request);
 }

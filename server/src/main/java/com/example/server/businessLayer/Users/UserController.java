@@ -8,6 +8,9 @@ import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingCart;
 
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +21,10 @@ public class UserController {
     //TODO synchronized next
     private SynchronizedCounter nextUniqueNumber;
     private static UserController instance;
+    private long registeredMembersAvg;
+    private LocalDate openingDate;
+
+
 
     public synchronized static UserController getInstance() {
         if (instance == null)
@@ -29,6 +36,8 @@ public class UserController {
         members = new ConcurrentHashMap<>();
         visitorsInMarket = new ConcurrentHashMap<>();
         nextUniqueNumber = new SynchronizedCounter();
+        this.registeredMembersAvg = 0;
+        this.openingDate = LocalDate.now();
     }
 
     /**
@@ -134,6 +143,9 @@ public class UserController {
         }
         EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
     }
+    public synchronized void setRegisteredAvg(){
+
+    }
 
     public boolean isLoggedIn(String visitorName) {
         return visitorsInMarket.containsKey ( visitorName );
@@ -150,6 +162,21 @@ public class UserController {
     public void setNextUniqueNumber(int nextUniqueNumber) {
         this.nextUniqueNumber.setValue(nextUniqueNumber);
     }
+
+    public String getUsersInfo(){
+        StringBuilder s = new StringBuilder("Numbers of avg new members per day:"+getRegisteredMembersAvg()+"\n");
+        s.append("------------------------------------------");
+        return s.toString();
+    }
+    private synchronized long getRegisteredMembersAvg() {
+        int daysPassed = openingDate.until(LocalDate.now()).getDays();
+        long newAvg = members.size()/ daysPassed;
+        DecimalFormat format = new DecimalFormat("0.00");
+        newAvg = Long.parseLong(format.format(newAvg));
+        this.registeredMembersAvg = newAvg;
+        return newAvg;
+    }
+
 
     public void reset() {
         members = new HashMap<>();

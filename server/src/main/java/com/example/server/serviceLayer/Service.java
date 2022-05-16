@@ -321,6 +321,12 @@ public class Service implements IService {
     public ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request) {
         return marketService.getItemInfo(request.getName(), request.getItemId());
     }
+    @Override
+    @RequestMapping(value = "/getMarketInfo")
+    @CrossOrigin
+    public ResponseT<String> getMarketInfo(GetMarketInfoRequest request) {
+        return marketService.getMarketInfo(request.getSysManager());
+    }
 
 
     public ResponseT<MemberFacade> getMember(String memberName) {
