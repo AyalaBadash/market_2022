@@ -3,14 +3,15 @@ package com.example.server.businessLayer.Users;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 
 public class Visitor {
     private String name;
     private Member member;
     private ShoppingCart cart;
 
-    public Visitor(String name) {
+    public Visitor(String name) throws MarketException {
+        if (name == null || name.equals(""))
+            throw new MarketException("Name cant be null or empty string");
         this.name = name;
         this.member = null;
         this.cart = new ShoppingCart();

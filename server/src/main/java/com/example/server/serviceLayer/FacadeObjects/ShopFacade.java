@@ -2,7 +2,6 @@ package com.example.server.serviceLayer.FacadeObjects;
 
 
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Shop;
 
@@ -12,13 +11,13 @@ import java.util.Map;
 public class ShopFacade implements FacadeObject<Shop> {
 
     private String shopName;
-    private Map<Integer, ItemFacade> itemMap;             //<ItemID,main.businessLayer.Item>
+    private Map<java.lang.Integer, ItemFacade> itemMap;             //<ItemID,main.businessLayer.Item>
     private Map<String, AppointmentFacade> employees;     //<name, appointment>
-    private Map<ItemFacade, Double> itemsCurrentAmount;
+    private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
 
-    public ShopFacade(String shopName, Map<Integer, Item> itemMap, Map<String,
-            Appointment> employees, Map<Item, Double> itemsCurrentAmount, boolean closed) {
+    public ShopFacade(String shopName, Map<java.lang.Integer, Item> itemMap, Map<String,
+            Appointment> employees, Map<java.lang.Integer, Double> itemsCurrentAmount, boolean closed) {
         this.shopName = shopName;
         updateItemMap ( itemMap );
         updateEmployees ( employees );
@@ -34,9 +33,9 @@ public class ShopFacade implements FacadeObject<Shop> {
         this.closed = fromShop.isClosed();
     }
 
-    private void updateItemMap(Map<Integer, Item> items){
+    private void updateItemMap(Map<java.lang.Integer, Item> items){
         this.itemMap = new HashMap<> ();
-        for( Map.Entry<Integer, Item> entry : items.entrySet ()) {
+        for( Map.Entry<java.lang.Integer, Item> entry : items.entrySet ()) {
             this.itemMap.put (entry.getKey (), new ItemFacade (entry.getValue ()) );
         }
     }
@@ -48,10 +47,10 @@ public class ShopFacade implements FacadeObject<Shop> {
         }
     }
 
-    private void updateItemsAmount(Map<Item, Double> itemsAmount){
-        for (Map.Entry<Item, Double> entry: itemsAmount.entrySet()){
-            ItemFacade item = new ItemFacade(entry.getKey());
-            itemsCurrentAmount.put(item, entry.getValue());
+    private void updateItemsAmount(Map<java.lang.Integer, Double> itemsAmount){
+        itemsCurrentAmount = new HashMap<>();
+        for (Map.Entry<java.lang.Integer, Double> entry: itemsAmount.entrySet()){
+            itemsCurrentAmount.put(entry.getKey(), entry.getValue());
         }
     }
 
@@ -63,11 +62,11 @@ public class ShopFacade implements FacadeObject<Shop> {
         this.shopName = shopName;
     }
 
-    public Map<Integer, ItemFacade> getItemMap() {
+    public Map<java.lang.Integer, ItemFacade> getItemMap() {
         return itemMap;
     }
 
-    public void setItemMap(Map<Integer, ItemFacade> itemMap) {
+    public void setItemMap(Map<java.lang.Integer, ItemFacade> itemMap) {
         this.itemMap = itemMap;
     }
 
@@ -79,11 +78,11 @@ public class ShopFacade implements FacadeObject<Shop> {
         this.employees = employees;
     }
 
-    public void setItemsCurrentAmount(Map<ItemFacade, Double> itemsCurrentAmount) {
+    public void setItemsCurrentAmount(Map<java.lang.Integer, Double> itemsCurrentAmount) {
         this.itemsCurrentAmount = itemsCurrentAmount;
     }
 
-    public Map<ItemFacade, Double> getItemsCurrentAmount() {
+    public Map<java.lang.Integer, Double> getItemsCurrentAmount() {
         return itemsCurrentAmount;
     }
 

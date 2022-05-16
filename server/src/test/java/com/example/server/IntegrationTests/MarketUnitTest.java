@@ -6,22 +6,16 @@ import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.PaymentService;
 import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
+import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.when;
 
 public class MarketUnitTest {
     Member member;
@@ -38,8 +32,24 @@ public class MarketUnitTest {
     Item item;
     //TODO - approve - no test for validate cart - goes directly to basket.
 
+    @BeforeAll
+    public static void init(){
+        PaymentService paymentService = new PaymentMock();
+        ProductsSupplyService supplyService = new SupplyMock();
+        try{
+            Market.getInstance().firstInitMarket(paymentService,supplyService,"Ido","password");
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
     @BeforeEach
     public void marketUnitTestInit(){
+        try {
+            //todo - check why after reset there is no ido member in security , while he exist in userController.(needs to be in both)
+            Market.getInstance().reset();
+        } catch (Exception e){}
         List<String> keywords = new ArrayList<>();
         keywords.add("dairy");
         shopsHistory = ClosedShopsHistory.getInstance();
@@ -47,15 +57,13 @@ public class MarketUnitTest {
         security = Security.getInstance();
         userController = UserController.getInstance();
         try {
-            item = new Item(1,"milk",5.0,"", Item.Category.general,
-                    keywords);
             market.register("raz","password");
             market.register("ayala","password");
             market.memberLogin("raz","password");
             market.validateSecurityQuestions("raz",new ArrayList<>(),"@visitor1");
             market.openNewShop("raz","razShop");
             shop = market.getShopByName("razShop");
-            market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),item.getInfo(),item.getKeywords(),10.0,"razShop");
+            item = market.addItemToShop("raz","milk", 5.0, Item.Category.general,"",keywords,10.0,"razShop");
         }
         catch (Exception e)
         {
@@ -64,20 +72,7 @@ public class MarketUnitTest {
 
     }
 
-    @Test
-    @DisplayName("First init market - good test")
-    public void initTest(){
-        PaymentService paymentService = new PaymentMock();
-        ProductsSupplyService supplyService = new SupplyMock();
-        try{
-                    market.firstInitMarket(paymentService,supplyService,"raz","password");
-                    assert true;
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-            assert false;
-        }
-    }
+
     @Test
     @DisplayName("First init market - fail test - one of the external service is null")
     public void initFailTest(){
@@ -94,7 +89,9 @@ public class MarketUnitTest {
     @Test
     @DisplayName("First init market - fail test - one service already exist")
     public void initFailTestOneServiceIsNotNull(){
-        market.setPaymentService(new PaymentMock());
+        try {
+            market.setPaymentService(new PaymentMock(), "raz");
+        } catch (MarketException e) {}
         PaymentService paymentService = new PaymentMock();
         ProductsSupplyService supplyService = new SupplyMock();
         try{
@@ -111,8 +108,7 @@ public class MarketUnitTest {
     @DisplayName("Register test - good test")
     public void registerTest(){
         try {
-            security.validateRegister("ido", "password");
-            userController.register("ido");
+            market.register("ido", "password");
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -123,11 +119,13 @@ public class MarketUnitTest {
     @DisplayName("Register test - fail test - valid")
     public void registerFailTest(){
         try {
-            security.validateRegister("ido", "password");
-            userController.register("ido");
+            market.register("raz", "password");
+            assert false;
         }
-        catch (Exception e){
-            System.out.println(e.getMessage());
+        catch (MarketException e){
+            assert true;
+        }catch (Exception e){
+            System.out.printf(e.getMessage());
             assert false;
         }
     }
@@ -157,17 +155,17 @@ public class MarketUnitTest {
     @DisplayName("Calculate shopping cart - good test")
     public void CalculateCart(){
 
-        try {
-            shop.addItem("raz", item.getName(), item.getPrice(),item.getCategory(),item.getInfo(),item.getKeywords(),10.0,item.getID());
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-            System.out.println("End of test");
-            System.out.println("-------------------------------------------------------------");
-            assert false;
-        }
+//        try {
+//            shop.addItem("raz", item.getName(), item.getPrice(),item.getCategory(),item.getInfo(),item.getKeywords(),10.0,item.getID());
+//        }
+//        catch (Exception e){
+//            System.out.println(e.getMessage());
+//            System.out.println("End of test");
+//            System.out.println("-------------------------------------------------------------");
+//            assert false;
+//        }
         try{
-            market.addItemToShoppingCart(item,1.0,"razShop","ayala");
+            market.addItemToShoppingCart(item,1.0,"razShop","raz");
         }
         catch (Exception e)
         {
@@ -177,7 +175,7 @@ public class MarketUnitTest {
             assert false;
         }
         try {
-            ShoppingCart updatedCart = market.calculateShoppingCart("ayala");
+            ShoppingCart updatedCart = market.calculateShoppingCart("raz");
             Assertions.assertEquals(5.0,updatedCart.getCurrentPrice());
             System.out.println("End of test");
             System.out.println("-------------------------------------------------------------");
@@ -199,8 +197,8 @@ public class MarketUnitTest {
         try {
             Item item1 = new Item(2,"apple",2.5,"red", Item.Category.fruit,
             keywords);
-            market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),"",
-                    item.getKeywords(),5.0,"razShop");
+//            market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),"",
+//                    item.getKeywords(),5.0,"razShop");
             market.addItemToShop("raz",item1.getName(),item1.getPrice(),item1.getCategory(),item1.getInfo(),
                     item1.getKeywords(),5.0,"razShop");
             market.openNewShop("raz","razShop2");
@@ -225,21 +223,18 @@ public class MarketUnitTest {
     public void getItemByCategoryTest(){
         List<String> keywords = new ArrayList<>();
         keywords.add("fruit");
+        Item item1 = null;
         try {
-            Item item1 = new Item(2,"apple",2.5,"red apple", Item.Category.fruit,
-                    keywords);
-            market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),"",
-                    item.getKeywords(),5.0,"razShop");
-            market.addItemToShop("raz",item1.getName(),item1.getPrice(),item1.getCategory(),item1.getInfo(),
-                    item1.getKeywords(),5.0,"razShop");
+            item1 = market.addItemToShop("raz","apple",2.5, Item.Category.fruit, "red apple",
+                    keywords,5.0,"razShop");
             market.openNewShop("raz","razShop2");
-            market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),"On shop 2 we have info",item.getKeywords(),3.0,"razShop2");
+            Item item2 = market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),"On shop 2 we have info",item.getKeywords(),3.0,"razShop2");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;
         }
-        List<Item> res = market.getItemByCategory(Item.Category.fruit);
+        List<Item> res = market.getItemByCategory(item1.getCategory());
         Assertions.assertEquals(1,res.size());
         Assertions.assertEquals("red apple",res.get(0).getInfo());
         System.out.println("End of test");
@@ -296,6 +291,11 @@ public class MarketUnitTest {
         }
         List<String> ans = new ArrayList<>();
         ans.add("1995");
+        try {
+            market.memberLogout("raz");
+        } catch (MarketException e) {
+            System.out.println(e.getMessage());
+        }
         try {
             Member test= market.validateSecurityQuestions("raz",ans,"@visitor1");
             Assertions.assertNotNull(test);
@@ -430,13 +430,6 @@ public class MarketUnitTest {
     @Test
     @DisplayName("Remove Item From Shop")
     public void removeItemFromShopTest(){
-        try {
-            market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),item.getInfo(),item.getKeywords(),10.0,"razShop");
-        } catch (Exception e) {
-            System.out.println("Build up for test:Remove Item From Shop has failed");
-            System.out.println(e.getMessage());
-            assert false;
-        }
         Assertions.assertEquals(1,shop.getItemMap().size());
         try {
             market.removeItemFromShop("raz",item.getID(),"razShop");
@@ -451,13 +444,6 @@ public class MarketUnitTest {
     @Test
     @DisplayName("Remove Item From Shop-fail test ")
     public void removeItemFromShopFailTest() {
-        try {
-            market.addItemToShop("raz", item.getName(), item.getPrice(), item.getCategory(), item.getInfo(), item.getKeywords(), 10.0, "razShop");
-        } catch (Exception e) {
-            System.out.println("Build up for test:Remove Item From Shop has failed");
-            System.out.println(e.getMessage());
-            assert false;
-        }
         Assertions.assertEquals(1, shop.getItemMap().size());
         try {
             market.removeItemFromShop("razb", item.getID(), "razShop");//No such member razb
@@ -467,7 +453,6 @@ public class MarketUnitTest {
             try {
                 market.removeItemFromShop("raz", 10, "razShop");//no such item with ID 10
                 assert false;
-
             } catch (Exception ex) {
                 try {
                     market.removeItemFromShop("raz",item.getID(),"NoShop");//No such shop with name NoShop
@@ -475,11 +460,7 @@ public class MarketUnitTest {
                 } catch (Exception exc) {
                     assert true;
                 }
-
             }
-
-            System.out.println(e.getMessage());
-            assert false;
             System.out.println("-----------------------------------------------");
         }
     }
@@ -488,10 +469,10 @@ public class MarketUnitTest {
     @DisplayName("Add Item To Shop -good test")
     public void addItemToShopTest(){
         try {
-            Assertions.assertEquals(0,shop.getItemMap().size());
-            market.addItemToShop("raz","soap",10.0, Item.Category.general,"Muy kef",new ArrayList<>(),50.0,"razShop");
             Assertions.assertEquals(1,shop.getItemMap().size());
-            Assertions.assertEquals(2,market.getNextItemID());
+            market.addItemToShop("raz","soap",10.0, Item.Category.general,"Muy kef",new ArrayList<>(),50.0,"razShop");
+            Assertions.assertEquals(2,shop.getItemMap().size());
+            Assertions.assertEquals(3,market.getNextItemID());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;
@@ -510,17 +491,16 @@ public class MarketUnitTest {
                 market.addItemToShop("raz","soap",10.0, Item.Category.general,"Muy kef",new ArrayList<>(),50.0,"NullShop");
                 assert false;
             } catch (Exception ex) {
-                Assertions.assertEquals(1,market.getNextItemID());
+                Assertions.assertEquals(2,market.getNextItemID());
             }
         }
     }
     @Test
     @DisplayName("Set Item Current Amount - good test")
     public void setItemCurrentAmountTest(){
-
         try {
             market.setItemCurrentAmount("raz",item,3.0,"razShop");
-            Assertions.assertEquals(3.0,shop.getItemMap().get(item.getID()));
+            Assertions.assertEquals(3.0,shop.getItemCurrentAmount(item));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;
@@ -552,7 +532,7 @@ public class MarketUnitTest {
     @DisplayName("Member Logout- fail test")
     public void memberLogoutFailTest(){
         try {
-            market.memberLogout("raz");
+            market.memberLogout("Ido");
             assert false;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -611,7 +591,7 @@ public class MarketUnitTest {
             Member raz = userController.getMember("raz");
             Map<Shop,ShoppingBasket> cartRaz = raz.getMyCart().getCart();
             Assertions.assertEquals(1,cartRaz.size());
-            Assertions.assertEquals(5.0,cartRaz.get(shop).getItems().get(item));
+            Assertions.assertEquals(5.0,cartRaz.get(shop).getItems().get(item.getID()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;
@@ -619,35 +599,31 @@ public class MarketUnitTest {
     }
     @Test
     @DisplayName("Add Item To Shopping Cart - fail test")
-    public void addItemToShoppingCartFailTest(){
+    public void addItemToShoppingCartFailTest() {
         try {
-            market.addItemToShoppingCart(null,5.0,"razShop","raz");//No item
+            market.addItemToShoppingCart(null, 5.0, "razShop", "raz");//No item
             assert false;
         } catch (Exception e) {
             try {
-                market.addItemToShoppingCart(item,-5.0,"razShop","raz");// negative amount
+                market.addItemToShoppingCart(item, -5.0, "razShop", "raz");// negative amount
                 assert false;
             } catch (Exception ex) {
                 try {
-                    market.addItemToShoppingCart(item,5.0,"NullShop","raz");// no such shop
+                    market.addItemToShoppingCart(null, 5.0, "razShop", "ayala");//member not logged in
                     assert false;
-                } catch (Exception exc) {
+                } catch (Exception Exce) {
                     try {
-                        market.addItemToShoppingCart(null,5.0,"razShop","ayala");//member not logged in
+                        market.addItemToShoppingCart(null, 15.0, "razShop", "raz");// amount large shop amount
                         assert false;
-                    } catch (Exception Exce) {
-                        try {
-                            market.addItemToShoppingCart(null,15.0,"razShop","raz");// amount large shop amount
-                            assert false;
-                        } catch (Exception Excep) {
-                            assert true;
-                        }
+                    } catch (Exception Excep) {
+                        assert true;
                     }
                 }
             }
-
         }
+
     }
+
     @Test
     @DisplayName("Appoint Shop Owner - good test")
     public void appointShopOwnerTest(){
@@ -735,7 +711,7 @@ public class MarketUnitTest {
             Member raz = userController.getMember("raz");
             Map<Shop,ShoppingBasket> razCart = raz.getMyCart().getCart();
             ShoppingBasket razShopBasket = razCart.get(shop);
-            Assertions.assertEquals(2.0,razShopBasket.getItems().get(item));
+            Assertions.assertEquals(2.0,razShopBasket.getItems().get(item.getID()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;
@@ -760,7 +736,6 @@ public class MarketUnitTest {
     @Test
     @DisplayName("Edit Item - good test")
     public void editItemTest(){
-
         try {
             double oldPrice = item.getPrice();
             Item updated = new Item(item.getID(),item.getName(),item.getPrice()+1,item.getInfo(),item.getCategory(),item.getKeywords());
@@ -795,8 +770,145 @@ public class MarketUnitTest {
     @DisplayName("Buy Shopping Cart - fail test")
     public void buyShoppingCartFailTest(){}//TODO
 
+    @Test
+    @DisplayName("Remove shop owner - good test - valid shop")
+    public void removeShopOwnerTest(){
+        try {
+            market.appointShopOwner("raz","ayala","razShop");
+        } catch (Exception e) {
+            assert false;
+        }
+        try{
+            market.removeShopOwnerAppointment("raz","ayala","razShop");
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
 
+    @Test
+    @DisplayName("Remove shop owner - fail test - no such shop")
+    public void removeShopOwnerFailTest(){
+        try {
+            market.appointShopOwner("raz","ayala","razShop");
+        } catch (Exception e) {
+            assert false;
+        }
+        try{
+            market.removeShopOwnerAppointment("raz","ayala","stamShop");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            System.out.println(e.getMessage());
+            assert true;
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+            assert false;
+        }
+    }
 
+    @Test
+    @DisplayName("Remove member - good test")
+    public void removeMemberTest(){
+        try {
+            market.register("shaked", "password");
+            market.appointShopOwner("raz", "ayala", "razShop");
+        }
+        catch (Exception e)
+        {
+            assert false;
+        }
+        try {
+            market.removeMember(market.getSystemManagerName(),"shaked");
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Remove member - fail test - trying to remove employee")
+    public void removeMemberFailTestRemoveEmployee(){
+        try {
+            market.register("shaked", "password");
+            market.appointShopOwner("raz", "ayala", "razShop");
+        }
+        catch (Exception e)
+        {
+            assert false;
+        }
+        try {
+            market.removeMember("Ido","ayala");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Remove member - fail test - trying to remove system manager")
+    public void removeMemberFailTestRemoveSysManager(){
+        try {
+            market.register("shaked", "password");
+            market.appointShopOwner("raz", "ayala", "razShop");
+        }
+        catch (Exception e)
+        {
+            assert false;
+        }
+        try {
+            market.removeMember("raz","Ido");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Remove member - fail test - trying to remove myself")
+    public void removeMemberFailTestRemoveMyself(){
+        try {
+            market.register("shaked", "password");
+            market.appointShopOwner("raz", "ayala", "razShop");
+        }
+        catch (Exception e)
+        {
+            assert false;
+        }
+        try {
+            market.removeMember("Ido","Ido");
+            assert false;
+        }
+        catch (MarketException e)
+        {
+            assert true;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            assert false;
+        }
+    }
 
 
 

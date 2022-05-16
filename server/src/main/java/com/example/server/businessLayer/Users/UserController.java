@@ -2,23 +2,29 @@ package com.example.server.businessLayer.Users;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
+import com.example.server.ResourcesObjects.SynchronizedCounter;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.businessLayer.ShoppingCart;
-import com.example.server.serviceLayer.Notifications.Notification;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserController {
     private Map<String, Member> members;
     private Map<String, Visitor> visitorsInMarket;
-
-    private int nextUniqueNumber;
+    //TODO synchronized next
+    private SynchronizedCounter nextUniqueNumber;
     private static UserController instance;
+    private long registeredMembersAvg;
+    private LocalDate openingDate;
+
+
 
     public synchronized static UserController getInstance() {
         if (instance == null)
@@ -29,7 +35,9 @@ public class UserController {
     private UserController() {
         members = new ConcurrentHashMap<>();
         visitorsInMarket = new ConcurrentHashMap<>();
-        nextUniqueNumber = 1;
+        nextUniqueNumber = new SynchronizedCounter();
+        this.registeredMembersAvg = 0;
+        this.openingDate = LocalDate.now();
     }
 
     /**
@@ -72,8 +80,7 @@ public class UserController {
 
 
     private synchronized String getNextUniqueName() {
-        String name = "@visitor" + nextUniqueNumber;
-        nextUniqueNumber++;
+        String name = "@visitor" + nextUniqueNumber.increment();
         return name;
     }
 
@@ -85,8 +92,11 @@ public class UserController {
         throw new UnsupportedOperationException();
     }
 
-    public Visitor getVisitor(String visitorName){
-        return this.visitorsInMarket.get(visitorName);
+    public Visitor getVisitor(String visitorName) throws MarketException {
+        Visitor visitor = this.visitorsInMarket.get(visitorName);
+        if (visitor == null)
+            throw new MarketException("no such visitor in the market");
+        return visitor;
     }
     public Map<String, Visitor> getVisitorsInMarket() {
         return visitorsInMarket;
@@ -101,21 +111,21 @@ public class UserController {
             ErrorLog.getInstance().Log("Non member tried to logout");
             throw new MarketException("no such member");
         }
-        else if (!visitorsInMarket.containsKey(member)) {
+        if (!visitorsInMarket.containsKey(member)) {
             ErrorLog.getInstance().Log("member who is not visiting tried to logout");
             throw new MarketException("not currently visiting the shop");
         }
-        else{
-            visitorsInMarket.remove(member);
-            String newVisitorName = getNextUniqueName();
-            Visitor newVisitor = new Visitor(newVisitorName);
-            visitorsInMarket.put(newVisitorName, newVisitor);
-            EventLog.getInstance().Log("Our beloved member "+member+" logged out.");
-            return newVisitorName;
-        }
+        visitorsInMarket.remove(member);
+        String newVisitorName = getNextUniqueName();
+        Visitor newVisitor = new Visitor(newVisitorName);
+        visitorsInMarket.put(newVisitorName, newVisitor);
+        EventLog.getInstance().Log("Our beloved member " + member + " logged out.");
+        return newVisitorName;
     }
-    public Member finishLogin(String userName, String visitorName) {
+    public synchronized Member finishLogin(String userName, String visitorName) throws MarketException {
         Visitor newVisitorMember = new Visitor(userName,members.get(userName),members.get(userName).getMyCart());
+        if(visitorsInMarket.containsKey(userName))
+            throw new MarketException("member is already logged in");
         visitorsInMarket.put(userName,newVisitorMember);
         visitorsInMarket.remove ( visitorName );
 
@@ -134,6 +144,9 @@ public class UserController {
         }
         EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
     }
+    public synchronized void setRegisteredAvg(){
+
+    }
 
     public boolean isLoggedIn(String visitorName) {
         return visitorsInMarket.containsKey ( visitorName );
@@ -146,5 +159,30 @@ public class UserController {
         return members.get ( visitorName );
     }
 
+  
+    public void setNextUniqueNumber(int nextUniqueNumber) {
+        this.nextUniqueNumber.setValue(nextUniqueNumber);
+    }
+
+    public String getUsersInfo(){
+        StringBuilder s = new StringBuilder("Numbers of avg new members per day:"+getRegisteredMembersAvg()+"\n");
+        s.append("------------------------------------------");
+        return s.toString();
+    }
+    private synchronized long getRegisteredMembersAvg() {
+        int daysPassed = openingDate.until(LocalDate.now()).getDays();
+        long newAvg = members.size()/ daysPassed;
+        DecimalFormat format = new DecimalFormat("0.00");
+        newAvg = Long.parseLong(format.format(newAvg));
+        this.registeredMembersAvg = newAvg;
+        return newAvg;
+    }
+
+
+    public void reset() {
+        members = new HashMap<>();
+        visitorsInMarket = new HashMap<>();
+        nextUniqueNumber.reset();
+    }
 
 }

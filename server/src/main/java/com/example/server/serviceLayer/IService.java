@@ -187,7 +187,7 @@ public interface IService {
      * @param addItemToShopRequest
      * @return
      */
-    public Response addItemToShop(AddItemToShopRequest addItemToShopRequest);
+    public ResponseT<ItemFacade> addItemToShop(AddItemToShopRequest addItemToShopRequest);
 
 
     /**
@@ -283,4 +283,12 @@ public interface IService {
      * @return Member purchase history
      */
     public ResponseT<String> getHistoryByMember(GetHistoryByMemberRequest request);
+
+    public Response removeShopOwnerAppointment(removeAppointmentRequest request);
+
+    public Response removeMember(removeMemberRequest request);
+
+    ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request);
+
+    ResponseT<String> getMarketInfo(GetMarketInfoRequest request);
 }

@@ -8,36 +8,51 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ShoppingBasketFacade implements FacadeObject<ShoppingBasket> {
-    Map<ItemFacade,Double> items;//<Item,quantity>
+    public Map<java.lang.Integer, ItemFacade> getItemMap() {
+        return itemMap;
+    }
+
+    public void setItemMap(Map<java.lang.Integer, ItemFacade> itemMap) {
+        this.itemMap = itemMap;
+    }
+
+    Map<java.lang.Integer,Double> items;//<Item,quantity>
+    Map<java.lang.Integer,ItemFacade> itemMap;
     double price;
 
-    public ShoppingBasketFacade(Map<ItemFacade, Double> items,double price) {
+    public ShoppingBasketFacade(Map<java.lang.Integer, Double> items, Map<java.lang.Integer, ItemFacade> itemMap, double price) {
         this.items = items;
+        this.itemMap = itemMap;
+        this.price = price;
     }
 
     public ShoppingBasketFacade(ShoppingBasket shoppingBasket) {
-        this.items = new HashMap<>();
-        for (Map.Entry<Item,Double> itemsAmount: shoppingBasket.getItems().entrySet()){
-            items.put(new ItemFacade(itemsAmount.getKey()), itemsAmount.getValue());
+        items = new HashMap<>();
+        for (Map.Entry<java.lang.Integer,Double> item: shoppingBasket.getItems().entrySet()){
+            items.put(item.getKey(), item.getValue());
+        }
+        itemMap = new HashMap<>();
+        for(Map.Entry<java.lang.Integer, Item> item : shoppingBasket.getItemMap().entrySet()){
+            itemMap.put(item.getKey(), new ItemFacade((item.getValue())));
         }
     }
 
-    public Map<ItemFacade, Double> getItems() {
+    public Map<java.lang.Integer, Double> getItems() {
         return items;
     }
 
-    public void setItems(Map<ItemFacade, Double> items) {
+    public void setItems(Map<java.lang.Integer, Double> items) {
         this.items = items;
     }
 
     @Override
     public ShoppingBasket toBusinessObject() throws MarketException {
-        Map<ItemFacade,Double> facadeItems = this.items;
-        Map<Item,Double> BLItems = new HashMap<>();
-        for (Map.Entry<ItemFacade,Double> entry: facadeItems.entrySet()){
-            BLItems.put(entry.getKey().toBusinessObject(),entry.getValue());
+        Map<java.lang.Integer,ItemFacade> facadeItems = this.itemMap;
+        Map<java.lang.Integer, Item> BLItems = new HashMap<>();
+        for (Map.Entry<java.lang.Integer, ItemFacade> entry: facadeItems.entrySet()){
+            BLItems.put(entry.getKey(),entry.getValue().toBusinessObject());
         }
-        ShoppingBasket basket = new ShoppingBasket(BLItems,this.price);
+        ShoppingBasket basket = new ShoppingBasket(items, BLItems, this.price);
         return basket;
 
     }

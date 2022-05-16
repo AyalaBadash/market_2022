@@ -11,17 +11,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     @Mock
     Visitor visitor = Mockito.mock(Visitor.class);
+    UserController controller;
 
 
-    UserController controller = UserController.getInstance();
+
     @BeforeEach
     public void reset(){
-
+        controller = UserController.getInstance();
+        Map<String,Visitor> emptyMap = new HashMap<>();
+        controller.setVisitorsInMarket(emptyMap);
+        controller.setNextUniqueNumber(1);
     }
 
     @Test
@@ -65,7 +72,7 @@ class UserControllerTest {
     public void RegisterTest(){
         try {
             controller.register("shaked");
-            Assertions.assertEquals(1,controller.getMembers().size());
+            Assertions.assertNotNull(controller.getMembers().get("shaked"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;
@@ -74,7 +81,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Member log out test - good test")
-    public void MemberLogout(){//TODO - complete
+    public void MemberLogout(){
         try {
             controller.register("raz");
             controller.finishLogin("raz","@visitor1");

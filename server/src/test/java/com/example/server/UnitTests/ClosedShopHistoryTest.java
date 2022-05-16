@@ -1,6 +1,7 @@
 package com.example.server.UnitTests;
 
 import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.Item;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
-public class ClosedShopHistoryTest extends mainTest {
+public class ClosedShopHistoryTest{
 
     @Mock
     Shop shop;
@@ -42,10 +43,15 @@ public class ClosedShopHistoryTest extends mainTest {
 
     @Test
     @DisplayName("History Unit Test - empty purchase")
-    public void testEmptyPurchaseHistory() throws IllegalAccessException {
+    public void testEmptyPurchaseHistory() {
         // empty item name
         String purchase = "";
-        closedShopsHistory.addPurchaseHistory(purchase, shop);
+        try {
+            closedShopsHistory.addPurchaseHistory(purchase, shop);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            assert false;
+        }
         String test = closedShopsHistory.getOverallHistory().toString();
         Assertions.assertEquals(test,"");
         purchase = "purchase";
@@ -53,17 +59,26 @@ public class ClosedShopHistoryTest extends mainTest {
             closedShopsHistory.addPurchaseHistory(purchase,null);
             assert false;
         } catch (Exception ignored){}
-        closedShopsHistory.addPurchaseHistory(purchase, shop);
-        Assertions.assertTrue(closedShopsHistory.getOverallHistory().toString().contains(purchase));
+        try {
+            closedShopsHistory.addPurchaseHistory(purchase, shop);
+            Assertions.assertTrue(closedShopsHistory.getOverallHistory().toString().contains("purchase"));
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            assert false;
+        }
     }
 
     @Test
     @DisplayName("History Unit Test - valid")
     public void testValidPurchaseHistory() throws IllegalAccessException {
         String purchase = "purchase";
-        closedShopsHistory.addPurchaseHistory(purchase,shop);
-        Assertions.assertTrue(closedShopsHistory.getOverallHistory().toString().contains(purchase));
-
+        try {
+            closedShopsHistory.addPurchaseHistory(purchase, shop);
+            Assertions.assertTrue(closedShopsHistory.getOverallHistory().toString().contains(purchase));
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            assert false;
+        }
     }
     @Test
     @DisplayName("History - close a shop")

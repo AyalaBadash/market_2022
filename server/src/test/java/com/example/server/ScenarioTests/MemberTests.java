@@ -2,18 +2,12 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
+import com.example.server.businessLayer.*;
 import com.example.server.businessLayer.ExternalServices.PaymentMock;
 import com.example.server.businessLayer.ExternalServices.SupplyMock;
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.ShoppingBasket;
-import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
-import com.example.server.serviceLayer.FacadeObjects.*;
-import com.example.server.serviceLayer.Response;
-import com.example.server.serviceLayer.ResponseT;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -29,20 +23,22 @@ public class MemberTests {
     SupplyMock supplyService = new SupplyMock();
     String userName = "userTest";
     String password = "passTest";
-    String shopManagerName = "shaked";
+    String shopManagerName = "shakedMember";
     String shopManagerPassword = "shaked1234";
-    String shopName = "kolbo";
+    String shopName = "kolbo2";
     Double productAmount;
     Double productPrice;
     CreditCard creditCard;
     Address address;
     Item milk;
+    Item cookies;
 
     @BeforeAll
     public void setUpMember() {
         try {
             market = Market.getInstance();
-            market.firstInitMarket(paymentService, supplyService, userName, password);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, userName, password);
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);
@@ -54,26 +50,33 @@ public class MemberTests {
             productPrice = 1.2;
             List<String> keywords = new ArrayList<>();
             keywords.add("in sale");
-            market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
+            milk = market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
                     "soy",keywords , productAmount,shopName);
-            List<Item> res = market.getItemByName("milk");
-            milk = res.get(0);
-
-            creditCard = new CreditCard("124","13/5" , "555");
-            address = new Address("Tel Aviv", "Super" , "1");
+            cookies = market.addItemToShop(shopManagerName, "cookies", productPrice, Item.Category.general, "",
+                    keywords, productAmount, shopName);
             testMemberName = "managerTest";
             testMemberPassword = "1234";
+            Visitor visitor2 = market.guestLogin();
+            market.register(testMemberName, testMemberPassword);
+            market.memberLogin(testMemberName, testMemberPassword);
+            market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor2.getName());
+            creditCard = new CreditCard("124","13/5" , "555");
+            address = new Address("Tel Aviv", "Super" , "1");
 
-        } catch (Exception ignored) {}
+
+        } catch (Exception ignored) {
+            System.out.printf(ignored.getMessage());
+        }
     }
 
     @BeforeEach
     public void resetMember() {
         try {
-            Visitor visitor = market.guestLogin();
-            market.register(testMemberName, testMemberPassword);
-            List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
-            market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+            if (!UserController.getInstance().isLoggedIn(testMemberName)) {
+                Visitor visitor = market.guestLogin();
+                List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
+                market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+            }
             testMember = UserController.getInstance().getMember(testMemberName);
 
         } catch (Exception e) {
@@ -91,7 +94,7 @@ public class MemberTests {
     @DisplayName("open new shop")
     public void openNewShop() {
         try {
-            String shopTest = "shopTest";
+            String shopTest = "shopNewName";
             market.openNewShop(testMember.getName(), shopTest);
             assert true;
         } catch (Exception e) {
@@ -150,130 +153,157 @@ public class MemberTests {
         }
     }
 
-//    @Test
-//    @DisplayName("logout - check member saved")
-//    public void checkMemberSaved() {
-//        try {
-//            market.addItemToShoppingCart(milk, productAmount-1,shopName,testMemberName);
-//            ShoppingCart prevCart = testMember.getMyCart();
-//            String visitorName = market.memberLogout(testMember.getName());
-//            Visitor visitor = UserController.getInstance().getVisitor(visitorName);
-//            List<String> questions = market.memberLogin(testMember.getName(), testMemberPassword);
-//            market.validateSecurityQuestions(testMember.getName(), new ArrayList<>(),
-//                    visitorName);
-//            Member returnedMember = visitor.getMember();
-//            Assertions.assertEquals(returnedMember.getAppointedByMe(), testMember.getAppointedByMe());
-//            Assertions.assertEquals(returnedMember.getName(), testMember.getName());
-//            Assertions.assertEquals(returnedMember.getMyAppointments(), testMember.getMyAppointments());
-//            if (!(testMember.getMyCart() == returnedMember.getMyCart())) {
-//                assert testMember.getMyCart().getCart().size() == returnedMember.getMyCart().getCart().size();
-//                // for each shop - check equals
-//                prevCart.getCart().forEach((shop, prevBasket) -> {
-//                    assert returnedMember.getMyCart().getCart().containsKey(shop);
-//                    ShoppingBasket newBasket = returnedMember.getMyCart().getCart().get(shop);
-//                    // for each item in shopping basket
-//                    prevBasket.getItems().forEach((item, amount) -> {
-//                        assert newBasket.getItems().size() == prevBasket.getItems().size();
-//                        assert newBasket.getItems().containsKey(item);
-//                        assert newBasket.getItems().get(item).equals(amount);
-//                    });
-//                });
-//            }
-//            // for each shopping basket - checks equals
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//    }
+    @Test
+    @DisplayName("logout - check member saved")
+    public void checkMemberSaved() {
+        try {
+            market.addItemToShoppingCart(milk, productAmount-1,shopName,testMemberName);
+            testMember = UserController.getInstance().getMember(testMemberName);
+            ShoppingCart prevCart = testMember.getMyCart();
+            String visitorName = market.memberLogout(testMember.getName());
+            Visitor visitor = UserController.getInstance().getVisitor(visitorName);
+            List<String> questions = market.memberLogin(testMember.getName(), testMemberPassword);
+            Member returnedMember = market.validateSecurityQuestions(testMember.getName(), new ArrayList<>(),
+                    visitorName);
+            Assertions.assertEquals(returnedMember.getAppointedByMe(), testMember.getAppointedByMe());
+            Assertions.assertEquals(returnedMember.getName(), testMember.getName());
+            Assertions.assertEquals(returnedMember.getMyAppointments(), testMember.getMyAppointments());
+            if (!(testMember.getMyCart() == returnedMember.getMyCart())) {
+                assert testMember.getMyCart().getCart().size() == returnedMember.getMyCart().getCart().size();
+                // for each shop - check equals
+                prevCart.getCart().forEach((shop, prevBasket) -> {
+                    assert returnedMember.getMyCart().getCart().containsKey(shop);
+                    ShoppingBasket newBasket = returnedMember.getMyCart().getCart().get(shop);
+                    // for each item in shopping basket
+                    prevBasket.getItems().forEach((item, amount) -> {
+                        assert newBasket.getItems().size() == prevBasket.getItems().size();
+                        assert newBasket.getItems().containsKey(item);
+                        assert newBasket.getItems().get(item).equals(amount);
+                    });
+                });
+            }
+            // for each shopping basket - checks equals
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-//    @Test
-//    @DisplayName("login twice")
-//    public void loginTwice() {
-//        try {
-//            Visitor visitor = market.guestLogin();
-//            List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
-//            Member newMember = market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
-//            Assertions.assertNull(newMember);
-//            assert false;
-//        } catch (Exception e) {
-//            assert false;
-//        }
-//    }
-//
-//    @Test
-//    @DisplayName("member exit system logs out")
-//    public void memberExitSystem() {
-//        try {
-//            market.visitorExitSystem(testMember.getName());
-//            Visitor visitor = market.guestLogin();
-//            List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
-//            testMember = market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
-//            assert testMember != null;
-//        } catch (Exception e) {
-//            assert false;
-//        }
-//    }
-//
-//    @Test
-//    @DisplayName("add question")
-//    public void addQuestion() {
-//        try {
-//            Visitor visitor = market.guestLogin();
-//            String currName = "questionsName";
-//            String password = "1234";
-//            market.register(currName, password);
-//            List<String> questions = market.memberLogin(currName, password);
-//            assert questions.size() == 0;
-//            Member member = market.validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
-//            market.addPersonalQuery("whats your mother's name?", "idk", member.getName());
-//            String visitorName = market.memberLogout(member.getName());
-//            questions = market.memberLogin(currName, password);
-//            assert questions.size() == 1;
-//            assert questions.contains("whats your mother's name?");
-//            ArrayList<String> answers = new ArrayList<>();
-//            answers.add("idk");
-//            member = market.validateSecurityQuestions(currName, answers, member.getName());
-//            assert member != null;
-//
-//        } catch (Exception e) {
-//            assert false;
-//        }
-//    }
-//
-//    @Test
-//    @DisplayName("invalid authentication")
-//    public void invalidAuthentication() {
-//        try {
-//            Visitor visitor = market.guestLogin();
-//            String currName = "questionsName2";
-//            String password = "1234";
-//            market.register(currName, password);
-//            List<String> questions = market.memberLogin(currName, password);
-//            Member member = market.validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
-//            market.addPersonalQuery("whats your mother's name?", "idk", member.getName());
-//            String visitorName = market.memberLogout(member.getName());
-//            questions = market.memberLogin(currName, "123");
-//            try {
-//                questions = market.memberLogin(currName, "123");
-//                assert false;
-//            } catch (Exception ignored) {
-//            }
-//            questions = market.memberLogin(currName, password);
-//            ArrayList<String> answers = new ArrayList<>();
-//            answers.add("idk1");
-//            try {
-//                member = market.validateSecurityQuestions(currName, answers, member.getName());
-//                assert member == null;
-//            } catch (Exception ignored) {
-//            }
-//            answers.clear();
-//            answers.add("idk");
-//            assert member != null;
-//            member = market.validateSecurityQuestions(currName, answers, member.getName());
-//        } catch (Exception e) {
-//            assert false;
-//        }
-//    }
+    }
+
+    @Test
+    @DisplayName("login twice")
+    public void loginTwice() {
+        try {
+            Visitor visitor = market.guestLogin();
+            List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
+            Member newMember = market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+            Assertions.assertNotNull(newMember);
+            visitor = market.guestLogin();
+            questions = market.memberLogin(testMemberName, testMemberPassword);
+            newMember = market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+            assert false;
+        } catch (Exception e) {
+            assert true;
+        }
+    }
+
+    @Test
+    @DisplayName("member exit system logs out")
+    public void memberExitSystem() {
+        try {
+            market.visitorExitSystem(testMember.getName());
+            Visitor visitor = market.guestLogin();
+            List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
+            testMember = market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
+            assert testMember != null;
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("add question")
+    public void addQuestion() {
+        try {
+            Visitor visitor = market.guestLogin();
+            String currName = "questionsName";
+            String password = "1234";
+            market.register(currName, password);
+            List<String> questions = market.memberLogin(currName, password);
+            assert questions.size() == 0;
+            Member member = market.validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
+            market.addPersonalQuery("whats your mother's name?", "idk", member.getName());
+            String visitorName = market.memberLogout(member.getName());
+            questions = market.memberLogin(currName, password);
+            assert questions.size() == 1;
+            assert questions.contains("whats your mother's name?");
+            ArrayList<String> answers = new ArrayList<>();
+            answers.add("idk");
+            member = market.validateSecurityQuestions(currName, answers, member.getName());
+            assert member != null;
+
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("invalid authentication")
+    public void invalidAuthentication() {
+        try {
+            Visitor visitor = market.guestLogin();
+            String currName = "questionsName2";
+            String password = "1234";
+            market.register(currName, password);
+            List<String> questions = market.memberLogin(currName, password);
+            Member member = market.validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
+            market.addPersonalQuery("whats your mother's name?", "idk", member.getName());
+            String visitorName = market.memberLogout(member.getName());
+            try {
+                questions = market.memberLogin(currName, "123");
+                assert false;
+            }catch (MarketException e){
+                assert true;
+            }
+            ArrayList<String> answers = new ArrayList<>();
+            answers.add("idk1");
+            try {
+                member = market.validateSecurityQuestions(currName, answers, member.getName());
+            } catch (Exception ignored) {
+                assert true;
+            }
+            answers.clear();
+            answers.add("idk");
+            member = market.validateSecurityQuestions(currName, answers, member.getName());
+            Assertions.assertNotNull(member);
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("login-addToCart-logout-addToCart-buy")
+    public void loginAndLogoutSenario() {
+        String memberName = "Kim";
+        String password = "guideDog";
+        Visitor visitor = market.guestLogin();
+        try {
+            market.register(memberName, password);
+            market.memberLogin(memberName, password);
+            Member member = market.validateSecurityQuestions(memberName, null, visitor.getName());
+            market.addItemToShoppingCart(milk, 1, shopName, memberName);
+            String visitorName = market.memberLogout(memberName);
+            market.addItemToShoppingCart(cookies, 1, shopName, visitorName);
+            visitor = UserController.getInstance().getVisitor(visitorName);
+            assert visitor.getCart().getItemQuantity(milk) == 0;
+            assert visitor.getCart().getItemQuantity(cookies) == 1;
+            market.memberLogin(memberName, password);
+            member = market.validateSecurityQuestions(memberName, null, visitorName);
+            assert member.getMyCart().getItemQuantity(milk) == 1;
+            assert member.getMyCart().getItemQuantity(cookies) == 0;
+        }catch (MarketException e){
+            assert false;
+        }
+    }
 
 
 

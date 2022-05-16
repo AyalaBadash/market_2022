@@ -6,6 +6,7 @@ import com.example.server.businessLayer.ExternalServices.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
 
@@ -27,8 +28,13 @@ public class ShopOwnerTests {
     String shopOwnerPassword = "pass";
     String memberName = "bar1";
     String memberPassword = "pass1";
+
+    String loggedInmemberName = "bar2";
+
+    String loggedInmemberPassword = "pass2";
     String shopName = "store";
     String ItemName= "item1";
+    Item itemAdded;
     int productAmount;
     Double productPrice;
     double newAmount;
@@ -41,22 +47,24 @@ public class ShopOwnerTests {
             productAmount = 3;
             productPrice = 1.2;
             newAmount=10;
-            market.firstInitMarket(paymentService, supplyService, userName, password);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, userName, password);
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop
             openShop();
             registerVisitor(memberName,memberPassword);
-
+            registerVisitor(loggedInmemberName, loggedInmemberPassword);
+            loginMember(loggedInmemberName, loggedInmemberPassword);
         } catch (Exception Ignored) {
         }
     }
 
     private void openShop() throws MarketException {
-
         loginMember(shopOwnerName,shopOwnerPassword);
         market.openNewShop(shopOwnerName, shopName);
-
+        itemAdded = market.addItemToShop(shopOwnerName, ItemName, productPrice, Item.Category.electricity, "", new ArrayList<>(), productAmount, shopName);
+        logoutMember(shopOwnerName);
     }
 
     @Test
@@ -65,11 +73,21 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName, shopOwnerPassword);
-            market.addItemToShop(shopOwnerName, ItemName, productPrice, Item.Category.general,"some info"
-                    ,new ArrayList<>() , productAmount,shopName);
+            market.addItemToShop(shopOwnerName, "bikini", 150.99, Item.Category.general,"big size"
+                    ,new ArrayList<>() , 3,shopName);
             Assertions.assertTrue(market.getItemByName(ItemName).size()>=1);
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -82,8 +100,18 @@ public class ShopOwnerTests {
             market.addItemToShop("non existing owner", ItemName, productPrice, Item.Category.general,
                     "some info",new ArrayList<>() , productAmount,shopName);
              assert  false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
     @Test
@@ -96,8 +124,18 @@ public class ShopOwnerTests {
             market.addItemToShop(shopOwnerName, ItemName, productPrice, Item.Category.general,
                     "some info",new ArrayList<>() , productAmount,"non existing shop name");
             assert  false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -106,15 +144,22 @@ public class ShopOwnerTests {
     public void setItemAmount() {
         try {
             //login owner and add product
-
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
-            Item it= market.getItemByName(ItemName).get(0);
-            market.setItemCurrentAmount(shopOwnerName,it,newAmount,shopName);
-            assert true;
+            market.setItemCurrentAmount(shopOwnerName,itemAdded,newAmount,shopName);
+            assert market.getItemCurrentAmount(itemAdded.getID()).equals(newAmount);
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -128,8 +173,18 @@ public class ShopOwnerTests {
             //set amount for item that is not exists.
             market.setItemCurrentAmount(shopOwnerName,new Item(111,ItemName,10,"inf", Item.Category.fruit,new ArrayList<>()),newAmount,shopName);
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -139,16 +194,24 @@ public class ShopOwnerTests {
     public void setItemAmountFail2() {
         try {
             //login owner and add product
-
             loginMember(shopOwnerName,shopOwnerPassword);
-            loginMember(memberName,memberPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
+            addItem(shopOwnerName,"newName",productPrice, Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
             Item it= market.getItemByName(ItemName).get(0);
-            market.setItemCurrentAmount(memberName,it,newAmount,shopName);
+            market.setItemCurrentAmount(loggedInmemberName,it,newAmount,shopName);
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             Assertions.assertEquals("member is not the shop owner and is not authorized to effect the inventory.",e.getMessage());
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -158,14 +221,21 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
-            Item it= market.getItemByName(ItemName).get(0);
-            Item newIt= new Item(it.getID(),it.getName(),it.getPrice(),"another info",it.getCategory(), it.getKeywords());
-            market.changeShopItemInfo(shopOwnerName,it,newIt,shopName);
-            assert true;
+            market.changeShopItemInfo(shopOwnerName,"another info",itemAdded.getID(),shopName);
+            assert market.getItemByID(itemAdded.getID()).getInfo().equals("another info");
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -173,16 +243,22 @@ public class ShopOwnerTests {
     @DisplayName("edit item info bad case - item to update does not exists")
     public void editItemInfoFail()  {
         try {
-            //login owner and add product
+            //login owner
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
-            //get the item from the market for args.
-            Item it= market.getItemByName(ItemName).get(0);
-            Item newIt= new Item(it.getID(),it.getName(),it.getPrice(),"another info",it.getCategory(), it.getKeywords());
-            market.changeShopItemInfo(shopOwnerName,newIt,it,shopName);
+            market.changeShopItemInfo(shopOwnerName,"another info",33,shopName);
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -192,14 +268,23 @@ public class ShopOwnerTests {
         try {
             //login owner and add product
             loginMember(shopOwnerName,shopOwnerPassword);
-            addItem(shopOwnerName,ItemName,productPrice,Item.Category.general,"info", new ArrayList(),productAmount,shopName);
+            addItem(shopOwnerName,ItemName,productPrice, Item.Category.general,"info", new ArrayList(),productAmount,shopName);
             //get the item from the market for args.
             Item it= market.getItemByName(ItemName).get(0);
-            Item newIt= new Item(it.getID(),it.getName(),it.getPrice(),"another info",it.getCategory(), it.getKeywords());
-            market.changeShopItemInfo(shopOwnerName,it,newIt,"not real shop name");
+            market.changeShopItemInfo(shopOwnerName,"another info",it.getID(),"not real shop name");
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -207,12 +292,21 @@ public class ShopOwnerTests {
     @DisplayName("appoint new shop owner")
     public void appointNewOwner() {
         try {
-
             loginMember(shopOwnerName,shopOwnerPassword);
             market.appointShopOwner(shopOwnerName,memberName,shopName);
             assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -220,12 +314,21 @@ public class ShopOwnerTests {
     @DisplayName("appoint new shop owner bad case - appoint for not a real shop")
     public void appointNewOwnerFail() {
         try {
-
             loginMember(shopOwnerName,shopOwnerPassword);
             market.appointShopOwner(shopOwnerName,"not real member",shopName);
             assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         } catch (Exception e) {
             assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
     @Test
@@ -236,13 +339,18 @@ public class ShopOwnerTests {
             market.appointShopOwner(shopOwnerName,memberName,shopName);
             try {
                 market.appointShopOwner(shopOwnerName, memberName, shopName);
+                assert false;
             }
             catch(Exception e){
                 assert  true;
             }
-            assert false;
         } catch (Exception e) {
             assert false;
+        }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -258,6 +366,11 @@ public class ShopOwnerTests {
         } catch (Exception e) {
             assert false;
         }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Test
@@ -271,22 +384,32 @@ public class ShopOwnerTests {
         } catch (Exception e) {
             assert true;
         }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     @Test
     @DisplayName("appoint new shop manager bad case - appoint twice a member")
     public void appointNewManagerFail2()  {
         try {
             loginMember(shopOwnerName,shopOwnerPassword);
-            market.appointShopManager(shopOwnerName,memberName,shopName);
+            market.appointShopManager(shopOwnerName,loggedInmemberName,shopName);
             try {
-                market.appointShopManager(shopOwnerName, memberName, shopName);
+                market.appointShopManager(shopOwnerName, loggedInmemberName, shopName);
+                assert false;
             }
             catch(Exception e){
                 assert  true;
             }
-            assert false;
         } catch (Exception e) {
             assert false;
+        }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -294,12 +417,17 @@ public class ShopOwnerTests {
     @DisplayName("close shop")
     public void closeShop() {
         try {
-
             loginMember(shopOwnerName,shopOwnerPassword);
             market.closeShop(shopOwnerName,shopName);
             assert true;
+            openShop();
         } catch (Exception e) {
             assert false;
+        }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -307,10 +435,6 @@ public class ShopOwnerTests {
     @DisplayName("close shop bad case- owner not login")
     public void closeShopFail() {
         try {
-            try{
-                logoutMember(shopOwnerName);
-            }
-            catch (Exception e){}
             market.closeShop(shopOwnerName,shopName);
             assert false;
         } catch (Exception e) {
@@ -328,6 +452,11 @@ public class ShopOwnerTests {
         } catch (Exception e) {
             assert true;
         }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Test
@@ -340,6 +469,11 @@ public class ShopOwnerTests {
             assert true;
         } catch (Exception e) {
             assert false;
+        }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -354,16 +488,17 @@ public class ShopOwnerTests {
         } catch (Exception e) {
             assert true;
         }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Test
     @DisplayName("get employees info bad case - member not logged in")
     public void empInfoFail1() {
         try {
-            try{
-                logoutMember(shopOwnerName);
-            }
-            catch (Exception e){}
             market.getShopEmployeesInfo(memberName,shopName);
             assert false;
         } catch (Exception e) {
@@ -381,6 +516,11 @@ public class ShopOwnerTests {
         } catch (Exception e) {
             assert false;
         }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Test
@@ -388,10 +528,15 @@ public class ShopOwnerTests {
     public void purchaseHistoryFail() {
         try {
             loginMember(shopOwnerName,shopOwnerPassword);
-          market.getShopPurchaseHistory(memberName,shopName);
+            market.getShopPurchaseHistory(memberName,shopName);
             assert false;
         } catch (Exception e) {
             assert true;
+        }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -405,13 +550,20 @@ public class ShopOwnerTests {
         } catch (Exception e) {
             assert true;
         }
+        try {
+            logoutMember(shopOwnerName);
+        } catch (MarketException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
-    public void loginMember(String shopOwnerN, String shopOwnerP) throws MarketException {
+    public void loginMember(String name, String password) throws MarketException {
+        if(UserController.getInstance().isLoggedIn(name))
+            return;
         Visitor visitor = market.guestLogin();
-        market.memberLogin(shopOwnerN, shopOwnerP);
-        market.validateSecurityQuestions(shopOwnerN, new ArrayList<>(), visitor.getName());
-        market.memberLogin(shopOwnerN,shopOwnerP);
+        market.memberLogin(name, password);
+        market.validateSecurityQuestions(name, new ArrayList<>(), visitor.getName());
+        market.memberLogin(name,password);
     }
     public void logoutMember(String name) throws MarketException {
         market.memberLogout(name);
@@ -420,11 +572,9 @@ public class ShopOwnerTests {
         // shop manager register
         Visitor visitor = market.guestLogin();
         market.register(name, pass);
-      //  market.memberLogin(name, pass);
-      //  market.validateSecurityQuestions(name, new ArrayList<>(), visitor.getName());
     }
-    public void addItem(String son, String in, double pp ,Item.Category cat, String inf, List<String> lis, int am, String sn) throws MarketException {
-        market.addItemToShop(son, in, pp, cat,
+    public Item addItem(String son, String in, double pp , Item.Category cat, String inf, List<String> lis, int am, String sn) throws MarketException {
+        return market.addItemToShop(son, in, pp, cat,
                 inf,lis , am,sn);
     }
 }

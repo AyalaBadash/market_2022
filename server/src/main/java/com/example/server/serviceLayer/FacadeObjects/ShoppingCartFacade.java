@@ -1,46 +1,47 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
-import com.example.server.businessLayer.MarketException;
-import com.example.server.businessLayer.Shop;
-import com.example.server.businessLayer.ShoppingBasket;
-import com.example.server.businessLayer.ShoppingCart;
+import com.example.server.businessLayer.*;
+import org.yaml.snakeyaml.error.Mark;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
-    Map<ShopFacade, ShoppingBasketFacade> cart; // <Shop ,basket for the shop>
+    Map<String, ShoppingBasketFacade> cart; // <Shop ,basket for the shop>
     double price;
 
-    public ShoppingCartFacade(Map<ShopFacade, ShoppingBasketFacade> cart,double price) {
+    public ShoppingCartFacade(Map<String, ShoppingBasketFacade> cart,double price) {
         this.cart = cart;
         this.price = price;
     }
 
     public ShoppingCartFacade(ShoppingCart cart) {
         this.cart = new HashMap<>();
+        price = cart.getCurrentPrice();
+        if(cart.getCart() == null || cart.getCart().size() == 0)
+            return;
         for (Map.Entry<Shop, ShoppingBasket> fromCart: cart.getCart().entrySet()){
-            ShopFacade toShop = new ShopFacade(fromCart.getKey());
             ShoppingBasketFacade toBasket = new ShoppingBasketFacade(fromCart.getValue());
-            this.cart.put(toShop,toBasket);
+            this.cart.put(fromCart.getKey().getShopName(),toBasket);
         }
 
     }
 
-    public Map<ShopFacade, ShoppingBasketFacade> getCart() {
+    public Map<String, ShoppingBasketFacade> getCart() {
         return cart;
     }
 
-    public void setCart(Map<ShopFacade, ShoppingBasketFacade> cart) {
+    public void setCart(Map<String, ShoppingBasketFacade> cart) {
         this.cart = cart;
     }
 
     @Override
     public ShoppingCart toBusinessObject() throws MarketException {
         Map<Shop,ShoppingBasket> baskets = new HashMap<>();
-        for (Map.Entry<ShopFacade,ShoppingBasketFacade> entry:this.cart.entrySet())
+        for (Map.Entry<String,ShoppingBasketFacade> entry:this.cart.entrySet())
         {
-            baskets.put(entry.getKey().toBusinessObject(),entry.getValue().toBusinessObject());
+            Shop shop = Market.getInstance().getShopByName(entry.getKey());
+            baskets.put(shop,entry.getValue().toBusinessObject());
         }
         return new ShoppingCart(baskets,this.price);
 

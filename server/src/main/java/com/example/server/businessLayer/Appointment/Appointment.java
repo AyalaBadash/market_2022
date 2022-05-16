@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class Appointment {
+public abstract class
+Appointment {
     private Member appointed;       //  the actual appointed member
     private Member superVisor;      //  member appointedMe
     private Shop relatedShop;
+    //TODO - needs to be not an object? :O
     List<IPermission> permissions;
 
     public Appointment(Member appointed, Member appoint, Shop relatedShop) {
@@ -28,6 +30,7 @@ public abstract class Appointment {
         addAllPermissions();
     }
 
+    public Appointment(){}
     public Appointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
         this.appointed = appointed;
         this.superVisor = superVisor;
@@ -92,6 +95,12 @@ public abstract class Appointment {
                 return true;
         }
         return false;
+    }
+
+
+
+    public void setPermissions(List<IPermission> permissions) {
+        this.permissions = permissions;
     }
 
     public abstract AppointmentFacade visitToFacade(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade);

@@ -2,10 +2,11 @@ package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
+import java.util.ArrayList;
+import java.util.HashMap;
 import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
 import org.apache.el.stream.Stream;
 import org.yaml.snakeyaml.util.ArrayUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +50,6 @@ public class Security {
         return namesToLoginInfo;
     }
 
-    //TODO: enforce the user to add questions(no one add the questions right now)
     public void addNewMember(String name, String password, List<String> questions,
                              List<String> answers) throws MarketException {
         LoginCard card = new LoginCard(name, password, questions, answers);
@@ -74,7 +74,7 @@ public class Security {
         List<String> questions = new ArrayList<>();
         LoginCard card = namesToLoginInfo.get(userName);
         for (Map.Entry<String, String> entry : card.getQandA().entrySet()) {
-            questions.add(entry.getValue());
+            questions.add(entry.getKey());
         }
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("Prepared security questions for member.");
@@ -82,12 +82,13 @@ public class Security {
 
     }
 
-    public void validateQuestions(String userName, List<String> answers) throws MarketException {
-        if (answers == null)
-            return;
+  
+    public void validateQuestions(String userName, List<String> answers) throws MarketException{
         LoginCard card = namesToLoginInfo.get(userName);
         Map<String, String> QsAndAns = card.getQandA();
-        if (answers.size() != QsAndAns.size()) {
+        if(answers == null && (QsAndAns == null || QsAndAns.size() == 0))
+            return;
+        if (answers.size()!=QsAndAns.size()) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Member didnt gave number of answers equal to questions number");
             throw new MarketException("Answers size different from questions size");
@@ -109,13 +110,24 @@ public class Security {
             ErrorLog.getInstance().Log("Cannot add a personal query cause there is no such user in the system ");
             throw new MarketException("Cannot add a personal query cause there is no such user in the system ");
         }
-        //TODO check if question or answer is null
+        if (userAdditionalQueries==null||userAdditionalAnswers==null||userAdditionalAnswers.equals("")||userAdditionalQueries.equals(""))
+        {
+            ErrorLog.getInstance().Log("User tried to add query with empty/null question/answer ");
+            throw new MarketException("Question and answer cant be null or empty string");
+        }
         else {
             LoginCard card = namesToLoginInfo.get(name);
             Map<String, String> QA = card.getQandA();
             QA.put(userAdditionalQueries, userAdditionalAnswers);
         }
+    }
 
+    public void setNamesToLoginInfo(Map<String, LoginCard> namesToLoginInfo) {
+        this.namesToLoginInfo = namesToLoginInfo;
+    }
+
+    public void reset() {
+        namesToLoginInfo = new HashMap<>();
     }
 
     public String encode(String str) {
@@ -199,8 +211,13 @@ public class Security {
         }
     }
 
+
     //Method for notifications.
     //check if there is need to save the notification in case the visitor is member.
     public boolean isMember(String name){ return namesToLoginInfo.containsKey(name);}
 
+
+    public void removeMember(String memberToRemove) {
+        this.namesToLoginInfo.remove(memberToRemove);
+    }
 }

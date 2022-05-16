@@ -147,6 +147,10 @@ public class Publisher {
         } catch (Exception e) {
             throw e;
         }
+        catch (Exception e){
+            //TODO - implement
+            throw e;
+        }
     }
 
     //Todo: Add to reopened shop method in market

@@ -14,6 +14,10 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 import java.text.SimpleDateFormat;
@@ -147,7 +151,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/buyShoppingCart")
     @CrossOrigin
-    public Response buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
+    public ResponseT<ShoppingCartFacade> buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
         return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
                 request.getPaymentMethod(), request.getAddress());
     }
@@ -203,7 +207,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addItemToShop")
     @CrossOrigin
-    public Response addItemToShop(@RequestBody AddItemToShopRequest request) {
+    public ResponseT<ItemFacade> addItemToShop(@RequestBody AddItemToShopRequest request) {
         return marketService.addItemToShop(request.getShopOwnerName(), request.getName(), request.getPrice(),
                 request.getCategory(), request.getInfo(), request.getKeywords(), request.getAmount(), request.getShopName());
     }
@@ -221,7 +225,7 @@ public class Service implements IService {
     @RequestMapping(value = "/changeShopItemInfo")
     @CrossOrigin
     public Response changeShopItemInfo(@RequestBody ChangeShopItemInfoRequest request) {
-        return marketService.changeShopItemInfo (request.getShopOwnerName(), request.getUpdatedItem(),
+        return marketService.changeShopItemInfo (request.getShopOwnerName(), request.getUpdatedInfo(),
                 request.getOldItem(), request.getShopName() );
     }
 
@@ -244,7 +248,7 @@ public class Service implements IService {
     @RequestMapping(value = "/appointShopManager")
     @CrossOrigin
     public Response appointShopManager(@RequestBody AppointmentShopManagerRequest request) {
-        return null;
+        return userService.appointShopManager(request.getShopOwnerName(),request.getAppointedShopManager(),request.getShopName());
     }
 
     @Override
@@ -258,7 +262,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getManagerPermission")
     @CrossOrigin
-    public ResponseT getManagerPermission(@RequestBody GetManagerPermissionRequest request){
+    public ResponseT<AppointmentFacade> getManagerPermission(@RequestBody GetManagerPermissionRequest request){
         return this.userService.getManagerAppointment(request.getShopOwnerName(),
                 request.getManagerName(), request.getRelatedShop());
     }
@@ -325,4 +329,43 @@ public class Service implements IService {
         return ResponseEntity.ok().build();
     }
 
+    @Override
+    @RequestMapping(value = "/removeShopOwnerAppointment")
+    @CrossOrigin
+    public Response removeShopOwnerAppointment(removeAppointmentRequest request) {
+        return marketService.removeShopOwnerAppointment(request.getBoss(),request.getFiredAppointed(),request.getShopName());
+    }
+
+    @Override
+    @RequestMapping(value = "/removeMember")
+    @CrossOrigin
+    public Response removeMember(removeMemberRequest request) {
+        return marketService.removeMember(request.getManager(),request.getMemberToRemove());
+    }
+
+    @Override
+    @RequestMapping(value = "/getItemInfo")
+    @CrossOrigin
+    public ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request) {
+        return marketService.getItemInfo(request.getName(), request.getItemId());
+    }
+    @Override
+    @RequestMapping(value = "/getMarketInfo")
+    @CrossOrigin
+    public ResponseT<String> getMarketInfo(GetMarketInfoRequest request) {
+        return marketService.getMarketInfo(request.getSysManager());
+    }
+
+
+    public ResponseT<MemberFacade> getMember(String memberName) {
+        return userService.getMember(memberName);
+    }
+
+    public ResponseT<VisitorFacade> getVisitor(String name) {
+        return userService.getVisitor(name);
+    }
+
+    public ResponseT<ItemFacade> getItemById(int id) {
+        return marketService.getItemById(id);
+    }
 }

@@ -5,16 +5,16 @@ import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 public class ChangeShopItemInfoRequest {
 
     private String shopOwnerName;
-    private ItemFacade updatedItem;
+    private String updatedInfo;
     private ItemFacade oldItem;
     private String shopName;
 
     public ChangeShopItemInfoRequest() {
     }
 
-    public ChangeShopItemInfoRequest(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
+    public ChangeShopItemInfoRequest(String shopOwnerName, String updatedInfo, ItemFacade oldItem, String shopName) {
         this.shopOwnerName = shopOwnerName;
-        this.updatedItem = updatedItem;
+        this.updatedInfo = updatedInfo;
         this.oldItem = oldItem;
         this.shopName = shopName;
     }
@@ -27,12 +27,12 @@ public class ChangeShopItemInfoRequest {
         this.shopOwnerName = shopOwnerName;
     }
 
-    public ItemFacade getUpdatedItem() {
-        return updatedItem;
+    public String getUpdatedInfo() {
+        return updatedInfo;
     }
 
-    public void setUpdatedItem(ItemFacade updatedItem) {
-        this.updatedItem = updatedItem;
+    public void setUpdatedInfo(String updatedInfo) {
+        this.updatedInfo = updatedInfo;
     }
 
     public ItemFacade getOldItem() {

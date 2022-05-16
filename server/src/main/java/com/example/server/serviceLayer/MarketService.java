@@ -141,7 +141,7 @@ public class MarketService {
 
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         try{
-            Item itemBL = new Item(item.getID(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
+            Item itemBL = new Item(item.getId(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
             market.setItemCurrentAmount ( shopOwnerName,  itemBL, amount, shopName);
             return new Response (  );
         } catch (MarketException e){
@@ -152,7 +152,7 @@ public class MarketService {
 
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
         try {
-            market.removeItemFromShop(shopOwnerName,item.getID(),shopName);
+            market.removeItemFromShop(shopOwnerName,item.getId(),shopName);
             return new Response();
         }
         catch (MarketException e)
@@ -162,15 +162,15 @@ public class MarketService {
     }
 
 
-    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
-                                  List<String> keywords, double amount, String shopName) {
-        Response response;
+    public ResponseT<ItemFacade> addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info,
+                                               List<String> keywords, double amount, String shopName) {
+        ResponseT<ItemFacade> response;
         try {
-            market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
-            response = new Response();
+            Item item = market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
+            response = new ResponseT(new ItemFacade(item));
         }
         catch (MarketException e){
-            response = new Response(e.getMessage());
+            response = new ResponseT(e.getMessage());
         }
         return response;
 
@@ -178,7 +178,7 @@ public class MarketService {
 
     public Response setItemCurrentAmount(String shopOwnerName,ItemFacade item, double amount, String shopName){
         try{
-            Item itemBL = new Item(item.getID(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
+            Item itemBL = new Item(item.getId(),item.getName(),item.getPrice(),item.getInfo(),item.getCategory(),item.getKeywords());
             market.setItemCurrentAmount(shopOwnerName, itemBL ,amount,shopName);
             return new Response (  );
         }catch (MarketException e){
@@ -186,11 +186,9 @@ public class MarketService {
         }
     }
 
-    public Response changeShopItemInfo(String shopOwnerName, ItemFacade updatedItem, ItemFacade oldItem, String shopName) {
+    public Response changeShopItemInfo(String shopOwnerName, String info, ItemFacade oldItem, String shopName) {
         try{
-            Item oldItemBL = new Item(oldItem.getID(),oldItem.getName(),oldItem.getPrice(),oldItem.getInfo(),oldItem.getCategory(),oldItem.getKeywords());
-            Item updatedItemBL = new Item(updatedItem.getID(),updatedItem.getName(),updatedItem.getPrice(),updatedItem.getInfo(),updatedItem.getCategory(),updatedItem.getKeywords());
-            market.changeShopItemInfo(shopOwnerName, updatedItemBL, oldItemBL, shopName);
+            market.changeShopItemInfo(shopOwnerName, info, oldItem.getId(), shopName);
             return new Response (  );
         }catch (MarketException e){
             return new Response ( e.getMessage () );
@@ -309,5 +307,60 @@ public class MarketService {
             toReturn = new ResponseT<>(e.getMessage());
         }
         return toReturn;
+    }
+
+    public Response removeShopOwnerAppointment(String boss, String firedAppointed, String shopName){
+        Response response;
+        try{
+            market.removeShopOwnerAppointment(boss,firedAppointed,shopName);
+            response = new Response();
+        }
+        catch (MarketException e)
+        {
+            response = new Response(e.getMessage());
+        }
+        return response;
+
+    }
+
+    public Response removeMember(String manager, String memberToRemove) {
+        Response response;
+        try
+        {
+            market.removeMember(manager,memberToRemove);
+            response = new Response();
+        }
+        catch (MarketException e)
+        {
+            response = new Response(e.getMessage());
+        }
+        return response;
+    }
+
+    public ResponseT<ItemFacade> getItemInfo(String name, int itemId) {
+        try {
+            Item item = market.getItemById(name, itemId);
+            return new ResponseT<>(new ItemFacade(item));
+        } catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
+    }
+
+    public ResponseT<ItemFacade> getItemById(int id) {
+        try {
+            Item item = market.getItemByID(id);
+            return new ResponseT<>(new ItemFacade(item));
+        }catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
+    }
+
+    public ResponseT<String> getMarketInfo(String sysManager) {
+        try{
+            return new ResponseT<>(market.getMarketInfo(sysManager));
+        }
+        catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
     }
 }

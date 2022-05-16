@@ -1,18 +1,24 @@
 package com.example.server.businessLayer;
 
+import com.example.server.ResourcesObjects.ErrorLog;
+
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBasket implements IHistory {
-    private Map<Item, Double> items;//<Item,quantity>
+    private Map<java.lang.Integer, Double> items;//<Item,quantity>
+    private Map<java.lang.Integer, Item> itemMap;
     private double price;
 
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
+        itemMap = new ConcurrentHashMap<>();
         price = 0;
     }
-    public ShoppingBasket(Map<Item,Double> items , double price){
+    public ShoppingBasket(Map<java.lang.Integer,Double> items , Map<java.lang.Integer, Item> itemMap , double price){
         this.items = items;
+        this.itemMap = itemMap;
         this.price = price;
     }
 
@@ -20,8 +26,8 @@ public class ShoppingBasket implements IHistory {
     @Override
     public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();
-        for (Map.Entry<Item, Double> itemToAmount : items.entrySet()) {
-            Item item = itemToAmount.getKey();
+        for (Map.Entry<java.lang.Integer, Double> itemToAmount : items.entrySet()) {
+            Item item = itemMap.get(itemToAmount.getKey());
             Double amount = itemToAmount.getValue();
             if (amount > 0) {
                 review.append(String.format("%s, amount: %f\n", item.getReview(), amount));
@@ -35,17 +41,24 @@ public class ShoppingBasket implements IHistory {
         this.price = price;
     }
 
+    //TODO - needs to stay without checking the discount
     public double getPrice() {
         return calculatePrice();
     }
-    //TODO - price should be up to 3 digits . Example : 3.14159265 -> 3.141
+
+    //TODO - add calculationOfDiscount
+    public double getPriceWithDiscount() {
+        throw new UnsupportedOperationException();
+    }
 
     private double calculatePrice() {
         double price = 0;
-        for (Map.Entry<Item,Double> currItem:items.entrySet())
+        for (Map.Entry<java.lang.Integer,Double> currItem:items.entrySet())
         {
-            price = price + currItem.getValue()*currItem.getKey().getPrice();
+            price = price + currItem.getValue()*itemMap.get(currItem.getKey()).getPrice();
         }
+        DecimalFormat format = new DecimalFormat("#.###");
+        price = Double.parseDouble(format.format(price));
         setPrice(price);
         return price;
     }
@@ -54,7 +67,7 @@ public class ShoppingBasket implements IHistory {
         if (this.items == null || this.items.isEmpty()) {
             return true;
         } else {
-            for (Map.Entry<Item, Double> itemDoubleEntry : items.entrySet()) {
+            for (Map.Entry<java.lang.Integer, Double> itemDoubleEntry : items.entrySet()) {
                 if (itemDoubleEntry.getValue() > 0) {
                     return false;
                 }
@@ -63,26 +76,42 @@ public class ShoppingBasket implements IHistory {
         return true;
     }
 
-    public Map<Item, Double> getItems() {
+    public Map<java.lang.Integer, Double> getItems() {
         return items;
     }
 
-    public void addItem(Item item, double amount) {
-        items.put(item,amount);
+    public void addItem(Item item, double amount) throws MarketException {
+        if (amount<0)
+            throw new MarketException("Cant add negative amount of item to basket.");
+        if(itemMap.get(item.getID()) == null)
+            itemMap.put(item.getID(), item);
+        else
+            amount += items.get(item.getID());
+        items.put(item.getID(),amount);
     }
 
-    public void removeItem(Item item) throws MarketException {//TODO delete throws exception
-        if (!items.containsKey(item))
-            return;
-        else items.remove(item);
+    public void removeItem(Item item) {
+        items.remove(item.getID());
     }
 
 
-    public void updateQuantity(double amount, Item itemFacade) throws MarketException {
-        if(!items.containsKey(itemFacade)){
+    public void updateQuantity(double amount, Item item) throws MarketException {
+        if(!items.containsKey(item.getID())){
             throw new MarketException("Item is not in cart. cannot update amount");
         }
-        items.remove(itemFacade);
-        items.put(itemFacade, Double.valueOf(amount));
+        if (amount<0)
+        {
+            ErrorLog.getInstance().Log("Visitor tried to update negative amount for item.");
+            throw new MarketException("Cant put negative amount for item");
+        }
+        items.replace(item.getID(), amount);
+    }
+
+    public Map<java.lang.Integer, Item> getItemMap() {
+        return itemMap;
+    }
+
+    public void setItemMap(Map<java.lang.Integer, Item> itemMap) {
+        this.itemMap = itemMap;
     }
 }
