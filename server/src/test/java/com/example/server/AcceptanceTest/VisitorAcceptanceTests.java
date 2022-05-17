@@ -115,6 +115,10 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
 
     }
 
+    /**
+     * 2.1.1 use case
+     * @throws Exception
+     */
     @Test
     @DisplayName("guest leaves the market")
     public void guestExitMarket() throws Exception {
