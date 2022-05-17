@@ -1,7 +1,7 @@
 package com.example.server.businessLayer;
 
 
-import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.DebugLog;
 import com.example.server.ResourcesObjects.MarketException;
 
 import java.util.HashMap;
@@ -27,12 +27,12 @@ public class ClosedShopsHistory {
 
     public void closeShop(Shop closedShop) throws MarketException {
         if (closedShop == null){
-            ErrorLog.getInstance ().Log ( "tried to close a null shop!" );
+            DebugLog.getInstance ().Log ( "tried to close a null shop!" );
             throw new MarketException("tried to close a null shop!");
         }
         if(closedShop.isClosed ())
         {
-            ErrorLog.getInstance ().Log ( String.format ( "shop %s is already closed", closedShop.getShopName () ) );
+            DebugLog.getInstance ().Log ( String.format ( "shop %s is already closed", closedShop.getShopName () ) );
             throw new MarketException ( String.format ( "shop %s is already closed", closedShop.getShopName () ));
         }
         closedShops.put (closedShop.getShopName (), closedShop);
