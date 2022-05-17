@@ -1,6 +1,6 @@
 package com.example.server.businessLayer;
 
-import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.DebugLog;
 import com.example.server.ResourcesObjects.MarketException;
 
 import java.text.DecimalFormat;
@@ -102,7 +102,7 @@ public class ShoppingBasket implements IHistory {
         }
         if (amount<0)
         {
-            ErrorLog.getInstance().Log("Visitor tried to update negative amount for item.");
+            DebugLog.getInstance().Log("Visitor tried to update negative amount for item.");
             throw new MarketException("Cant put negative amount for item");
         }
         items.replace(item.getID(), amount);

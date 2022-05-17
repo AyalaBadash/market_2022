@@ -1,6 +1,6 @@
 package com.example.server.businessLayer.Users;
 
-import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.DebugLog;
 import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.ResourcesObjects.SynchronizedCounter;
 import com.example.server.businessLayer.Item;
@@ -66,7 +66,7 @@ public class UserController {
         }
         else
         {
-            ErrorLog.getInstance().Log("Non visitor tried to leave - The only way to be out is to be in.");
+            DebugLog.getInstance().Log("Non visitor tried to leave - The only way to be out is to be in.");
             throw new MarketException(String.format("%s tried to exit system but never entered", visitorName));
         }
     }
@@ -107,11 +107,11 @@ public class UserController {
 
     public String memberLogout(String member) throws MarketException {
         if (!members.containsKey(member)) {
-            ErrorLog.getInstance().Log("Non member tried to logout");
+            DebugLog.getInstance().Log("Non member tried to logout");
             throw new MarketException("no such member");
         }
         if (!visitorsInMarket.containsKey(member)) {
-            ErrorLog.getInstance().Log("member who is not visiting tried to logout");
+            DebugLog.getInstance().Log("member who is not visiting tried to logout");
             throw new MarketException("not currently visiting the shop");
         }
         visitorsInMarket.remove(member);

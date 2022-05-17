@@ -1,6 +1,6 @@
 package com.example.server.businessLayer;
 
-import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.DebugLog;
 import com.example.server.ResourcesObjects.EventLog;
 import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Appointment.Appointment;
@@ -53,16 +53,16 @@ public class Shop implements IHistory {
 
         Appointment ownerAppointment = shopOwners.get ( superVisorName );
         if (ownerAppointment == null) {
-            ErrorLog.getInstance ( ).Log ( String.format ( "%s: cannot find an owner '%s'", shopName, superVisorName ) );
+            DebugLog.getInstance ( ).Log ( String.format ( "%s: cannot find an owner '%s'", shopName, superVisorName ) );
             throw new MarketException ( String.format ( "%s: cannot find an owner '%s'", shopName, superVisorName ) );
         }
         Appointment oldAppointment = shopManagers.get ( managerName );
         if (oldAppointment == null) {
-            ErrorLog.getInstance ( ).Log ( String.format ( "%s: cannot find an appointment of %s", this.getShopName ( ), managerName ) );
+            DebugLog.getInstance ( ).Log ( String.format ( "%s: cannot find an appointment of %s", this.getShopName ( ), managerName ) );
             throw new MarketException ( String.format ( "%s: cannot find an appointment of %s", this.getShopName ( ), managerName ) );
         }
         if (!oldAppointment.getSuperVisor ( ).equals ( superVisorName )) {
-            ErrorLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
+            DebugLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
         this.shopManagers.put ( managerName, appointment );
@@ -258,11 +258,11 @@ public class Shop implements IHistory {
         if (employee == null)
             employee = shopOwners.get ( shopManagerName );
         if (employee == null) {
-            ErrorLog.getInstance ( ).Log ( "Tried to get information on someone who doesnt work in the shop." );
+            DebugLog.getInstance ( ).Log ( "Tried to get information on someone who doesnt work in the shop." );
             throw new MarketException ( shopManagerName + " is not working at this shop" );
         }
         if (!employee.isOwner ( )) {
-            ErrorLog.getInstance ( ).Log ( "Non shop owner tried to access employees info. " );
+            DebugLog.getInstance ( ).Log ( "Non shop owner tried to access employees info. " );
             throw new MarketException ( "only owners can view employees info" );
         }
         return employee.getShopEmployeesInfo ( );
@@ -270,7 +270,7 @@ public class Shop implements IHistory {
 
     public Shop getShopInfo(String member) throws MarketException {
         if (isClosed ( ) && !isShopOwner ( member )) {
-            ErrorLog.getInstance ( ).Log ( "Non shop owner or system manager tried to access shop info. " );
+            DebugLog.getInstance ( ).Log ( "Non shop owner or system manager tried to access shop info. " );
             throw new MarketException ( "member must be shop owner or system manager in order to get a close shop info" );
         }
         return this;
@@ -364,7 +364,7 @@ public class Shop implements IHistory {
 
     public StringBuilder getPurchaseHistory(String shopManagerName) throws MarketException {
         if (!hasPermission ( shopManagerName, "get_purchase_history" )) {
-            ErrorLog.getInstance ( ).Log ( "Non authorized user tried to access shop's purchase history." );
+            DebugLog.getInstance ( ).Log ( "Non authorized user tried to access shop's purchase history." );
             throw new MarketException ( shopManagerName + " is not authorized to see shop purchase history" );
         }
         return getReview ( );
@@ -447,12 +447,12 @@ public class Shop implements IHistory {
 
     public void appointShopOwner(Member shopOwner, Member appointedShopOwner) throws MarketException {
         if (isShopOwner ( appointedShopOwner.getName ( ) )){
-            ErrorLog.getInstance ().Log ( "appointed shop owner is already a shop owner of the shop." );
+            DebugLog.getInstance ().Log ( "appointed shop owner is already a shop owner of the shop." );
             throw new MarketException ( "appointed shop owner is already a shop owner of the shop." );
         }
         //TODO : check the is shop member check . makes some problem with instances. change it to ==
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) )) {
-            ErrorLog.getInstance ().Log ( "member is not a shop owner so is not authorized to appoint shop owner" );
+            DebugLog.getInstance ().Log ( "member is not a shop owner so is not authorized to appoint shop owner" );
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         }
         ShopOwnerAppointment appointment = new ShopOwnerAppointment ( appointedShopOwner, shopOwner, this, false );
@@ -461,7 +461,7 @@ public class Shop implements IHistory {
 
     public void appointShopManager(Member shopOwner, Member appointed) throws MarketException {
         if (appointed == null || isShopManager ( appointed.getName ( ) )) {
-            ErrorLog.getInstance ().Log ( "appointed shop manager is already a shop manager of the shop." );
+            DebugLog.getInstance ().Log ( "appointed shop manager is already a shop manager of the shop." );
             throw new MarketException ( "appointed shop manager is already a shop manager of the shop." );
         }
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) ))
@@ -488,18 +488,18 @@ public class Shop implements IHistory {
     public void removeShopOwnerAppointment(String boss, String firedAppointed) throws MarketException {
         if (!this.shopOwners.containsKey(boss))
         {
-            ErrorLog.getInstance().Log("You are not a shop owner in the shop:"+this.shopName+" so you cant remove a shop owner");
+            DebugLog.getInstance().Log("You are not a shop owner in the shop:"+this.shopName+" so you cant remove a shop owner");
             throw new MarketException("You are not a shop owner in the shop:"+this.shopName+" so you cant remove a shop owner");
         }
         if (!this.shopOwners.containsKey(firedAppointed))
         {
-            ErrorLog.getInstance().Log(firedAppointed+" is not a shop owner in the shop:"+this.shopName+" so there no need to remove his appointment.");
+            DebugLog.getInstance().Log(firedAppointed+" is not a shop owner in the shop:"+this.shopName+" so there no need to remove his appointment.");
             throw new MarketException(firedAppointed+" is not a shop owner in the shop:"+this.shopName+" so there no need to remove his appointment.");
         }
         Appointment appointment = shopOwners.get(firedAppointed);
         if (!appointment.getSuperVisor().getName().equals(boss))
         {
-            ErrorLog.getInstance().Log(boss + " didnt appoint "+firedAppointed+" so he cant remove his appointment.");
+            DebugLog.getInstance().Log(boss + " didnt appoint "+firedAppointed+" so he cant remove his appointment.");
             throw new MarketException(boss + " didnt appoint "+firedAppointed+" so he cant remove his appointment.");
         }
 
