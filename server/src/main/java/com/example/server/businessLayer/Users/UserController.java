@@ -58,9 +58,6 @@ public class UserController {
 
     public void exitSystem(String visitorName) throws MarketException {
         if (this.visitorsInMarket.containsKey(visitorName)) {
-            if (members.containsKey(visitorName)){
-//                visitorName = this.logout(visitorName).getName();
-            }
             this.visitorsInMarket.remove(visitorName);
             EventLog.getInstance().Log("User left the market.");
         }
