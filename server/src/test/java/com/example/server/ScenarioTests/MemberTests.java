@@ -158,7 +158,7 @@ public class MemberTests {
     @DisplayName("logout - check member saved")
     public void checkMemberSaved() {
         try {
-            market.addItemToShoppingCart(milk, productAmount-1,shopName,testMemberName);
+            market.addItemToShoppingCart(milk, productAmount-1,testMemberName);
             testMember = UserController.getInstance().getMember(testMemberName);
             ShoppingCart prevCart = testMember.getMyCart();
             String visitorName = market.memberLogout(testMember.getName());
@@ -291,9 +291,9 @@ public class MemberTests {
             market.register(memberName, password);
             market.memberLogin(memberName, password);
             Member member = market.validateSecurityQuestions(memberName, null, visitor.getName());
-            market.addItemToShoppingCart(milk, 1, shopName, memberName);
+            market.addItemToShoppingCart(milk, 1, memberName);
             String visitorName = market.memberLogout(memberName);
-            market.addItemToShoppingCart(cookies, 1, shopName, visitorName);
+            market.addItemToShoppingCart(cookies, 1, visitorName);
             visitor = UserController.getInstance().getVisitor(visitorName);
             assert visitor.getCart().getItemQuantity(milk) == 0;
             assert visitor.getCart().getItemQuantity(cookies) == 1;

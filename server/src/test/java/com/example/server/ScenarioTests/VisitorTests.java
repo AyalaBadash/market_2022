@@ -167,7 +167,7 @@ public class VisitorTests {
             Visitor visitor = market.guestLogin();
             List<Item> res = market.getItemByName("milk");
             Item milk = res.get(0);
-            market.addItemToShoppingCart(milk, 3, shopName, visitor.getName());
+            market.addItemToShoppingCart(milk, 3, visitor.getName());
             assert true;
             //check shopping basket includes only the milk
             assert visitor.getCart().getCart().size() == 1;
@@ -190,7 +190,7 @@ public class VisitorTests {
             Visitor visitor = market.guestLogin();
             List<Item> res = market.getItemByName("milk");
             Item milk = res.get(0);
-            market.addItemToShoppingCart(milk, 3, shopName, visitor.getName());
+            market.addItemToShoppingCart(milk, 3, visitor.getName());
             assert !visitor.getCart().getCart().isEmpty();
             market.visitorExitSystem(visitor.getName());
             visitor = market.guestLogin();
@@ -207,7 +207,7 @@ public class VisitorTests {
             Visitor visitor = market.guestLogin();
             List<Item> res = market.getItemByName("milk");
             Item milk = res.get(0);
-            market.addItemToShoppingCart(milk, 0, shopName, visitor.getName());
+            market.addItemToShoppingCart(milk, 0, visitor.getName());
             assert false;
         } catch (MarketException e) {
             assert true;
@@ -226,7 +226,7 @@ public class VisitorTests {
             Item chocolate = res.get(0);
             Double itemAmount = shop.getItemCurrentAmount(chocolate);
             double buyingAmount = itemAmount - 1;
-            market.addItemToShoppingCart(chocolate, buyingAmount, shopName, visitor.getName());
+            market.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
             market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             shop = market.getShopInfo(shopManagerName, shopName);
             Double newAMount = shop.getItemCurrentAmount(chocolate);
@@ -246,7 +246,7 @@ public class VisitorTests {
             Item milk = res.get(0);
             Double itemAmount = shop.getItemCurrentAmount(milk);
             double buyingAmount = itemAmount + 1;
-            market.addItemToShoppingCart(milk, buyingAmount, shopName, visitor.getName());
+            market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
             market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
 
         } catch (Exception e) {
@@ -264,7 +264,7 @@ public class VisitorTests {
             Item milk = res.get(0);
             Double itemAmount = shop.getItemCurrentAmount(milk);
             double buyingAmount = itemAmount;
-            market.addItemToShoppingCart(milk, buyingAmount, shopName, visitor.getName());
+            market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
             // add not existing item shouldn't fail
             ShoppingCart shoppingCart = market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
             assert !shoppingCart.getCart().isEmpty();
