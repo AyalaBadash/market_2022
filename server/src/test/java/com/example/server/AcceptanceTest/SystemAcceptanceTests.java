@@ -17,6 +17,7 @@ public class SystemAcceptanceTests extends AcceptanceTests {
         initMarket();
     }
 
+
     @BeforeEach
     public void reset() {
         try {
