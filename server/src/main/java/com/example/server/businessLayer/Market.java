@@ -642,58 +642,72 @@ public class Market {
 
     }
 
-    //TODO  - use acquisition class.
     public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice,
                                 PaymentMethod paymentMethod, Address address) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)){
+        if (!userController.isLoggedIn(visitorName)) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
         }
-        boolean succeed = true;
         Visitor visitor = userController.getVisitor(visitorName);
-        ShoppingCart cart = visitor.getCart();
-        double actualPrice = cart.saveFromShops(visitorName);
-
-        // checks the price is correct
-        if (actualPrice != expectedPrice){
-            for (Shop shop : cart.getCart().keySet()) {
-                shop.releaseItems(cart.getCart().get(shop));
-            }
-            ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("Shopping cart price has been changed for a costumer");
-//            throw new MarketException(String.format("Sorry, the price cart price change\n" +
-//                    "The new Price is: %f\nThe old Price was: %f\n",actualPrice,expectedPrice));
-            return cart;
-        }
-        String supplyID = "";
-        // tries to pay if fails - return items to shops
-        try {
-            supplyID = this.supplyService.supply(address, LocalDateTime.now());
-            this.paymentService.pay(paymentMethod);
-            EventLog eventLog = EventLog.getInstance();
-            eventLog.Log("Supply has been set up for the costumer +"+visitorName+".\n Payment has been done.");
-        }catch (Exception e){
-            try {
-                if (!supplyID.equals("")) {
-                    supplyService.cancelSupply(supplyID);
-                    ErrorLog errorLog = ErrorLog.getInstance();
-                    errorLog.Log("Supply has been failed.");
-                }
-            }catch (Exception ignored){}
-            cart.cancelShopSave();
-            succeed = false;
-        }
-        if (succeed){
-            Member member = visitor.getMember ();
-            if( member != null) {
-                Acquisition acq = new Acquisition(cart,member.getName());
-                member.savePurchase(acq);
-            }
-            cart.clear();
-        }
-        return null;
+        ShoppingCart shoppingCart = visitor.getCart();
+        Acquisition acquisition = new Acquisition(shoppingCart, visitorName);
+        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, paymentService, supplyService);
+        return shoppingCartToReturn;
     }
+
+
+//    public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice,
+//                                PaymentMethod paymentMethod, Address address) throws MarketException {
+//        if (!userController.isLoggedIn(visitorName)){
+//            ErrorLog errorLog = ErrorLog.getInstance();
+//            errorLog.Log("you must be a visitor in the market in order to make actions");
+//            throw new MarketException("you must be a visitor in the market in order to make actions");
+//        }
+//        boolean succeed = true;
+//        Visitor visitor = userController.getVisitor(visitorName);
+//        ShoppingCart cart = visitor.getCart();
+//        double actualPrice = cart.saveFromShops(visitorName);
+//
+//        // checks the price is correct
+//        if (actualPrice != expectedPrice){
+//            for (Shop shop : cart.getCart().keySet()) {
+//                shop.releaseItems(cart.getCart().get(shop));
+//            }
+//            ErrorLog errorLog = ErrorLog.getInstance();
+//            errorLog.Log("Shopping cart price has been changed for a costumer");
+////            throw new MarketException(String.format("Sorry, the price cart price change\n" +
+////                    "The new Price is: %f\nThe old Price was: %f\n",actualPrice,expectedPrice));
+//            return cart;
+//        }
+//        String supplyID = "";
+//        // tries to pay if fails - return items to shops
+//        try {
+//            supplyID = this.supplyService.supply(address, LocalDateTime.now());
+//            this.paymentService.pay(paymentMethod);
+//            EventLog eventLog = EventLog.getInstance();
+//            eventLog.Log("Supply has been set up for the costumer +"+visitorName+".\n Payment has been done.");
+//        }catch (Exception e){
+//            try {
+//                if (!supplyID.equals("")) {
+//                    supplyService.cancelSupply(supplyID);
+//                    ErrorLog errorLog = ErrorLog.getInstance();
+//                    errorLog.Log("Supply has been failed.");
+//                }
+//            }catch (Exception ignored){}
+//            cart.cancelShopSave();
+//            succeed = false;
+//        }
+//        if (succeed){
+//            Member member = visitor.getMember ();
+//            if( member != null) {
+//                AcquisitionHistory acq = new AcquisitionHistory(cart,member.getName());
+//                member.savePurchase(acq);
+//            }
+//            cart.clear();
+//        }
+//        return null;
+//    }
 
 
     private ShoppingCart validateCart(ShoppingCart currentCart) {
