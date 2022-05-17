@@ -100,7 +100,10 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
         }
     }
 
-
+    /**
+     * 2.1.1 use case
+     * @throws Exception
+     */
     @Test
     @DisplayName("valid guest login")
     public void guestLoginValid() throws Exception {
@@ -115,10 +118,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
 
     }
 
-    /**
-     * 2.1.1 use case
-     * @throws Exception
-     */
+
     @Test
     @DisplayName("guest leaves the market")
     public void guestExitMarket() throws Exception {
