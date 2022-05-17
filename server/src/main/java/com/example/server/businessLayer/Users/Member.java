@@ -2,21 +2,22 @@ package com.example.server.businessLayer.Users;
 
 
 import com.example.server.ResourcesObjects.EventLog;
-import com.example.server.businessLayer.Acquisition;
+import com.example.server.businessLayer.AcquisitionHistory;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.IHistory;
 import com.example.server.businessLayer.ShoppingCart;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Member {
+public class Member implements IHistory {
     private String name;
     private ShoppingCart myCart;
     private List<Appointment> appointedByMe;
     private List<Appointment> myAppointments;
-    private List<Acquisition> purchaseHistory;
+    private List<AcquisitionHistory> purchaseHistory;
 
 
 
@@ -30,7 +31,7 @@ public class Member {
         purchaseHistory = new ArrayList<> (  );
     }
 
-    public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<Acquisition> purchaseHistory ){
+    public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<AcquisitionHistory> purchaseHistory ){
         this.name = name;
         myCart = shoppingCart;
         this.appointedByMe = appointmentedByME;
@@ -80,8 +81,8 @@ public class Member {
     public StringBuilder getPurchaseHistoryString() {
         StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
         int i = 1;
-        for(Acquisition acquisition : purchaseHistory){
-            history.append ( String.format ( "purchase %d:\n%s", i, acquisition.toString () ));//TODO - Check if shoppingCart.getReview is same as acq.tostring
+        for(AcquisitionHistory acquisitionHistory : purchaseHistory){
+            history.append ( String.format ( "purchase %d:\n%s", i, acquisitionHistory.toString () ));//TODO - Check if shoppingCart.getReview is same as acq.tostring
             i++;
         }
         EventLog eventLog = EventLog.getInstance();
@@ -89,11 +90,24 @@ public class Member {
         return history;
     }
 
-    public List<Acquisition> getPurchaseHistory() {
+    public List<AcquisitionHistory> getPurchaseHistory() {
         return purchaseHistory;
     }
 
-    public void savePurchase(Acquisition acquisition) {
-        purchaseHistory.add ( acquisition );
+    public void savePurchase(AcquisitionHistory acquisitionHistory) {
+        purchaseHistory.add (acquisitionHistory);
+    }
+
+    @Override
+    public StringBuilder getReview() {
+        StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
+        int i = 1;
+        for(AcquisitionHistory acquisitionHistory : purchaseHistory){
+            history.append ( String.format ( "purchase %d:\n%s", i, acquisitionHistory.toString () ));//TODO - Check if shoppingCart.getReview is same as acq.tostring
+            i++;
+        }
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("Pulled "+this.getName()+" history");
+        return history;
     }
 }

@@ -1,117 +1,113 @@
 package com.example.server.businessLayer;
 
-import java.util.List;
-import java.util.Map;
+import com.example.server.ResourcesObjects.*;
+import com.example.server.businessLayer.ExternalComponents.PaymentService;
+import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
+import com.example.server.businessLayer.Users.Member;
+import com.example.server.businessLayer.Users.UserController;
+import com.example.server.businessLayer.Users.Visitor;
 
-class ItemAcquisition {
-    String shopName;
-    String itemName;
-    double amount;
-    double totalPriceForItem;
-
-    public ItemAcquisition(String shopName, String itemName, double amount, double totalPriceForItem) {
-        this.shopName = shopName;
-        this.itemName = itemName;
-        this.amount = amount;
-        this.totalPriceForItem = totalPriceForItem;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public void setTotalPriceForItem(double totalPriceForItem) {
-        this.totalPriceForItem = totalPriceForItem;
-    }
-
-    public String getShopName() {
-        return shopName;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public double getTotalPriceForItem() {
-        return totalPriceForItem;
-    }
-
-    @Override
-    public String toString() {
-        return "You bought : "+amount + " "+ itemName+" in the shop : "+ shopName+". Total price for this item:"+totalPriceForItem+"\n";
-    }
-}
-//--------------------------------------------------------------------------------------------------------------------
+import java.time.LocalDateTime;
 
 public class Acquisition {
-    private String name;
-    private List<ItemAcquisition> ItemAcquisitions;
-    private Boolean paymentDone;
-    private Boolean supplied;
+    private boolean paymentDone;
+    private boolean supplyConfirmed;
+    ShoppingCart shoppingCartToBuy;
+    String buyerName;
+    String supplyID;
+    String paymentID;
 
-    public Acquisition(ShoppingCart cart , String name)
-    {
-        this.name = name;
+    public Acquisition(ShoppingCart shoppingCartToBuy, String buyerName) {
+        this.shoppingCartToBuy = shoppingCartToBuy;
+        this.buyerName = buyerName;
         paymentDone = false;
-        supplied = false;
-        for (Map.Entry<Shop,ShoppingBasket> entry:cart.getCart().entrySet())
-        {
-            String curShop = entry.getKey().getShopName();
-            for (Map.Entry<java.lang.Integer,Double> bask: entry.getValue().getItems().entrySet())
-            {
-                Item curItem = entry.getKey().getItemMap().get(bask.getKey());
-                double curPrice = curItem.getPrice()*bask.getValue();
-                ItemAcquisition acq = new ItemAcquisition(curShop,curItem.getName(), bask.getValue(),curPrice);
-                ItemAcquisitions.add(acq);
-            }
+        supplyConfirmed = false;
+    }
+
+    public ShoppingCart buyShoppingCart(double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentService paymentService, ProductsSupplyService supplyService) throws MarketException {
+        // checks the price is correct
+       if(!isPriceCorrect(expectedPrice))
+           return shoppingCartToBuy;
+        boolean supplyIsPossible = supply(supplyService, address);
+        if(!supplyIsPossible){
+            shoppingCartToBuy.cancelShopSave();
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Supply has been failed.");
+            throw new MarketException("supply has been failed. shopping cart did not change");
         }
-
+        boolean isPaymentPossible = pay(paymentMethod, paymentService);
+        if(!isPaymentPossible){
+            shoppingCartToBuy.cancelShopSave();
+            supplyService.cancelSupply(supplyID);
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Payment has been failed.");
+            throw new MarketException("payment has been failed. shopping cart did not change and supply was canceled");
+        }
+        Visitor visitor = UserController.getInstance().getVisitor(buyerName);
+        Member member = visitor.getMember ();
+        if( member != null) {
+            //todo - add discount calculation
+            AcquisitionHistory acq = new AcquisitionHistory(shoppingCartToBuy, member.getName(), expectedPrice, expectedPrice);
+            member.savePurchase(acq);
+        }
+        shoppingCartToBuy.clear();
+        return null;
     }
 
-    public List<ItemAcquisition> getItemAcquisitions() {
-        return ItemAcquisitions;
+    private  boolean isPriceCorrect(double expectedPrice) throws MarketException {
+        double actualPrice = shoppingCartToBuy.saveFromShops(buyerName);
+        if (actualPrice != expectedPrice){
+            shoppingCartToBuy.cancelShopSave();
+            ErrorLog errorLog = ErrorLog.getInstance();
+            errorLog.Log("Shopping cart price has been changed for a costumer");
+            return false;
+        }
+        return true;
     }
 
-    public void setItemAcquisitions(List<ItemAcquisition> ItemAcquisitions) {
-        this.ItemAcquisitions = ItemAcquisitions;
+    private boolean pay(PaymentMethod paymentMethod, PaymentService paymentService){
+        paymentID = paymentService.pay(paymentMethod);
+        if(paymentID.equals("-1"))
+            return false;
+        return true;
     }
 
-    public Boolean getPaymentDone() {
+    private boolean supply(ProductsSupplyService supplyService, Address address){
+        supplyID = supplyService.supply(address, LocalDateTime.now());
+        if(supplyID.equals("-1"))
+            return false;
+        return true;
+    }
+
+    public boolean isPaymentDone() {
         return paymentDone;
     }
 
-    public void setPaymentDone(Boolean paymentDone) {
+    public void setPaymentDone(boolean paymentDone) {
         this.paymentDone = paymentDone;
     }
 
-    public Boolean getSupplied() {
-        return supplied;
+    public boolean isSupplyConfirmed() {
+        return supplyConfirmed;
     }
 
-    public void setSupplied(Boolean supplied) {
-        this.supplied = supplied;
+    public void setSupplyConfirmed(boolean supplyConfirmed) {
+        this.supplyConfirmed = supplyConfirmed;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        for (ItemAcquisition acq : ItemAcquisitions)
-            str.append(acq.toString());
-        str.append("Payment status:").append(paymentDone);
-        str.append("Supply status:").append(supplied);
-        return str.toString();
+    public ShoppingCart getShoppingCartToBuy() {
+        return shoppingCartToBuy;
+    }
 
+    public void setShoppingCartToBuy(ShoppingCart shoppingCartToBuy) {
+        this.shoppingCartToBuy = shoppingCartToBuy;
+    }
+
+    public String getBuyerName() {
+        return buyerName;
+    }
+
+    public void setBuyerName(String buyerName) {
+        this.buyerName = buyerName;
     }
 }

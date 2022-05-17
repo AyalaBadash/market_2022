@@ -95,13 +95,12 @@ class MemberTest {
 
     @Test
     public void getPurchaseHistory() {//TODO redo
-        String test = member.getPurchaseHistoryString().toString();
+        String test = member.getReview().toString();
         Assertions.assertEquals(test,String.format ("%s:\n", member.getName ()));
-        Acquisition acq = new Acquisition(myCart,name);
+        AcquisitionHistory acq = new AcquisitionHistory(myCart, name, myCart.getCurrentPrice(), myCart.getCurrentPrice());
         member.savePurchase(acq);
-        Mockito.when(myCart.getReview()).thenReturn(new StringBuilder().append("cart test"));
-        Assertions.assertTrue(member.getPurchaseHistoryString().toString().contains("cart test"));
-        Assertions.assertTrue(member.getPurchaseHistoryString().toString().contains(name));
+        Assertions.assertTrue(member.getPurchaseHistory().size() == 1);
+        Assertions.assertTrue(member.getReview().toString().contains(name));
     }
 
 }

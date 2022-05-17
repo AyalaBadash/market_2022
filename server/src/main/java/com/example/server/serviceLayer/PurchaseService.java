@@ -75,6 +75,8 @@ public class PurchaseService {
             if(shoppingCart != null)
                 return new ResponseT<>("some of the items in the cart are missing. care was updated and the price was changed", new ShoppingCartFacade(shoppingCart));
             return new ResponseT<>(new ShoppingCartFacade(new ShoppingCart()));
+        }catch (MarketException e){
+            return new ResponseT(e.getMessage());
         }catch (Exception e){
             ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT(e.getMessage());
