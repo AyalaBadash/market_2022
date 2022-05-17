@@ -244,7 +244,14 @@ public class Market {
         return paymentService;
     }
 
-    //TODO make private and add authentication checks
+    //TODO make private
+
+    /**
+     *
+     * @param paymentService
+     * @param memberName
+     * @throws MarketException
+     */
     public void setPaymentService(PaymentService paymentService, String memberName) throws MarketException {
         if(!userController.isLoggedIn(memberName)){
             DebugLog.getInstance().Log("Member must be logged in for making this action");
