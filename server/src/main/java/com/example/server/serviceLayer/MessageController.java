@@ -1,6 +1,7 @@
 package com.example.server.serviceLayer;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.ExternalComponents.Publisher;
+
+import com.example.server.businessLayer.MarketException;
+import com.example.server.businessLayer.Publisher;
 import com.example.server.serviceLayer.FacadeObjects.OutputMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
