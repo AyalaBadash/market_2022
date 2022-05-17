@@ -13,7 +13,7 @@ public class ShoppingCart implements IHistory {
 
 
     public ShoppingCart() {
-        this.currentPrice = -1;
+        this.currentPrice = 0;
         this.cart = new ConcurrentHashMap<>();
     }
     public ShoppingCart(Map<Shop,ShoppingBasket> cart , double currentPrice){
