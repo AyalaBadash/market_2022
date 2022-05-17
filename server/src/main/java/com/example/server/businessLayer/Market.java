@@ -517,7 +517,7 @@ public class Market {
 
 
     //TODO -delete shop name
-    public void addItemToShoppingCart(Item item, double amount, String shopName, String visitorName) throws MarketException {
+    public void addItemToShoppingCart(Item item, double amount, String visitorName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)){
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("you must be a visitor in the market in order to make actions");
@@ -720,8 +720,8 @@ public class Market {
             basketEntry.setValue(updatedBasket);
             cartPrice = cartPrice + updatedBasket.getPrice();
         }
-        res.setCurrentPrice(cartPrice);
-        return res;
+        currentCart.setCurrentPrice(cartPrice);
+        return currentCart;
     }
 
 

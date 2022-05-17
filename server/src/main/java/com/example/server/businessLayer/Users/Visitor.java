@@ -41,6 +41,7 @@ public class Visitor {
     }
 
     public ShoppingCart getCart() {
+        cart.calculate();
         return cart;
     }
 

@@ -109,6 +109,7 @@ public class ShoppingCart implements IHistory {
         double price = 0;
         for(ShoppingBasket shoppingBasket : cart.values ())
             price += shoppingBasket.getPrice ();
+        currentPrice = price;
     }
 
     public void editQuantity(double amount, Item item, String shopName) throws MarketException {

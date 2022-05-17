@@ -206,7 +206,7 @@ public class MarketConcurrencyTest {
                     } catch (InterruptedException e) {}
                     List<Item> items = market.getItemByName ( "itemToBuy" );
                     Item item = items.get ( 0 );
-                    market.addItemToShoppingCart ( item, 1, "shopName5", names[index]);
+                    market.addItemToShoppingCart ( item, 1, names[index]);
                     market.buyShoppingCart ( names[index], 10, new CreditCard ( "1111111111111111", "03/25", "555" ), new Address () );
                 }
             } );

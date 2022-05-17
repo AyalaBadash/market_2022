@@ -152,18 +152,8 @@ public class MarketUnitTest {
     @Test
     @DisplayName("Calculate shopping cart - good test")
     public void CalculateCart(){
-
-//        try {
-//            shop.addItem("raz", item.getName(), item.getPrice(),item.getCategory(),item.getInfo(),item.getKeywords(),10.0,item.getID());
-//        }
-//        catch (Exception e){
-//            System.out.println(e.getMessage());
-//            System.out.println("End of test");
-//            System.out.println("-------------------------------------------------------------");
-//            assert false;
-//        }
         try{
-            market.addItemToShoppingCart(item,1.0,"razShop","raz");
+            market.addItemToShoppingCart(item,1.0,"raz");
         }
         catch (Exception e)
         {
@@ -585,7 +575,7 @@ public class MarketUnitTest {
     @DisplayName("Add Item To Shopping Cart - good test")
     public void addItemToShoppingCartTest(){
         try {
-            market.addItemToShoppingCart(item,5.0,"razShop","raz");
+            market.addItemToShoppingCart(item,5.0,"raz");
             Member raz = userController.getMember("raz");
             Map<Shop,ShoppingBasket> cartRaz = raz.getMyCart().getCart();
             Assertions.assertEquals(1,cartRaz.size());
@@ -599,19 +589,19 @@ public class MarketUnitTest {
     @DisplayName("Add Item To Shopping Cart - fail test")
     public void addItemToShoppingCartFailTest() {
         try {
-            market.addItemToShoppingCart(null, 5.0, "razShop", "raz");//No item
+            market.addItemToShoppingCart(null, 5.0, "raz");//No item
             assert false;
         } catch (Exception e) {
             try {
-                market.addItemToShoppingCart(item, -5.0, "razShop", "raz");// negative amount
+                market.addItemToShoppingCart(item, -5.0,  "raz");// negative amount
                 assert false;
             } catch (Exception ex) {
                 try {
-                    market.addItemToShoppingCart(null, 5.0, "razShop", "ayala");//member not logged in
+                    market.addItemToShoppingCart(null, 5.0,  "ayala");//member not logged in
                     assert false;
                 } catch (Exception Exce) {
                     try {
-                        market.addItemToShoppingCart(null, 15.0, "razShop", "raz");// amount large shop amount
+                        market.addItemToShoppingCart(null, 15.0,  "raz");// amount large shop amount
                         assert false;
                     } catch (Exception Excep) {
                         assert true;
@@ -699,7 +689,7 @@ public class MarketUnitTest {
     @DisplayName("Edit cart - good test")
     public void editCartTest(){
         try {
-            market.addItemToShoppingCart(item,5.0,"razShop","raz");
+            market.addItemToShoppingCart(item,5.0,"raz");
         } catch (Exception e) {
             System.out.println("Build up for test:Edit cart  has failed");
             assert false;

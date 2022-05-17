@@ -25,7 +25,7 @@ public class PurchaseService {
     public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
         try {
             Item item = itemToInsert.toBusinessObject();
-            market.addItemToShoppingCart(item, amount, shopName, visitorName);
+            market.addItemToShoppingCart(item, amount, visitorName);
             return new Response (  );
         } catch (Exception e){
             ErrorLog.getInstance().Log(e.getMessage());
