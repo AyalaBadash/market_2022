@@ -49,6 +49,7 @@ public class Service implements IService {
         return this.userService.guestLogin();
     }
 
+
     @Override
     @RequestMapping(value = "/exitSystem")
     @CrossOrigin
