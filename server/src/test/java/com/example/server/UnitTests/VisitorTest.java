@@ -1,18 +1,13 @@
 package com.example.server.UnitTests;
 
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.Visitor;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class VisitorTest {
     //TODO - For ayala and raz : do we really need this class?

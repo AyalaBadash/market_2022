@@ -1,6 +1,8 @@
 package com.example.server.UnitTests;
 
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.Item;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +15,7 @@ import java.util.HashMap;
 
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
-public class ClosedShopHistoryTest extends mainTest {
+public class ClosedShopHistoryTest{
 
     @Mock
     Shop shop;

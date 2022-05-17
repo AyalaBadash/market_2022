@@ -1,8 +1,5 @@
 package com.example.server.serviceLayer.Requests;
 
-import com.example.server.businessLayer.ExternalServices.PaymentService;
-import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
-
 public class InitMarketRequest {
 //    private PaymentService paymentService;
 //    private ProductsSupplyService supplyService;

@@ -1,8 +1,6 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
-import com.example.server.businessLayer.ClosedShopsHistory;
-import com.example.server.businessLayer.MarketException;
-import com.example.server.businessLayer.ShoppingCart;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.SystemManager;
 

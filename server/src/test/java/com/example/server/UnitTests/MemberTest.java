@@ -1,5 +1,6 @@
 package com.example.server.UnitTests;
 
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
 import org.junit.jupiter.api.Test;
@@ -93,10 +94,11 @@ class MemberTest {
     }
 
     @Test
-    public void getPurchaseHistory() {
+    public void getPurchaseHistory() {//TODO redo
         String test = member.getPurchaseHistoryString().toString();
         Assertions.assertEquals(test,String.format ("%s:\n", member.getName ()));
-        member.savePurchase(myCart);
+        Acquisition acq = new Acquisition(myCart,name);
+        member.savePurchase(acq);
         Mockito.when(myCart.getReview()).thenReturn(new StringBuilder().append("cart test"));
         Assertions.assertTrue(member.getPurchaseHistoryString().toString().contains("cart test"));
         Assertions.assertTrue(member.getPurchaseHistoryString().toString().contains(name));

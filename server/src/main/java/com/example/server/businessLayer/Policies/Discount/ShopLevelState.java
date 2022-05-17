@@ -5,6 +5,6 @@ import com.example.server.businessLayer.ShoppingBasket;
 public class ShopLevelState implements DiscountLevelState{
     @Override
     public double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) {
-        throw new UnsupportedOperationException();
+        return shoppingBasket.getPrice()*(100-percentageOfDiscount)/100;
     }
 }

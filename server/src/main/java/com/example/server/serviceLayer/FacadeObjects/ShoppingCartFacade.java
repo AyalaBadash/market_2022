@@ -1,7 +1,7 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
-import org.yaml.snakeyaml.error.Mark;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +17,9 @@ public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
 
     public ShoppingCartFacade(ShoppingCart cart) {
         this.cart = new HashMap<>();
+        price = cart.getCurrentPrice();
+        if(cart.getCart() == null || cart.getCart().size() == 0)
+            return;
         for (Map.Entry<Shop, ShoppingBasket> fromCart: cart.getCart().entrySet()){
             ShoppingBasketFacade toBasket = new ShoppingBasketFacade(fromCart.getValue());
             this.cart.put(fromCart.getKey().getShopName(),toBasket);

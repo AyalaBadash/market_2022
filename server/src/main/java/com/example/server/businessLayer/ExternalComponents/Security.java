@@ -1,14 +1,12 @@
-package com.example.server.businessLayer;
+package com.example.server.businessLayer.ExternalComponents;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.EventLog;
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
-import org.apache.el.stream.Stream;
-import org.yaml.snakeyaml.util.ArrayUtils;
-import java.util.ArrayList;
-import java.util.Arrays;
+
+import com.example.server.ResourcesObjects.MarketException;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,7 +72,7 @@ public class Security {
         List<String> questions = new ArrayList<>();
         LoginCard card = namesToLoginInfo.get(userName);
         for (Map.Entry<String, String> entry : card.getQandA().entrySet()) {
-            questions.add(entry.getValue());
+            questions.add(entry.getKey());
         }
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("Prepared security questions for member.");
@@ -210,6 +208,12 @@ public class Security {
             return "";
         }
     }
+
+
+    //Method for notifications.
+    //check if there is need to save the notification in case the visitor is member.
+    public boolean isMember(String name){ return namesToLoginInfo.containsKey(name);}
+
 
     public void removeMember(String memberToRemove) {
         this.namesToLoginInfo.remove(memberToRemove);

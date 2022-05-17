@@ -1,7 +1,7 @@
 package com.example.server.UnitTests;
 
 import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.ShoppingBasket;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +21,7 @@ public class ShoppingBasketTest {
     @DisplayName("Add item - good test")
     public void AddItemTest (){
         item = Mockito.mock(Item.class);
+        Mockito.when(item.getID()).thenReturn(3212);
         try {
             basket.addItem(item,5);
         } catch (Exception e) {
@@ -28,7 +29,7 @@ public class ShoppingBasketTest {
             assert false;
         }
         Assertions.assertEquals(1,basket.getItems().size());
-        Assertions.assertEquals(5.0,basket.getItems().get(item));
+        Assertions.assertEquals(5.0,basket.getItems().get(item.getID()));
     }
 
     @Test
@@ -47,6 +48,7 @@ public class ShoppingBasketTest {
     @DisplayName("Update item amount - good test")
     public void updateQuantityTest(){
         item = Mockito.mock(Item.class,Mockito.CALLS_REAL_METHODS);
+        Mockito.when(item.getID()).thenReturn(9009);
         try {
             basket.addItem(item,5);
         } catch (MarketException e) {
@@ -55,7 +57,7 @@ public class ShoppingBasketTest {
         }
         try {
             basket.updateQuantity(3,item);
-            Assertions.assertEquals(3,basket.getItems().get(item));
+            Assertions.assertEquals(3,basket.getItems().get(item.getID()));
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -66,12 +68,14 @@ public class ShoppingBasketTest {
     @DisplayName("Update item amount - fail test - No such Item on basket")
     public void updateQuantityFailTestNoItem(){
         item = Mockito.mock(Item.class);
+        Mockito.when(item.getID()).thenReturn(193);
         try {
             basket.addItem(item,5);
         } catch (MarketException e) {
             assert false;
         }
         Item otherItem = Mockito.mock(Item.class);
+        Mockito.when(otherItem.getID()).thenReturn(114);
         try {
             basket.updateQuantity(3,otherItem);
             assert false;
@@ -105,6 +109,7 @@ public class ShoppingBasketTest {
     @DisplayName("Remove item - good test - item in basket")
     public void removeItemTest(){
         item = Mockito.mock(Item.class);
+        Mockito.when(item.getID()).thenReturn(989);
         try {
             basket.addItem(item,5);
         } catch (MarketException e) {
@@ -131,6 +136,7 @@ public class ShoppingBasketTest {
             assert false;
         }
         Item otherItem = Mockito.mock(Item.class);
+        Mockito.when(otherItem.getID()).thenReturn(1123);
         Assertions.assertEquals(1,basket.getItems().size());
         try {
             basket.removeItem(otherItem);
@@ -145,11 +151,12 @@ public class ShoppingBasketTest {
     @DisplayName("Calculate - good test")
     public void calculateTest(){
         item = Mockito.mock(Item.class,Mockito.CALLS_REAL_METHODS);
+        Mockito.when(item.getID()).thenReturn(1278);
         Item otherItem = Mockito.mock(Item.class,Mockito.CALLS_REAL_METHODS);
+        Mockito.when(otherItem.getID()).thenReturn(435);
         try {
             basket.addItem(item,5);
             basket.addItem(otherItem,9);
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -166,7 +173,9 @@ public class ShoppingBasketTest {
     @DisplayName("Calculate - good test - calculate Twice")
     public void calculateTwiceTest(){
         item = Mockito.mock(Item.class,Mockito.CALLS_REAL_METHODS);
+        Mockito.when(item.getID()).thenReturn(876);
         Item otherItem = Mockito.mock(Item.class,Mockito.CALLS_REAL_METHODS);
+        Mockito.when(otherItem.getID()).thenReturn(908);
         try{
             basket.addItem(item,5);
             basket.addItem(otherItem,9);}

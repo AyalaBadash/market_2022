@@ -1,15 +1,20 @@
 package com.example.server.businessLayer.Policies.Discount;
 
+import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.ShoppingBasket;
 
-public class AmountOfItemCondition extends Condition{
-    private double amountNeeded;
-    private Class itemNeeded;
+import java.util.Map;
 
-    public AmountOfItemCondition(double amountNeeded, Class itemNeeded) {
+public class AmountOfItemCondition extends CompositeCondition{
+    private double amountNeeded;
+    private Integer itemNeeded;
+
+    public AmountOfItemCondition(Condition baseCond, CompositeConditionType compositeType, double amountNeeded, Integer itemNeeded) {
+        super(baseCond, compositeType);
         this.amountNeeded = amountNeeded;
         this.itemNeeded = itemNeeded;
     }
+
 
     /**
      *
@@ -18,6 +23,7 @@ public class AmountOfItemCondition extends Condition{
      */
     @Override
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) {
-        throw new UnsupportedOperationException();
+        Map<Integer,Double> map = shoppingBasket.getItems();
+        return (map.containsKey(itemNeeded)&&map.get(itemNeeded)>=amountNeeded);
     }
 }

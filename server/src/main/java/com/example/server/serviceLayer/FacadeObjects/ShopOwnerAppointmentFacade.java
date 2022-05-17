@@ -16,11 +16,13 @@ import java.util.List;
 public class ShopOwnerAppointmentFacade extends AppointmentFacade {
     private boolean isShopFounder;
 
-    public ShopOwnerAppointmentFacade(){super();}
+    public ShopOwnerAppointmentFacade(){super();
+        this.type = "ShopOwnerAppointmentFacade";
+    }
 
     public ShopOwnerAppointmentFacade(Member appointed, Member superVisor,
                                       Shop relatedShop, List<PermissionFacade> permissions, boolean isShopFounder) {
-        super(appointed, relatedShop, permissions);
+        super(appointed, relatedShop, permissions, "ShopOwnerAppointmentFacade");
         if(!isShopFounder) {
             this.superVisor = superVisor.getName();
         }
@@ -28,7 +30,7 @@ public class ShopOwnerAppointmentFacade extends AppointmentFacade {
     }
 
     public ShopOwnerAppointmentFacade(ShopOwnerAppointment appointment) {
-        super(appointment.getAppointed(),appointment.getRelatedShop(), new ArrayList<>());
+        super(appointment.getAppointed(),appointment.getRelatedShop(), new ArrayList<>(), "ShopOwnerAppointmentFacade");
         if(!appointment.isShopFounder())
             this.superVisor = appointment.getSuperVisor().getName();
         permissions.addAll(appointment.getPermissions().stream().map(PermissionFacade::new).toList());

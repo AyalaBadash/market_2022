@@ -1,5 +1,7 @@
 package com.example.server.businessLayer;
 
+import com.example.server.ResourcesObjects.MarketException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +69,7 @@ public class ShoppingCart implements IHistory {
             try {
                 price += shopToBasket.getKey().buyBasket(shopToBasket.getValue(),buyer);
                 succeedShops.add(shopToBasket.getKey());
-            } catch (Exception e) {
+            } catch (MarketException e) {
                 succeeded = false;
                 shopToBasket.getKey ().validateBasket ( shopToBasket.getValue () );
                 missing.append(e.getMessage());
@@ -127,8 +129,8 @@ public class ShoppingCart implements IHistory {
     public double getItemQuantity(Item item) {
         for (Map.Entry<Shop,ShoppingBasket> entry: cart.entrySet())
         {
-            if (entry.getValue().getItems().containsKey(item))
-                return entry.getValue().getItems().get(item);
+            if (entry.getValue().getItems().containsKey(item.getID()))
+                return entry.getValue().getItems().get(item.getID());
         }
         return 0;
     }

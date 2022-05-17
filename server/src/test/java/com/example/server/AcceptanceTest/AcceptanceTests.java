@@ -1,0 +1,271 @@
+package com.example.server.AcceptanceTest;
+
+import com.example.server.ResourcesObjects.Address;
+import com.example.server.ResourcesObjects.CreditCard;
+import com.example.server.ResourcesObjects.PaymentMethod;
+import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Shop;
+import com.example.server.serviceLayer.AppointmentShopManagerRequest;
+import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.Requests.*;
+import com.example.server.serviceLayer.Response;
+import com.example.server.serviceLayer.ResponseT;
+import com.example.server.serviceLayer.Service;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AcceptanceTests {
+
+    static String shopOwnerName = "shaked";
+    static String shopOwnerPassword = "shaked1234";
+    static String shopName = "Shufersal";
+    static AcceptanceTestService config = new AcceptanceTestService();
+    static Double productAmount;
+    static Double productPrice;
+    static CreditCard creditCard;
+    static Address address;
+    static ItemFacade yogurt;
+
+    static double appleAmount;
+    static String appleName;
+    static Item.Category appleCategory;
+    static double applePrice;
+    static ArrayList<String> appleKeywords;
+    static String appleInfo;
+    static ItemFacade apple;
+
+    static double onePlusAmount;
+    static String onePlusName;
+    static Item.Category onePlusCategory;
+    static double onePlusPrice;
+    static List<String> onePlusKeywords;
+    static String onePlusInfo;
+    static ItemFacade onePlus;
+
+    @BeforeAll
+    public static void setup() {
+        try {
+            initMarket();
+            // shop manager register
+            VisitorFacade visitor = guestLogin();
+            register(shopOwnerName, shopOwnerPassword);
+            List<String> questions = memberLogin(shopOwnerName, shopOwnerPassword).getValue();
+            validateSecurityQuestions(shopOwnerName, new ArrayList<>(), visitor.getName());
+            // open shop
+            openShop(shopOwnerName, shopName);
+            productAmount = 3.0;
+            productPrice = 1.2;
+            addItemToShop(shopOwnerName, "yogurt", productPrice, Item.Category.general,
+                    "soy", new ArrayList<>(), productAmount, shopName);
+            List<ItemFacade> res = searchProductByName("yogurt");
+            yogurt = res.get(0);
+
+            appleAmount = 4.0;
+            appleName = "apple";
+            appleCategory = Item.Category.fruit;
+            applePrice = 10.0;
+            appleKeywords = new ArrayList<>();
+            appleKeywords.add("tasty");
+            appleKeywords.add("in sale");
+            appleInfo = "pink lady";
+            addItemToShop(shopOwnerName, appleName, applePrice, appleCategory, appleInfo, appleKeywords, appleAmount, shopName);
+            apple = searchProductByName("apple").get(0);
+
+            onePlusAmount = 2.0;
+            onePlusName = "onePlus";
+            onePlusCategory = Item.Category.cellular;
+            onePlusPrice = 1000;
+            onePlusKeywords = new ArrayList<>();
+            onePlusKeywords.add("best seller");
+            onePlusKeywords.add("in sale");
+            onePlusInfo = "9-5g";
+            addItemToShop(shopOwnerName, onePlusName, onePlusPrice, onePlusCategory,
+                    onePlusInfo, onePlusKeywords, onePlusAmount, shopName);
+            onePlus = searchProductByName(onePlusName).get(0);
+            creditCard = new CreditCard("124", "13/5", "555");
+            address = new Address("Tel Aviv", "Super", "1");
+        } catch (Exception e) {
+            String msg = e.getMessage();
+        }
+    }
+
+    @BeforeEach
+    public void reset() {
+        try {
+            setItemCurrentAmount(shopOwnerName, yogurt, productAmount, shopName);
+        } catch (Exception e) {
+            String msg = e.getMessage();
+        }
+    }
+
+    protected static ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName) {
+        ValidateSecurityRequest request = new ValidateSecurityRequest(userName, answers, visitorName);
+        ResponseT<MemberFacade> result = Service.getInstance().validateSecurityQuestions(request);
+        return result;
+    }
+
+    protected Response addItemToCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws Exception {
+        AddItemToShoppingCartRequest request = new AddItemToShoppingCartRequest(itemToInsert, amount, shopName, visitorName);
+        Response result = Service.getInstance().addItemToShoppingCart(request);
+        return result;
+    }
+
+    protected Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address) throws Exception {
+        BuyShoppingCartRequest request = new BuyShoppingCartRequest(visitorName, expectedPrice, paymentMethod, address);
+        Response res = Service.getInstance().buyShoppingCart(request);
+        return res;
+    }
+
+    protected static ResponseT<ShopFacade> addItemToShop(String shopOwnerName, String name, double price,
+                                                         Item.Category category, String info,
+                                                         List<String> keywords, double amount, String shopName) throws Exception {
+        AddItemToShopRequest request = new AddItemToShopRequest(shopOwnerName, name, price,
+                category, info, keywords, amount, shopName);
+        ResponseT<ShopFacade> result = Service.getInstance().addItemToShop(request);
+        return result;
+    }
+
+    protected ResponseT<ShopFacade> getShopInfo(String name, String shopName) {
+        TwoStringRequest request = new TwoStringRequest(name, shopName);
+        ResponseT<ShopFacade> result = Service.getInstance().getShopInfo(request);
+        return result;
+    }
+
+    protected ItemFacade getItemInfo(String name, int itemId) {
+        GetItemInfoRequest request = new GetItemInfoRequest(name, itemId);
+        ResponseT<ItemFacade> result = Service.getInstance().getItemInfo(request);
+        return result.getValue();
+    }
+
+    protected static VisitorFacade guestLogin() throws Exception {
+        ResponseT<VisitorFacade> result = Service.getInstance().guestLogin();
+        VisitorFacade visitor = result.getValue();
+        return visitor;
+    }
+
+    protected Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount,
+                                         String shopName) throws Exception {
+        SetItemCurrentAmountRequest request = new SetItemCurrentAmountRequest(shopOwnerName, item,
+                amount, shopName);
+        Response res = Service.getInstance().setItemCurrentAmount(request);
+        return res;
+    }
+
+
+    protected static List<ItemFacade> searchProductByName(String productName) throws Exception {
+        SearchProductByNameRequest request = new SearchProductByNameRequest(productName);
+        ResponseT<List<ItemFacade>> result  = Service.getInstance().searchProductByName(request);
+        return result.getValue();
+    }
+
+    protected List<ItemFacade> searchProductByCategory(Item.Category category) throws Exception {
+        Item.Category request = category;
+        ResponseT<List<ItemFacade>> result = Service.getInstance().searchProductByCategory(request);
+        return result.getValue();
+    }
+
+    protected List<ItemFacade> searchProductByKeyword(String keyword) throws Exception {
+        SearchProductByNameRequest request = new SearchProductByNameRequest(keyword);
+        ResponseT<List<ItemFacade>> res = Service.getInstance().searchProductByKeyword(request);
+        return res.getValue();
+    }
+
+    protected static ResponseT<Boolean> register(String name, String password) throws Exception {
+        NamePasswordRequest request = new NamePasswordRequest(name, password);
+        ResponseT<Boolean> result = Service.getInstance().register(request);
+        return result;
+    }
+
+    protected static Response initMarket() {
+        InitMarketRequest request = new InitMarketRequest(config.systemManagerName, config.systemManagerPassword);
+        Response res = Service.getInstance().firstInitMarket(request);
+        return res;
+    }
+
+    protected Response exitMarket(String name) throws Exception {
+        ExitSystemRequest request = new ExitSystemRequest(name);
+        Response result = Service.getInstance().exitSystem(request);
+        return result;
+    }
+
+    protected static Response openShop(String managerName, String shopName) throws Exception {
+        OpenNewShopRequest request = new OpenNewShopRequest(managerName, shopName);
+        Response result = Service.getInstance().openNewShop(request);
+        return result;
+    }
+
+    protected static ResponseT<List<String>> memberLogin(String name, String password) throws Exception {
+        NamePasswordRequest request = new NamePasswordRequest(name, password);
+        ResponseT<List<String>> result = Service.getInstance().memberLogin(request);
+        return result;
+    }
+
+    protected Response closeShop(String shopOwnerName, String shopName) throws Exception {
+        CloseShopRequest request = new CloseShopRequest(shopOwnerName, shopName);
+        Response result = Service.getInstance().closeShop(request);
+        return result;
+    }
+
+    protected Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) throws Exception {
+        RemoveItemFromShopRequest request = new RemoveItemFromShopRequest(shopOwnerName, item, shopName);
+        Response result = Service.getInstance().removeItemFromShop(request);
+        return result;
+
+    }
+
+    protected VisitorFacade logout(String name) throws Exception {
+        RequestVisitorName request = new RequestVisitorName(name);
+        ResponseT<VisitorFacade> result = Service.getInstance().logout(request);
+        return result.getValue();
+    }
+
+
+    protected Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) throws Exception {
+        AddPersonalQueryRequest request = new AddPersonalQueryRequest(userAdditionalQueries, userAdditionalAnswers, member);
+        Response result = Service.getInstance().addPersonalQuery(request);
+        return result;
+    }
+
+    protected Response changeShopItemInfo(String shopOwnerName, String info, ItemFacade oldItem, String shopName) throws Exception {
+        ChangeShopItemInfoRequest request = new ChangeShopItemInfoRequest(shopOwnerName, info,
+                oldItem, shopName);
+        Response result = Service.getInstance().changeShopItemInfo(request);
+        return result;
+    }
+
+
+    protected Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws Exception {
+        AppointmentShopOwnerRequest request = new AppointmentShopOwnerRequest(shopOwnerName, appointedShopOwner, shopName);
+        Response result = Service.getInstance().appointShopOwner(request);
+        return result;
+    }
+
+    protected Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) throws Exception {
+        AppointmentShopManagerRequest request = new AppointmentShopManagerRequest(shopOwnerName, appointedShopManager, shopName);
+        Response result = Service.getInstance().appointShopManager(request);
+        return result;
+    }
+
+    protected List<AppointmentFacade> getShopEmployeesInfo(String shopManagerName, String shopName) throws Exception {
+        GetShopEmployeesRequest request = new GetShopEmployeesRequest(shopManagerName, shopName);
+        ResponseT<List<AppointmentFacade>> result = Service.getInstance().getShopEmployeesInfo(request);
+        return result.getValue();
+    }
+
+    protected MemberFacade getMember(String memberName){
+        return Service.getInstance().getMember(memberName).getValue();
+    }
+
+    protected VisitorFacade getVisitor(String name){
+        return Service.getInstance().getVisitor(name).getValue();
+    }
+
+    protected ItemFacade getItemById(int id){
+        return Service.getInstance().getItemById(id).getValue();
+    }
+
+
+}

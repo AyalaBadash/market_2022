@@ -1,7 +1,7 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.businessLayer.ExternalServices.PaymentMock;
-import com.example.server.businessLayer.ExternalServices.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -137,7 +137,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/buyShoppingCart")
     @CrossOrigin
-    public Response buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
+    public ResponseT<ShoppingCartFacade> buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
         return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
                 request.getPaymentMethod(), request.getAddress());
     }
@@ -192,7 +192,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addItemToShop")
     @CrossOrigin
-    public Response addItemToShop(@RequestBody AddItemToShopRequest request) {
+    public ResponseT<ShopFacade> addItemToShop(@RequestBody AddItemToShopRequest request) {
         return marketService.addItemToShop(request.getShopOwnerName(), request.getName(), request.getPrice(),
                 request.getCategory(), request.getInfo(), request.getKeywords(), request.getAmount(), request.getShopName());
     }
@@ -233,7 +233,7 @@ public class Service implements IService {
     @RequestMapping(value = "/appointShopManager")
     @CrossOrigin
     public Response appointShopManager(@RequestBody AppointmentShopManagerRequest request) {
-        return null;
+        return userService.appointShopManager(request.getShopOwnerName(),request.getAppointedShopManager(),request.getShopName());
     }
 
     @Override
@@ -247,7 +247,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getManagerPermission")
     @CrossOrigin
-    public ResponseT getManagerPermission(@RequestBody GetManagerPermissionRequest request){
+    public ResponseT<AppointmentFacade> getManagerPermission(@RequestBody GetManagerPermissionRequest request){
         return this.userService.getManagerAppointment(request.getShopOwnerName(),
                 request.getManagerName(), request.getRelatedShop());
     }
@@ -309,9 +309,35 @@ public class Service implements IService {
     }
 
     @Override
+    @RequestMapping(value = "/removeMember")
+    @CrossOrigin
     public Response removeMember(removeMemberRequest request) {
         return marketService.removeMember(request.getManager(),request.getMemberToRemove());
     }
 
+    @Override
+    @RequestMapping(value = "/getItemInfo")
+    @CrossOrigin
+    public ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request) {
+        return marketService.getItemInfo(request.getName(), request.getItemId());
+    }
+    @Override
+    @RequestMapping(value = "/getMarketInfo")
+    @CrossOrigin
+    public ResponseT<String> getMarketInfo(GetMarketInfoRequest request) {
+        return marketService.getMarketInfo(request.getSysManager());
+    }
 
+
+    public ResponseT<MemberFacade> getMember(String memberName) {
+        return userService.getMember(memberName);
+    }
+
+    public ResponseT<VisitorFacade> getVisitor(String name) {
+        return userService.getVisitor(name);
+    }
+
+    public ResponseT<ItemFacade> getItemById(int id) {
+        return marketService.getItemById(id);
+    }
 }

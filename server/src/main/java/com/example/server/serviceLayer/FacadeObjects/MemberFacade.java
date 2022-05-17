@@ -1,9 +1,10 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
+import com.example.server.businessLayer.Acquisition;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
 import com.example.server.businessLayer.Users.Member;
 
@@ -83,9 +84,11 @@ public class MemberFacade implements FacadeObject<Member> {
         List<Appointment> myAppointments = new ArrayList<> (  );
         for(AppointmentFacade appointment : this.myAppointments)
             myAppointments.add ( appointment.toBusinessObject () );
-        List<ShoppingCart> purchaseHistory = new ArrayList<> (  );
-        for(ShoppingCartFacade shoppingCartFacade : this.purchaseHistory)
-            purchaseHistory.add ( shoppingCartFacade.toBusinessObject () );
+        List<Acquisition> purchaseHistory = new ArrayList<> (  );
+        for(ShoppingCartFacade shoppingCartFacade : this.purchaseHistory) {
+            Acquisition acquisition = new Acquisition(shoppingCartFacade.toBusinessObject(),name);
+            purchaseHistory.add(acquisition);
+        }
         return new Member ( name, shoppingCart, appointedByMe,myAppointments, purchaseHistory);
     }
 }

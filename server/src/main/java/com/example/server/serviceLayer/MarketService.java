@@ -2,11 +2,11 @@ package com.example.server.serviceLayer;
 
 
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.ExternalServices.PaymentService;
-import com.example.server.businessLayer.ExternalServices.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalComponents.PaymentService;
+import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Shop;
 import com.example.server.serviceLayer.FacadeObjects.*;
 
@@ -162,15 +162,15 @@ public class MarketService {
     }
 
 
-    public Response addItemToShop(String shopOwnerName,String name, double price,Item.Category category,String info,
-                                  List<String> keywords, double amount, String shopName) {
-        Response response;
+    public ResponseT<ShopFacade> addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info,
+                                               List<String> keywords, double amount, String shopName) {
+        ResponseT<ShopFacade> response;
         try {
-            market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
-            response = new Response();
+            Shop shop = market.addItemToShop(shopOwnerName,name,price,category,info,keywords,amount,shopName);
+            response = new ResponseT(new ShopFacade(shop));
         }
         catch (MarketException e){
-            response = new Response(e.getMessage());
+            response = new ResponseT(e.getMessage());
         }
         return response;
 
@@ -335,5 +335,32 @@ public class MarketService {
             response = new Response(e.getMessage());
         }
         return response;
+    }
+
+    public ResponseT<ItemFacade> getItemInfo(String name, int itemId) {
+        try {
+            Item item = market.getItemById(name, itemId);
+            return new ResponseT<>(new ItemFacade(item));
+        } catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
+    }
+
+    public ResponseT<ItemFacade> getItemById(int id) {
+        try {
+            Item item = market.getItemByID(id);
+            return new ResponseT<>(new ItemFacade(item));
+        }catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
+    }
+
+    public ResponseT<String> getMarketInfo(String sysManager) {
+        try{
+            return new ResponseT<>(market.getMarketInfo(sysManager));
+        }
+        catch (MarketException e){
+            return new ResponseT<>(e.getMessage());
+        }
     }
 }

@@ -2,21 +2,12 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
-import com.example.server.businessLayer.ExternalServices.PaymentMock;
-import com.example.server.businessLayer.ExternalServices.SupplyMock;
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
-import com.example.server.businessLayer.Shop;
+import com.example.server.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.ExternalComponents.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.SupplyMock;
 import com.example.server.businessLayer.Users.Visitor;
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
-import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
-import com.example.server.serviceLayer.Response;
-import com.example.server.serviceLayer.ResponseT;
-import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.*;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +175,7 @@ public class VisitorTests {
                 assert basket.getItems().size() == 1;
                 assert shop.getShopName().equals(shopName);
                 // check right amount added
-                assert basket.getItems().get(milk).equals(3.0);
+                assert basket.getItems().get(milk.getID()).equals(3.0);
             });
 
         } catch (Exception e) {
@@ -275,8 +266,8 @@ public class VisitorTests {
             double buyingAmount = itemAmount;
             market.addItemToShoppingCart(milk, buyingAmount, shopName, visitor.getName());
             // add not existing item shouldn't fail
-            market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
-            assert false;
+            ShoppingCart shoppingCart = market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
+            assert !shoppingCart.getCart().isEmpty();
         } catch (Exception e) {
             assert true;
         }

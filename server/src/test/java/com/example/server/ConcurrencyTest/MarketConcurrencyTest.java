@@ -4,13 +4,12 @@ import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
-import com.example.server.businessLayer.Security;
+import com.example.server.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.ExternalComponents.Security;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.support.ManagedArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class MarketConcurrencyTest {
         market = Market.getInstance();
         security = Security.getInstance();
         userController = UserController.getInstance();
-        createShop();
+        createShop("shopName");
     }
     @BeforeEach
     public void initMemberTest() throws MarketException {
@@ -152,41 +151,42 @@ public class MarketConcurrencyTest {
             if(threads[i.value ()].getEx () != null)
                 numOfExceptions ++;
         }
-        Assertions.assertTrue(numOfExceptions >= 4);
+        Assertions.assertTrue(numOfExceptions == 4);
     }
 
-    @Test
-    @DisplayName("Add an item to shop concurrency test")
-    public void addItemToSHopShopConcurrencyTest() throws MarketException {
-        createShop();
-        registerAndLogin();
-        for ( i.reset () ; i.value () < 5 ; i.increment () ) {
-            market.appointShopOwner ( initialLoggedIn, names[i.value ()],  "shopName");
-        }
-
-        for ( i.reset () ; i.value () < 5 ; i.increment () ) {
-            threads[i.value ()] = new MyThread ( );
-            threads[i.value ()].setRunnable ( new MyRunnable ( i.value () ) {
-                @Override
-                public void run() throws MarketException{
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {}
-                    market.addItemToShop ( names[index], "itemTest", i.value (), Item.Category.fruit, null, null, 1, "shopName" );
-                }
-            } );
-        }
-        for (i.reset () ; i.value () < 5 ; i.increment () ) {
-            threads[i.value ()].start ( );
-        }
-        for(i.reset (); i.value () < 5; i.increment ()) {
-            try {
-                threads[i.value ()].join ( );
-            } catch (InterruptedException e) {}
-        }
-        List<Item> itemsAdded = market.getItemByName("itemTest");
-        Assertions.assertTrue(itemsAdded.size() == 5);
-    }
+//    @Test
+//    @DisplayName("Add an item to shop concurrency test")
+//    public void addItemToSHopShopConcurrencyTest() throws MarketException {
+//        createShop("cheapMarket");
+//        registerAndLogin();
+//        for ( i.reset () ; i.value () < 5 ; i.increment () ) {
+//            market.appointShopOwner ( initialLoggedIn, names[i.value ()],  "cheapMarket");
+//        }
+//
+//        for ( i.reset () ; i.value () < 5 ; i.increment () ) {
+//            threads[i.value ()] = new MyThread ( );
+//            threads[i.value ()].setRunnable ( new MyRunnable ( i.value () ) {
+//                @Override
+//                public void run() throws MarketException{
+//                    try {
+//                        Thread.sleep(500);
+//                    } catch (InterruptedException e) {}
+//                    String itemName = "justItemName";
+//                    market.addItemToShop ( names[index], itemName, i.value (), Item.Category.fruit, "", new ArrayList<>(), 1, "cheapMarket" );
+//                }
+//            } );
+//        }
+//        for (i.reset () ; i.value () < 5 ; i.increment () ) {
+//            threads[i.value ()].start ( );
+//        }
+//        for(i.reset (); i.value () < 5; i.increment ()) {
+//            try {
+//                threads[i.value ()].join ( );
+//            } catch (InterruptedException e) {}
+//        }
+//        List<Item> itemsAdded = market.getItemByName("justItemName");
+//        Assertions.assertTrue(itemsAdded.size() == 1);
+//    }
 
     @Test
     @DisplayName("Purchase concurrency test")
@@ -241,7 +241,7 @@ public class MarketConcurrencyTest {
         }
     }
 
-    private static void createShop() {
+    private static void createShop(String shopName) {
         Visitor visitor = market.guestLogin ();
         try {
             market.register (initialLoggedIn , password );
@@ -251,7 +251,7 @@ public class MarketConcurrencyTest {
             market.validateSecurityQuestions(initialLoggedIn, null, visitor.getName());
         } catch (MarketException e) {}
         try {
-            market.openNewShop ( initialLoggedIn,  "shopName");
+            market.openNewShop ( initialLoggedIn,  shopName);
         } catch (MarketException e) {}
     }
 

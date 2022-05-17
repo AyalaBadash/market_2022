@@ -1,13 +1,13 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
 import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 
 import java.util.List;
 
 public class ItemFacade implements FacadeObject<Item>{
     private String info;
-    private Integer id;
+    private java.lang.Integer id;
     private String name;
     private Double price;
     private Item.Category category;
@@ -20,7 +20,7 @@ public class ItemFacade implements FacadeObject<Item>{
 
     public ItemFacade(){}
 
-    public ItemFacade(Integer ID, String name, double price,
+    public ItemFacade(java.lang.Integer ID, String name, double price,
                       Item.Category category, List<String> keywords,
                       String info) {
         this.id = ID;
@@ -54,11 +54,11 @@ public class ItemFacade implements FacadeObject<Item>{
         this.info = info;
     }
 
-    public void setId(Integer id) {
+    public void setId(java.lang.Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public java.lang.Integer getId() {
         return id;
     }
 

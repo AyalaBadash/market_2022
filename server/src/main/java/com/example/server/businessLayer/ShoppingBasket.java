@@ -1,21 +1,23 @@
 package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.MarketException;
 
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBasket implements IHistory {
-    private Map<Integer, Double> items;//<Item,quantity>
-    private Map<Integer, Item> itemMap;
+    private Map<java.lang.Integer, Double> items;//<Item,quantity>
+    private Map<java.lang.Integer, Item> itemMap;
     private double price;
 
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
+        itemMap = new ConcurrentHashMap<>();
         price = 0;
     }
-    public ShoppingBasket(Map<Integer,Double> items ,Map<Integer,Item> itemMap , double price){
+    public ShoppingBasket(Map<java.lang.Integer,Double> items , Map<java.lang.Integer, Item> itemMap , double price){
         this.items = items;
         this.itemMap = itemMap;
         this.price = price;
@@ -25,7 +27,7 @@ public class ShoppingBasket implements IHistory {
     @Override
     public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();
-        for (Map.Entry<Integer, Double> itemToAmount : items.entrySet()) {
+        for (Map.Entry<java.lang.Integer, Double> itemToAmount : items.entrySet()) {
             Item item = itemMap.get(itemToAmount.getKey());
             Double amount = itemToAmount.getValue();
             if (amount > 0) {
@@ -44,16 +46,15 @@ public class ShoppingBasket implements IHistory {
     public double getPrice() {
         return calculatePrice();
     }
-    //TODO - price should be up to 3 digits . Example : 3.14159265 -> 3.141
 
     //TODO - add calculationOfDiscount
     public double getPriceWithDiscount() {
-        return calculatePrice();
+        throw new UnsupportedOperationException();
     }
 
     private double calculatePrice() {
         double price = 0;
-        for (Map.Entry<Integer,Double> currItem:items.entrySet())
+        for (Map.Entry<java.lang.Integer,Double> currItem:items.entrySet())
         {
             price = price + currItem.getValue()*itemMap.get(currItem.getKey()).getPrice();
         }
@@ -67,7 +68,7 @@ public class ShoppingBasket implements IHistory {
         if (this.items == null || this.items.isEmpty()) {
             return true;
         } else {
-            for (Map.Entry<Integer, Double> itemDoubleEntry : items.entrySet()) {
+            for (Map.Entry<java.lang.Integer, Double> itemDoubleEntry : items.entrySet()) {
                 if (itemDoubleEntry.getValue() > 0) {
                     return false;
                 }
@@ -76,19 +77,22 @@ public class ShoppingBasket implements IHistory {
         return true;
     }
 
-    public Map<Integer, Double> getItems() {
+    public Map<java.lang.Integer, Double> getItems() {
         return items;
     }
 
     public void addItem(Item item, double amount) throws MarketException {
         if (amount<0)
             throw new MarketException("Cant add negative amount of item to basket.");
-        itemMap.put(item.getID(), item);
+        if(itemMap.get(item.getID()) == null)
+            itemMap.put(item.getID(), item);
+        else
+            amount += items.get(item.getID());
         items.put(item.getID(),amount);
     }
 
     public void removeItem(Item item) {
-        items.remove(item);
+        items.remove(item.getID());
     }
 
 
@@ -104,11 +108,11 @@ public class ShoppingBasket implements IHistory {
         items.replace(item.getID(), amount);
     }
 
-    public Map<Integer, Item> getItemMap() {
+    public Map<java.lang.Integer, Item> getItemMap() {
         return itemMap;
     }
 
-    public void setItemMap(Map<Integer, Item> itemMap) {
+    public void setItemMap(Map<java.lang.Integer, Item> itemMap) {
         this.itemMap = itemMap;
     }
 }

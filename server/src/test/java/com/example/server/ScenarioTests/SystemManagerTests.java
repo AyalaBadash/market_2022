@@ -1,14 +1,11 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.ResourcesObjects.PaymentMethod;
-import com.example.server.businessLayer.ExternalServices.PaymentMock;
-import com.example.server.businessLayer.ExternalServices.PaymentService;
-import com.example.server.businessLayer.ExternalServices.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.SupplyMock;
 import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.MarketException;
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
-import org.yaml.snakeyaml.error.Mark;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,22 +16,25 @@ public class SystemManagerTests {
     //CHANGE EXTERNAL SERVICES
 
 
-    Market market;
-    String managerName = "userTest";
-    String managerpassword = "passTest";
-    PaymentMock paymentService = new PaymentMock();
-    SupplyMock supplyService = new SupplyMock();
+    static Market market;
+    static String managerName = "userTest";
+    static String managerpassword = "passTest";
+    static PaymentMock paymentService = new PaymentMock();
+    static SupplyMock supplyService = new SupplyMock();
     PaymentMock paymentService2 = new PaymentMock();
     SupplyMock supplyService2 = new SupplyMock();
 
 
     @BeforeAll
-    public void setUp() {
+    public static void setUp() {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
                 market.firstInitMarket(paymentService, supplyService, managerName, managerpassword);
-        } catch (Exception Ignored) {
+            else
+                market.register(managerName, managerpassword);
+        } catch (Exception e) {
+                System.out.println(e.getMessage());
         }
     }
 
@@ -43,11 +43,9 @@ public class SystemManagerTests {
     @DisplayName("system manager get purchases history")
     public void PurchaseHistory() {
         try {
-
             loginManager(managerName,managerpassword);
             String str= new String(market.getAllSystemPurchaseHistory(managerName));
             Assertions.assertNotNull(str);
-            assert  true;
             try{
                 logoutMember(managerName);
             }catch (MarketException e){
