@@ -1,6 +1,7 @@
 package com.example.server.serviceLayer;
 
 
+import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.ExternalComponents.PaymentService;
 import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
@@ -36,6 +37,11 @@ public class MarketService {
         } catch (MarketException e){
             return new Response ( e.getMessage () );
         }
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
+            return new Response(e.getMessage());
+        }
     }
 
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {
@@ -48,8 +54,11 @@ public class MarketService {
             }
             toReturn = new ResponseT<>(facadeItems);
         } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
             toReturn = new ResponseT<>(e.getMessage());
         }
+
+
         return toReturn;
     }
 
@@ -63,6 +72,7 @@ public class MarketService {
             }
             toReturn = new ResponseT<>(facadeItems);
         } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
             toReturn = new ResponseT<>(e.getMessage());
         }
         return toReturn;
@@ -78,6 +88,7 @@ public class MarketService {
             }
             toReturn = new ResponseT<>(facadeItems);
         } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
             toReturn = new ResponseT<>(e.getMessage());
         }
         return toReturn;
@@ -102,6 +113,7 @@ public class MarketService {
             }
             toReturn = new ResponseT<>(facadeItems);
         } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
             toReturn = new ResponseT<>(e.getMessage());
         }
         return toReturn;
@@ -125,6 +137,7 @@ public class MarketService {
             }
             toReturn = new ResponseT<>(facadeItems);
         } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
             toReturn = new ResponseT<>(e.getMessage());
         }
         return toReturn;
@@ -137,6 +150,11 @@ public class MarketService {
         }catch (MarketException marketException){
             return new Response ( marketException.getMessage () );
         }
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
+            return new Response(e.getMessage());
+        }
     }
 
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
@@ -146,6 +164,12 @@ public class MarketService {
             return new Response (  );
         } catch (MarketException e){
             return new Response ( e.getMessage () );
+        }
+
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
+            return new Response(e.getMessage());
         }
     }
 
@@ -157,6 +181,12 @@ public class MarketService {
         }
         catch (MarketException e)
         {
+            return new Response(e.getMessage());
+        }
+
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
             return new Response(e.getMessage());
         }
     }
@@ -172,6 +202,12 @@ public class MarketService {
         catch (MarketException e){
             response = new ResponseT(e.getMessage());
         }
+
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
+            response = new ResponseT<>(e.getMessage());
+        }
         return response;
 
     }
@@ -184,6 +220,12 @@ public class MarketService {
         }catch (MarketException e){
             return new Response ( e.getMessage () );
         }
+
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
+            return new Response(e.getMessage());
+        }
     }
 
     public Response changeShopItemInfo(String shopOwnerName, String info, ItemFacade oldItem, String shopName) {
@@ -193,6 +235,12 @@ public class MarketService {
         }catch (MarketException e){
             return new Response ( e.getMessage () );
         }
+
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
+            return new Response(e.getMessage());
+        }
     }
 
     public Response editItem(ItemFacade newItem, String id){
@@ -201,6 +249,12 @@ public class MarketService {
             return new Response (  );
         } catch (MarketException e){
             return new Response ( e.getMessage () );
+        }
+
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
+            return new Response(e.getMessage());
         }
     }
 
@@ -213,6 +267,11 @@ public class MarketService {
         catch (MarketException e)
         {
             response = new Response(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            ErrorLog.getInstance().Log(e.getMessage());
+            response= new Response(e.getMessage());
         }
         return response;
     }
@@ -252,7 +311,8 @@ public class MarketService {
         try {
             String history = market.getShopPurchaseHistory(shopManagerName, shopName).toString ();
             return new ResponseT<> ( history );
-        } catch (MarketException e){
+        } catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<> ( e.getMessage () );
         }
     }
@@ -267,7 +327,8 @@ public class MarketService {
         try {
             String history = market.getAllSystemPurchaseHistory (systemManagerName).toString ();
             return new ResponseT<> ( history );
-        }catch (MarketException e){
+        }catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<> ( e.getMessage () );
         }
     }
@@ -283,7 +344,8 @@ public class MarketService {
         try {
             String history = market.getHistoryByShop ( systemManagerName, shopName ).toString ();
             return new ResponseT<> ( history );
-        } catch (MarketException e) {
+        } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<> ( e.getMessage () ) ;
         }
     }
@@ -293,7 +355,8 @@ public class MarketService {
         try {
             String history = market.getHistoryByMember ( systemManagerName, memberName ).toString ();
             return new ResponseT<> ( history );
-        } catch (MarketException e){
+        } catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<> ( e.getMessage () );
         }
     }
@@ -304,6 +367,7 @@ public class MarketService {
             Shop shop = market.getShopInfo(member, shopName);
             toReturn = new ResponseT<>(new ShopFacade(shop));
         } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
             toReturn = new ResponseT<>(e.getMessage());
         }
         return toReturn;
@@ -315,8 +379,9 @@ public class MarketService {
             market.removeShopOwnerAppointment(boss,firedAppointed,shopName);
             response = new Response();
         }
-        catch (MarketException e)
+        catch (Exception e)
         {
+            ErrorLog.getInstance().Log(e.getMessage());
             response = new Response(e.getMessage());
         }
         return response;
@@ -332,6 +397,7 @@ public class MarketService {
         }
         catch (MarketException e)
         {
+            ErrorLog.getInstance().Log(e.getMessage());
             response = new Response(e.getMessage());
         }
         return response;
@@ -341,7 +407,8 @@ public class MarketService {
         try {
             Item item = market.getItemById(name, itemId);
             return new ResponseT<>(new ItemFacade(item));
-        } catch (MarketException e){
+        } catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
         }
     }
@@ -350,7 +417,8 @@ public class MarketService {
         try {
             Item item = market.getItemByID(id);
             return new ResponseT<>(new ItemFacade(item));
-        }catch (MarketException e){
+        }catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
         }
     }
@@ -359,7 +427,8 @@ public class MarketService {
         try{
             return new ResponseT<>(market.getMarketInfo(sysManager));
         }
-        catch (MarketException e){
+        catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
         }
     }

@@ -1,6 +1,6 @@
 package com.example.server.businessLayer.ExternalComponents;
 
-import com.example.server.ResourcesObjects.ErrorLog;
+import com.example.server.ResourcesObjects.DebugLog;
 import com.example.server.ResourcesObjects.EventLog;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,11 +34,11 @@ public class Security {
 
     private void validateName(String name) throws MarketException {
         if (name == null || name.equals("") || name.charAt(0) == '@') {
-            ErrorLog.getInstance().Log("User tried to register with invalid name.");
+            DebugLog.getInstance().Log("User tried to register with invalid name.");
             throw new MarketException("Name can't be null or empty string");
         }
         if (namesToLoginInfo.containsKey(name)) {
-            ErrorLog.getInstance().Log("User tried to register with taken name.");
+            DebugLog.getInstance().Log("User tried to register with taken name.");
             throw new MarketException("Name is already taken ,try to be a little more creative and choose another name. ");
         }
 
@@ -60,13 +60,13 @@ public class Security {
 
     public List<String> validatePassword(String userName, String userPassword) throws MarketException {
         if (userName == null || !namesToLoginInfo.containsKey(userName)) {
-            ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("Non member visitor tried to log in.");
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("Non member visitor tried to log in.");
             throw new MarketException("No such user name in the system");
         }
         if (!namesToLoginInfo.get(userName).getPassword().equals(userPassword)) {
-            ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("Member " + userName + " tried to log in but has password mismatch.");
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("Member " + userName + " tried to log in but has password mismatch.");
             throw new MarketException("Password mismatch");
         }
         List<String> questions = new ArrayList<>();
@@ -87,8 +87,8 @@ public class Security {
         if(answers == null && (QsAndAns == null || QsAndAns.size() == 0))
             return;
         if (answers.size()!=QsAndAns.size()) {
-            ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("Member didnt gave number of answers equal to questions number");
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("Member didnt gave number of answers equal to questions number");
             throw new MarketException("Answers size different from questions size");
         }
         int index = 0;
@@ -96,7 +96,7 @@ public class Security {
             if (entry.getValue().equals(answers.get(index)))
                 index++;
             else {
-                ErrorLog.getInstance().Log("Mismatch in validating security questions.");
+                DebugLog.getInstance().Log("Mismatch in validating security questions.");
                 throw new MarketException(String.format("answer %s does not fit the answers", answers.get(index)));
             }
         }
@@ -105,12 +105,12 @@ public class Security {
 
     public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String name) throws MarketException {
         if (!namesToLoginInfo.containsKey(name)) {
-            ErrorLog.getInstance().Log("Cannot add a personal query cause there is no such user in the system ");
+            DebugLog.getInstance().Log("Cannot add a personal query cause there is no such user in the system ");
             throw new MarketException("Cannot add a personal query cause there is no such user in the system ");
         }
         if (userAdditionalQueries==null||userAdditionalAnswers==null||userAdditionalAnswers.equals("")||userAdditionalQueries.equals(""))
         {
-            ErrorLog.getInstance().Log("User tried to add query with empty/null question/answer ");
+            DebugLog.getInstance().Log("User tried to add query with empty/null question/answer ");
             throw new MarketException("Question and answer cant be null or empty string");
         }
         else {

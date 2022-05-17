@@ -1,6 +1,7 @@
 package com.example.server.serviceLayer;
 
 import com.example.server.ResourcesObjects.Address;
+import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.*;
@@ -26,7 +27,8 @@ public class PurchaseService {
             Item item = itemToInsert.toBusinessObject();
             market.addItemToShoppingCart(item, amount, shopName, visitorName);
             return new Response (  );
-        } catch (MarketException e){
+        } catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new Response ( e.getMessage () );
         }
     }
@@ -36,7 +38,8 @@ public class PurchaseService {
             ShoppingCart shoppingCart = market.showShoppingCart ( visitorName );
             ShoppingCartFacade shoppingCartFacade = new ShoppingCartFacade ( shoppingCart );
             return new ResponseT<> ( shoppingCartFacade );
-        }catch (MarketException e){
+        }catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<> ( e.getMessage () );
         }
     }
@@ -46,7 +49,8 @@ public class PurchaseService {
             Item item = new Item(itemFacade.getId(),itemFacade.getName(),itemFacade.getPrice(),itemFacade.getInfo(),itemFacade.getCategory(),itemFacade.getKeywords());
             market.editCart(amount, item, shopName, visitorName);
             return new Response();
-        }catch (MarketException e){
+        }catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new Response(e.getMessage());
         }
     }
@@ -57,7 +61,8 @@ public class PurchaseService {
             ResponseT<ShoppingCartFacade> responseT = new ResponseT<>(cart);
             return responseT;
         }
-        catch (MarketException e){
+        catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
         }
     }
@@ -71,6 +76,9 @@ public class PurchaseService {
                 return new ResponseT<>("some of the items in the cart are missing. care was updated and the price was changed", new ShoppingCartFacade(shoppingCart));
             return new ResponseT<>(new ShoppingCartFacade(new ShoppingCart()));
         }catch (MarketException e){
+            return new ResponseT(e.getMessage());
+        }catch (Exception e){
+            ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT(e.getMessage());
         }
     }
