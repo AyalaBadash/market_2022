@@ -1,4 +1,4 @@
-package com.example.server.WebSocket;
+package com.example.server.businessLayer.Publisher.WebSocket;
 
 public class Message {
 

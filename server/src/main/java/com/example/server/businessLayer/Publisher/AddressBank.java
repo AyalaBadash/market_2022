@@ -1,21 +1,20 @@
-package com.example.server.businessLayer.ExternalComponents;
+package com.example.server.businessLayer.Publisher;
 
 import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Users.UserController;
+import com.example.server.businessLayer.ExternalComponents.Security;
+import com.example.server.businessLayer.Publisher.WebSocket.Publisher;
 import com.example.server.serviceLayer.FacadeObjects.OutputMessage;
-import com.example.server.serviceLayer.MessageController;
 import com.example.server.serviceLayer.Notifications.DelayedNotifications;
-import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-public class Publisher {
+public class AddressBank {
 
     //singleton to avoid resending notifications and to control all notifications from one instance of one object.
-    private static Publisher instance = null;
+    private static AddressBank instance = null;
 
     //holds notifications to send to each domain(by the member name)
     private Map<String, List<DelayedNotifications>> membersNotifications;
@@ -24,24 +23,23 @@ public class Publisher {
     private Map<String, String> memberNameToSocketName;
 
 
-    //the sending message rest controller
-    private MessageController controller;
-    private Security security;
+    //the messages' publisher.
+    private Publisher publisher;
 
 
-    public static synchronized Publisher getInstance() {
+
+    public static synchronized AddressBank getInstance() {
 
         if (instance == null) {
-            instance = new Publisher();
+            instance = new AddressBank();
         }
         return instance;
     }
 
-    private Publisher() {
+    private AddressBank() {
         membersNotifications = new ConcurrentHashMap<>();
-        controller = new MessageController();
         memberNameToSocketName = new ConcurrentHashMap<>();
-        security= Security.getInstance();
+        publisher= new Publisher();
     }
 
     //add new notification to the list in case member not logged in.
@@ -104,12 +102,13 @@ public class Publisher {
             //get the socket name of a member/visitor.
             String address = getAddress(name);
             //send the notification to the given address.
-            controller.sendMessage(address, new OutputMessage(not.getMessage()));
+            //TODO: send to publisher.
+
 
         } catch (Exception e) {
             if (e.getMessage().equals("Domain does not exist in system right now.")) {
                 //if the member not logged in. check if we need to save notification.
-                if (security.isMember(name)) {
+                if (Security.getInstance().isMember(name)) {
                     addNotification(name, new DelayedNotifications(not.getMessage()));
                 }
             }
@@ -201,13 +200,13 @@ public class Publisher {
             //get the socket name of a member/visitor.
             String address = getAddress(name);
             //send the notification to the given address.
-            controller.sendMessage(address, new OutputMessage(not.getMessage()));
+            //TODO: send to publisher.
 
 
         } catch (Exception e) {
             if (e.getMessage().equals("Domain does not exist in system right now.")) {
                 //if the member not logged in. check if we need to save notification.
-                if (security.isMember(name)) {
+                if (Security.getInstance().isMember(name)) {
                     addNotification(name, new DelayedNotifications(not.getMessage()));
                 }
             }
