@@ -4,7 +4,7 @@ package com.example.server.serviceLayer;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
-import com.example.server.businessLayer.Publisher.AddressBank;
+import com.example.server.businessLayer.Publisher.WebSocket.NotificationHandler;
 import com.example.server.businessLayer.Market;
 import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.ShoppingCart;
@@ -34,7 +34,6 @@ public class UserService {
         try{
             Visitor guest = this.market.guestLogin();
             VisitorFacade result = new VisitorFacade(guest);
-            AddressBank.getInstance().addAddress(result.getName());
             return new ResponseT<>(result);
         }catch (Exception e){
             return new ResponseT(e.getMessage());
@@ -145,7 +144,6 @@ public class UserService {
             Member member = market.validateSecurityQuestions(userName,answers, visitorName);
             MemberFacade memberLoggedIn = new MemberFacade(member);
             //Sent the delayed notifications to the logged user
-            AddressBank.getInstance().updateName(visitorName,userName);
             return new ResponseT<> ( memberLoggedIn );
         }catch (MarketException e){
             return new ResponseT<> ( e.getMessage () );

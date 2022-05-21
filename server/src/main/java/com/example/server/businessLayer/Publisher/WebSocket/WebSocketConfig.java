@@ -15,6 +15,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         //when a client sends a message back to the server during the sws 'socket'.
         registry.setApplicationDestinationPrefixes("/swns");
     }
+    
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //notifications will be the place where the client will read the messages.

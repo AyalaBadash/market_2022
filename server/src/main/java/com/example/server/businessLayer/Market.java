@@ -4,7 +4,7 @@ import com.example.server.ResourcesObjects.*;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.ExternalComponents.PaymentService;
 import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
-import com.example.server.businessLayer.Publisher.AddressBank;
+import com.example.server.businessLayer.Publisher.WebSocket.NotificationHandler;
 import com.example.server.businessLayer.ExternalComponents.Security;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
@@ -23,7 +23,7 @@ public class Market {
     private String systemManagerName;
     private Map<String, Shop> shops;                                 // <shopName, shop>
 
-    private AddressBank addressBank;
+    private NotificationHandler notificationHandler;
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
     private SynchronizedCounter nextItemID;
@@ -39,7 +39,6 @@ public class Market {
         this.itemByName = new ConcurrentHashMap<>();
         this.userController = UserController.getInstance();
         nextItemID = new SynchronizedCounter();
-        addressBank = AddressBank.getInstance();
         this.numOfAcqsPerShop = new HashMap<>();
     }
 
@@ -346,9 +345,10 @@ public class Market {
             history.closeShop(shopToClose);
             //send notifications to shop owners:
             try{
-                addressBank.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
-                        .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
-                        .collect(Collectors.toList())),shopName);
+                //TODO: complete.
+                //notificationHandler.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
+                      //  .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
+                      //  .collect(Collectors.toList())),shopName);
             }
             catch(Exception e){}
             //
@@ -801,7 +801,8 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss,firedAppointed);
         try{
-            AddressBank.getInstance().sendAppointmentRemovedNotification(firedAppointed,shopName);
+            //TODO: complete.
+            // NotificationHandler.getInstance().sendAppointmentRemovedNotification(firedAppointed,shopName);
         }
         catch (Exception e){}
 
