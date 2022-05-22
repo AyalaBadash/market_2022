@@ -4,11 +4,13 @@ import com.example.server.ResourcesObjects.*;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.ExternalComponents.PaymentService;
 import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
+import com.example.server.businessLayer.Publisher.WebSocket.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.WebSocket.NotificationHandler;
 import com.example.server.businessLayer.ExternalComponents.Security;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 
 
 import java.util.ArrayList;
@@ -345,10 +347,9 @@ public class Market {
             history.closeShop(shopToClose);
             //send notifications to shop owners:
             try{
-                //TODO: complete.
-                //notificationHandler.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
-                      //  .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
-                      //  .collect(Collectors.toList())),shopName);
+                notificationHandler.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
+                        .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
+                       .collect(Collectors.toList())),shopName);
             }
             catch(Exception e){}
             //
@@ -801,8 +802,8 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss,firedAppointed);
         try{
-            //TODO: complete.
-            // NotificationHandler.getInstance().sendAppointmentRemovedNotification(firedAppointed,shopName);
+            NotificationHandler handler=new NotificationHandler( NotificationDispatcher.getInstance());
+             handler.sendAppointmentRemovedNotification(firedAppointed,shopName);
         }
         catch (Exception e){}
 
@@ -835,6 +836,12 @@ public class Market {
         }
         Security security = Security.getInstance();
         security.removeMember(memberToRemove);
+        //send the notification
+        NotificationHandler handler= new NotificationHandler(NotificationDispatcher.getInstance());
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createMembershipDeniedMessage();
+        handler.sendNotification(memberToRemove,not,true);
+        //
     }
 
     public Item getItemById(String name, int itemId) throws MarketException {

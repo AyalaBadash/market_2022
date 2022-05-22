@@ -1,13 +1,10 @@
 package com.example.server.businessLayer.Publisher.WebSocket;
 
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.ExternalComponents.Security;
-import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,7 +35,12 @@ public class NotificationHandler {
         return dispatcher.addMessgae(sessionId,notification);
     }
 
-    //Add new session.
+    /**
+     * Add new session.
+     * @param name name of the new visitor that logged in.
+     * @param sessionId the sessionId of the connection.
+     * @return
+     */
     public synchronized boolean add(String name, String sessionId) {
 
         if(delayedMessages.containsKey(name)){
@@ -54,7 +56,11 @@ public class NotificationHandler {
         }
     }
 
-    //Callback method for user logged in.
+    /**
+     * Callback method for user logged in.
+     * @param name name of the new visitor that logged in.
+     * @return
+     */
     private boolean sendAllDelayedNotifications(String name) {
 
         if(!delayedMessages.containsKey(name)){
@@ -71,7 +77,12 @@ public class NotificationHandler {
         return true;
     }
 
-    //Remove a session in case of logout.
+    /**
+     * Remove a session in case of logout.
+     * @param name the name of the visitor to remove.
+     * @param sessionId the sessionId of the connection
+     * @return
+     */
     public synchronized boolean remove(String name, String sessionId) {
         if (!delayedMessages.containsKey(name)) {
             return false;
@@ -85,7 +96,11 @@ public class NotificationHandler {
         return true;
     }
 
-    //Method in case visitor suddenly disconnected.
+    /**
+     * Method in case visitor suddenly disconnected.
+     * @param sessionId the sessionId to send to.
+     * @return
+     */
     public boolean removeErr(String sessionId) {
         String name="";
         for(Map.Entry<String ,String> set : sessions.entrySet()){
@@ -109,7 +124,13 @@ public class NotificationHandler {
         return sessions.containsKey(name);
     }
 
-    //The main method for sending a notification for a user.
+    /**
+     * The main method for sending a notification for a user.
+     * @param name the name of the visitor to send the message
+     * @param notification the notification needed to be sent.
+     * @param isMember bool field that say if the visitor is a member.
+     * @return
+     */
     public boolean sendNotification(String name , Notification notification, boolean isMember){
 
         if(sessions.containsKey(name)){
@@ -128,5 +149,39 @@ public class NotificationHandler {
             }
         }
         return true;
+    }
+
+    /**
+     * Sends to all owner that item is bought from shop.
+     * @param buyer the man buyed the items.
+     * @param names the names of the owners to send to.
+     * @param shopName the shop name
+     * @param itemsNames the baught items list.
+     * @param prices the bought items prices.
+     */
+    public void sendItemBaughtNotificationsBatch(String buyer, ArrayList<String> names, String shopName, ArrayList<String> itemsNames, ArrayList<Double> prices) {
+
+        RealTimeNotifications not;
+        for (String name : names) {
+            for (int i = 0; i < itemsNames.size(); i++) {
+                not = new RealTimeNotifications();
+                not.createBuyingOfferMessage(buyer, shopName, itemsNames.get(i), prices.get(i));
+                sendNotification(name,not,true);
+            }
+        }
+    }
+
+    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName) {
+        RealTimeNotifications not=new RealTimeNotifications();
+        not.createShopClosedMessage(shopName);
+        for(String name: strings){
+            sendNotification(name,not,true);
+        }
+    }
+
+    public void sendAppointmentRemovedNotification(String firedAppointed, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createShopPermissionDeniedMessage(shopName,firedAppointed);
+        sendNotification(firedAppointed,not,true);
     }
 }

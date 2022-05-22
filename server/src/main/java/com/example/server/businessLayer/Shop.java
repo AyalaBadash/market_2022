@@ -6,9 +6,11 @@ import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Publisher.WebSocket.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.WebSocket.NotificationHandler;
 import com.example.server.businessLayer.Policies.Discount.DiscountPolicy;
 import com.example.server.businessLayer.Users.Member;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,6 +159,7 @@ public class Shop implements IHistory {
     //Bar: adding the parameter buyer name for the notification send.
     public synchronized double buyBasket(ShoppingBasket shoppingBasket,String buyer) throws MarketException {
         //the notification to the shop owners publisher.
+        NotificationHandler notificationHandler= new NotificationHandler(new NotificationDispatcher());
         ArrayList<String> names = new ArrayList<>(getShopOwners().values().stream().collect(Collectors.toList()).stream()
                 .map(appointment -> appointment.getAppointed().getName()).collect(Collectors.toList()));
         String shopName = getShopName();
@@ -191,8 +194,7 @@ public class Shop implements IHistory {
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
         try{
-            //TODO: complete.
-            //notificationHandler.sendItemBaughtNotificationsBatch(names,shopName,itemsNames,prices);
+            notificationHandler.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
         }
         catch (Exception e){}
         return shoppingBasket.getPrice ( );

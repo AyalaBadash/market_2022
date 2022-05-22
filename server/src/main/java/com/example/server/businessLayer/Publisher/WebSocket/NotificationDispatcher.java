@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Publisher.WebSocket;
 
 import com.example.server.serviceLayer.Notifications.Notification;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
@@ -11,20 +12,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Service
 @EnableScheduling
 public class NotificationDispatcher {
+    @Autowired
     private SimpMessagingTemplate template;
-
+    private static NotificationDispatcher notificationDispatcher=null;
 
     //Set of the sessionis-messages;
-    private HashMap<String, List<Notification>> messages=new HashMap<>();
+    private Map<String, List<Notification>> messages;
 
-    public NotificationDispatcher(SimpMessagingTemplate template) {
-
-        this.template = template;
+    public static NotificationDispatcher getInstance(){
+        if (notificationDispatcher==null){
+            notificationDispatcher=new NotificationDispatcher();
+        }
+        return notificationDispatcher;
+    }
+    private NotificationDispatcher() {
+        messages=new ConcurrentHashMap<>();
     }
 
     //For each listener, send all real time notifications available.
