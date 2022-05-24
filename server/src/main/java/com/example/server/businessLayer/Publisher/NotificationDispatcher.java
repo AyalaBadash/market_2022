@@ -29,7 +29,7 @@ public class NotificationDispatcher {
         }
         return notificationDispatcher;
     }
-    private NotificationDispatcher() {
+    public NotificationDispatcher() {
         messages=new ConcurrentHashMap<>();
     }
 
