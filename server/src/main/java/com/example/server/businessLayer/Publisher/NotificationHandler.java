@@ -1,4 +1,4 @@
-package com.example.server.businessLayer.Publisher.WebSocket;
+package com.example.server.businessLayer.Publisher;
 
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;

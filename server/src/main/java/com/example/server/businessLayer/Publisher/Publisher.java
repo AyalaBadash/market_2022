@@ -1,4 +1,4 @@
-package com.example.server.businessLayer.Publisher.WebSocket;
+package com.example.server.businessLayer.Publisher;
 
 public class Publisher {
 
