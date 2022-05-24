@@ -6,11 +6,10 @@ import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Appointment.Appointment;
 import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
-import com.example.server.businessLayer.Publisher.WebSocket.NotificationDispatcher;
-import com.example.server.businessLayer.Publisher.WebSocket.NotificationHandler;
+import com.example.server.businessLayer.Publisher.NotificationDispatcher;
+import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Policies.Discount.DiscountPolicy;
 import com.example.server.businessLayer.Users.Member;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;

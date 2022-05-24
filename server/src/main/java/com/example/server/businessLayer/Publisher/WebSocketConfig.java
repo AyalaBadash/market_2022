@@ -1,4 +1,4 @@
-package com.example.server.businessLayer.Publisher.WebSocket;
+package com.example.server.businessLayer.Publisher;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
