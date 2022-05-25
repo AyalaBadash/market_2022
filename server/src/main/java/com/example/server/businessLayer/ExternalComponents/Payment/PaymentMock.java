@@ -1,6 +1,7 @@
-package com.example.server.businessLayer.ExternalComponents;
+package com.example.server.businessLayer.ExternalComponents.Payment;
 
 import com.example.server.ResourcesObjects.PaymentMethod;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
 
 public class PaymentMock implements PaymentService {
     int num;

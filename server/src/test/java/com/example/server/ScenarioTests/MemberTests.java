@@ -1,11 +1,10 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalComponents.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;

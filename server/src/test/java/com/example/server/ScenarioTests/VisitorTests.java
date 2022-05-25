@@ -1,11 +1,11 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalComponents.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.Address;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
 
@@ -50,7 +50,7 @@ public class VisitorTests {
             market.addItemToShop(shopManagerName, "chocolate", productPrice, Item.Category.general,
                     "soy",keywords , productAmount,shopName);
             creditCard = new CreditCard("124","13/5" , "555");
-            address = new Address("Tel Aviv", "Super" , "1");
+            address = new Address("Ben Gurion 3","Tel Aviv", "Israel", "1234");
 
         } catch (Exception Ignored) {
         }

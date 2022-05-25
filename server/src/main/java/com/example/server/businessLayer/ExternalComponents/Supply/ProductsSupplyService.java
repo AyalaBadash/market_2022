@@ -1,6 +1,6 @@
-package com.example.server.businessLayer.ExternalComponents;
+package com.example.server.businessLayer.ExternalComponents.Supply;
 
-import com.example.server.ResourcesObjects.Address;
+import com.example.server.businessLayer.ExternalComponents.Address;
 
 import java.time.LocalDateTime;
 

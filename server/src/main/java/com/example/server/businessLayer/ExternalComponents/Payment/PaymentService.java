@@ -1,4 +1,4 @@
-package com.example.server.businessLayer.ExternalComponents;
+package com.example.server.businessLayer.ExternalComponents.Payment;
 
 import com.example.server.ResourcesObjects.PaymentMethod;
 

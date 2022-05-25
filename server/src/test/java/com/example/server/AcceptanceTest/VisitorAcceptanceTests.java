@@ -1,7 +1,7 @@
 package com.example.server.AcceptanceTest;
 
-import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
+import com.example.server.businessLayer.ExternalComponents.Address;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Response;
@@ -83,7 +83,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
                     onePlusInfo, onePlusKeywords, onePlusAmount, shopName);
             onePlus = searchProductByName(onePlusName).get(0);
             creditCard = new CreditCard("124", "13/5", "555");
-            address = new Address("Tel Aviv", "Super", "1");
+            address = new Address("Ben Gurion 3","Tel Aviv", "Israel", "1234");
         } catch (Exception e) {
             String msg = e.getMessage();
         }

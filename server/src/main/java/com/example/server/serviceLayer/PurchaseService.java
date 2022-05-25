@@ -1,10 +1,10 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.ResourcesObjects.PaymentMethod;
 import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.ExternalComponents.Address;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
 

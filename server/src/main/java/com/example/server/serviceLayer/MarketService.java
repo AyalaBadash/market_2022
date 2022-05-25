@@ -3,8 +3,8 @@ package com.example.server.serviceLayer;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.ExternalComponents.PaymentService;
-import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
+import com.example.server.businessLayer.ExternalComponents.Supply.ProductsSupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.ResourcesObjects.MarketException;

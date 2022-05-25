@@ -1,8 +1,9 @@
 package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.*;
-import com.example.server.businessLayer.ExternalComponents.PaymentService;
-import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalComponents.Address;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
+import com.example.server.businessLayer.ExternalComponents.Supply.ProductsSupplyService;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;

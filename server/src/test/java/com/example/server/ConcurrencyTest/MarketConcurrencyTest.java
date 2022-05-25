@@ -1,7 +1,7 @@
 package com.example.server.ConcurrencyTest;
 
-import com.example.server.ResourcesObjects.Address;
 import com.example.server.ResourcesObjects.CreditCard;
+import com.example.server.businessLayer.ExternalComponents.Address;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.ResourcesObjects.MarketException;
@@ -207,7 +207,7 @@ public class MarketConcurrencyTest {
                     List<Item> items = market.getItemByName ( "itemToBuy" );
                     Item item = items.get ( 0 );
                     market.addItemToShoppingCart ( item, 1, names[index]);
-                    market.buyShoppingCart ( names[index], 10, new CreditCard ( "1111111111111111", "03/25", "555" ), new Address () );
+                    market.buyShoppingCart ( names[index], 10, new CreditCard ( "1111111111111111", "03/25", "555" ), new Address() );
                 }
             } );
         }

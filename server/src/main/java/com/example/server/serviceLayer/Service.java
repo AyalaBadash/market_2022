@@ -1,7 +1,7 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.businessLayer.ExternalComponents.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.SupplyMock;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;

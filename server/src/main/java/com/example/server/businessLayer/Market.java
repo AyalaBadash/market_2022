@@ -2,8 +2,9 @@ package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.*;
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.ExternalComponents.PaymentService;
-import com.example.server.businessLayer.ExternalComponents.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalComponents.Address;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
+import com.example.server.businessLayer.ExternalComponents.Supply.ProductsSupplyService;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.ExternalComponents.Security;
