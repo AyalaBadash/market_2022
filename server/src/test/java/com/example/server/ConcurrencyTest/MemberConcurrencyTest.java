@@ -1,9 +1,9 @@
 package com.example.server.ConcurrencyTest;
 
-import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.ShoppingCart;
-import com.example.server.businessLayer.Users.Member;
+import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.businessLayer.Market.Users.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 

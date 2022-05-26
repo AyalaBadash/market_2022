@@ -1,10 +1,12 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.ResourcesObjects.ErrorLog;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
-import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalComponents.Supply.Address;
+import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Payment.PaymentMethod;
+import com.example.server.businessLayer.Supply.Address;
+import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
 

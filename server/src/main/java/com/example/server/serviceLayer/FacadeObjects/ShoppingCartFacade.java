@@ -1,7 +1,10 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.Shop;
+import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.businessLayer.Market.ShoppingCart;
 
 import java.util.HashMap;
 import java.util.Map;

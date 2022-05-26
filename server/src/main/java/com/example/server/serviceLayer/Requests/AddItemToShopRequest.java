@@ -1,6 +1,6 @@
 package com.example.server.serviceLayer.Requests;
 
-import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Market.Item;
 
 import java.util.List;
 

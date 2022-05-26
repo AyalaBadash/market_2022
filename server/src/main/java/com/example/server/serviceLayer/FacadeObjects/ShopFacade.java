@@ -1,9 +1,9 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
 
-import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Shop;
+import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.Shop;
 
 import java.util.HashMap;
 import java.util.Map;

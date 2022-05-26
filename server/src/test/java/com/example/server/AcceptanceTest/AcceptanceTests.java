@@ -1,9 +1,9 @@
 package com.example.server.AcceptanceTest;
 
-import com.example.server.ResourcesObjects.CreditCard;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
-import com.example.server.businessLayer.ExternalComponents.Supply.Address;
-import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Payment.PaymentMethod;
+import com.example.server.businessLayer.Supply.Address;
+import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -84,8 +84,8 @@ public class AcceptanceTests {
             addItemToShop(shopOwnerName, onePlusName, onePlusPrice, onePlusCategory,
                     onePlusInfo, onePlusKeywords, onePlusAmount, shopName);
             onePlus = searchProductByName(onePlusName).get(0);
-            creditCard = new CreditCard("124", "13/5", "555");
-            address = new Address("Ben Gurion 3","Tel Aviv", "Israel", "1234");
+            creditCard = new CreditCard("1234567890", "5","24", "555","Ido livne","204534839");
+            address = new Address("Bar Damri","Ben Gurion 3","Tel Aviv", "Israel", "1234");
         } catch (Exception e) {
             String msg = e.getMessage();
         }

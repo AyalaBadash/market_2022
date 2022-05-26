@@ -1,6 +1,6 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;

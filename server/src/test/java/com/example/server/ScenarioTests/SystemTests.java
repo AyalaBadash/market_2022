@@ -1,10 +1,10 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
-import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
-import com.example.server.businessLayer.Market;
+import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Payment.PaymentMock;
+import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Market.Market;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

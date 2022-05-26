@@ -1,7 +1,6 @@
 package com.example.server.AcceptanceTest;
 
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Shop;
+import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
 import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;

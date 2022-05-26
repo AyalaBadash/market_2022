@@ -1,22 +1,15 @@
 package com.example.server.UnitTests;
 
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.ExternalComponents.LoginCard;
-import com.example.server.businessLayer.ExternalComponents.Payment.CreditCard;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
-import com.example.server.businessLayer.ExternalComponents.Payment.WSEPPaymentService;
-import com.example.server.businessLayer.ExternalComponents.Security;
-import com.example.server.businessLayer.ExternalComponents.Supply.Address;
-import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
-import com.example.server.businessLayer.ExternalComponents.Supply.WSEPSupplyService;
+import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Payment.WSEPPaymentService;
+import com.example.server.businessLayer.Supply.Address;
+import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.WSEPSupplyService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServicesTests {
     PaymentHandler paymentHandler;
@@ -29,7 +22,7 @@ public class ServicesTests {
         paymentHandler=new PaymentHandler(new WSEPPaymentService());
         supplyHandler=new SupplyHandler(new WSEPSupplyService());
         creditCard=new CreditCard("1234567890","07","2026","205","Bar Damri","208915751");
-        address= new Address("Atad 3","Beer Shaba","Israel","8484403");
+        address= new Address("Bar Damri","Atad 3","Beer Shaba","Israel","8484403");
     }
 
     @Test

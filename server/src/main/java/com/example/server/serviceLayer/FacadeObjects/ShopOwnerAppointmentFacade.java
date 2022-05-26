@@ -1,13 +1,12 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
-import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Appointment.Permissions.IPermission;
-import com.example.server.businessLayer.Appointment.ShopManagerAppointment;
-import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
-import com.example.server.businessLayer.Market;
-import com.example.server.businessLayer.Shop;
-import com.example.server.businessLayer.Users.Member;
-import com.example.server.businessLayer.Users.UserController;
+import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
+import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.Shop;
+import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.UserController;
 
 
 import java.util.ArrayList;

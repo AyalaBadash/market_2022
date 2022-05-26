@@ -1,19 +1,18 @@
 package com.example.server.IntegrationTests;
 
 
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalComponents.*;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
-import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
-import com.example.server.businessLayer.ExternalComponents.Supply.SupplyService;
-import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Users.Member;
-import com.example.server.businessLayer.Users.UserController;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Payment.PaymentMock;
+import com.example.server.businessLayer.Payment.PaymentService;
+import com.example.server.businessLayer.Security.Security;
+import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyService;
+import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Market.*;
+import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.UserController;
+import com.example.server.businessLayer.Market.Users.Visitor;
 
 import org.junit.jupiter.api.*;
 
@@ -703,7 +702,7 @@ public class MarketUnitTest {
         try {
             market.editCart(2.0,item,"razShop","raz");
             Member raz = userController.getMember("raz");
-            Map<Shop,ShoppingBasket> razCart = raz.getMyCart().getCart();
+            Map<Shop, ShoppingBasket> razCart = raz.getMyCart().getCart();
             ShoppingBasket razShopBasket = razCart.get(shop);
             Assertions.assertEquals(2.0,razShopBasket.getItems().get(item.getID()));
         } catch (Exception e) {
