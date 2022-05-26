@@ -1,10 +1,12 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.businessLayer.ExternalComponents.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.SupplyMock;
-import com.example.server.businessLayer.Market;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Payment.PaymentMock;
+import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class SystemManagerTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, managerName, managerpassword);
+                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), managerName, managerpassword);
             else
                 market.register(managerName, managerpassword);
         } catch (Exception e) {

@@ -1,14 +1,14 @@
 package com.example.server.ConcurrencyTest;
 
-import com.example.server.ResourcesObjects.Address;
-import com.example.server.ResourcesObjects.CreditCard;
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Market;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.ExternalComponents.Security;
-import com.example.server.businessLayer.Users.Member;
-import com.example.server.businessLayer.Users.UserController;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Supply.Address;
+import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Security.Security;
+import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.UserController;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -207,7 +207,7 @@ public class MarketConcurrencyTest {
                     List<Item> items = market.getItemByName ( "itemToBuy" );
                     Item item = items.get ( 0 );
                     market.addItemToShoppingCart ( item, 1, names[index]);
-                    market.buyShoppingCart ( names[index], 10, new CreditCard ( "1111111111111111", "03/25", "555" ), new Address () );
+                    market.buyShoppingCart ( names[index], 10, new CreditCard("1234567890", "5","24", "555","Ido livne","204534839"), new Address() );
                 }
             } );
         }

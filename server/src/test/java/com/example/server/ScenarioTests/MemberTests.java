@@ -1,14 +1,19 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.ResourcesObjects.Address;
-import com.example.server.ResourcesObjects.CreditCard;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalComponents.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.SupplyMock;
-import com.example.server.businessLayer.Users.Member;
-import com.example.server.businessLayer.Users.UserController;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Supply.Address;
+import com.example.server.businessLayer.Payment.PaymentMock;
+import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.UserController;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -39,7 +44,7 @@ public class MemberTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, userName, password);
+                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);
@@ -61,8 +66,7 @@ public class MemberTests {
             market.register(testMemberName, testMemberPassword);
             market.memberLogin(testMemberName, testMemberPassword);
             market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor2.getName());
-            creditCard = new CreditCard("124","13/5" , "555");
-            address = new Address("Tel Aviv", "Super" , "1");
+            creditCard = new CreditCard("1234567890", "5","24", "555","Ido livne","204534839");            address = new Address("Bar Damri","atad 3","Tel Aviv", "Israel" , "1");
 
 
         } catch (Exception ignored) {
