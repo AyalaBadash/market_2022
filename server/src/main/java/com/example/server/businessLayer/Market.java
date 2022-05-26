@@ -2,9 +2,12 @@ package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.*;
 import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.ExternalComponents.Address;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
+import com.example.server.businessLayer.ExternalComponents.Supply.Address;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
 import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
-import com.example.server.businessLayer.ExternalComponents.Supply.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyService;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.ExternalComponents.Security;
@@ -30,8 +33,8 @@ public class Market {
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
     private SynchronizedCounter nextItemID;
-    private PaymentService paymentService;
-    private ProductsSupplyService supplyService;
+    private PaymentHandler paymentHandler;
+    private SupplyHandler supplyHandler;
 
     private static Market instance;
     Map<String,Integer> numOfAcqsPerShop;
@@ -53,20 +56,20 @@ public class Market {
         return instance;
     }
 
-    public synchronized void firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) throws MarketException {
-        if (this.paymentService != null || this.supplyService != null){
+    public synchronized void firstInitMarket(PaymentHandler paymentHandler1, SupplyHandler supplyHandler1, String userName, String password) throws MarketException {
+        if (this.paymentHandler != null || this.supplyHandler != null){
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
         }
-        if (paymentService == null || supplyService == null) {
+        if (paymentHandler1 == null || supplyHandler1 == null) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("A market initialization failed . Lack of payment / supply services ");
             throw new MarketException("market needs payment and supply services for initialize");
         }
         register ( userName, password );
         instance.systemManagerName = userName;
-        instance.paymentService = paymentService;
-        instance.supplyService = supplyService;
+        instance.paymentHandler = paymentHandler1;
+        instance.supplyHandler = supplyHandler1;
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -241,19 +244,18 @@ public class Market {
         Market.instance = instance;
     }
 
-    public PaymentService getPaymentService() {
-        return paymentService;
+    public PaymentHandler getPaymentService() {
+        return paymentHandler;
     }
 
     //TODO make private
 
     /**
      *
-     * @param paymentService
-     * @param memberName
+     * @param memberName the paying member's name.
      * @throws MarketException
      */
-    public void setPaymentService(PaymentService paymentService, String memberName) throws MarketException {
+    public void setPaymentService(PaymentService paymentService1, String memberName) throws MarketException {
         if(!userController.isLoggedIn(memberName)){
             DebugLog.getInstance().Log("Member must be logged in for making this action");
             throw new MarketException("Member must be logged in for making this action");
@@ -262,19 +264,19 @@ public class Market {
             DebugLog.getInstance().Log("Only a system manager can change the payment service");
             throw new MarketException("Only a system manager can change the payment service");
         }
-        if(paymentService == null) {
+        if(paymentService1 == null) {
             DebugLog.getInstance().Log("Try to initiate payment service with null");
             throw new MarketException("Try to initiate payment service with null");
         }
-        this.paymentService = paymentService;
+        this.paymentHandler.setService(paymentService1);
     }
 
-    public ProductsSupplyService getSupplyService() {
-        return supplyService;
+    public SupplyHandler getSupplyHandler() {
+        return supplyHandler;
     }
 
-    public void setSupplyService(ProductsSupplyService supplyService) {
-        this.supplyService = supplyService;
+    public void setSupplyHandler(SupplyService supplyHandler) {
+        this.supplyHandler.setService(supplyHandler);
     }
 
     public Member validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException{
@@ -651,7 +653,7 @@ public class Market {
     }
 
     public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice,
-                                PaymentMethod paymentMethod, Address address) throws MarketException {
+                                        PaymentMethod paymentMethod, Address address) throws MarketException {
         if (!userController.isLoggedIn(visitorName)) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -660,7 +662,7 @@ public class Market {
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart = visitor.getCart();
         Acquisition acquisition = new Acquisition(shoppingCart, visitorName);
-        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, paymentService, supplyService);
+        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, paymentHandler, supplyHandler);
         return shoppingCartToReturn;
     }
 

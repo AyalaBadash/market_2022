@@ -1,9 +1,11 @@
 package com.example.server.businessLayer;
 
 import com.example.server.ResourcesObjects.*;
-import com.example.server.businessLayer.ExternalComponents.Address;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
-import com.example.server.businessLayer.ExternalComponents.Supply.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
+import com.example.server.businessLayer.ExternalComponents.Supply.Address;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyService;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.businessLayer.Users.Visitor;
@@ -15,8 +17,8 @@ public class Acquisition {
     private boolean supplyConfirmed;
     ShoppingCart shoppingCartToBuy;
     String buyerName;
-    String supplyID;
-    String paymentID;
+    int supplyID;
+    int paymentID;
 
     public Acquisition(ShoppingCart shoppingCartToBuy, String buyerName) {
         this.shoppingCartToBuy = shoppingCartToBuy;
@@ -25,21 +27,21 @@ public class Acquisition {
         supplyConfirmed = false;
     }
 
-    public ShoppingCart buyShoppingCart(double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentService paymentService, ProductsSupplyService supplyService) throws MarketException {
+    public ShoppingCart buyShoppingCart(double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentHandler paymentHandler, SupplyHandler supplyHandler) throws MarketException {
         // checks the price is correct
        if(!isPriceCorrect(expectedPrice))
            return shoppingCartToBuy;
-        boolean supplyIsPossible = supply(supplyService, address);
-        if(!supplyIsPossible){
+
+        if(supplyHandler.supply(address)==-1){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Supply has been failed.");
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
-        boolean isPaymentPossible = pay(paymentMethod, paymentService);
+        boolean isPaymentPossible = pay(paymentMethod, paymentHandler);
         if(!isPaymentPossible){
             shoppingCartToBuy.cancelShopSave();
-            supplyService.cancelSupply(supplyID);
+            supplyHandler.cancelSupply(supplyID);
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Payment has been failed.");
             throw new MarketException("payment has been failed. shopping cart did not change and supply was canceled");
@@ -66,19 +68,15 @@ public class Acquisition {
         return true;
     }
 
-    private boolean pay(PaymentMethod paymentMethod, PaymentService paymentService){
-        paymentID = paymentService.pay(paymentMethod);
-        if(paymentID.equals("-1"))
+    //TODO: add address to payment method.
+    private boolean pay(PaymentMethod paymentMethod, PaymentHandler paymentHandler){
+        Address address=new Address("","","","");
+        paymentID = paymentHandler.pay(paymentMethod);
+        if(paymentID==-1)
             return false;
         return true;
     }
 
-    private boolean supply(ProductsSupplyService supplyService, Address address){
-        supplyID = supplyService.supply(address, LocalDateTime.now());
-        if(supplyID.equals("-1"))
-            return false;
-        return true;
-    }
 
     public boolean isPaymentDone() {
         return paymentDone;

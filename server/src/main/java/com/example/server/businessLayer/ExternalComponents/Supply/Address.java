@@ -1,4 +1,4 @@
-package com.example.server.businessLayer.ExternalComponents;
+package com.example.server.businessLayer.ExternalComponents.Supply;
 
 public class Address {
 

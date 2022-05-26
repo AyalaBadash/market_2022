@@ -3,8 +3,10 @@ package com.example.server.ScenarioTests;
 import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalComponents.Address;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
+import com.example.server.businessLayer.ExternalComponents.Supply.Address;
 import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
 import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
 import com.example.server.businessLayer.Users.Visitor;
 import org.junit.jupiter.api.*;
@@ -33,7 +35,7 @@ public class VisitorTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, userName, password);
+                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);

@@ -3,7 +3,10 @@ package com.example.server.ScenarioTests;
 import com.example.server.ResourcesObjects.CreditCard;
 import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
+import com.example.server.businessLayer.ExternalComponents.Supply.Address;
 import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
 import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
 import com.example.server.businessLayer.Users.Member;
 import com.example.server.businessLayer.Users.UserController;
@@ -38,7 +41,7 @@ public class MemberTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, userName, password);
+                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);
@@ -61,7 +64,7 @@ public class MemberTests {
             market.memberLogin(testMemberName, testMemberPassword);
             market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor2.getName());
             creditCard = new CreditCard("124","13/5" , "555");
-            address = new Address("Tel Aviv", "Super" , "1");
+            address = new Address("atad 3","Tel Aviv", "Israel" , "1");
 
 
         } catch (Exception ignored) {

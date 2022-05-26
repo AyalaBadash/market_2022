@@ -1,7 +1,7 @@
 package com.example.server.AcceptanceTest;
 
 import com.example.server.ResourcesObjects.CreditCard;
-import com.example.server.businessLayer.ExternalComponents.Address;
+import com.example.server.businessLayer.ExternalComponents.Supply.Address;
 import com.example.server.businessLayer.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Response;

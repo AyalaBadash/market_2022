@@ -3,8 +3,10 @@ package com.example.server.serviceLayer;
 
 import com.example.server.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Appointment.Appointment;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
 import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
-import com.example.server.businessLayer.ExternalComponents.Supply.ProductsSupplyService;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyService;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.ResourcesObjects.MarketException;
@@ -30,9 +32,9 @@ public class MarketService {
         return marketService;
     }
 
-    public Response firstInitMarket(PaymentService paymentService, ProductsSupplyService supplyService, String userName, String password) {
+    public Response firstInitMarket(PaymentService paymentService, SupplyService supplyService, String userName, String password) {
         try {
-            market.firstInitMarket ( paymentService, supplyService, userName, password );
+            market.firstInitMarket ( new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password );
             return new Response (  );
         } catch (MarketException e){
             return new Response ( e.getMessage () );

@@ -1,7 +1,7 @@
 package com.example.server.ConcurrencyTest;
 
 import com.example.server.ResourcesObjects.CreditCard;
-import com.example.server.businessLayer.ExternalComponents.Address;
+import com.example.server.businessLayer.ExternalComponents.Supply.Address;
 import com.example.server.businessLayer.Item;
 import com.example.server.businessLayer.Market;
 import com.example.server.ResourcesObjects.MarketException;

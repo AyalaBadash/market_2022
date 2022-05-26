@@ -21,7 +21,7 @@ public class Service implements IService {
     UserService userService;
 
 
-    private Service() {
+    protected Service() {
         marketService = MarketService.getInstance();
         purchaseService = PurchaseService.getInstance();
         userService = UserService.getInstance();

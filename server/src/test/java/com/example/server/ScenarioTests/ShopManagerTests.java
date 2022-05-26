@@ -1,6 +1,8 @@
 package com.example.server.ScenarioTests;
 
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
 import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
 import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
 import com.example.server.businessLayer.Market;
 import com.example.server.ResourcesObjects.MarketException;
@@ -37,7 +39,7 @@ public class ShopManagerTests {
             productPrice = 1.2;
             newAmount=10;
             if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, userName, password);
+                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop

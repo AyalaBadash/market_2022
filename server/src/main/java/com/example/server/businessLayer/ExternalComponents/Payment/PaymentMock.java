@@ -1,7 +1,6 @@
 package com.example.server.businessLayer.ExternalComponents.Payment;
 
-import com.example.server.ResourcesObjects.PaymentMethod;
-import com.example.server.businessLayer.ExternalComponents.Payment.PaymentService;
+import com.example.server.businessLayer.ExternalComponents.Supply.Address;
 
 public class PaymentMock implements PaymentService {
     int num;
@@ -21,12 +20,18 @@ public class PaymentMock implements PaymentService {
     }
 
     @Override
-    public String pay(PaymentMethod paymentMethod) {
-        return "1";
+    public int pay(String request) {
+        return 10000;
     }
 
     @Override
-    public boolean cancelPayment(PaymentMethod paymentMethod) {
-        return true;
+    public int cancelPayment(String transactionId) {
+        return 0;
     }
+
+    @Override
+    public String handShake(String request) {
+        return "OK";
+    }
+
 }

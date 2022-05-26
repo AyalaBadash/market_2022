@@ -2,7 +2,7 @@
 //
 //import com.example.server.ResourcesObjects.Address;
 //import com.example.server.ResourcesObjects.CreditCard;
-//import com.example.server.ResourcesObjects.PaymentMethod;
+//import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
 //import com.example.server.ServerApplication;
 //import com.example.server.businessLayer.Item;
 //import com.example.server.serviceLayer.AppointmentShopManagerRequest;

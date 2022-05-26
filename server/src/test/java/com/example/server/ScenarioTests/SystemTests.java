@@ -1,6 +1,8 @@
 package com.example.server.ScenarioTests;
 
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentHandler;
 import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMock;
+import com.example.server.businessLayer.ExternalComponents.Supply.SupplyHandler;
 import com.example.server.businessLayer.ExternalComponents.Supply.SupplyMock;
 import com.example.server.businessLayer.Market;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,14 +20,14 @@ public class SystemTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService()==null)
-                market.firstInitMarket (paymentService, supplyService, userName, password );
+                market.firstInitMarket (new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password );
         }
         catch (Exception e){}
     }
     @Test
     public void initTwice() {
         try {
-            market.firstInitMarket (paymentService, supplyService, userName, password );
+            market.firstInitMarket (new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password );
             assert false;
         } catch (Exception e) {
             assert true;

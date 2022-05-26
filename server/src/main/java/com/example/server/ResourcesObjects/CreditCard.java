@@ -1,6 +1,8 @@
 package com.example.server.ResourcesObjects;
 
-public class CreditCard implements PaymentMethod{
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
+
+public class CreditCard implements PaymentMethod {
     private String cardNumber;
     private String expiredDate;
     private String threeDigits;

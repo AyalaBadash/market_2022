@@ -1,21 +1,19 @@
 package com.example.server.businessLayer.ExternalComponents.Supply;
 
-import com.example.server.businessLayer.ExternalComponents.Address;
-
 import java.time.LocalDateTime;
 
-public class SupplyMock implements ProductsSupplyService {
+public class SupplyMock implements SupplyService {
 
     public SupplyMock() {
     }
 
     @Override
-    public String supply(Address address, LocalDateTime date) {
-        return "1";
+    public int supply(String request) {
+        return 1;
     }
 
     @Override
-    public boolean cancelSupply(String supplyID) {
-        return true;
+    public int cancelSupply(String supplyID) {
+        return 1;
     }
 }

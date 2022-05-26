@@ -1,7 +1,7 @@
 package com.example.server.serviceLayer.Requests;
 
-import com.example.server.ResourcesObjects.PaymentMethod;
-import com.example.server.businessLayer.ExternalComponents.Address;
+import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
+import com.example.server.businessLayer.ExternalComponents.Supply.Address;
 
 public class BuyShoppingCartRequest {
     private String visitorName;
