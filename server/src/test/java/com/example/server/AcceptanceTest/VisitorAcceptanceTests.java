@@ -26,6 +26,8 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     static Address address;
     static ItemFacade milk;
 
+    static ItemFacade bamba;
+
     static double appleAmount;
     static String appleName;
     static Item.Category appleCategory;
@@ -56,9 +58,11 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             productAmount = 3.0;
             productPrice = 1.2;
             addItemToShop(shopOwnerName, "milk", productPrice, Item.Category.general,
-                    "soy", new ArrayList<>(), productAmount, shopName);
-            List<ItemFacade> res = searchProductByName("milk");
-            milk = res.get(0);
+                    "soy", new ArrayList<>(), productAmount, shopName).getValue ();
+            addItemToShop(shopOwnerName, "bamba", productPrice, Item.Category.general,
+                    "nugat", new ArrayList<>(), productAmount, shopName);
+            List<ItemFacade> res = searchProductByName("bamba");
+            bamba = res.get(0);
 
             appleAmount = 4.0;
             appleName = "apple";
@@ -175,8 +179,8 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void itemInfoTest() {
         try {
             VisitorFacade visitor = guestLogin();
-            ItemFacade res = getItemInfo(visitor.getName(), milk.getId());
-            assert res.getName().equals(milk.getName());
+            ItemFacade res = getItemInfo(visitor.getName(), bamba.getId());
+            assert res.getName().equals(bamba.getName());
             exitMarket(visitor.getName());
         } catch (Exception e) {
             assert false;
@@ -305,15 +309,15 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
         try {
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
-            List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(1);
-            Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
+            List<ItemFacade> res = searchProductByName("bamba");
+            ItemFacade bamba = res.get(0);
+            Double itemAmount = shop.getItemsCurrentAmount().get(bamba.getId());
             double buyingAmount = itemAmount - 1;
-            Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
+            Response response = addItemToCart(bamba, buyingAmount, shopName, visitor.getName());
             Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             assert !result.isErrorOccurred();
             shop = getShopInfo(shopOwnerName, shopName).getValue();
-            Double newAMount = shop.getItemsCurrentAmount().get(milk.getId());
+            Double newAMount = shop.getItemsCurrentAmount().get(bamba.getId());
             assert newAMount == 1;
             itemAmount = newAMount;
 
@@ -352,18 +356,19 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
         try {
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
-            List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(1);
-            Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
+            List<ItemFacade> res = searchProductByName("bamba");
+            ItemFacade bamba = res.get(0);
+            Double itemAmount = shop.getItemsCurrentAmount().get(bamba.getId());
             double buyingAmount = itemAmount;
-            Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
+            Response response = addItemToCart(bamba, buyingAmount, shopName, visitor.getName());
             // add not existing item shouldn't fail
             assert !response.isErrorOccurred();
+            Double amount = shop.getItemsCurrentAmount().get(bamba.getId());
             Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
             assert result.isErrorOccurred();
             shop = getShopInfo(shopOwnerName, shopName).getValue();
-            Double newAMount = shop.getItemsCurrentAmount().get(milk.getId());
-            Assertions.assertEquals(newAMount, itemAmount);
+            Double newAMount = shop.getItemsCurrentAmount().get(bamba.getId());
+            Assertions.assertEquals(newAMount, amount);
 
         } catch (Exception e) {
             assert false;

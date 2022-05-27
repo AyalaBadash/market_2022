@@ -21,7 +21,9 @@ public class PaymentMock implements PaymentService {
 
     @Override
     public String pay(PaymentMethod paymentMethod) {
-        return "1";
+        if(paymentMethod == null)
+            return "-1";
+        else return "1";
     }
 
     @Override

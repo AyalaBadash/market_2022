@@ -26,7 +26,7 @@ public class Acquisition {
 
     public ShoppingCart buyShoppingCart(double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentService paymentService, ProductsSupplyService supplyService) throws MarketException {
         // checks the price is correct
-       if(!isPriceCorrect(expectedPrice))
+        if(!isPriceCorrect(expectedPrice))
            return shoppingCartToBuy;
         boolean supplyIsPossible = supply(supplyService, address);
         if(!supplyIsPossible){
@@ -55,8 +55,13 @@ public class Acquisition {
     }
 
     private  boolean isPriceCorrect(double expectedPrice) throws MarketException {
-        double actualPrice = shoppingCartToBuy.saveFromShops(buyerName);
-        if (actualPrice != expectedPrice){
+        double actualPrice;
+        try {
+            actualPrice = shoppingCartToBuy.saveFromShops(buyerName);
+        }catch (MarketException e){
+            return false;
+        }
+        if (Math.abs ( actualPrice - expectedPrice ) > 0.001){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Shopping cart price has been changed for a costumer");
@@ -66,6 +71,8 @@ public class Acquisition {
     }
 
     private boolean pay(PaymentMethod paymentMethod, PaymentService paymentService){
+        if (paymentService == null)
+            return false;
         paymentID = paymentService.pay(paymentMethod);
         if(paymentID.equals("-1"))
             return false;
@@ -73,6 +80,8 @@ public class Acquisition {
     }
 
     private boolean supply(ProductsSupplyService supplyService, Address address){
+        if(supplyService == null)
+            return false;
         supplyID = supplyService.supply(address, LocalDateTime.now());
         if(supplyID.equals("-1"))
             return false;

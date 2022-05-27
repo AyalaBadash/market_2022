@@ -11,6 +11,8 @@ public class SupplyMock implements ProductsSupplyService {
 
     @Override
     public String supply(Address address, LocalDateTime date) {
+        if(address == null)
+            return "-1";
         return "1";
     }
 

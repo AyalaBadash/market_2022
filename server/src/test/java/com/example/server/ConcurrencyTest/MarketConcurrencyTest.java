@@ -191,7 +191,6 @@ public class MarketConcurrencyTest {
     @Test
     @DisplayName("Purchase concurrency test")
     public void purchaseConcurrencyTest() throws MarketException {
-        int numOfExceptions = 0;
         registerAndLogin();
         market.openNewShop ( names[0],  "shopName5");
         market.addItemToShop ( names[0], "itemToBuy", 10, Item.Category.fruit, null, null, 1, "shopName5" );
@@ -223,7 +222,11 @@ public class MarketConcurrencyTest {
             if(threads[i.value ()].getEx () != null)
                 numOfExceptions ++;
         }
-        Assertions.assertTrue(numOfExceptions == 4);
+        int numOfSuccess = 0;
+        for(int index = 0; index < 5; index++)
+            if (userController.getVisitor (names[index]).getCart () == null)
+                numOfSuccess ++;
+        assert numOfSuccess == 1;
     }
 
     private static synchronized void registerAndLogin() {
