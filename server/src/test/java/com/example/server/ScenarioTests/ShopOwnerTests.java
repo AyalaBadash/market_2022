@@ -49,7 +49,7 @@ public class ShopOwnerTests {
             productAmount = 3;
             productPrice = 1.2;
             newAmount=10;
-            if (market.getPaymentService() == null)
+            if (market.getPaymentHandler() == null)
                 market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);

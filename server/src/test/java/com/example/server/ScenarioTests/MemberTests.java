@@ -43,7 +43,7 @@ public class MemberTests {
     public void setUpMember() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
+            if (market.getPaymentHandler () == null)
                 market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
             // shop manager register
             Visitor visitor = market.guestLogin();

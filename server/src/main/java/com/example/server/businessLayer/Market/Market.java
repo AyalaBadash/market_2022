@@ -46,6 +46,7 @@ public class Market {
         this.userController = UserController.getInstance();
         nextItemID = new SynchronizedCounter();
         this.numOfAcqsPerShop = new HashMap<>();
+        //TODO - supply and payment service
     }
 
 
@@ -244,7 +245,7 @@ public class Market {
         Market.instance = instance;
     }
 
-    public PaymentHandler getPaymentService() {
+    public PaymentHandler getPaymentHandler() {
         return paymentHandler;
     }
 
@@ -662,7 +663,8 @@ public class Market {
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart = visitor.getCart();
         Acquisition acquisition = new Acquisition(shoppingCart, visitorName);
-        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, paymentHandler, supplyHandler);
+        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, getPaymentHandler (), getSupplyHandler());
+        //TODO - what is expected here?
         return shoppingCartToReturn;
     }
 

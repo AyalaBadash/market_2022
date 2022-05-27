@@ -19,7 +19,7 @@ public class SystemTests {
     public void setUp(){
         try {
             market = Market.getInstance();
-            if (market.getPaymentService()==null)
+            if (market.getPaymentHandler()==null)
                 market.firstInitMarket (new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password );
         }
         catch (Exception e){}

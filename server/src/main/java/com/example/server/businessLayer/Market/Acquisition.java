@@ -38,7 +38,7 @@ public class Acquisition {
             errorLog.Log("Supply has been failed.");
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
-        paymentID = pay(paymentMethod, paymentHandler);
+        paymentID = paymentHandler.pay (paymentMethod);
         if(paymentID==-1){
             shoppingCartToBuy.cancelShopSave();
             supplyHandler.cancelSupply(supplyID);
@@ -58,20 +58,19 @@ public class Acquisition {
     }
 
     private  boolean isPriceCorrect(double expectedPrice) throws MarketException {
-        double actualPrice = shoppingCartToBuy.saveFromShops(buyerName);
-        if (actualPrice != expectedPrice){
+        double actualPrice;
+        try {
+            actualPrice = shoppingCartToBuy.saveFromShops(buyerName);
+        }catch (MarketException e){
+            return false;
+        }
+        if (Math.abs ( actualPrice - expectedPrice ) > 0.001){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Shopping cart price has been changed for a costumer");
             return false;
         }
         return true;
-    }
-
-    private int pay(PaymentMethod paymentMethod, PaymentHandler paymentHandler){
-
-        return paymentHandler.pay(paymentMethod);
-
     }
 
 

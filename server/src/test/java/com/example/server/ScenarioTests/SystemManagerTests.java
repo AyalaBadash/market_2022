@@ -31,7 +31,7 @@ public class SystemManagerTests {
     public static void setUp() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
+            if (market.getPaymentHandler() == null)
                 market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), managerName, managerpassword);
             else
                 market.register(managerName, managerpassword);
