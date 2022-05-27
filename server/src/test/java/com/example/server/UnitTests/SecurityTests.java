@@ -1,8 +1,8 @@
 package com.example.server.UnitTests;
 
-import com.example.server.businessLayer.ExternalComponents.LoginCard;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.ExternalComponents.Security;
+import com.example.server.businessLayer.Security.LoginCard;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Security.Security;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

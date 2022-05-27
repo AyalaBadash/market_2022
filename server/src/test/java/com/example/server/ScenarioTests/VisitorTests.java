@@ -1,12 +1,17 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.ResourcesObjects.Address;
-import com.example.server.ResourcesObjects.CreditCard;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.ExternalComponents.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.SupplyMock;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Supply.Address;
+import com.example.server.businessLayer.Payment.PaymentMock;
+import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.Shop;
+import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,8 +39,8 @@ public class VisitorTests {
     public void setUp() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, userName, password);
+            if (market.getPaymentHandler() == null)
+                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);
@@ -51,8 +56,7 @@ public class VisitorTests {
                     "soy",keywords , productAmount,shopName);
             market.addItemToShop(shopManagerName, "chocolate", productPrice, Item.Category.general,
                     "soy",keywords , productAmount,shopName);
-            creditCard = new CreditCard("124","13/5" , "555");
-            address = new Address("Tel Aviv", "Super" , "1");
+            creditCard = new CreditCard("1234567890", "5","24", "555","Ido livne","204534839");            address = new Address("Bar Damri","Ben Gurion 3","Tel Aviv", "Israel", "1234");
 
         } catch (Exception Ignored) {
         }
@@ -329,7 +333,7 @@ public class VisitorTests {
     public void buyWhenExternalServiceIsNotConnected() {
         try {
             Visitor visitor = market.guestLogin();
-            Mockito.when ( market.getPaymentService () ).then ( null );
+            Mockito.when ( market.getPaymentHandler () ).then ( null );
             Shop shop = market.getShopInfo(shopManagerName, shopName);
             List<Item> res = market.getItemByName("milk");
             Item milk = res.get(0);

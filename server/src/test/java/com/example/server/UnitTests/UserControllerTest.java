@@ -1,7 +1,7 @@
 package com.example.server.UnitTests;
 
-import com.example.server.businessLayer.Users.UserController;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Market.Users.UserController;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

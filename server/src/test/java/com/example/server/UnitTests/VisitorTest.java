@@ -1,9 +1,9 @@
 package com.example.server.UnitTests;
 
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.Users.Member;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
