@@ -1,9 +1,10 @@
-package com.example.server.businessLayer.Market.Policies.Discount;
+package com.example.server.businessLayer.Market.Policies.Discount.Condition;
 
+import com.example.server.businessLayer.Market.Policies.Discount.Condition.Condition;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
-public class CompositeCondition extends Condition{
+public class CompositeCondition extends Condition {
 
 
     public enum CompositeConditionType {

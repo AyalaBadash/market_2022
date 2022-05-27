@@ -1,9 +1,9 @@
-package com.example.server.businessLayer.Market.Policies.Discount;
+package com.example.server.businessLayer.Market.Policies.Discount.DiscountState;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
-public abstract class CompositeDiscountLevelState implements DiscountLevelState{
+public abstract class CompositeDiscountLevelState implements DiscountLevelState {
 
     public enum CompositeDiscountLevelType{
         XORType,

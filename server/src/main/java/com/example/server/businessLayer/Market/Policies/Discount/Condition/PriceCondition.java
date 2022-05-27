@@ -1,9 +1,9 @@
-package com.example.server.businessLayer.Market.Policies.Discount;
+package com.example.server.businessLayer.Market.Policies.Discount.Condition;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
-public class PriceCondition extends CompositeCondition{
+public class PriceCondition extends CompositeCondition {
     private double priceNeeded;
 
     public PriceCondition(Condition baseCond, CompositeConditionType compositeType, double priceNeeded) {

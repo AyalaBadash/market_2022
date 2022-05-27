@@ -1,10 +1,10 @@
-package com.example.server.businessLayer.Market.Policies.Discount;
+package com.example.server.businessLayer.Market.Policies.Discount.Condition;
 
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
 import java.util.Map;
 
-public class AmountOfItemCondition extends CompositeCondition{
+public class AmountOfItemCondition extends CompositeCondition {
     private double amountNeeded;
     private Integer itemNeeded;
 
