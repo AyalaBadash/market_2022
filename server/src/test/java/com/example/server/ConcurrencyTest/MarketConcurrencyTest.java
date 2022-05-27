@@ -218,10 +218,10 @@ public class MarketConcurrencyTest {
                 threads[i.value ()].join ( );
             } catch (InterruptedException e) {}
         }
-        for (i.reset () ; i.value () < 5 ; i.increment () ) {
-            if(threads[i.value ()].getEx () != null)
-                numOfExceptions ++;
-        }
+//        for (i.reset () ; i.value () < 5 ; i.increment () ) {
+//            if(threads[i.value ()].getEx () != null)
+//                numOfExceptions ++;
+//        }
         int numOfSuccess = 0;
         for(int index = 0; index < 5; index++)
             if (userController.getVisitor (names[index]).getCart () == null)
