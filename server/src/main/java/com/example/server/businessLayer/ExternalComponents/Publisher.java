@@ -1,5 +1,6 @@
-package com.example.server.businessLayer;
+package com.example.server.businessLayer.ExternalComponents;
 
+import com.example.server.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Users.UserController;
 import com.example.server.serviceLayer.FacadeObjects.OutputMessage;
 import com.example.server.serviceLayer.MessageController;

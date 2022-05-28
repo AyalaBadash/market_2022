@@ -42,6 +42,11 @@ public class Service implements IService {
         return marketService.firstInitMarket ( paymentService,supplyMock, request.getUserName(), request.getPassword() );
     }
 
+//    @RequestMapping("")
+//    public String hi(){
+//        return "hi";
+//    }
+
     @Override
     @RequestMapping(value = "/guestLogin")
     @CrossOrigin
