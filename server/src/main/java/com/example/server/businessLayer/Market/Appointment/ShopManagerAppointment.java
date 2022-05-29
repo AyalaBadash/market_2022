@@ -10,8 +10,6 @@ import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 import java.util.List;
 
 public class ShopManagerAppointment extends Appointment {
-
-
     public ShopManagerAppointment(Member appointed, Member appoint, Shop relatedShop) {
         super(appointed, appoint, relatedShop );
     }

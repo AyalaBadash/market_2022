@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 
 public class Shop implements IHistory {
     private String shopName;
-    private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
-    private Map<String, Appointment> shopManagers;     //<name, appointment>
-    private Map<String, Appointment> shopOwners;     //<name, appointment>
+    private Map<java.lang.Integer, Item> itemMap;     //<ItemID,main.businessLayer.Item>
+    private Map<String, Appointment> shopManagers;    //<name, appointment>
+    private Map<String, Appointment> shopOwners;      //<name, appointment>
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
 

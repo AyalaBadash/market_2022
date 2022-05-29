@@ -1,6 +1,5 @@
 package com.example.server.businessLayer.Market;
 
-
 import com.example.server.businessLayer.Payment.PaymentHandler;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;

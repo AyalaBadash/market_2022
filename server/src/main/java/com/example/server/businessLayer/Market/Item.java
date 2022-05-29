@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Item implements IHistory {
-
     public enum Category {
         general,
         fruit,

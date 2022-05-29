@@ -23,7 +23,6 @@ public class ShoppingBasket implements IHistory {
         this.price = price;
     }
 
-
     @Override
     public StringBuilder getReview() {
         StringBuilder review = new StringBuilder();
