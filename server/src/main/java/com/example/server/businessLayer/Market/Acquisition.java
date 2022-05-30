@@ -11,6 +11,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Acquisition {
     private boolean paymentDone;
@@ -27,7 +28,7 @@ public class Acquisition {
         supplyConfirmed = false;
     }
 
-    public ShoppingCart buyShoppingCart(Publisher publisher,double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentServiceProxy, SupplyServiceProxy supplyServiceProxy) throws MarketException {
+    public ShoppingCart buyShoppingCart(Publisher publisher,double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentServiceProxy, SupplyServiceProxy supplyServiceProxy) throws MarketException, JsonProcessingException {
         // checks the price is correct
        if(!isPriceCorrect(publisher,expectedPrice))
            return shoppingCartToBuy;
@@ -69,7 +70,7 @@ public class Acquisition {
         return true;
     }
 
-    private int pay(PaymentMethod paymentMethod, PaymentServiceProxy paymentServiceProxy){
+    private int pay(PaymentMethod paymentMethod, PaymentServiceProxy paymentServiceProxy) throws JsonProcessingException {
 
         return paymentServiceProxy.pay(paymentMethod);
 

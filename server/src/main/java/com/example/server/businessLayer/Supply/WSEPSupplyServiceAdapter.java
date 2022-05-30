@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Supply;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -7,8 +8,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WSEPSupplyServiceAdapter implements SupplyService {
@@ -21,8 +24,9 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
     }
 
     @Override
-    public int supply(List<NameValuePair> requestBody) {
+    public int supply(Address address) {
         try {
+            List<NameValuePair> requestBody= addressToString(address);
             return sendRequest(requestBody);
         }
         catch (Exception e){
@@ -31,8 +35,9 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
     }
 
     @Override
-    public int cancelSupply(List<NameValuePair> requestBody) {
+    public int cancelSupply(int transactionId) {
         try {
+            List<NameValuePair> requestBody= transactionToString(transactionId);
             return sendRequest(requestBody);
         }
         catch (Exception e){
@@ -79,4 +84,47 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
         }
         return  res;
     }
+
+    /**
+     * creates a string request from the transaction id and the transaction type.
+     *
+     * @param transactionId the transaction id to cancel.
+     * @return the request string to send.
+     * @throws JsonProcessingException
+     */
+    public List<NameValuePair> transactionToString(int transactionId) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>() {
+            {
+
+                add(new BasicNameValuePair("action_type", TypeCancel_supply));
+                add(new BasicNameValuePair("transaction_id", String.valueOf(transactionId)));
+            }
+        };
+
+        return params;
+    }
+
+    /**
+     * creates request string out of an address.
+     *
+     * @param address the address of the customer.
+     * @return the request string.
+     * @throws JsonProcessingException
+     */
+    public List<NameValuePair> addressToString(Address address) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>() {
+            {
+
+                add(new BasicNameValuePair("action_type", TypeSupply));
+                add(new BasicNameValuePair("name", address.getName()));
+                add(new BasicNameValuePair("address", address.getAddress()));
+                add(new BasicNameValuePair("city", address.getCity()));
+                add(new BasicNameValuePair("country", address.getCountry()));
+                add(new BasicNameValuePair("zip", address.getZip()));
+            }
+        };
+
+        return params;
+    }
+
 }

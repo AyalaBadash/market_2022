@@ -33,7 +33,7 @@ public class PaymentServiceProxy {
      * @param method the payment method. The credit card in this version.
      * @return the transaction id.
      */
-    public int pay(PaymentMethod method){
+    public int pay(PaymentMethod method) throws JsonProcessingException {
         if(testRequest){
             return 10000;
         }
@@ -49,11 +49,8 @@ public class PaymentServiceProxy {
 
         }
 
-        catch (JsonProcessingException e) {
-            return -1;
-        }
         catch (Exception e){
-            return -1;
+            throw  e;
         }
     }
 
@@ -63,7 +60,7 @@ public class PaymentServiceProxy {
      * @param transactionId the transaction id to cancel.
      * @return 1 if succeed and -1 if not.
      */
-    public int cancelPay(int transactionId){
+    public int cancelPay(int transactionId) throws JsonProcessingException {
         if(testRequest){
             return 10000;
         }
@@ -75,7 +72,7 @@ public class PaymentServiceProxy {
             return paymentService.cancelPayment(request);
         }
         catch(Exception e){
-            return -1;
+            throw e;
         }
     }
 

@@ -15,6 +15,7 @@ import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 import java.util.ArrayList;
@@ -662,7 +663,7 @@ public class Market {
     }
 
     public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice,
-                                        PaymentMethod paymentMethod, Address address) throws MarketException {
+                                        PaymentMethod paymentMethod, Address address) throws MarketException, JsonProcessingException {
         if (!userController.isLoggedIn(visitorName)) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
