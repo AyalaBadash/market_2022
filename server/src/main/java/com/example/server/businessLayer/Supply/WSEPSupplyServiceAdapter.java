@@ -11,11 +11,12 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.List;
 
-public class WSEPSupplyService implements SupplyService {
+public class WSEPSupplyServiceAdapter implements SupplyService {
 
     private final String url;
 
-    public WSEPSupplyService() {
+    public WSEPSupplyServiceAdapter()
+    {
         url = "https://cs-bgu-wsep.herokuapp.com/";
     }
 
@@ -47,21 +48,34 @@ public class WSEPSupplyService implements SupplyService {
      * @throws InterruptedException
      */
     public int sendRequest(List<NameValuePair> requestBody) throws IOException, InterruptedException {
-        HttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-        HttpPost request = new HttpPost(url);
+        HttpClient httpClient ;
+        HttpPost request;
+        try {
+            httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+            request = new HttpPost(url);
 
-        // adding the form data
-        request.setEntity(new UrlEncodedFormEntity(requestBody));
+            // adding the form data
+            request.setEntity(new UrlEncodedFormEntity(requestBody));
+        }
+        catch (Exception e){
+            throw new IOException("Could not connect to the supply service");
+        }
+        if(httpClient==null | request==null){
+            throw new IOException("Could not connect to the supply service");
+        }
+        //send the request to the service server.
         HttpResponse response= httpClient.execute(request);
         HttpEntity entity = response.getEntity();
+
         // String of the response
         String responseString = EntityUtils.toString(entity);
+
         int res;
         try{
             res =Integer.parseInt(responseString);
         }
         catch (Exception e ){
-            res=-1;
+            throw new IOException("Error with supply service");
         }
         return  res;
     }

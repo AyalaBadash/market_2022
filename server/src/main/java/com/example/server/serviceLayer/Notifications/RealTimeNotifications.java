@@ -25,7 +25,7 @@ public class RealTimeNotifications extends Notification{
         message= "Unfortunately, your membership has been denied.";
     }
     public void createShopPermissionDeniedMessage(String shop,String permission){
-        message= "Unfortunately, your appointment as "+ permission+" in shop "+shop +"has been canceled.";
+        message= "Unfortunately, your appointment as "+ permission+" in shop "+shop +" has been canceled.";
     }
     public void createNewMessageMessage(){
         message= "You have a new message in your inbox.";

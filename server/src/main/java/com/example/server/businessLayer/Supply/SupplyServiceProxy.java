@@ -6,17 +6,22 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SupplyHandler {
+public class SupplyServiceProxy {
 
+    private final boolean testRequest;
     private final String TypeSupply="supply";
     private final String TypeCancel_supply="cancel_supply";
     private SupplyService supplyService;
 
-    public SupplyHandler(SupplyService supplyService1){
+    public SupplyServiceProxy(SupplyService supplyService1, boolean test){
         super();
+        testRequest=test;
         this.supplyService=supplyService1;
     }
-
+    public SupplyServiceProxy(){
+        super();
+        testRequest=true;
+    }
 
     /**
      * set supply to a customer.
@@ -24,6 +29,9 @@ public class SupplyHandler {
      * @return the transaction id
      */
     public int supply(Address address) {
+        if(testRequest){
+            return 10000;
+        }
         try {
 
             List<NameValuePair> request = addressToString(address);
@@ -45,6 +53,9 @@ public class SupplyHandler {
      * @return
      */
     public int cancelSupply(int transactionId){
+        if(testRequest){
+            return 10000;
+        }
         try{
             if(transactionId==-1){
                 return -1;

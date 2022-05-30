@@ -1,10 +1,11 @@
 package com.example.server.businessLayer.Market;
 
 
-import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
-import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
@@ -26,22 +27,22 @@ public class Acquisition {
         supplyConfirmed = false;
     }
 
-    public ShoppingCart buyShoppingCart(double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentHandler paymentHandler, SupplyHandler supplyHandler) throws MarketException {
+    public ShoppingCart buyShoppingCart(Publisher publisher,double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentServiceProxy, SupplyServiceProxy supplyServiceProxy) throws MarketException {
         // checks the price is correct
-       if(!isPriceCorrect(expectedPrice))
+       if(!isPriceCorrect(publisher,expectedPrice))
            return shoppingCartToBuy;
 
-        supplyID=supplyHandler.supply(address);
+        supplyID= supplyServiceProxy.supply(address);
         if(supplyID==-1){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Supply has been failed.");
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
-        paymentID = pay(paymentMethod, paymentHandler);
+        paymentID = pay(paymentMethod, paymentServiceProxy);
         if(paymentID==-1){
             shoppingCartToBuy.cancelShopSave();
-            supplyHandler.cancelSupply(supplyID);
+            supplyServiceProxy.cancelSupply(supplyID);
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Payment has been failed.");
             throw new MarketException("payment has been failed. shopping cart did not change and supply was canceled");
@@ -57,8 +58,8 @@ public class Acquisition {
         return null;
     }
 
-    private  boolean isPriceCorrect(double expectedPrice) throws MarketException {
-        double actualPrice = shoppingCartToBuy.saveFromShops(buyerName);
+    private  boolean isPriceCorrect(Publisher publisher, double expectedPrice) throws MarketException {
+        double actualPrice = shoppingCartToBuy.saveFromShops(publisher,buyerName);
         if (actualPrice != expectedPrice){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -68,9 +69,9 @@ public class Acquisition {
         return true;
     }
 
-    private int pay(PaymentMethod paymentMethod, PaymentHandler paymentHandler){
+    private int pay(PaymentMethod paymentMethod, PaymentServiceProxy paymentServiceProxy){
 
-        return paymentHandler.pay(paymentMethod);
+        return paymentServiceProxy.pay(paymentMethod);
 
     }
 
