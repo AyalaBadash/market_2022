@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Publisher;
 
 import com.example.server.serviceLayer.Notifications.Notification;
+import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
@@ -78,6 +79,9 @@ public class NotificationDispatcher {
             return false;
         }
         messages.put(sessionId,new ArrayList<>());
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createAnotherMessage("welcome to notifications service");
+        messages.get(sessionId).add(not);
         return true;
     }
 
