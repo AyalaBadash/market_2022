@@ -1,4 +1,4 @@
-package com.example.server.businessLayer.Market.Policies.Discount;
+package com.example.server.businessLayer.Market.Policies.Discount.DiscountState;
 
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
