@@ -1,11 +1,12 @@
 package com.example.server.UnitTests;
 
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.*;
-import com.example.server.businessLayer.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.AcquisitionHistory;
+import com.example.server.businessLayer.Market.ShoppingCart;
 import org.junit.jupiter.api.Test;
-import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.Users.Member;
+import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.Users.Member;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

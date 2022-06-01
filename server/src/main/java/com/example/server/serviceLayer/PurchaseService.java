@@ -1,10 +1,12 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.ResourcesObjects.Address;
-import com.example.server.ResourcesObjects.ErrorLog;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.ResourcesObjects.PaymentMethod;
-import com.example.server.businessLayer.*;
+import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Payment.PaymentMethod;
+import com.example.server.businessLayer.Supply.Address;
+import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
 
@@ -73,7 +75,7 @@ public class PurchaseService {
         try {
             ShoppingCart shoppingCart = this.market.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
             if(shoppingCart != null)
-                return new ResponseT<>("some of the items in the cart are missing. care was updated and the price was changed", new ShoppingCartFacade(shoppingCart));
+                return new ResponseT<>("some of the items in the cart are missing. car was updated and the price was changed", new ShoppingCartFacade(shoppingCart));
             return new ResponseT<>(new ShoppingCartFacade(new ShoppingCart()));
         }catch (MarketException e){
             return new ResponseT(e.getMessage());

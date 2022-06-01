@@ -1,13 +1,15 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.businessLayer.Appointment.Appointment;
-import com.example.server.businessLayer.ExternalComponents.PaymentMock;
-import com.example.server.businessLayer.ExternalComponents.SupplyMock;
-import com.example.server.businessLayer.Item;
-import com.example.server.businessLayer.Market;
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Users.UserController;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Payment.PaymentMock;
+import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Users.UserController;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -47,8 +49,8 @@ public class ShopOwnerTests {
             productAmount = 3;
             productPrice = 1.2;
             newAmount=10;
-            if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, userName, password);
+            if (market.getPaymentHandler() == null)
+                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop

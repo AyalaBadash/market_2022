@@ -1,6 +1,6 @@
 package com.example.server.serviceLayer.Requests;
 
-import com.example.server.businessLayer.Item;
+import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 
 import java.util.List;

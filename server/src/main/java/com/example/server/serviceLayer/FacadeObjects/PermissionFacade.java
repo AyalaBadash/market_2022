@@ -1,9 +1,9 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
 
-import com.example.server.businessLayer.Appointment.Permissions.EmployeesPermission;
-import com.example.server.businessLayer.Appointment.Permissions.IPermission;
-import com.example.server.businessLayer.Appointment.Permissions.PurchaseHistoryPermission;
+import com.example.server.businessLayer.Market.Appointment.Permissions.EmployeesPermission;
+import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
+import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
 
 public class PermissionFacade implements FacadeObject{
     private String name;

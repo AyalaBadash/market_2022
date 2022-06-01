@@ -1,9 +1,9 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
-import com.example.server.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.ShoppingCart;
-import com.example.server.businessLayer.Users.Member;
-import com.example.server.businessLayer.Users.Visitor;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.Visitor;
 
 public class VisitorFacade implements FacadeObject<Visitor>{
     private String name;

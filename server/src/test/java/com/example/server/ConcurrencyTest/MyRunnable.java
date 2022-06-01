@@ -1,6 +1,6 @@
 package com.example.server.ConcurrencyTest;
 
-import com.example.server.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
 public abstract class MyRunnable {
     int index;
