@@ -8,4 +8,10 @@ public class KindOfCondition extends Condition{
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException {
         return false;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object instanceof AmountOfItemCondition) return true;
+        return false;
+    }
 }

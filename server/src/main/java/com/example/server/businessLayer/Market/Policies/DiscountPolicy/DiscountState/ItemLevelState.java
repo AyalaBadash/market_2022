@@ -1,4 +1,4 @@
-package com.example.server.businessLayer.Market.Policies.Discount.DiscountState;
+package com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState;
 
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
@@ -7,17 +7,15 @@ import com.example.server.businessLayer.Market.ShoppingBasket;
 
 import java.util.Map;
 
-public class ItemLevelState extends CompositeDiscountLevelState {
+public class ItemLevelState implements DiscountLevelState{
     private Integer itemID;
 
-    public ItemLevelState(DiscountLevelState discountLevelState, CompositeDiscountLevelType compositeDiscountLevelType, Integer itemID) {
-        super(discountLevelState, compositeDiscountLevelType);
+    public ItemLevelState(Integer itemID) {
         this.itemID = itemID;
     }
     @Override
     public double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) throws MarketException {
-        double firstCalculation = discountLevelState.calculateDiscount(shoppingBasket, percentageOfDiscount);
-        double discount = shoppingBasket.getPrice() - firstCalculation;
+        double price = shoppingBasket.getPrice();
         Item item=Market.getInstance().getItemByID(itemID);
         Map<java.lang.Integer,Double> items= shoppingBasket.getItems();
         double itemDiscount = 0;
@@ -27,6 +25,15 @@ public class ItemLevelState extends CompositeDiscountLevelState {
             itemDiscount = amount * (percentageOfDiscount/100);
 
         }
-        return calculateBothDiscount(shoppingBasket.getPrice(), discount, itemDiscount);
+        return price - itemDiscount;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof ItemLevelState){
+            ItemLevelState toCompare = (ItemLevelState) object;
+            return this.itemID == toCompare.itemID;
+        }
+        return false;
     }
 }

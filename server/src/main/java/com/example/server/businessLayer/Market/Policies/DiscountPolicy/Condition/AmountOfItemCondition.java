@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition;
 
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CategoryLevelState;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
 import java.util.Map;
@@ -23,4 +24,13 @@ public class AmountOfItemCondition extends Condition {
         Map<Integer,Double> map = shoppingBasket.getItems();
         return (map.containsKey(itemNeeded)&&map.get(itemNeeded)>=amountNeeded);
     }
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof AmountOfItemCondition){
+            AmountOfItemCondition toCompare = (AmountOfItemCondition) object;
+            return this.amountNeeded == toCompare.amountNeeded && this.itemNeeded == toCompare.itemNeeded;
+        }
+        return false;
+    }
+
 }

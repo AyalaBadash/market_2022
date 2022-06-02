@@ -1,6 +1,8 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Payment.PaymentHandler;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
@@ -14,7 +16,9 @@ import com.example.server.businessLayer.Security.Security;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionFacade;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
+import org.apache.juli.logging.Log;
 
 
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Market {
@@ -883,5 +888,19 @@ public class Market {
         addItemToShop(shopOwnerName, itemName, productPrice, electricity, info, keyWords, productAmount,shopName);
         Item itemAdded = getItemByID(nextItemID.value() - 1);
         return itemAdded;
+    }
+
+    public void addDiscountToShop(String visitorName, String shopName, DiscountType discountType) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)){
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("you must be a visitor in the market in order to make actions");
+            throw new MarketException("you must be a visitor in the market in order to make actions");
+        }
+        Shop shop = shops.get(shopName);
+        if(shop == null) {
+            DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
+            throw new MarketException("shop does not exist in the market");
+        }
+        shop.addDiscountToShop(visitorName, discountType);
     }
 }

@@ -1,40 +1,45 @@
-package com.example.server.businessLayer.Market.Policies.Discount;
+package com.example.server.businessLayer.Market.Policies.DiscountPolicy;
 
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.CompositeDiscount;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DiscountPolicy {
-    private List<SimpleDiscount> simpleDiscounts;
-    private List<ConditionalDiscount> conditionalDiscounts;
-
-    public double calculateDiscount(ShoppingBasket shoppingBasket){
-        throw new UnsupportedOperationException();
+    private List<DiscountType> validDiscounts;
+    public DiscountPolicy() {
+        this.validDiscounts = new ArrayList<> (  );
+    }
+    public double calculateDiscount(ShoppingBasket shoppingBasket) throws MarketException {
+        double price = shoppingBasket.getPrice ();
+        double priceAfterDiscount = price;
+        for(DiscountType discountType: validDiscounts){
+            double curPrice = discountType.calculateDiscount ( shoppingBasket );
+            priceAfterDiscount -= (price - curPrice);
+        }
+        return priceAfterDiscount;
     }
 
-    //TODO - create for each rule
-    public void createDiscountWithXor(List<DiscountType> discountTypes){
-        //By default - will take the best discount
-        throw new UnsupportedOperationException();
+    public void addNewDiscount(DiscountType discountType) throws MarketException {
+        if(discountType == null)
+            throw new MarketException ( "discount is null" );
+        if (validDiscounts.contains ( discountType ))
+            throw new MarketException ( "discount is already exist in the shop" );
+        if(discountType instanceof CompositeDiscount){
+            pureDiscounts ( (CompositeDiscount) discountType );
+        }
+        validDiscounts.add ( discountType );
     }
 
-    public void createDiscountWithOr(List<DiscountType> discountTypes){
-        //By default - will take the best discount
-        throw new UnsupportedOperationException();
-    }
-
-    public void createDiscountWithAnd(List<DiscountType> discountTypes){
-        //By default - will take the best discount
-        throw new UnsupportedOperationException();
-    }
-
-    public void createMaxDiscount(List<DiscountType> discountTypes){
-        //By default - will take the best discount
-        throw new UnsupportedOperationException();
-    }
-
-    public void createAddedDiscount(List<DiscountType> discountTypes){
-        //By default - will take the best discount
-        throw new UnsupportedOperationException();
+    private void pureDiscounts(CompositeDiscount discount){
+        for(DiscountType discountType: discount.getDiscountTypes ()){
+            if(validDiscounts.contains ( discountType )){
+                validDiscounts.remove ( discountType );
+            } else if(discountType instanceof CompositeDiscount){
+                pureDiscounts ((CompositeDiscount) discountType);
+            }
+        }
     }
 }
