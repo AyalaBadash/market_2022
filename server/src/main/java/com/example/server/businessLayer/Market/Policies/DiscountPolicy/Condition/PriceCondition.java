@@ -19,4 +19,15 @@ public class PriceCondition extends Condition {
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException {
         return shoppingBasket.getPrice() >= priceNeeded;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object instanceof PriceCondition){
+            PriceCondition toCompare = (PriceCondition) object;
+            return this.priceNeeded == toCompare.priceNeeded;
+        }
+        return false;
+    }
+
+
 }

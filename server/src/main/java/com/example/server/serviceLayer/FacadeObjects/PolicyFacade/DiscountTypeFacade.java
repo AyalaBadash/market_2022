@@ -1,10 +1,10 @@
-package com.example.server.serviceLayer.FacadeObjects;
+package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
 
-public abstract class DiscountTypeFacade implements FacadeObject{
-    protected int id;
+public abstract class DiscountTypeFacade implements FacadeObject {
     protected int percentageOfDiscount;
     protected DiscountLevelStateFacade discountLevelState;
 
@@ -30,5 +30,5 @@ public abstract class DiscountTypeFacade implements FacadeObject{
     }
 
     @Override
-    public abstract Object toBusinessObject() throws MarketException;
+    public abstract DiscountType toBusinessObject() throws MarketException;
 }

@@ -559,6 +559,24 @@ public class ShopOwnerTests {
         }
     }
 
+    @Test
+    @DisplayName("add new simple discount to shop")
+    public void addNewSimpleDiscountToShopSuccess() {
+        throw new UnsupportedOperationException (  );
+    }
+
+    @Test
+    @DisplayName("add new complex discount to shop")
+    public void addNewComplexDiscountToShopSuccess() {
+        throw new UnsupportedOperationException (  );
+    }
+
+    @Test
+    @DisplayName("add new complex discount to shop - existing simple discount")
+    public void addNewComplexDiscountToShopExistingSimpleDiscount() {
+        throw new UnsupportedOperationException (  );
+    }
+
     public void loginMember(String name, String password) throws MarketException {
         if(UserController.getInstance().isLoggedIn(name))
             return;

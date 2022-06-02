@@ -3,13 +3,13 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Composit
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Market.ShoppingBasket;
 
+import java.awt.event.MouseAdapter;
 import java.util.List;
 
-public class MaxComposite extends CompositeDiscount{
-    public MaxComposite(int percentageOfDiscount, DiscountLevelState discountLevelState, List<DiscountType> discountTypes) {
-        super ( percentageOfDiscount, discountLevelState, discountTypes );
+public class MaxCompositeDiscount extends CompositeDiscount{
+    public MaxCompositeDiscount(List<DiscountType> discountTypes) {
+        super (discountTypes);
     }
 
     @Override
@@ -21,5 +21,22 @@ public class MaxComposite extends CompositeDiscount{
             if (cur > max)
                 max = cur;
         return price - max;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object instanceof MaxCompositeDiscount){
+            MaxCompositeDiscount toCompare = (MaxCompositeDiscount) object;
+            for(DiscountType discountType: this.discountTypes){
+                if (toCompare.discountTypes.contains ( discountType ))
+                    return false;
+            }
+            for(DiscountType discountType: toCompare.discountTypes){
+                if (this.discountTypes.contains ( discountType ))
+                    return false;
+            }
+            return true;
+        }
+        return false;
     }
 }

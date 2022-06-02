@@ -5,4 +5,5 @@ import com.example.server.businessLayer.Market.ShoppingBasket;
 
 public abstract class Condition {
     public abstract boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException;
+    public abstract boolean equals(Object object);
 }
