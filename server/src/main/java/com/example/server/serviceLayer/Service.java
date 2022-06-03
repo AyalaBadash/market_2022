@@ -6,6 +6,7 @@ import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -329,6 +330,13 @@ public class Service implements IService {
     @CrossOrigin
     public ResponseT<String> getMarketInfo(GetMarketInfoRequest request) {
         return marketService.getMarketInfo(request.getSysManager());
+    }
+
+    @Override
+    @RequestMapping(value = "/addDiscountToShop")
+    @CrossOrigin
+    public Response addDiscountToShop(AddDiscountToShopRequest request) {
+        return marketService.addDiscountToShop(request.getVisitorName (), request.getShopName (), request.getDiscount ());
     }
 
 

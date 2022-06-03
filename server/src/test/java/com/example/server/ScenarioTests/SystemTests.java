@@ -19,8 +19,9 @@ public class SystemTests {
     public void setUp(){
         try {
             market = Market.getInstance();
-            if (market.getPaymentService()==null)
+        if (market.getPaymentService()==null)
                 market.firstInitMarket (paymentService, supplyService, textDispatcher,userName, password );
+
         }
         catch (Exception e){}
     }

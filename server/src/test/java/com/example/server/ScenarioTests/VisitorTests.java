@@ -12,6 +12,8 @@ import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ public class VisitorTests {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
                 market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);
@@ -241,7 +244,7 @@ public class VisitorTests {
     }
 
     @Test
-    @DisplayName("buy not existing item")
+    @DisplayName("buy cart with unexpected price")
     public void buyWithUnexpectedPrice() {
         try {
             Visitor visitor = market.guestLogin();
@@ -259,19 +262,91 @@ public class VisitorTests {
     }
 
     @Test
-    @DisplayName("buy cart with unexpected price")
+    @DisplayName("buy not existing item")
     public void buyNotExistingItem() {
+        try {
+            Visitor visitor = market.guestLogin();
+            Visitor visitor2 = market.guestLogin ();
+            Shop shop = market.getShopInfo(shopManagerName, shopName);
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            res = market.getItemByName ( "chocolate" );
+            Item chocolate = res.get ( 0 );
+            Double itemAmount = shop.getItemCurrentAmount(milk);
+            double buyingAmount = itemAmount;
+            market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
+            market.addItemToShoppingCart(milk, 1, visitor2.getName());
+            market.addItemToShoppingCart(chocolate, 1, visitor2.getName());
+            // add not existing item shouldn't fail
+            ShoppingCart shoppingCart = market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+            Assertions.assertNull ( shoppingCart );
+            ShoppingCart shoppingCart2 = market.buyShoppingCart(visitor2.getName(), productPrice + productPrice , creditCard, address);
+            assert !shoppingCart2.getCart ().isEmpty ();
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("buy with illegal payment method")
+    public void buyWithIllegalPaymentMethod() {
         try {
             Visitor visitor = market.guestLogin();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
             List<Item> res = market.getItemByName("milk");
             Item milk = res.get(0);
             Double itemAmount = shop.getItemCurrentAmount(milk);
-            double buyingAmount = itemAmount;
+            market.addItemToShoppingCart(milk, itemAmount, visitor.getName());
+            try {
+                market.buyShoppingCart(visitor.getName(), productPrice * itemAmount, null, address);
+                assert false;
+            }catch (MarketException e){
+                assert true;
+            }
+        } catch (Exception e) {
+            assert true;
+        }
+    }
+
+    @Test
+    @DisplayName("buy with illegal address")
+    public void buyWithIllegalAddress() {
+        try {
+            Visitor visitor = market.guestLogin();
+            Shop shop = market.getShopInfo(shopManagerName, shopName);
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            Double itemAmount = shop.getItemCurrentAmount(milk);
+            market.addItemToShoppingCart(milk, itemAmount, visitor.getName());
+            try {
+                market.buyShoppingCart(visitor.getName(), productPrice * itemAmount, null, address);
+                assert false;
+            }catch (MarketException e){
+                assert true;
+            }
+        } catch (Exception e) {
+            assert true;
+        }
+    }
+
+    @Test
+    @DisplayName("buy when external service is not connected")
+    public void buyWhenExternalServiceIsNotConnected() {
+        try {
+            Visitor visitor = market.guestLogin();
+            Mockito.when ( market.getPaymentHandler () ).then ( null );
+            Shop shop = market.getShopInfo(shopManagerName, shopName);
+            List<Item> res = market.getItemByName("milk");
+            Item milk = res.get(0);
+            Double itemAmount = shop.getItemCurrentAmount(milk);
+            double buyingAmount = itemAmount + 1;
             market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
-            // add not existing item shouldn't fail
-            ShoppingCart shoppingCart = market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount + 1, creditCard, address);
-            assert !shoppingCart.getCart().isEmpty();
+            try {
+                market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+                assert false;
+            }catch (MarketException e){
+                assert true;
+            }
         } catch (Exception e) {
             assert true;
         }

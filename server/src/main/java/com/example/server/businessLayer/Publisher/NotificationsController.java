@@ -22,10 +22,12 @@ public class NotificationsController {
     //registers the user to the dispacher
     @MessageMapping("/start/{name}")
     public void start(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable("name") String name) {
+
         handler.add(name,stompHeaderAccessor.getSessionId());
     }
     @MessageMapping("/stop/{name}")
     public void stop(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable("name") String name) {
+
         handler.remove(name,stompHeaderAccessor.getSessionId());
     }
 
@@ -33,6 +35,7 @@ public class NotificationsController {
     //Event listener for connections suddenly closed.
     @EventListener
     public void sessionDisconnectionHandler(SessionDisconnectEvent event) {
+        System.out.println("web socket connection ended for session id: "+event.getSessionId());
         String sessionId = event.getSessionId();
         handler.removeErr(sessionId);
     }

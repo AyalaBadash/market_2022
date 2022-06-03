@@ -45,6 +45,7 @@ public class MemberTests {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
                 market.firstInitMarket(new PaymentServiceProxy(), new SupplyServiceProxy(),textDispatcher, userName, password);
+
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);

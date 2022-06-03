@@ -33,6 +33,7 @@ public class SystemManagerTests {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
                 market.firstInitMarket(paymentService, supplyService, textDispatcher,managerName, managerpassword);
+
             else
                 market.register(managerName, managerpassword);
         } catch (Exception e) {

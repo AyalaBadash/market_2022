@@ -2,6 +2,7 @@ package com.example.server.serviceLayer;
 
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -284,11 +285,37 @@ public interface IService {
      */
     public ResponseT<String> getHistoryByMember(GetHistoryByMemberRequest request);
 
+    /**
+     *
+     * @param request
+     * @return
+     */
     public Response removeShopOwnerAppointment(removeAppointmentRequest request);
 
+    /**
+     *
+     * @param request
+     * @return
+     */
     public Response removeMember(removeMemberRequest request);
 
+    /**
+     *
+     * @param request
+     * @return
+     */
     ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request);
 
+    /**
+     *
+     * @param request
+     * @return
+     */
     ResponseT<String> getMarketInfo(GetMarketInfoRequest request);
+
+    /**
+     * @param request
+     * @return
+     */
+    Response addDiscountToShop(AddDiscountToShopRequest request);
 }

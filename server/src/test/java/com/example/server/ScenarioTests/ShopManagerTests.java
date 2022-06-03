@@ -40,6 +40,7 @@ public class ShopManagerTests {
             newAmount=10;
             if (market.getPaymentService() == null)
                 market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop

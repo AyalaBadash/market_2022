@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
@@ -8,7 +9,7 @@ import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointmen
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
-import com.example.server.businessLayer.Market.Policies.Discount.DiscountPolicy;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Publisher.Publisher;
 
@@ -521,5 +522,11 @@ public class Shop implements IHistory {
         shopOwners.remove(firedAppointed);
 
 
+    }
+
+    public void addDiscountToShop(String visitorName, DiscountType discountType) throws MarketException {
+        if (!isShopOwner ( visitorName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        discountPolicy.addNewDiscount ( discountType );
     }
 }

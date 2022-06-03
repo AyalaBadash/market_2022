@@ -49,8 +49,9 @@ public class ShopOwnerTests {
             productAmount = 3;
             productPrice = 1.2;
             newAmount=10;
-            if (market.getPaymentService() == null)
+           if (market.getPaymentService() == null)
                 market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop
@@ -557,6 +558,24 @@ public class ShopOwnerTests {
         } catch (MarketException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    @Test
+    @DisplayName("add new simple discount to shop")
+    public void addNewSimpleDiscountToShopSuccess() {
+        throw new UnsupportedOperationException (  );
+    }
+
+    @Test
+    @DisplayName("add new complex discount to shop")
+    public void addNewComplexDiscountToShopSuccess() {
+        throw new UnsupportedOperationException (  );
+    }
+
+    @Test
+    @DisplayName("add new complex discount to shop - existing simple discount")
+    public void addNewComplexDiscountToShopExistingSimpleDiscount() {
+        throw new UnsupportedOperationException (  );
     }
 
     public void loginMember(String name, String password) throws MarketException {
