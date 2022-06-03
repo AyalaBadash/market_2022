@@ -503,7 +503,11 @@ public class Market {
             }
             throw new MarketException("only a system manager can get information about a closed shop");
         }
-        return shops.get(shopName).getShopInfo(member);
+        Shop shop = shops.get(shopName);
+        if (!shop.isEmployee(member)){
+            throw new MarketException("You are not employee in this shop");
+        }
+        return shop.getShopInfo(member);
     }
 
     //TODO check that shop name is not ""
