@@ -1,13 +1,14 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
+
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
-import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
-import com.example.server.businessLayer.Payment.PaymentService;
-import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.SupplyService;
 import com.example.server.businessLayer.Market.ResourcesObjects.*;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
@@ -18,6 +19,7 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionFacade;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.juli.logging.Log;
 
 
@@ -38,8 +40,9 @@ public class Market {
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
     private SynchronizedCounter nextItemID;
-    private PaymentHandler paymentHandler;
-    private SupplyHandler supplyHandler;
+    private PaymentServiceProxy paymentServiceProxy;
+    private SupplyServiceProxy supplyServiceProxy;
+    private Publisher dispatcher;
 
     private static Market instance;
     Map<String,Integer> numOfAcqsPerShop;
@@ -51,6 +54,7 @@ public class Market {
         this.userController = UserController.getInstance();
         nextItemID = new SynchronizedCounter();
         this.numOfAcqsPerShop = new HashMap<>();
+        this.dispatcher=null;
         //TODO - supply and payment service
     }
 
@@ -62,20 +66,27 @@ public class Market {
         return instance;
     }
 
-    public synchronized void firstInitMarket(PaymentHandler paymentHandler1, SupplyHandler supplyHandler1, String userName, String password) throws MarketException {
-        if (this.paymentHandler != null || this.supplyHandler != null){
+    public synchronized void firstInitMarket(PaymentServiceProxy paymentServiceProxy1, SupplyServiceProxy supplyServiceProxy1, Publisher publisher,String userName, String password) throws MarketException {
+        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null){
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
         }
-        if (paymentHandler1 == null || supplyHandler1 == null) {
+        if (paymentServiceProxy1 == null || supplyServiceProxy1 == null) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("A market initialization failed . Lack of payment / supply services ");
             throw new MarketException("market needs payment and supply services for initialize");
         }
+        if(publisher==null){
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("A market initialization failed . Lack of publisher services ");
+            throw new MarketException("market needs publisher services for initialize");
+
+        }
         register ( userName, password );
         instance.systemManagerName = userName;
-        instance.paymentHandler = paymentHandler1;
-        instance.supplyHandler = supplyHandler1;
+        instance.paymentServiceProxy = paymentServiceProxy1;
+        instance.supplyServiceProxy = supplyServiceProxy1;
+        instance.dispatcher=publisher;
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -250,8 +261,9 @@ public class Market {
         Market.instance = instance;
     }
 
-    public PaymentHandler getPaymentHandler() {
-        return paymentHandler;
+    public PaymentServiceProxy getPaymentService() {
+        return paymentServiceProxy;
+
     }
 
     //TODO make private
@@ -261,7 +273,7 @@ public class Market {
      * @param memberName the paying member's name.
      * @throws MarketException
      */
-    public void setPaymentService(PaymentService paymentService1, String memberName) throws MarketException {
+    public void setPaymentService(PaymentServiceProxy paymentService1, String memberName) throws MarketException {
         if(!userController.isLoggedIn(memberName)){
             DebugLog.getInstance().Log("Member must be logged in for making this action");
             throw new MarketException("Member must be logged in for making this action");
@@ -274,15 +286,15 @@ public class Market {
             DebugLog.getInstance().Log("Try to initiate payment service with null");
             throw new MarketException("Try to initiate payment service with null");
         }
-        this.paymentHandler.setService(paymentService1);
+        this.paymentServiceProxy=paymentService1;
     }
 
-    public SupplyHandler getSupplyHandler() {
-        return supplyHandler;
+    public SupplyServiceProxy getSupplyHandler() {
+        return supplyServiceProxy;
     }
 
     public void setSupplyHandler(SupplyService supplyHandler) {
-        this.supplyHandler.setService(supplyHandler);
+        this.supplyServiceProxy.setService(supplyHandler);
     }
 
     public Member validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException{
@@ -659,7 +671,7 @@ public class Market {
     }
 
     public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice,
-                                        PaymentMethod paymentMethod, Address address) throws MarketException {
+                                        PaymentMethod paymentMethod, Address address) throws MarketException, JsonProcessingException {
         if (!userController.isLoggedIn(visitorName)) {
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("you must be a visitor in the market in order to make actions");
@@ -812,7 +824,7 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss,firedAppointed);
         try{
-            NotificationHandler handler=new NotificationHandler( NotificationDispatcher.getInstance());
+            NotificationHandler handler=new NotificationHandler( dispatcher);
              handler.sendAppointmentRemovedNotification(firedAppointed,shopName);
         }
         catch (Exception e){}

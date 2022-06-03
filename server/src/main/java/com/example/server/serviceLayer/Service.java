@@ -1,8 +1,10 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.businessLayer.Payment.PaymentMock;
-import com.example.server.businessLayer.Supply.SupplyMock;
 import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
+import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.Requests.*;
@@ -38,8 +40,8 @@ public class Service implements IService {
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
-        PaymentMock paymentService = new PaymentMock();
-        SupplyMock supplyMock = new SupplyMock();
+        PaymentServiceProxy paymentService = new PaymentServiceProxy(new WSEPPaymentServiceAdapter(),true);
+        SupplyServiceProxy supplyMock = new SupplyServiceProxy(new WSEPSupplyServiceAdapter(),true);
         return marketService.firstInitMarket ( paymentService,supplyMock, request.getUserName(), request.getPassword() );
     }
 

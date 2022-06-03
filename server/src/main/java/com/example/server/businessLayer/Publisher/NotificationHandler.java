@@ -11,16 +11,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class NotificationHandler {
 
+    //TODO ADD TEXT DISPATCHER
     //holds notifications to send to each domain(by the member name)
     private Map<String, List<Notification>> delayedMessages;
-    private NotificationDispatcher dispatcher;
+    private Publisher dispatcher;
 
     //Map for sessionId-name pairs.
     private Map<String, String> sessions;
 
 
     @Autowired
-    public NotificationHandler(NotificationDispatcher dispatcher) {
+    public NotificationHandler(Publisher dispatcher) {
         this.dispatcher = dispatcher;
         delayedMessages = new ConcurrentHashMap<>();
         sessions = new ConcurrentHashMap<>();

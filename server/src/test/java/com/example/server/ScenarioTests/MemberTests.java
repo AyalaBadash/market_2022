@@ -2,11 +2,10 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Payment.PaymentHandler;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
-import com.example.server.businessLayer.Payment.PaymentMock;
-import com.example.server.businessLayer.Supply.SupplyHandler;
-import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ShoppingBasket;
@@ -25,8 +24,8 @@ public class MemberTests {
     Member testMember;
     String testMemberPassword;
     String testMemberName;
-    PaymentMock paymentService = new PaymentMock();
-    SupplyMock supplyService = new SupplyMock();
+    PaymentServiceProxy paymentService = new PaymentServiceProxy();
+    PaymentServiceProxy supplyService = new PaymentServiceProxy();
     String userName = "userTest";
     String password = "passTest";
     String shopManagerName = "shakedMember";
@@ -38,13 +37,15 @@ public class MemberTests {
     Address address;
     Item milk;
     Item cookies;
+    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
 
     @BeforeAll
     public void setUpMember() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentHandler () == null)
-                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(new PaymentServiceProxy(), new SupplyServiceProxy(),textDispatcher, userName, password);
+
             // shop manager register
             Visitor visitor = market.guestLogin();
             market.register(shopManagerName, shopManagerPassword);

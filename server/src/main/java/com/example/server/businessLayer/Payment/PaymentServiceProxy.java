@@ -6,8 +6,9 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentHandler {
+public class PaymentServiceProxy {
 
+    private final boolean testRequest;
     private final String okayMessage="OK";
     private final String TypeHandshake="handshake";
     private final String TypePay="pay";
@@ -15,18 +16,27 @@ public class PaymentHandler {
 
     private PaymentService paymentService;
 
-    public PaymentHandler(PaymentService paymentService1) {
+    public PaymentServiceProxy(PaymentService paymentService1, boolean test) {
 
         super();
+        this.testRequest=test;
         this.paymentService = paymentService1;
     }
 
+    public PaymentServiceProxy() {
+
+        super();
+        this.testRequest=true;
+    }
     /**
      * Send the payment post if the handshake works.
      * @param method the payment method. The credit card in this version.
      * @return the transaction id.
      */
-    public int pay(PaymentMethod method){
+    public int pay(PaymentMethod method) throws JsonProcessingException {
+        if(testRequest){
+            return 10000;
+        }
         try {
         if(handshake().equals(okayMessage)){
             if(method instanceof CreditCard){
@@ -39,11 +49,8 @@ public class PaymentHandler {
 
         }
 
-        catch (JsonProcessingException e) {
-            return -1;
-        }
         catch (Exception e){
-            return -1;
+            throw  e;
         }
     }
 
@@ -53,7 +60,10 @@ public class PaymentHandler {
      * @param transactionId the transaction id to cancel.
      * @return 1 if succeed and -1 if not.
      */
-    public int cancelPay(int transactionId){
+    public int cancelPay(int transactionId) throws JsonProcessingException {
+        if(testRequest){
+            return 10000;
+        }
         try{
             if(transactionId==-1){
                 return -1;
@@ -62,7 +72,7 @@ public class PaymentHandler {
             return paymentService.cancelPayment(request);
         }
         catch(Exception e){
-            return -1;
+            throw e;
         }
     }
 

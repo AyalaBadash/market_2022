@@ -7,7 +7,16 @@ import java.util.List;
 
 public interface SupplyService {
 
-    public static RequestConfig requestConfig = RequestConfig.custom().build();
-    public int supply(List<NameValuePair> requestBody);
-    public int cancelSupply(List<NameValuePair> supplyID);
+    boolean testRequest = false;
+    String TypeSupply = "supply";
+    String TypeCancel_supply = "cancel_supply";
+    RequestConfig requestConfig = RequestConfig.custom().build();
+
+    int supply(Address address);
+
+    int cancelSupply(int supplyID);
+
+    List<NameValuePair> addressToString(Address address);
+
+    List<NameValuePair> transactionToString(int transactionId);
 }

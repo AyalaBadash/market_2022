@@ -22,12 +22,12 @@ public class NotificationsController {
     //registers the user to the dispacher
     @MessageMapping("/start/{name}")
     public void start(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable("name") String name) {
-        System.out.println("client started listening:" + name);
+
         handler.add(name,stompHeaderAccessor.getSessionId());
     }
     @MessageMapping("/stop/{name}")
     public void stop(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable("name") String name) {
-        System.out.println("client stopped listening:" + name);
+
         handler.remove(name,stompHeaderAccessor.getSessionId());
     }
 

@@ -9,6 +9,7 @@ import com.example.server.businessLayer.Security.Security;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -199,14 +200,17 @@ public class MarketConcurrencyTest {
             threads[i.value ()] = new MyThread ( );
             threads[i.value ()].setRunnable ( new MyRunnable ( i.value () ) {
                 @Override
-                public void run() throws MarketException{
+                public void run() throws MarketException {
                     try {
                         Thread.sleep(500);
-                    } catch (InterruptedException e) {}
-                    List<Item> items = market.getItemByName ( "itemToBuy" );
-                    Item item = items.get ( 0 );
-                    market.addItemToShoppingCart ( item, 1, names[index]);
-                    market.buyShoppingCart ( names[index], 10, new CreditCard("1234567890", "5","24", "555","Ido livne","204534839"), new Address() );
+                    } catch (InterruptedException e) {
+                    }
+                    List<Item> items = market.getItemByName("itemToBuy");
+                    Item item = items.get(0);
+                    try {
+                        market.addItemToShoppingCart(item, 1, names[index]);
+                        market.buyShoppingCart(names[index], 10, new CreditCard("1234567890", "5", "24", "555", "Ido livne", "204534839"), new Address());
+                    }catch(Exception e){}
                 }
             } );
         }

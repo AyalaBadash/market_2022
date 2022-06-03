@@ -11,20 +11,20 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.List;
 
-public class WSEPPaymentService implements PaymentService{
+public class WSEPPaymentServiceAdapter implements PaymentService{
 
     private final String url;
 
-    {
+
+
+
+    public WSEPPaymentServiceAdapter() {
         url = "https://cs-bgu-wsep.herokuapp.com/";
-
-    }
-
-    public WSEPPaymentService() {
     }
 
     @Override
     public int pay(List<NameValuePair> requestBody) {
+
         try {
             int result=-1;
             result=sendRequest(requestBody);
@@ -72,22 +72,29 @@ public class WSEPPaymentService implements PaymentService{
      * @throws IOException
      * @throws InterruptedException
      */
-    private String sendRequestHandshake(List<NameValuePair> requestBody) {
+    private String sendRequestHandshake(List<NameValuePair> requestBody) throws IOException {
+        HttpClient httpClient ;
+        HttpPost request;
         try {
-            HttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-            HttpPost request = new HttpPost(url);
+            httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+            request = new HttpPost(url);
 
             // adding the form data
             request.setEntity(new UrlEncodedFormEntity(requestBody));
-            HttpResponse response= httpClient.execute(request);
-            HttpEntity entity = response.getEntity();
-            // String of the response
-            return EntityUtils.toString(entity);
         }
-        catch(Exception e){
-            String str= e.getMessage();
-            return "";
+        catch (Exception e){
+            throw new IOException("Could not connect to the payment service");
         }
+        if(httpClient==null | request==null){
+            throw new IOException("Could not connect to the payment service");
+        }
+        //send the request to the service server.
+        HttpResponse response= httpClient.execute(request);
+        HttpEntity entity = response.getEntity();
+
+        // String of the response
+       return EntityUtils.toString(entity);
+
     }
 
 
@@ -99,21 +106,34 @@ public class WSEPPaymentService implements PaymentService{
      * @throws InterruptedException
      */
     public int sendRequest(List<NameValuePair> requestBody) throws IOException, InterruptedException {
-        HttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-        HttpPost request = new HttpPost(url);
+        HttpClient httpClient ;
+        HttpPost request;
+        try {
+            httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+            request = new HttpPost(url);
 
-        // adding the form data
-        request.setEntity(new UrlEncodedFormEntity(requestBody));
+           // adding the form data
+           request.setEntity(new UrlEncodedFormEntity(requestBody));
+       }
+       catch (Exception e){
+           throw new IOException("Could not connect to the payment service");
+       }
+        if(httpClient==null | request==null){
+            throw new IOException("Could not connect to the payment service");
+        }
+        //send the request to the service server.
         HttpResponse response= httpClient.execute(request);
         HttpEntity entity = response.getEntity();
+
         // String of the response
         String responseString = EntityUtils.toString(entity);
+
         int res;
         try{
           res =Integer.parseInt(responseString);
         }
         catch (Exception e ){
-            res=-1;
+            throw new IOException("Error with payment service");
         }
         return  res;
     }
