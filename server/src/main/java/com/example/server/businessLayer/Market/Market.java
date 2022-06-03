@@ -2,7 +2,6 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Publisher.Publisher;
@@ -17,10 +16,8 @@ import com.example.server.businessLayer.Security.Security;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionFacade;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.juli.logging.Log;
 
 
 import java.util.ArrayList;
@@ -28,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Market {
@@ -42,7 +38,7 @@ public class Market {
     private SynchronizedCounter nextItemID;
     private PaymentServiceProxy paymentServiceProxy;
     private SupplyServiceProxy supplyServiceProxy;
-    private Publisher dispatcher;
+    private Publisher publisher;
 
     private static Market instance;
     Map<String,Integer> numOfAcqsPerShop;
@@ -54,7 +50,7 @@ public class Market {
         this.userController = UserController.getInstance();
         nextItemID = new SynchronizedCounter();
         this.numOfAcqsPerShop = new HashMap<>();
-        this.dispatcher=null;
+        this.publisher =null;
         //TODO - supply and payment service
     }
 
@@ -86,7 +82,7 @@ public class Market {
         instance.systemManagerName = userName;
         instance.paymentServiceProxy = paymentServiceProxy1;
         instance.supplyServiceProxy = supplyServiceProxy1;
-        instance.dispatcher=publisher;
+        instance.publisher =publisher;
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -680,7 +676,7 @@ public class Market {
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart = visitor.getCart();
         Acquisition acquisition = new Acquisition(shoppingCart, visitorName);
-        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, getPaymentHandler (), getSupplyHandler());
+        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(publisher,expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
         //TODO - what is expected here?
         return shoppingCartToReturn;
     }
@@ -824,7 +820,7 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss,firedAppointed);
         try{
-            NotificationHandler handler=new NotificationHandler( dispatcher);
+            NotificationHandler handler=new NotificationHandler(publisher);
              handler.sendAppointmentRemovedNotification(firedAppointed,shopName);
         }
         catch (Exception e){}

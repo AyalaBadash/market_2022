@@ -40,9 +40,7 @@ public class PaymentServiceProxy {
         try {
         if(handshake().equals(okayMessage)){
             if(method instanceof CreditCard){
-
-                List<NameValuePair> request= CreditCardToString((CreditCard)method );
-                return paymentService.pay(request);
+                payWithCreditCard((CreditCard) method);
             }
         }
         return -1;
@@ -55,6 +53,10 @@ public class PaymentServiceProxy {
     }
 
 
+    public int payWithCreditCard(CreditCard card) throws JsonProcessingException {
+        List<NameValuePair> request= CreditCardToString((CreditCard)card );
+        return paymentService.pay(request);
+    }
     /**
      * Cancel a payment.
      * @param transactionId the transaction id to cancel.

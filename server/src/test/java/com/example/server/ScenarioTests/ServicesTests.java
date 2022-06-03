@@ -1,4 +1,4 @@
-package com.example.server.UnitTests;
+package com.example.server.ScenarioTests;
 
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;

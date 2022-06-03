@@ -334,7 +334,7 @@ public class VisitorTests {
     public void buyWhenExternalServiceIsNotConnected() {
         try {
             Visitor visitor = market.guestLogin();
-            Mockito.when ( market.getPaymentHandler () ).then ( null );
+            Mockito.when ( market.getPaymentService() ).then ( null );
             Shop shop = market.getShopInfo(shopManagerName, shopName);
             List<Item> res = market.getItemByName("milk");
             Item milk = res.get(0);
