@@ -26,8 +26,8 @@ public class ServicesTests {
 
     @BeforeEach
     public void init() {
-        paymentServiceProxy = new PaymentServiceProxy(new WSEPPaymentServiceAdapter(), false);
-        supplyServiceProxy = new SupplyServiceProxy(new WSEPSupplyServiceAdapter(), false);
+        paymentServiceProxy = new PaymentServiceProxy(new WSEPPaymentServiceAdapter(), true);
+        supplyServiceProxy = new SupplyServiceProxy(new WSEPSupplyServiceAdapter(), true);
         creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
         address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
     }
