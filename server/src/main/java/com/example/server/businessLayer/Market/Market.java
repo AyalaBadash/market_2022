@@ -911,4 +911,8 @@ public class Market {
         }
         shop.addDiscountToShop(visitorName, discountType);
     }
+
+    public boolean isInit() {
+        return this.systemManagerName != null && !this.systemManagerName.equals("");
+    }
 }
