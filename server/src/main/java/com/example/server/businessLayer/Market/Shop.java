@@ -279,7 +279,7 @@ public class Shop implements IHistory {
         return this;
     }
 
-    private boolean isEmployee(String memberName) {
+    public boolean isEmployee(String memberName) {
         for ( Map.Entry<String, Appointment> appointment : shopManagers.entrySet ( ) ) {
             if (appointment.getValue ( ).getAppointed ( ).getName ( ).equals ( memberName )) {
                 return true;
