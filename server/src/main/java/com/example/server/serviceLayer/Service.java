@@ -351,4 +351,12 @@ public class Service implements IService {
     public ResponseT<ItemFacade> getItemById(int id) {
         return marketService.getItemById(id);
     }
+
+    @Override
+    @RequestMapping(value = "/isServerInit")
+    @CrossOrigin
+    public Response isServerInit(){
+        return marketService.isServerInit();
+    }
+
 }

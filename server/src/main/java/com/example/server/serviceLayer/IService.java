@@ -318,4 +318,10 @@ public interface IService {
      * @return
      */
     Response addDiscountToShop(AddDiscountToShopRequest request);
+
+    /**
+     *
+     * @return empty response if true, error message if not
+     */
+    public Response isServerInit();
 }
