@@ -112,7 +112,7 @@ public class AcceptanceTests {
         return result;
     }
 
-    protected Response buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address) throws Exception {
+    protected Response buyShoppingCart(String visitorName, double expectedPrice, CreditCard paymentMethod, Address address) throws Exception {
         BuyShoppingCartRequest request = new BuyShoppingCartRequest(visitorName, expectedPrice, paymentMethod, address);
         Response res = Service.getInstance().buyShoppingCart(request);
         return res;
