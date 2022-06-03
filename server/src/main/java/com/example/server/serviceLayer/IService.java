@@ -123,7 +123,8 @@ public interface IService {
     /**
      *
      * @param request
-     * @return
+     * @return if succeed - new shopping cart
+     * if couldn't complete - returns an error message with null shopping cart
      */
     public Response buyShoppingCart(BuyShoppingCartRequest request);
 

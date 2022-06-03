@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class EmployeesPermission extends IPermission<Map<String, Appointment>> {
     public EmployeesPermission() {
-        this.name = "get_employees_info";
+        this.name = "EmployeesPermission";
     }
 
     @Override

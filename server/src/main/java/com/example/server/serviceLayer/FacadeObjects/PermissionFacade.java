@@ -25,7 +25,7 @@ public class PermissionFacade implements FacadeObject{
 
     @Override
     public IPermission toBusinessObject() {
-        if(name.equals ( "get_employees_info" ))
+        if(name.equals ( new EmployeesPermission().getName() ))
             return new EmployeesPermission ();
         return new PurchaseHistoryPermission ();
     }
