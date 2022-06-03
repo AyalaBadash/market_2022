@@ -28,7 +28,6 @@ public class Market {
     private UserController userController;
     private String systemManagerName;
     private Map<String, Shop> shops;                                 // <shopName, shop>
-
     private NotificationHandler notificationHandler;
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
@@ -549,7 +548,7 @@ public class Market {
             DebugLog.getInstance().Log("Cant add item with negative or zero amount");
             throw new MarketException("Cant add item with negative amount");
         }
-        shoppingCart.addItem ( curShop, item, amount );
+        shoppingCart.addItem( curShop, item, amount );
         EventLog.getInstance().Log(amount+" "+item.getName()+ " added to cart.");
     }
 

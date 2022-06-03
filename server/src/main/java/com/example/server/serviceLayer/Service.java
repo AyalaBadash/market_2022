@@ -3,8 +3,11 @@ package com.example.server.serviceLayer;
 import com.example.server.businessLayer.Payment.PaymentMock;
 import com.example.server.businessLayer.Supply.SupplyMock;
 import com.example.server.businessLayer.Market.Item;
+import com.example.server.dataLayer.entities.DalUser;
+import com.example.server.dataLayer.userControllerToDelete;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,8 @@ import java.util.List;
 
 @RestController
 public class Service implements IService {
+//    @Autowired
+//    private userControllerToDelete toDelete;
     private static Service service = null;
     MarketService marketService;
     PurchaseService purchaseService;
@@ -31,6 +36,16 @@ public class Service implements IService {
         if (service == null)
             service = new Service();
         return service;
+    }
+
+    @RequestMapping(value = "/toDelete")
+    public void toDeleteMethod(){
+        userControllerToDelete toDelete = new userControllerToDelete();
+        try {
+            toDelete.save(new DalUser("ido", "ido"));
+        }catch (Exception e){
+
+        }
     }
 
     @Override

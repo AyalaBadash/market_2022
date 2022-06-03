@@ -11,8 +11,8 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 
 public class Acquisition {
-    private boolean paymentDone;
-    private boolean supplyConfirmed;
+    private boolean paymentDone; //save
+    private boolean supplyConfirmed; //save
     ShoppingCart shoppingCartToBuy;
     String buyerName;
     int supplyID;
