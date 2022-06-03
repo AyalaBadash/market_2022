@@ -38,6 +38,7 @@ public class Acquisition {
             errorLog.Log("Supply has been failed.");
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
+        supplyConfirmed = true;
         paymentID = paymentHandler.pay (paymentMethod);
         if(paymentID==-1){
             shoppingCartToBuy.cancelShopSave();
@@ -46,6 +47,7 @@ public class Acquisition {
             errorLog.Log("Payment has been failed.");
             throw new MarketException("payment has been failed. shopping cart did not change and supply was canceled");
         }
+        paymentDone = true;
         Visitor visitor = UserController.getInstance().getVisitor(buyerName);
         Member member = visitor.getMember ();
         if( member != null) {
