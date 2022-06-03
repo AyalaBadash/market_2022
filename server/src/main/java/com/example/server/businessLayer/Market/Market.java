@@ -14,7 +14,10 @@ import com.example.server.businessLayer.Security.Security;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.dataLayer.repositories.ItemRepository;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Component
 public class Market {
     private UserController userController;
     private String systemManagerName;
@@ -34,9 +38,11 @@ public class Market {
     private SynchronizedCounter nextItemID;
     private PaymentHandler paymentHandler;
     private SupplyHandler supplyHandler;
-
     private static Market instance;
     Map<String,Integer> numOfAcqsPerShop;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -70,6 +76,8 @@ public class Market {
         instance.systemManagerName = userName;
         instance.paymentHandler = paymentHandler1;
         instance.supplyHandler = supplyHandler1;
+
+        Shop.setItemRepository(itemRepository);
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 

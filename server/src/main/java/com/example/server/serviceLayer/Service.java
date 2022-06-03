@@ -3,8 +3,10 @@ package com.example.server.serviceLayer;
 import com.example.server.businessLayer.Payment.PaymentMock;
 import com.example.server.businessLayer.Supply.SupplyMock;
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.dataLayer.entities.DalUser;
-import com.example.server.dataLayer.userControllerToDelete;
+
+import com.example.server.dataLayer.entities.DalItem;
+import com.example.server.dataLayer.repositories.ItemRepository;
+import com.example.server.dataLayer.repositoryToDelete;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +16,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class Service implements IService {
-//    @Autowired
-//    private userControllerToDelete toDelete;
     private static Service service = null;
+    @Autowired
     MarketService marketService;
     PurchaseService purchaseService;
     UserService userService;
+    @Autowired
+    private ItemRepository itemRepository;
+
 
 
     protected Service() {
-        marketService = MarketService.getInstance();
+//        marketService = MarketService.getInstance();
         purchaseService = PurchaseService.getInstance();
         userService = UserService.getInstance();
     }
@@ -40,12 +45,14 @@ public class Service implements IService {
 
     @RequestMapping(value = "/toDelete")
     public void toDeleteMethod(){
-        userControllerToDelete toDelete = new userControllerToDelete();
+        List<String> keywords = new ArrayList<>();
+        keywords.add("keywordTest");
+        keywords.add("keywordTest2");
         try {
-            toDelete.save(new DalUser("ido", "ido"));
-        }catch (Exception e){
-
-        }
+            DalItem item = new DalItem(1, "itemTest", 5,
+                    "infoTest",1,2,"fruit");
+            itemRepository.save(item);
+        }catch (Exception e){}
     }
 
     @Override
@@ -54,7 +61,7 @@ public class Service implements IService {
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
         PaymentMock paymentService = new PaymentMock();
         SupplyMock supplyMock = new SupplyMock();
-        return marketService.firstInitMarket ( paymentService,supplyMock, request.getUserName(), request.getPassword() );
+        return marketService.firstInitMarket(paymentService,supplyMock, request.getUserName(), request.getPassword() );
     }
 
     @Override

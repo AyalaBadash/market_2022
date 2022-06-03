@@ -4,17 +4,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class DalUser {
+public class DalUserToDelete {
     @Id
     String id;
     String name;
 
-    public DalUser(String id, String name) {
+    public DalUserToDelete(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public DalUser(){}
+    public DalUserToDelete(){}
 
     public String getId() {
         return id;

@@ -10,6 +10,7 @@ import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.Discount.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.dataLayer.repositories.ItemRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class Shop implements IHistory {
     private Map<String, Appointment> shopOwners;      //<name, appointment>
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
+    private static ItemRepository itemRepository;
 
     Member shopFounder;//todo
     private int rank;
@@ -399,7 +401,8 @@ public class Shop implements IHistory {
             if (itemNameExists(itemName))
                 throw new MarketException("different item with the same name already exists in this shop");
             addedItem = new Item(id, itemName, price, info, category, keywords);
-            itemMap.put ( id, addedItem );
+            itemRepository.save(addedItem.toDalObject());
+            itemMap.put (id, addedItem);
         }
         itemsCurrentAmount.put ( id, amount );
         return addedItem;
@@ -518,7 +521,9 @@ public class Shop implements IHistory {
                 shopManagers.remove(entry.getKey());
         }
         shopOwners.remove(firedAppointed);
+    }
 
-
+    protected static void setItemRepository(ItemRepository itemRep){
+        itemRepository = itemRep;
     }
 }

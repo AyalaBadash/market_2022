@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market;
 
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.entities.DalItem;
 
 import java.util.List;
 import java.util.Objects;
@@ -103,6 +104,11 @@ public class Item implements IHistory {
 
     public boolean equals(Item itemToCompare){
         return  itemToCompare.ID == ID;
+    }
+
+    public DalItem toDalObject(){
+        return new DalItem(this.ID, this.name, (int)this.price, this.info,
+                this.rank, this.rankers, this.category.toString());
     }
 
 }

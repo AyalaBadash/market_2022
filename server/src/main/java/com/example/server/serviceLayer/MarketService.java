@@ -12,17 +12,21 @@ import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class MarketService {
     private static MarketService marketService = null;
+    @Autowired
     private Market market;
 
     private MarketService() {
-        market = Market.getInstance();
+//        market = Market.getInstance();
     }
 
     public synchronized static MarketService getInstance() {
