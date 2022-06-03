@@ -64,7 +64,7 @@ public class Shop implements IHistory {
             DebugLog.getInstance ( ).Log ( String.format ( "%s: cannot find an appointment of %s", this.getShopName ( ), managerName ) );
             throw new MarketException ( String.format ( "%s: cannot find an appointment of %s", this.getShopName ( ), managerName ) );
         }
-        if (!oldAppointment.getSuperVisor ( ).equals ( superVisorName )) {
+        if (!oldAppointment.getSuperVisor( ).getName().equals ( superVisorName )) {
             DebugLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
