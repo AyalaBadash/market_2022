@@ -1,8 +1,10 @@
 package com.example.server.serviceLayer.Requests;
 
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountDeserializer;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountLevelStateFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class AddDiscountToShopRequest {
 
@@ -15,6 +17,8 @@ public class AddDiscountToShopRequest {
         this.shopName = shopName;
         this.visitorName = visitorName;
     }
+
+    public AddDiscountToShopRequest(){}
 
     public DiscountTypeFacade getDiscount() {
         return discount;

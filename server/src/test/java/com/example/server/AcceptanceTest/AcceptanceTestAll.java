@@ -1,105 +1,108 @@
-//package com.example.server.AcceptanceTest;
-//
-//import com.example.server.ResourcesObjects.Address;
-//import com.example.server.ResourcesObjects.CreditCard;
-//import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
-//import com.example.server.ServerApplication;
-//import com.example.server.businessLayer.Market.Item;
-//import com.example.server.serviceLayer.AppointmentShopManagerRequest;
-//import com.example.server.serviceLayer.FacadeObjects.*;
-//import com.example.server.serviceLayer.Requests.*;
-//import com.example.server.serviceLayer.Response;
-//import com.example.server.serviceLayer.ResponseT;
-//import com.example.server.serviceLayer.Service;
-//import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.google.gson.Gson;
-//import com.google.gson.reflect.TypeToken;
-//import org.junit.jupiter.api.*;
-//import org.junit.platform.commons.logging.Logger;
-//import org.junit.platform.commons.logging.LoggerFactory;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.http.MediaType;
-//import org.springframework.http.converter.HttpMessageConverter;
-//import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-//import org.springframework.mock.http.MockHttpOutputMessage;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.test.web.servlet.MvcResult;
-//import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-//import org.springframework.web.context.WebApplicationContext;
-//
-//import java.io.IOException;
-//import java.io.UnsupportedEncodingException;
-//import java.lang.reflect.Type;
-//import java.nio.charset.Charset;
-//import java.util.*;
-//
-//import static org.springframework.test.util.AssertionErrors.assertNotNull;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-//
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-//
-////@RunWith(SpringRunner.class)
-//@SpringBootTest(
-//        classes = ServerApplication.class)
-//@AutoConfigureMockMvc
-//public class AcceptanceTestAll {
-//
-//
-//    protected MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-//            MediaType.APPLICATION_JSON.getSubtype(),
-//            Charset.forName("utf8"));
-//    protected HttpMessageConverter mappingJakson2HttpMessageConverter;
-//    protected String tokenStr;
-//    protected Logger logger = LoggerFactory.getLogger(this.getClass());
-//    @Autowired
-//    private MockMvc mvc;
-//
-//    @Autowired
-//    private Service service;
-//
-//    @Autowired
-//    protected WebApplicationContext webApplicationContext;
-//
-//    // common fields
-//    Gson gson = new Gson();
-//    VisitorFacade curVisitor;
-//    String shopOwnerName = "shaked";
-//    String shopOwnerPassword = "shaked1234";
-//    String shopName = "kolbo";
-//    AcceptanceTestService config = new AcceptanceTestService();
-//    Double productAmount;
-//    Double productPrice;
-//    CreditCard creditCard;
-//    Address address;
-//    ItemFacade milk;
-//
-//    double appleAmount;
-//    String appleName ;
-//    Item.Category appleCategory;
-//    double applePrice ;
-//    ArrayList<String> appleKeywords ;
-//    String appleInfo;
-//    ItemFacade apple;
-//
-//    double onePlusAmount;
-//    String onePlusName;
-//    Item.Category onePlusCategory;
-//    double onePlusPrice;
-//    List<String> onePlusKeywords;
-//    String onePlusInfo;
-//    ItemFacade onePlus;
-//    @Autowired
-//    void setConverters(HttpMessageConverter<?>[] converters) {
-//        this.mappingJakson2HttpMessageConverter = Arrays.stream(converters)
-//                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
-//                .findAny()
-//                .orElse(null);
-//        assertNotNull("the Json message converter must not be null", this.mappingJakson2HttpMessageConverter);
-//    }
-//
+package com.example.server.AcceptanceTest;
+
+
+import com.example.server.ServerApplication;
+import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Supply.Address;
+import com.example.server.serviceLayer.AppointmentShopManagerRequest;
+import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ShopLevelStateFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
+import com.example.server.serviceLayer.Requests.*;
+import com.example.server.serviceLayer.Response;
+import com.example.server.serviceLayer.ResponseT;
+import com.example.server.serviceLayer.Service;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.junit.jupiter.api.*;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mock.http.MockHttpOutputMessage;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.util.*;
+
+import static org.springframework.test.util.AssertionErrors.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
+//@RunWith(SpringRunner.class)
+@SpringBootTest(
+        classes = ServerApplication.class)
+@AutoConfigureMockMvc
+public class AcceptanceTestAll {
+
+
+    protected MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(),
+            Charset.forName("utf8"));
+    protected HttpMessageConverter mappingJakson2HttpMessageConverter;
+    protected String tokenStr;
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private Service service;
+
+    @Autowired
+    protected WebApplicationContext webApplicationContext;
+
+    // common fields
+    Gson gson = new Gson();
+    VisitorFacade curVisitor;
+    String shopOwnerName = "shaked";
+    String shopOwnerPassword = "shaked1234";
+    String shopName = "kolbo";
+    AcceptanceTestService config = new AcceptanceTestService();
+    Double productAmount;
+    Double productPrice;
+    CreditCard creditCard;
+    Address address;
+    ItemFacade milk;
+
+    double appleAmount;
+    String appleName ;
+    Item.Category appleCategory;
+    double applePrice ;
+    ArrayList<String> appleKeywords ;
+    String appleInfo;
+    ItemFacade apple;
+
+    double onePlusAmount;
+    String onePlusName;
+    Item.Category onePlusCategory;
+    double onePlusPrice;
+    List<String> onePlusKeywords;
+    String onePlusInfo;
+    ItemFacade onePlus;
+    @Autowired
+    void setConverters(HttpMessageConverter<?>[] converters) {
+        this.mappingJakson2HttpMessageConverter = Arrays.stream(converters)
+                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
+                .findAny()
+                .orElse(null);
+        assertNotNull("the Json message converter must not be null", this.mappingJakson2HttpMessageConverter);
+    }
+
 //    // ############################### SETUP #######################################
 //
 //    @BeforeAll
@@ -163,20 +166,20 @@
 //    // ############################### SYSTEM #######################################
 //
 //    @Nested
-//    class System {
-//        @Test
-//        @DisplayName("init market twice test - fail")
-//        public void initTwice() {
-//            try {
-//                Response result = initMarket();
-//                assert result.isErrorOccurred();
-//            } catch (Exception e) {
-//                // should return as result fail and not as exception
-//                assert false;
-//            }
-//            ;
-//        }
-//    }
+    class System {
+        @Test
+        @DisplayName("init market twice test - fail")
+        public void initTwice() {
+            try {
+                Response result = initMarket();
+                assert result.isErrorOccurred();
+            } catch (Exception e) {
+                // should return as result fail and not as exception
+                assert false;
+            }
+            ;
+        }
+    }
 //
 //    // ############################### VISITOR #######################################
 //
@@ -218,20 +221,20 @@
 //        }
 //
 //
-//        @Test
-//        @DisplayName("register taken name")
-//        public void registerTest() {
-//            try {
-//                VisitorFacade visitor = guestLogin();
-//                ResponseT<Boolean> res = register("registerTest", "1234R");
-//                assert !res.isErrorOccurred();
-//                ResponseT<Boolean> res2 = register("registerTest", "1234R");
-//                assert res2.isErrorOccurred();
-//
-//            } catch (Exception e) {
-//                assert false;
-//            }
-//        }
+        @Test
+        @DisplayName("register taken name")
+        public void registerTest() {
+            try {
+                VisitorFacade visitor = guestLogin();
+                ResponseT<Boolean> res = register("registerTest", "1234R");
+                assert !res.isErrorOccurred();
+                ResponseT<Boolean> res2 = register("registerTest", "1234R");
+                assert res2.isErrorOccurred();
+
+            } catch (Exception e) {
+                assert false;
+            }
+        }
 //
 //        @Test
 //        @DisplayName("get shop info")
@@ -955,15 +958,15 @@
 //    //
 //    //########################################### SERVICE METHODS ##########################################3
 //
-//    public VisitorFacade guestLogin() throws Exception {
-//        String methodCall = "/guestLogin";
-//        MvcResult res = mvc.perform(post(methodCall)).andReturn();
-//        Type type = new TypeToken<ResponseT<VisitorFacade>>() {
-//        }.getType();
-//        ResponseT<VisitorFacade> result = deserialize(res, type);
-//        VisitorFacade visitor = result.getValue();
-//        return visitor;
-//    }
+    public VisitorFacade guestLogin() throws Exception {
+        String methodCall = "/guestLogin";
+        MvcResult res = mvc.perform(post(methodCall)).andReturn();
+        Type type = new TypeToken<ResponseT<VisitorFacade>>() {
+        }.getType();
+        ResponseT<VisitorFacade> result = deserialize(res, type);
+        VisitorFacade visitor = result.getValue();
+        return visitor;
+    }
 //
 //    private Response exitMarket(String name) throws Exception {
 //        String methodCall = "/exitSystem";
@@ -976,18 +979,18 @@
 //        return result;
 //    }
 //
-//    public ResponseT<Boolean> register(String name, String password) throws Exception {
-//        NamePasswordRequest request = new NamePasswordRequest(name, password);
-//        String methodCall = "/register";
-//        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
-//                        content(toHttpRequest(request)).contentType(contentType))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        Type type = new TypeToken<ResponseT<Boolean>>() {
-//        }.getType();
-//        ResponseT<Boolean> result = deserialize(res, type);
-//        return result;
-//    }
+    public ResponseT<Boolean> register(String name, String password) throws Exception {
+        NamePasswordRequest request = new NamePasswordRequest(name, password);
+        String methodCall = "/register";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        Type type = new TypeToken<ResponseT<Boolean>>() {
+        }.getType();
+        ResponseT<Boolean> result = deserialize(res, type);
+        return result;
+    }
 //
 //    public MemberFacade validateSecurityQuestions(String userName, List<String> answers, String visitorName) {
 //        ValidateSecurityRequest request = new ValidateSecurityRequest(userName, answers, visitorName);
@@ -1253,36 +1256,48 @@
 //        ResponseT<List<AppointmentFacade>> appointmentFacadeList = deserialize(res, type);
 //        return appointmentFacadeList.getValue();
 //    }
-//    public Response initMarket() throws Exception {
-//        InitMarketRequest request = new InitMarketRequest(config.systemManagerName, config.systemManagerPassword);
-//        String methodCall = "/firstInitMarket";
-//        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
-//                        content(toHttpRequest(request)).contentType(contentType))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        return deserialize(res, Response.class);
-//
-//    }
-//
-//    protected String toHttpRequest(Object obj) throws IOException {
-//        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-//        this.mappingJakson2HttpMessageConverter.write(
-//                obj, MediaType.APPLICATION_JSON,
-//                mockHttpOutputMessage);
-//        String request = mockHttpOutputMessage.getBodyAsString();
-//        return request;
-//    }
-//
-//    protected <T> T deserialize(MvcResult res, Class<T> classType) throws UnsupportedEncodingException, JsonProcessingException {
-//        String json = res.getResponse().getContentAsString();
-//        T result = gson.fromJson(json, classType);
-//        return result;
-//    }
-//
-//    protected <T> T deserialize(MvcResult res, Type classType) throws UnsupportedEncodingException, JsonProcessingException {
-//        String json = res.getResponse().getContentAsString();
-//        T result = gson.fromJson(json, classType);
-//        return result;
-//    }
-//
-//}
+    public Response initMarket() throws Exception {
+        InitMarketRequest request = new InitMarketRequest(config.systemManagerName, config.systemManagerPassword);
+        String methodCall = "/firstInitMarket";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+        return deserialize(res, Response.class);
+
+    }
+
+
+    @Test
+    public void addDiscount() throws Exception {
+        DiscountTypeFacade discountTypeFacade = new SimpleDiscountFacade ( 50, new ShopLevelStateFacade () );
+        AddDiscountToShopRequest request = new AddDiscountToShopRequest (discountTypeFacade, "shop", "Ido");
+        String methodCall = "/addDiscountToShop";
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(methodCall).
+                        content(toHttpRequest(request)).contentType(contentType))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    protected String toHttpRequest(Object obj) throws IOException {
+        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
+        this.mappingJakson2HttpMessageConverter.write(
+                obj, MediaType.APPLICATION_JSON,
+                mockHttpOutputMessage);
+        String request = mockHttpOutputMessage.getBodyAsString();
+        return request;
+    }
+
+    protected <T> T deserialize(MvcResult res, Class<T> classType) throws UnsupportedEncodingException, JsonProcessingException {
+        String json = res.getResponse().getContentAsString();
+        T result = gson.fromJson(json, classType);
+        return result;
+    }
+
+    protected <T> T deserialize(MvcResult res, Type classType) throws UnsupportedEncodingException, JsonProcessingException {
+        String json = res.getResponse().getContentAsString();
+        T result = gson.fromJson(json, classType);
+        return result;
+    }
+
+}

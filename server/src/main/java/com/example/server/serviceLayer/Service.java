@@ -6,6 +6,7 @@ import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountLevelStateFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -308,37 +309,36 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeShopOwnerAppointment")
     @CrossOrigin
-    public Response removeShopOwnerAppointment(removeAppointmentRequest request) {
+    public Response removeShopOwnerAppointment(@RequestBody removeAppointmentRequest request) {
         return marketService.removeShopOwnerAppointment(request.getBoss(),request.getFiredAppointed(),request.getShopName());
     }
 
     @Override
     @RequestMapping(value = "/removeMember")
     @CrossOrigin
-    public Response removeMember(removeMemberRequest request) {
+    public Response removeMember(@RequestBody removeMemberRequest request) {
         return marketService.removeMember(request.getManager(),request.getMemberToRemove());
     }
 
     @Override
     @RequestMapping(value = "/getItemInfo")
     @CrossOrigin
-    public ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request) {
+    public ResponseT<ItemFacade> getItemInfo(@RequestBody GetItemInfoRequest request) {
         return marketService.getItemInfo(request.getName(), request.getItemId());
     }
     @Override
     @RequestMapping(value = "/getMarketInfo")
     @CrossOrigin
-    public ResponseT<String> getMarketInfo(GetMarketInfoRequest request) {
+    public ResponseT<String> getMarketInfo(@RequestBody GetMarketInfoRequest request) {
         return marketService.getMarketInfo(request.getSysManager());
     }
 
     @Override
     @RequestMapping(value = "/addDiscountToShop")
     @CrossOrigin
-    public Response addDiscountToShop(AddDiscountToShopRequest request) {
+    public Response addDiscountToShop(@RequestBody AddDiscountToShopRequest request) {
         return marketService.addDiscountToShop(request.getVisitorName (), request.getShopName (), request.getDiscount ());
     }
-
 
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);

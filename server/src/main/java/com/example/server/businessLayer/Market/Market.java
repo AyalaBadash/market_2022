@@ -680,7 +680,7 @@ public class Market {
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart = visitor.getCart();
         Acquisition acquisition = new Acquisition(shoppingCart, visitorName);
-        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, getPaymentHandler (), getSupplyHandler());
+        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(null, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
         //TODO - what is expected here?
         return shoppingCartToReturn;
     }
@@ -914,5 +914,9 @@ public class Market {
             throw new MarketException("shop does not exist in the market");
         }
         shop.addDiscountToShop(visitorName, discountType);
+    }
+
+    public Object getPaymentHandler() {
+        return paymentServiceProxy;
     }
 }
