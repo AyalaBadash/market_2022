@@ -267,7 +267,7 @@ public class Service implements IService {
     @RequestMapping(value = "/getShopEmployeesInfo")
     @CrossOrigin
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(@RequestBody GetShopEmployeesRequest request) {
-        return marketService.getShopEmployeesInfo(request.getShopName(), request.getShopName());
+        return marketService.getShopEmployeesInfo(request.getShopManagerName(), request.getShopName());
     }
 
     @Override
