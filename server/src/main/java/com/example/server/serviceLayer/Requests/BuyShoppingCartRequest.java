@@ -1,18 +1,19 @@
 package com.example.server.serviceLayer.Requests;
 
+import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.Address;
 
 public class BuyShoppingCartRequest {
     private String visitorName;
     private double expectedPrice;
-    private PaymentMethod paymentMethod;
+    private CreditCard paymentMethod;
     private Address address;
 
     public BuyShoppingCartRequest() {
     }
 
-    public BuyShoppingCartRequest(String visitorName, double expectedPrice, PaymentMethod paymentMethod, Address address) {
+    public BuyShoppingCartRequest(String visitorName, double expectedPrice, CreditCard paymentMethod, Address address) {
         this.visitorName = visitorName;
         this.expectedPrice = expectedPrice;
         this.paymentMethod = paymentMethod;
@@ -39,7 +40,7 @@ public class BuyShoppingCartRequest {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
+    public void setPaymentMethod(CreditCard paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
