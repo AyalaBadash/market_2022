@@ -1,8 +1,7 @@
 package com.example.server.dataLayer.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "shops")
@@ -15,15 +14,28 @@ public class DalShop {
     private int rnk;
     private int rnkrs;
 
+    @OneToMany(targetEntity = DalItem.class,cascade =CascadeType.ALL )
+    @JoinColumn(name = "shop",referencedColumnName = "name")
+    private List<DalItem> items;
+
     public DalShop(){}
 
-    public DalShop(String name, int marketID, String shopFounder, boolean closed, int rnk, int rnkrs) {
+    public DalShop(String name, int marketID, String shopFounder, boolean closed, int rnk, int rnkrs,List<DalItem> items) {
         this.name = name;
         this.marketID = marketID;
         this.shopFounder = shopFounder;
         this.closed = closed;
         this.rnk = rnk;
         this.rnkrs = rnkrs;
+        this.items = items;
+    }
+
+    public List<DalItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<DalItem> items) {
+        this.items = items;
     }
 
     public String getName() {

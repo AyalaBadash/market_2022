@@ -11,6 +11,8 @@ public class ShoppingCart implements IHistory {
     private Map<Shop, ShoppingBasket> cart; // <Shop ,basket for the shop>
     private double currentPrice;
 
+    //private static ShoppingBasketRepository repo;
+
 
     public ShoppingCart() {
         this.currentPrice = 0;
