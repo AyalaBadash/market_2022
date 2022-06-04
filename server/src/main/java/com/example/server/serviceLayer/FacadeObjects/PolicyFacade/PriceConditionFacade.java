@@ -8,8 +8,11 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionFacad
 public class PriceConditionFacade extends ConditionFacade {
     private int price;
 
+    public PriceConditionFacade(){};
     public PriceConditionFacade(int price) {
+
         this.price = price;
+        this.type = "PriceConditionFacade";
     }
 
     public int getPrice() {

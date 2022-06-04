@@ -8,7 +8,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositeConditionFacade extends ConditionFacade{
+    public class CompositeConditionFacade extends ConditionFacade{
     enum CompositeConditionType{
         or,
         and
@@ -16,9 +16,12 @@ public class CompositeConditionFacade extends ConditionFacade{
     private CompositeConditionType compositeConditionType;
     private List<ConditionFacade> conditionFacadeList;
 
+    public CompositeConditionFacade(){};
     public CompositeConditionFacade(CompositeConditionType compositeConditionType, List<ConditionFacade> conditionFacadeList) {
         this.compositeConditionType = compositeConditionType;
         this.conditionFacadeList = conditionFacadeList;
+        this.type = "CompositeConditionFacade";
+
     }
 
     public CompositeConditionType getCompositeConditionType() {

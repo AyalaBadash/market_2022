@@ -5,6 +5,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
 
 public abstract class DiscountTypeFacade implements FacadeObject {
+    String type;
     protected int percentageOfDiscount;
     protected DiscountLevelStateFacade discountLevelState;
 
@@ -27,6 +28,14 @@ public abstract class DiscountTypeFacade implements FacadeObject {
 
     public void setDiscountLevelState(DiscountLevelStateFacade discountLevelState) {
         this.discountLevelState = discountLevelState;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

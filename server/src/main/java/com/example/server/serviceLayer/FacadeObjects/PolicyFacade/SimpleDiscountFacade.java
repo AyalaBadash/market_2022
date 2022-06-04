@@ -9,6 +9,8 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFa
 public class SimpleDiscountFacade extends DiscountTypeFacade {
     public SimpleDiscountFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState) {
         super (percentageOfDiscount, discountLevelState );
+        this.type = "SimpleDiscountFacade";
+
     }
 
     @Override

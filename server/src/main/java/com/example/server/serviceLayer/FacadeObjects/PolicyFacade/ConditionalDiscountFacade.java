@@ -10,6 +10,8 @@ public class ConditionalDiscountFacade extends DiscountTypeFacade {
     public ConditionalDiscountFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState, ConditionFacade conditionFacade) {
         super (percentageOfDiscount, discountLevelState );
         this.conditionFacade = conditionFacade;
+        this.type = "ConditionalDiscountFacade";
+
     }
 
     public ConditionFacade getConditionFacade() {

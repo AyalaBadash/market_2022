@@ -10,6 +10,8 @@ public class ItemLevelStateFacade extends DiscountLevelStateFacade {
 
     public ItemLevelStateFacade(int itemID) {
         this.itemID = itemID;
+        this.type = "ItemLevelStateFacade";
+
     }
 
     public int getItemID() {

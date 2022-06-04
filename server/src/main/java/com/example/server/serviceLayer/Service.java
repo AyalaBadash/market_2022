@@ -6,7 +6,10 @@ import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountLevelStateFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ShopLevelStateFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -304,7 +307,15 @@ public class Service implements IService {
     public ResponseT<String> getHistoryByMember(@RequestBody GetHistoryByMemberRequest request) {
         return marketService.getHistoryByMember (request.getSystemManagerName(), request.getMemberName() );
     }
+    @Override
+    @RequestMapping(value = "/isServerInit")
+    @CrossOrigin
+    public Response isServerInit(){
+        return marketService.isServerInit();
+    }
 
+
+    ///////////////////// NEED TO IMPLEMENT IN CLIENT SIDE ////////////////
     @Override
     @RequestMapping(value = "/removeShopOwnerAppointment")
     @CrossOrigin
@@ -352,11 +363,23 @@ public class Service implements IService {
         return marketService.getItemById(id);
     }
 
-    @Override
-    @RequestMapping(value = "/isServerInit")
+
+
+    //////////////////////////////////////// JUST FOR DEBUG ///////////////////////////
+
+    @RequestMapping(value = "/getDiscountTest")
     @CrossOrigin
-    public Response isServerInit(){
-        return marketService.isServerInit();
+    public ResponseT<DiscountTypeFacade> getDiscountTest(){
+        DiscountLevelStateFacade discountLevelState = new ShopLevelStateFacade();
+        DiscountTypeFacade discountType = new SimpleDiscountFacade(50, discountLevelState);
+        return new ResponseT<>(discountType);
+
     }
+
+
+    //////////////////////////////////////// JUST FOR DEBUG ///////////////////////////
+
+
+
 
 }

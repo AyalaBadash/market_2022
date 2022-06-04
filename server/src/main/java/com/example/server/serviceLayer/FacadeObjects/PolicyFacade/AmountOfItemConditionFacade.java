@@ -8,10 +8,11 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionFacad
 public class AmountOfItemConditionFacade extends ConditionFacade {
     private double amount;
     int itenID;
-
-    public AmountOfItemConditionFacade(double amount, int itenID) {
+    public AmountOfItemConditionFacade(){};
+    public AmountOfItemConditionFacade(double amount, int itemID) {
+        this.type = "AmountOfItemConditionFacade";
         this.amount = amount;
-        this.itenID = itenID;
+        this.itenID = itemID;
     }
 
     public double getAmount() {

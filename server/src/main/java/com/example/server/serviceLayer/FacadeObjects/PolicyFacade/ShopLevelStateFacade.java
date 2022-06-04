@@ -6,6 +6,11 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountLevelStateFacade;
 
 public class ShopLevelStateFacade extends DiscountLevelStateFacade {
+
+    public ShopLevelStateFacade(){
+        this.type = "ShopLevelStateFacade";
+
+    }
     @Override
     public DiscountLevelState toBusinessObject() throws MarketException {
         return new ShopLevelState ();

@@ -20,6 +20,7 @@ public class CompositeDiscountFacade extends DiscountTypeFacade{
         super (percentageOfDiscount, discountLevelState );
         this.discountTypes = discountTypes;
         this.compositeDiscountType = compositeDiscountType;
+        this.type = "CompositeDiscountFacade";
     }
 
     public List<DiscountTypeFacade> getDiscountTypes() {
