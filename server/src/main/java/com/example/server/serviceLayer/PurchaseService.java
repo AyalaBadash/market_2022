@@ -79,7 +79,20 @@ public class PurchaseService {
                 return new ResponseT<>("some of the items in the cart are missing. car was updated and the price was changed", new ShoppingCartFacade(shoppingCart));
             return new ResponseT<>(new ShoppingCartFacade(new ShoppingCart()));
         }catch (MarketException e){
-            return new ResponseT(e.getMessage());
+            String message =e.getMessage();
+            if(e.getMessage().equals("Error0")){
+                message= "There is a problem with the supply service. Please try again later.";
+            }
+            if(e.getMessage().equals("Error1")){
+                message= "There is a problem with setting the supply. Please try again later.";
+            }
+            if(e.getMessage().equals("Error2")){
+                message= "There is a problem with the payment service. Please try again later.";
+            }
+            if(e.getMessage().equals("Error3")){
+                message= "There is a problem with setting the payment. Please try again later.";
+            }
+            return new ResponseT(message);
         }catch (Exception e){
             ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT(e.getMessage());

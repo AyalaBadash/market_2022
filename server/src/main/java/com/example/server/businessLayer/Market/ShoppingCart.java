@@ -148,5 +148,14 @@ public class ShoppingCart implements IHistory {
     }
 
 
-
+    public boolean isEmpty() {
+        if (cart.isEmpty())
+            return true;
+        for(Map.Entry<Shop, ShoppingBasket> basket : cart.entrySet()){
+            if(basket.getValue().isEmpty()){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,8 +1,11 @@
 package com.example.server.businessLayer.Payment;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,36 +36,40 @@ public class PaymentServiceProxy {
      * @param method the payment method. The credit card in this version.
      * @return the transaction id.
      */
-    public int pay(PaymentMethod method) throws JsonProcessingException {
+    public int pay(PaymentMethod method) throws  Exception {
         if(testRequest){
             return 10000;
         }
         try {
+            int ret=0;
         if(handshake().equals(okayMessage)){
             if(method instanceof CreditCard){
-                payWithCreditCard((CreditCard) method);
+                ret= payWithCreditCard((CreditCard) method);
             }
+            if (ret>100000 | ret<10000){
+                throw new MarketException("Error1");
+            }
+            return ret;
         }
-        return -1;
+        else
+        {
+            return -1;
+        }
 
         }
-
-        catch (Exception e){
-            throw  e;
+        catch (Exception io){
+            throw io;
         }
+
     }
 
 
-    public int payWithCreditCard(CreditCard card) throws JsonProcessingException {
-        List<NameValuePair> request= CreditCardToString((CreditCard)card );
-        return paymentService.pay(request);
-    }
     /**
      * Cancel a payment.
      * @param transactionId the transaction id to cancel.
      * @return 1 if succeed and -1 if not.
      */
-    public int cancelPay(int transactionId) throws JsonProcessingException {
+    public int cancelPay(int transactionId) throws Exception {
         if(testRequest){
             return 10000;
         }
@@ -71,7 +78,11 @@ public class PaymentServiceProxy {
                 return -1;
             }
             List<NameValuePair> request= transactionToString(transactionId);
-            return paymentService.cancelPayment(request);
+            int ret=  paymentService.cancelPayment(request);
+            if (ret>100000 | ret<10000){
+                throw new MarketException("Error1");
+            }
+            return ret;
         }
         catch(Exception e){
             throw e;
@@ -83,14 +94,36 @@ public class PaymentServiceProxy {
      * do handshake before payment.
      * @return "OK" if succeed. empty if not.
      */
-    private String handshake(){
+    private String handshake() throws Exception {
 
         try {
-            return paymentService.handShake(handshakeString());
+            String ret= paymentService.handShake(handshakeString());
+            if (!ret.equals("OK")){
+                throw new MarketException("Error0");
+            }
+            return ret;
         }
         catch (Exception e){
-            return "";
+            throw e;
         }
+    }
+
+
+    /**
+     * make payment withcredit card as a payment method.
+     * @param card the payment method as parameter.
+     * @return the transaction number.
+     * @throws Exception
+     */
+    public int payWithCreditCard(CreditCard card) throws Exception {
+        if(card==null){
+            throw new MarketException("Credit card not supplied.");
+        }
+        if(!card.isLegal()){
+            throw new MarketException("Credit card details are illegal.");
+        }
+        List<NameValuePair> request= CreditCardToString(card );
+        return paymentService.pay(request);
     }
 
     /**
