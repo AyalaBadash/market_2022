@@ -1,48 +1,52 @@
-//package com.example.server.dataLayer.entities;
-//
-//import javax.persistence.Entity;
-//import javax.persistence.Id;
-//import javax.persistence.IdClass;
-//import javax.persistence.Table;
-//
-//@Entity
-//@Table
-//@IdClass(itemsForBasketID.class)
-//public class DalItemsForBasket {
-//    @Id
-//    private int basketID;
-//    @Id
-//    private int itemID;
-//    private int amount;
-//    public  DalItemsForBasket(){}
-//
-//    public DalItemsForBasket(int basketID, int itemID, int amount) {
-//        this.basketID = basketID;
-//        this.itemID = itemID;
-//        this.amount = amount;
-//    }
-//
-//    public int getBasketID() {
-//        return basketID;
-//    }
-//
-//    public void setBasketID(int basketID) {
-//        this.basketID = basketID;
-//    }
-//
-//    public int getItemID() {
-//        return itemID;
-//    }
-//
-//    public void setItemID(int itemID) {
-//        this.itemID = itemID;
-//    }
-//
-//    public int getAmount() {
-//        return amount;
-//    }
-//
-//    public void setAmount(int amount) {
-//        this.amount = amount;
-//    }
-//}
+package com.example.server.dataLayer.entities;
+
+import javax.persistence.*;
+
+@Entity
+@Table (name = "items_in_basket")
+public class DalItemsForBasket {
+    @Id
+    private int id;
+
+    @ManyToOne
+    @JoinColumn (name = "basket_id")
+    private DalShoppingBasket shoppingBasket;
+    @ManyToOne
+    @JoinColumn (name = "item_id")
+    private DalItem item;
+
+    private Double amount;
+    public DalItemsForBasket(){}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public DalShoppingBasket getShoppingBasket() {
+        return shoppingBasket;
+    }
+
+    public void setShoppingBasket(DalShoppingBasket shoppingBasket) {
+        this.shoppingBasket = shoppingBasket;
+    }
+
+    public DalItem getItem() {
+        return item;
+    }
+
+    public void setItem(DalItem item) {
+        this.item = item;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+}

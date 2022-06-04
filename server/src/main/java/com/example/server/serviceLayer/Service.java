@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @RestController
 public class Service implements IService {
     private static Service service = null;
@@ -32,6 +36,10 @@ public class Service implements IService {
     private ItemRepository itemRepository;
     @Autowired
     private ShopRepository shopRepository;
+
+    @PersistenceContext
+    private EntityManager em;
+
 
 
 
@@ -53,22 +61,15 @@ public class Service implements IService {
         keywords.add("keywordTest");
         keywords.add("keywordTest2");
         try {
-            DalItem item = new DalItem(1, "itemTest", 5,
-                    "infoTest",1,2,"fruit");
-            itemRepository.save(item);
-        }catch (Exception e){}
-    }
-    @RequestMapping(value = "/toDelete2")
-    public void toDeleteMethod2(){
-
-        try {
-            DalItem item = new DalItem(1, "itemTest", 5,
-                    "infoTest",1,2,"fruit");
-            itemRepository.save(item);
             List<DalItem> items = new ArrayList<>();
+            DalItem item = new DalItem(1, "itemTest", 5,
+                    "infoTest",1,2,"fruit");
             items.add(item);
-            DalShop dalShop = new DalShop("shopTest",1,"raz",true,1,2,items);
-            shopRepository.save(dalShop);
+            List<Double> amounts = new ArrayList<>();
+            amounts.add(5.0);
+            DalShop shop = new DalShop("shopName",items,amounts, false, 6,7);
+            itemRepository.save(item);
+            shopRepository.save(shop);
         }catch (Exception e){}
     }
 

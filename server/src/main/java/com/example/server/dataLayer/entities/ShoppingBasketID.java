@@ -1,6 +1,5 @@
 package com.example.server.dataLayer.entities;
 
-
 import java.io.Serializable;
 
 public class ShoppingBasketID implements Serializable {

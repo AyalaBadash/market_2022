@@ -19,8 +19,6 @@ public class Member implements IHistory {
     private List<Appointment> myAppointments;
     private List<AcquisitionHistory> purchaseHistory;
 
-
-
     public Member(String name) throws MarketException {
         if(name.charAt ( 0 ) == '@')
             throw new MarketException ( "cannot create a member with a username starts with @" );
