@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Entity
-//@Table (name = "shopping_baskets")
+@Table (name = "shopping_baskets")
 //@IdClass(ShoppingBasketID.class)
 public class DalShoppingBasket {
 //    @Id

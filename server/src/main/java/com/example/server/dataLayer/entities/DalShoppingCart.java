@@ -1,29 +1,38 @@
 package com.example.server.dataLayer.entities;
 
 import javax.persistence.*;
+import java.util.Map;
 
 @Entity
 @Table
 public class DalShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ID;
+    private int Id;
     private double currentPrice;
+
+//    @ElementCollection
+//    @OneToMany
+//    @JoinColumn (name = "shopping_cart", referencedColumnName = "id")
+    @OneToMany(targetEntity = DalShoppingBasket.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "shopping_cart", referencedColumnName = "id")
+    @MapKeyJoinColumn (name = "basket_id")
+    private Map<String, DalShoppingBasket> baskets;
 
 
     public DalShoppingCart(){}
 
     public DalShoppingCart(int ID, double price) {
-        this.ID = ID;
+        this.Id = ID;
         this.currentPrice = price;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return Id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int ID) {
+        this.Id = ID;
     }
 
 

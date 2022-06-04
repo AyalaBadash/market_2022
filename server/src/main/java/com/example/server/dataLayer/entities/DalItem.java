@@ -21,8 +21,8 @@ public class DalItem {
     @Column (name = "keyword")
     @CollectionTable (name = "item_keywords", joinColumns = {@JoinColumn(name = "item_id")})
     private List<String> keywords;
-    @OneToMany (mappedBy = "item")
-    private Set<DalItemsForBasket> baskets;
+//    @OneToMany (mappedBy = "item")
+//    private Set<DalItemsForBasket> baskets;
 
     public DalItem(int id, String name, int price, String info, int rnk, int rnkrs, String category) {
         this.item_id = id;
@@ -102,13 +102,6 @@ public class DalItem {
         this.category = category;
     }
 
-    public Set<DalItemsForBasket> getBaskets() {
-        return baskets;
-    }
-
-    public void setBaskets(Set<DalItemsForBasket> baskets) {
-        this.baskets = baskets;
-    }
 
 //    public List<String> getKeywords() {
 //        return keywords;
