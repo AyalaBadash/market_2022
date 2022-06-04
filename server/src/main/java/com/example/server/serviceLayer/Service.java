@@ -4,10 +4,8 @@ import com.example.server.businessLayer.Payment.PaymentMock;
 import com.example.server.businessLayer.Supply.SupplyMock;
 import com.example.server.businessLayer.Market.Item;
 
-import com.example.server.dataLayer.entities.DalItem;
-import com.example.server.dataLayer.entities.DalShop;
-import com.example.server.dataLayer.repositories.ItemRepository;
-import com.example.server.dataLayer.repositories.ShopRepository;
+import com.example.server.dataLayer.entities.*;
+import com.example.server.dataLayer.repositories.*;
 import com.example.server.dataLayer.repositoryToDelete;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -18,13 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
 @RestController
 public class Service implements IService {
     private static Service service = null;
@@ -35,10 +29,9 @@ public class Service implements IService {
     @Autowired
     private ItemRepository itemRepository;
     @Autowired
-    private ShopRepository shopRepository;
+    private OwnerAppRepository repo;
 
-    @PersistenceContext
-    private EntityManager em;
+
 
 
 
@@ -61,15 +54,20 @@ public class Service implements IService {
         keywords.add("keywordTest");
         keywords.add("keywordTest2");
         try {
-            List<DalItem> items = new ArrayList<>();
             DalItem item = new DalItem(1, "itemTest", 5,
                     "infoTest",1,2,"fruit");
-            items.add(item);
-            List<Double> amounts = new ArrayList<>();
-            amounts.add(5.0);
-            DalShop shop = new DalShop("shopName",items,amounts, false, 6,7);
             itemRepository.save(item);
-            shopRepository.save(shop);
+        }catch (Exception e){}
+    }
+    @RequestMapping(value = "/toDelete2")
+    public void toDeleteMethod2(){
+
+        try {
+            List<String> perms = new ArrayList<>();
+            perms.add("perm1");perms.add("perm2");
+            DalOwnerApp app = new DalOwnerApp("super","appointed","shop",true,false,true);
+            repo.save(app);
+
         }catch (Exception e){}
     }
 

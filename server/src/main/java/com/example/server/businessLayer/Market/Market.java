@@ -669,7 +669,7 @@ public class Market {
         }
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart = visitor.getCart();
-        Acquisition acquisition = new Acquisition(shoppingCart, visitorName);
+            Acquisition acquisition = new Acquisition(shoppingCart, visitorName);
         ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, getPaymentHandler (), getSupplyHandler());
         //TODO - what is expected here?
         return shoppingCartToReturn;
