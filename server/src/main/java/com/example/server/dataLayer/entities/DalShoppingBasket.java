@@ -18,7 +18,7 @@ public class DalShoppingBasket {
     private Integer id;
     private double price;
     @ElementCollection
-    @CollectionTable(name="items_in_basket")
+    @CollectionTable(name="items_in_basket", joinColumns = {@JoinColumn(name = "basket_id")})
 //    @MapKeyJoinColumn(name="item_id")
     @Column(name="amount")
     @MapKeyJoinColumn (name = "item_id")
