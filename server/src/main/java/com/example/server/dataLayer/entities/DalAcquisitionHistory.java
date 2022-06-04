@@ -19,7 +19,9 @@ public class DalAcquisitionHistory {
     private double totalPriceBeforeDiscount;
     private double discount;
     private double totalPriceAfterDiscount;
-    @OneToMany
+    //TODO
+    @OneToMany(targetEntity = DalItemAcquisitionHistory.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "Item Acquisitions History_fk",referencedColumnName = "id")
     private List<DalItemAcquisitionHistory> itemAcquisitionHistories;
 
     public DalAcquisitionHistory(){}

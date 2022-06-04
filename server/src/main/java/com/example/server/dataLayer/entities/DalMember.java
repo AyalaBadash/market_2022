@@ -15,6 +15,7 @@ public class DalMember {
     @OneToMany
     private List <DalAcquisitionHistory> purchaseHistory;
 
+    //TODO - Appointments
     public DalMember(String name, List<DalAcquisitionHistory> purchaseHistory) {
         this.name = name;
         this.purchaseHistory = purchaseHistory;
