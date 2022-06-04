@@ -66,4 +66,19 @@ public class CreditCard implements PaymentMethod{
         public void setId(String id) {
                 this.id = id;
         }
+
+        @Override
+        public boolean isLegal() {
+                try {
+                        int month = Integer.parseInt(getMonth());
+                        int year= Integer.parseInt(getYear());
+                        int cvv= Integer.parseInt(getCvv());
+                        long number = Long.parseLong(getNumber());
+                        return (month > 0 & month<13 & year > 2000 & year < 2030 & !id.isEmpty() &
+                                !getHolder().isEmpty() & cvv>99 & cvv<1000 & !getId().isEmpty() & number > 0);
+                }
+                catch(Exception e){
+                        return false;
+                }
+        }
 }

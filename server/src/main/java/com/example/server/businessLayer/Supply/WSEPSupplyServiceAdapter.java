@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Supply;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,6 +14,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class WSEPSupplyServiceAdapter implements SupplyService {
 
@@ -24,24 +26,24 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
     }
 
     @Override
-    public int supply(Address address) {
+    public int supply(Address address) throws MarketException, IOException {
         try {
             List<NameValuePair> requestBody= addressToString(address);
             return sendRequest(requestBody);
         }
         catch (Exception e){
-            return -1;
+            throw e;
         }
     }
 
     @Override
-    public int cancelSupply(int transactionId) {
+    public int cancelSupply(int transactionId) throws MarketException, IOException {
         try {
             List<NameValuePair> requestBody= transactionToString(transactionId);
             return sendRequest(requestBody);
         }
         catch (Exception e){
-            return -1;
+            throw e;
         }
     }
 
@@ -52,7 +54,7 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
      * @throws IOException
      * @throws InterruptedException
      */
-    public int sendRequest(List<NameValuePair> requestBody) throws IOException, InterruptedException {
+    public int sendRequest(List<NameValuePair> requestBody) throws IOException, MarketException {
         HttpClient httpClient ;
         HttpPost request;
         try {
@@ -63,11 +65,13 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
             request.setEntity(new UrlEncodedFormEntity(requestBody));
         }
         catch (Exception e){
-            throw new IOException("Could not connect to the supply service");
+            throw new MarketException("Error0");
         }
         if(httpClient==null | request==null){
-            throw new IOException("Could not connect to the supply service");
+            throw new MarketException("Error0");
         }
+        int res;
+        try{
         //send the request to the service server.
         HttpResponse response= httpClient.execute(request);
         HttpEntity entity = response.getEntity();
@@ -75,12 +79,12 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
         // String of the response
         String responseString = EntityUtils.toString(entity);
 
-        int res;
-        try{
+
             res =Integer.parseInt(responseString);
         }
         catch (Exception e ){
-            throw new IOException("Error with supply service");
+            throw new MarketException("Error1");
+
         }
         return  res;
     }

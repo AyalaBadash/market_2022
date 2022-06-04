@@ -28,11 +28,19 @@ public class Acquisition {
         supplyConfirmed = false;
     }
 
-    public ShoppingCart buyShoppingCart(Publisher publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, JsonProcessingException {
+    public ShoppingCart buyShoppingCart(Publisher publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
+
         // checks the price is correct
+        //todo: check why there is not an exception here.
         if(!isPriceCorrect(publisher,expectedPrice))
             return shoppingCartToBuy;
 
+        if(address==null){
+            throw new MarketException("Address not supplied.");
+        }
+        if(!address.isLegal()){
+            throw new MarketException("Address details are illegal.");
+        }
         supplyID=supplyHandler.supply(address);
         if(supplyID==-1){
             shoppingCartToBuy.cancelShopSave();
@@ -41,6 +49,12 @@ public class Acquisition {
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
         supplyConfirmed = true;
+        if(paymentMethod==null){
+            throw new MarketException("Payment method not supplied.");
+        }
+        if(!paymentMethod.isLegal()){
+            throw new MarketException("Payment method details are illegal.");
+        }
         paymentID = paymentHandler.pay(paymentMethod);
         if(paymentID==-1){
             shoppingCartToBuy.cancelShopSave();
@@ -58,7 +72,7 @@ public class Acquisition {
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
-        return null;
+        return shoppingCartToBuy;
     }
 
     private  boolean isPriceCorrect(Publisher publisher,double expectedPrice) throws MarketException {

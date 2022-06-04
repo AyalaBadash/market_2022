@@ -1,8 +1,11 @@
 package com.example.server.businessLayer.Supply;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +31,21 @@ public class SupplyServiceProxy implements SupplyService {
      * @param address the address to send to.
      * @return the transaction id
      */
-    public int supply(Address address) {
+    public int supply(Address address) throws MarketException, IOException {
+        if(address==null){
+            throw new MarketException("Address not supplied");
+        }
+        if(!address.isLegal()){
+            throw new MarketException("Address details are illegal");
+        }
         if (testRequest) {
             return 10000;
         }
-        return supplyService.supply(address);
-
+        int ret= supplyService.supply(address);
+        if (ret>100000 | ret<10000){
+            throw new MarketException("Error1");
+        }
+        return ret;
 
     }
 
@@ -43,14 +55,18 @@ public class SupplyServiceProxy implements SupplyService {
      * @param transactionId the supply transaction is.
      * @return
      */
-    public int cancelSupply(int transactionId) {
+    public int cancelSupply(int transactionId) throws Exception {
         if (testRequest) {
             return 10000;
         }
         if (transactionId == -1) {
             return -1;
         }
-        return supplyService.cancelSupply(transactionId);
+        int ret= supplyService.cancelSupply(transactionId);
+        if (ret>100000 | ret<10000){
+            throw new MarketException("Error1");
+        }
+        return ret;
     }
 
     /**

@@ -13,7 +13,7 @@ public class TextDispatcher extends Publisher{
     private final String dir;
     private static TextDispatcher textDispatcher=null;
 
-    //Set of the sessionis-messages;
+    //Set of the sessions-messages;
     private Map<String, Integer> messages;
 
 

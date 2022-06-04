@@ -1,5 +1,7 @@
 package com.example.server.ScenarioTests;
 
+import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
@@ -152,4 +154,33 @@ public class ServicesTests {
         not.createShopPermissionDeniedMessage("some shop", "some permission");
         Assertions.assertTrue(textDispatcher.addMessgae(name,not));
     }
+
+    @Test
+    @DisplayName("System init from file")
+    public void initFromFile(){
+        try{
+            Market market = Market.getInstance();
+            market.firstInitMarket("AdminName","AdminPassword");
+            assert true;
+        }
+        catch(Exception e){
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("System init from no file")
+    public void initFromNoFile(){
+        try{
+            Market market = Market.getInstance();
+            market.firstInitMarket("AdminName","AdminPassword","noName.txt");
+            assert false;
+        }
+        catch(MarketException ex){
+            assert true;
+        }
+        catch(Exception e){
+            assert false;
+        }
+    }
+
 }

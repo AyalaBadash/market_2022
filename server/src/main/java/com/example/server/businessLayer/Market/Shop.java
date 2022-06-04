@@ -529,4 +529,18 @@ public class Shop implements IHistory {
             throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
         discountPolicy.addNewDiscount ( discountType );
     }
+
+    public boolean hasItem(Item item) {
+        for(Map.Entry<Integer,Item> items: itemMap.entrySet()){
+            if( items.getValue().getID()==item.getID()){
+                if(items.getValue()==item) {
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 }
