@@ -4,10 +4,8 @@ import com.example.server.businessLayer.Payment.PaymentMock;
 import com.example.server.businessLayer.Supply.SupplyMock;
 import com.example.server.businessLayer.Market.Item;
 
-import com.example.server.dataLayer.entities.DalItem;
-import com.example.server.dataLayer.entities.DalShop;
-import com.example.server.dataLayer.repositories.ItemRepository;
-import com.example.server.dataLayer.repositories.ShopRepository;
+import com.example.server.dataLayer.entities.*;
+import com.example.server.dataLayer.repositories.*;
 import com.example.server.dataLayer.repositoryToDelete;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -31,7 +29,10 @@ public class Service implements IService {
     @Autowired
     private ItemRepository itemRepository;
     @Autowired
-    private ShopRepository shopRepository;
+    private OwnerAppRepository repo;
+
+
+
 
 
 
@@ -62,13 +63,11 @@ public class Service implements IService {
     public void toDeleteMethod2(){
 
         try {
-            DalItem item = new DalItem(1, "itemTest", 5,
-                    "infoTest",1,2,"fruit");
-            itemRepository.save(item);
-            List<DalItem> items = new ArrayList<>();
-            items.add(item);
-            DalShop dalShop = new DalShop("shopTest",1,"raz",true,1,2,items);
-            shopRepository.save(dalShop);
+            List<String> perms = new ArrayList<>();
+            perms.add("perm1");perms.add("perm2");
+            DalOwnerApp app = new DalOwnerApp("super","appointed","shop",true,false,true);
+            repo.save(app);
+
         }catch (Exception e){}
     }
 
