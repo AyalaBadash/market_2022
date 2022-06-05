@@ -5,6 +5,7 @@ import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
+import com.example.server.businessLayer.Publisher.NotificationHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingCart implements IHistory {
+
     private Map<Shop, ShoppingBasket> cart; // <Shop ,basket for the shop>
     private double currentPrice;
 
@@ -66,7 +68,7 @@ public class ShoppingCart implements IHistory {
      *                         return all items to shops, MarketException message include missing items
      */
 
-    public synchronized double saveFromShops(Publisher publisher, String buyer) throws MarketException {
+    public synchronized double saveFromShops(NotificationHandler publisher, String buyer) throws MarketException {
         boolean succeeded = true;
         List<Shop> succeedShops = new ArrayList<>();
         StringBuilder missing = new StringBuilder();

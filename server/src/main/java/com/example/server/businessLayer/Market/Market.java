@@ -43,9 +43,9 @@ public class Market {
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
     private SynchronizedCounter nextItemID;
-    private PaymentHandler paymentHandler;
-    private SupplyHandler supplyHandler;
-
+    private PaymentServiceProxy paymentServiceProxy;
+    private SupplyServiceProxy supplyServiceProxy;
+    private Publisher publisher;
     private static Market instance;
     Map<String, Integer> numOfAcqsPerShop;
 
@@ -62,6 +62,7 @@ public class Market {
         paymentServiceProxy = null;
         supplyServiceProxy = null;
         publisher = null;
+        notificationHandler=null;
     }
 
 
@@ -92,7 +93,7 @@ public class Market {
         instance.systemManagerName = userName;
         instance.paymentServiceProxy = paymentServiceProxy1;
         instance.supplyServiceProxy = supplyServiceProxy1;
-        instance.publisher = publisher;
+        notificationHandler=new NotificationHandler(publisher);
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -109,7 +110,6 @@ public class Market {
         readConfigurationFile();
         register(userName, password);
         instance.systemManagerName = userName;
-        instance.publisher = publisher;
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -156,7 +156,7 @@ public class Market {
                 debugLog.Log("A market initialization failed . Lack of payment / supply services ");
                 throw new MarketException("market needs payment and supply services for initialize");
             }
-            if (publisher == null) {
+            if (publisher == null || notificationHandler==null) {
                 DebugLog debugLog = DebugLog.getInstance();
                 debugLog.Log("A market initialization failed . Lack of publisher services ");
                 throw new MarketException("market needs publisher services for initialize");
@@ -349,8 +349,6 @@ public class Market {
     }
 
 
-
-
     public Map<java.lang.Integer, String> getAllItemsInMarketToShop() {
         return allItemsInMarketToShop;
     }
@@ -416,7 +414,6 @@ public class Market {
     //TODO make private
 
     /**
-     *
      * @param memberName the paying member's name.
      * @throws MarketException
      */
@@ -526,7 +523,6 @@ public class Market {
                         .collect(Collectors.toList())), shopName);
             } catch (Exception e) {
             }
-            catch(Exception e){}
             //
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
         }
@@ -560,7 +556,6 @@ public class Market {
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
-
 
 
     public Shop addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
@@ -731,8 +726,6 @@ public class Market {
         }
         shoppingCart.addItem(curShop, item, amount);
         EventLog.getInstance().Log(amount + " " + item.getName() + " added to cart.");
-        shoppingCart.addItem( curShop, item, amount );
-        EventLog.getInstance().Log(amount+" "+item.getName()+ " added to cart.");
     }
 
     public StringBuilder getShopPurchaseHistory(String shopManagerName, String shopName) throws MarketException {
@@ -768,7 +761,7 @@ public class Market {
     }
 
     public void appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)){
+        if (!userController.isLoggedIn(shopOwnerName)) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
@@ -869,7 +862,7 @@ public class Market {
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
-            shoppingCartToReturn = acquisition.buyShoppingCart(publisher, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
+            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
         } catch (Exception e) {
 
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -879,10 +872,6 @@ public class Market {
         if (shoppingCartToReturn == null) {
             throw new MarketException("Could not make the purchase right now for the shopping cart. Please try again later. ");
         }
-        ShoppingCart shoppingCart = visitor.getCart();
-            Acquisition acquisition = new Acquisition(shoppingCart, visitorName);
-        ShoppingCart shoppingCartToReturn = acquisition.buyShoppingCart(expectedPrice, paymentMethod, address, getPaymentHandler (), getSupplyHandler());
-        //TODO - what is expected here?
         return shoppingCartToReturn;
     }
 
@@ -968,8 +957,7 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss, firedAppointed);
         try {
-            NotificationHandler handler = new NotificationHandler(publisher);
-            handler.sendAppointmentRemovedNotification(firedAppointed, shopName);
+            notificationHandler.sendAppointmentRemovedNotification(firedAppointed, shopName);
         } catch (Exception e) {
         }
 

@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 
 public class Shop implements IHistory {
     private String shopName;
-    private Map<java.lang.Integer, Item> itemMap;     //<ItemID,main.businessLayer.Item>
-    private Map<String, Appointment> shopManagers;    //<name, appointment>
-    private Map<String, Appointment> shopOwners;      //<name, appointment>
+    private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
+    private Map<String, Appointment> shopManagers;     //<name, appointment>
+    private Map<String, Appointment> shopOwners;     //<name, appointment>
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
     private static ItemRepository itemRepository;
@@ -162,9 +162,8 @@ public class Shop implements IHistory {
     }
 
     //Bar: adding the parameter buyer name for the notification send.
-    public synchronized double buyBasket(Publisher publisher, ShoppingBasket shoppingBasket, String buyer) throws MarketException {
+    public synchronized double buyBasket(NotificationHandler publisher, ShoppingBasket shoppingBasket, String buyer) throws MarketException {
         //the notification to the shop owners publisher.
-        NotificationHandler notificationHandler= new NotificationHandler(publisher);
         ArrayList<String> names = new ArrayList<>(getShopOwners().values().stream().collect(Collectors.toList()).stream()
                 .map(appointment -> appointment.getAppointed().getName()).collect(Collectors.toList()));
         String shopName = getShopName();
@@ -199,7 +198,7 @@ public class Shop implements IHistory {
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
         try{
-            notificationHandler.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
+            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
         }
         catch (Exception e){}
         return shoppingBasket.getPrice ( );
