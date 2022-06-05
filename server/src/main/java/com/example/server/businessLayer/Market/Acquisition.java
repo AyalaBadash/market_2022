@@ -9,6 +9,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.dataLayer.entities.DalAcquisition;
 
 public class Acquisition {
     private boolean paymentDone; //save
@@ -70,6 +71,10 @@ public class Acquisition {
             return false;
         }
         return true;
+    }
+    private DalAcquisition toDalObject(){
+        //TODO check what to do with ID
+        return new DalAcquisition(-1,this.buyerName,this.paymentDone,this.supplyConfirmed,this.supplyID,this.paymentID);
     }
 
 

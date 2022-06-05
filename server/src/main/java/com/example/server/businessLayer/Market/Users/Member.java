@@ -108,4 +108,5 @@ public class Member implements IHistory {
         eventLog.Log("Pulled "+this.getName()+" history");
         return history;
     }
+    //TODO add toDalObject Method.
 }

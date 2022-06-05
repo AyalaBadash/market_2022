@@ -14,6 +14,7 @@ import com.example.server.businessLayer.Security.Security;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.dataLayer.entities.DalMarket;
 import com.example.server.dataLayer.repositories.ItemRepository;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -890,5 +891,9 @@ public class Market {
         addItemToShop(shopOwnerName, itemName, productPrice, electricity, info, keyWords, productAmount,shopName);
         Item itemAdded = getItemByID(nextItemID.value() - 1);
         return itemAdded;
+    }
+    private DalMarket toDalObject(){
+        //TODO check what to do with ID
+        return new DalMarket(1,this.systemManagerName);
     }
 }

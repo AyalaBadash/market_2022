@@ -1,7 +1,10 @@
 package com.example.server.businessLayer.Market.Appointment;
 
+import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.dataLayer.entities.DalManagerApp;
+import com.example.server.dataLayer.entities.DalOwnerApp;
 import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
@@ -24,6 +27,36 @@ public class ShopOwnerAppointment extends Appointment {
     @Override
     public boolean isOwner() {
         return true;
+    }
+
+    @Override
+    public DalOwnerApp toDalObject(){
+        boolean employeesPerm;
+        boolean purchaseHistoryPerm;
+        if (permissions.size()==0)
+        {
+            employeesPerm = false;
+            purchaseHistoryPerm = false;
+        }
+        else if (permissions.size()==2)
+        {
+            employeesPerm = true;
+            purchaseHistoryPerm = true;
+        }
+        else {
+            IPermission permission = permissions.get(0);
+            if (permission.getName().equals("get_employees_info"))
+            {
+                employeesPerm = true;
+                purchaseHistoryPerm = false;
+            }
+            else {
+                employeesPerm = false;
+                purchaseHistoryPerm = true;
+            }
+
+        }
+        return new DalOwnerApp(getSuperVisor().getName(),getAppointed().getName(),getRelatedShop().getShopName(),employeesPerm,purchaseHistoryPerm,isShopFounder);
     }
 
     @Override

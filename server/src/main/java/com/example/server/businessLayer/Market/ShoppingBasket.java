@@ -2,8 +2,11 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.entities.DalItem;
+import com.example.server.dataLayer.entities.DalShoppingBasket;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -113,5 +116,14 @@ public class ShoppingBasket implements IHistory {
 
     public void setItemMap(Map<java.lang.Integer, Item> itemMap) {
         this.itemMap = itemMap;
+    }
+
+    private DalShoppingBasket toDalObject(){
+        Map<DalItem,Double> dalItems = new HashMap<>();
+        for (Map.Entry<Integer,Double> entry:this.items.entrySet()){
+            dalItems.put(itemMap.get(entry.getKey()).toDalObject(),entry.getValue());
+        }
+        //TODO - check what with ID
+        return new DalShoppingBasket(-1,this.price,dalItems);
     }
 }

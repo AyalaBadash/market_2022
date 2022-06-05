@@ -10,6 +10,8 @@ import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.Discount.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.dataLayer.entities.DalItem;
+import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.repositories.ItemRepository;
 
 import java.util.ArrayList;
@@ -525,5 +527,16 @@ public class Shop implements IHistory {
 
     protected static void setItemRepository(ItemRepository itemRep){
         itemRepository = itemRep;
+    }
+
+    private DalShop toDalObject(){
+        List<DalItem> items = new ArrayList<>();
+        List<Double> amounts = new ArrayList<>();
+        for (Map.Entry<Integer,Double> entry:itemsCurrentAmount.entrySet()){
+            items.add(itemMap.get(entry.getKey()).toDalObject());
+            amounts.add(entry.getValue());
+        }
+        DalShop res = new DalShop(this.shopName,items,amounts,this.closed,this.rank,this.rankers);
+        return res;
     }
 }

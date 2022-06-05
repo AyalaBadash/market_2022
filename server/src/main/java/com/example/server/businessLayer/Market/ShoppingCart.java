@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.entities.DalShoppingCart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +128,10 @@ public class ShoppingCart implements IHistory {
             throw new MarketException("The basket does not exist in the cart.");
         }
         basket.updateQuantity(amount, item);
+    }
+    private DalShoppingCart toDalObject(){
+        //TODO check what to do with ID
+        return new DalShoppingCart(-1,this.currentPrice);
     }
 
 

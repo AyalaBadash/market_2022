@@ -6,6 +6,7 @@ import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseH
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.dataLayer.entities.DalAppointment;
 import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
@@ -74,6 +75,9 @@ Appointment {
 
     public abstract boolean isManager();
     public abstract boolean isOwner();
+
+    public abstract DalAppointment toDalObject();
+
 
 
     public Map<String, Appointment> getShopEmployeesInfo() throws MarketException {

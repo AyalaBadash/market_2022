@@ -8,7 +8,7 @@ import javax.persistence.Table;
 @Entity
 @Table
 @IdClass(AppointmentID.class)
-public class DalOwnerApp {
+public class DalOwnerApp extends DalAppointment{
     @Id
     private String supervisor;
     @Id
