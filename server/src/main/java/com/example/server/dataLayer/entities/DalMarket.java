@@ -12,8 +12,8 @@ public class DalMarket {
 
     public DalMarket(){}
 
-    public DalMarket(int marketID, String sysManagerName) {
-        this.marketID = marketID;
+    public DalMarket( String sysManagerName) {
+
         SysManagerName = sysManagerName;
     }
 

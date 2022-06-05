@@ -1,13 +1,11 @@
 package com.example.server.dataLayer.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "acquisitions")
-public class DalAcquisition {
+public class DalAcquisition implements Serializable {
     @Id
     private int cartID;
     private String buyerName;

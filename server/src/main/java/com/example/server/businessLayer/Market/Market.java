@@ -893,7 +893,7 @@ public class Market {
         return itemAdded;
     }
     private DalMarket toDalObject(){
-        //TODO check what to do with ID
-        return new DalMarket(1,this.systemManagerName);
+
+        return new DalMarket(this.systemManagerName);
     }
 }

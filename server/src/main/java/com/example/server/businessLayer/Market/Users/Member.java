@@ -7,6 +7,10 @@ import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.IHistory;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.dataLayer.entities.DalAcquisitionHistory;
+import com.example.server.dataLayer.entities.DalManagerApp;
+import com.example.server.dataLayer.entities.DalMember;
+import com.example.server.dataLayer.entities.DalOwnerApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,5 +112,35 @@ public class Member implements IHistory {
         eventLog.Log("Pulled "+this.getName()+" history");
         return history;
     }
-    //TODO add toDalObject Method.
+    public DalMember toDalObject(){
+        List<DalManagerApp> managerAppsByMe = new ArrayList<>();
+        List<DalOwnerApp> ownerAppsByMe = new ArrayList<>();
+        List<DalManagerApp> myManagerApps = new ArrayList<>();
+        List<DalOwnerApp> myOwnerApps = new ArrayList<>();
+        List<DalAcquisitionHistory> dalPurchaseHistory = new ArrayList<>();
+        for (Appointment app: this.appointedByMe){
+            if (app.isManager())
+            {
+
+                managerAppsByMe.add((DalManagerApp) app.toDalObject());
+            }
+            else {
+                ownerAppsByMe.add((DalOwnerApp) app.toDalObject());
+            }
+        }
+        for (Appointment app: this.appointedByMe){
+            if (app.isManager())
+            {
+                myManagerApps.add((DalManagerApp) app.toDalObject());
+            }
+            else {
+                myOwnerApps.add((DalOwnerApp) app.toDalObject());
+            }
+        }
+        for (AcquisitionHistory acq : this.purchaseHistory){
+            dalPurchaseHistory.add(acq.toDalObject());
+        }
+        DalMember res = new DalMember(this.name,this.myCart.toDalObject(),managerAppsByMe,ownerAppsByMe,myManagerApps,myOwnerApps,dalPurchaseHistory);
+        return res;
+    }
 }

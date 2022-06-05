@@ -529,7 +529,7 @@ public class Shop implements IHistory {
         itemRepository = itemRep;
     }
 
-    private DalShop toDalObject(){
+    public DalShop toDalObject(){
         List<DalItem> items = new ArrayList<>();
         List<Double> amounts = new ArrayList<>();
         for (Map.Entry<Integer,Double> entry:itemsCurrentAmount.entrySet()){

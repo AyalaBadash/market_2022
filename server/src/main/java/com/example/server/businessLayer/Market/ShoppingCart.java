@@ -1,9 +1,12 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.entities.DalShop;
+import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,9 +132,12 @@ public class ShoppingCart implements IHistory {
         }
         basket.updateQuantity(amount, item);
     }
-    private DalShoppingCart toDalObject(){
-        //TODO check what to do with ID
-        return new DalShoppingCart(-1,this.currentPrice);
+    public DalShoppingCart toDalObject(){
+        Map<DalShop, DalShoppingBasket> baskets = new HashMap<>();
+        for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
+            baskets.put(entry.getKey().toDalObject(),entry.getValue().toDalObject());
+        }
+        return new DalShoppingCart(baskets,this.currentPrice);
     }
 
 

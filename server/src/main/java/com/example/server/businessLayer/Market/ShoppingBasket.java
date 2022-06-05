@@ -118,12 +118,12 @@ public class ShoppingBasket implements IHistory {
         this.itemMap = itemMap;
     }
 
-    private DalShoppingBasket toDalObject(){
+    public DalShoppingBasket toDalObject(){
         Map<DalItem,Double> dalItems = new HashMap<>();
         for (Map.Entry<Integer,Double> entry:this.items.entrySet()){
             dalItems.put(itemMap.get(entry.getKey()).toDalObject(),entry.getValue());
         }
-        //TODO - check what with ID
-        return new DalShoppingBasket(-1,this.price,dalItems);
+
+        return new DalShoppingBasket(this.price,dalItems);
     }
 }

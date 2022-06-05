@@ -25,9 +25,9 @@ public class DalShoppingCart {
 
     public DalShoppingCart(){}
 
-    public DalShoppingCart(Map<String, DalShoppingBasket> baskets, double price) {
-//        this.baskets = baskets;
-        this.currentPrice = price;
+    public DalShoppingCart(Map<DalShop, DalShoppingBasket> baskets, double currentPrice) {
+        this.baskets = baskets;
+        this.currentPrice = currentPrice;
     }
 
     public int getId() {

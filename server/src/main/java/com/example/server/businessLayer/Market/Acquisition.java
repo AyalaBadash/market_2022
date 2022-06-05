@@ -10,6 +10,7 @@ import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.dataLayer.entities.DalAcquisition;
+import com.example.server.dataLayer.entities.DalShoppingCart;
 
 public class Acquisition {
     private boolean paymentDone; //save
@@ -73,8 +74,9 @@ public class Acquisition {
         return true;
     }
     private DalAcquisition toDalObject(){
-        //TODO check what to do with ID
-        return new DalAcquisition(-1,this.buyerName,this.paymentDone,this.supplyConfirmed,this.supplyID,this.paymentID);
+        //TODO check this code
+        int cartID = this.shoppingCartToBuy.toDalObject().getId();
+        return new DalAcquisition(cartID,this.buyerName,this.paymentDone,this.supplyConfirmed,this.supplyID,this.paymentID);
     }
 
 

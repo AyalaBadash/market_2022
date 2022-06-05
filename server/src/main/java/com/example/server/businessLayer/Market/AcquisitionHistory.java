@@ -1,5 +1,8 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.dataLayer.entities.DalAcquisitionHistory;
+import com.example.server.dataLayer.entities.DalItemAcquisitionHistory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +56,9 @@ class ItemAcquisitionHistory {
     public String toString() {
         return "You bought : "+amount + " "+ itemName+" in the shop : "+ shopName+". Total price for this item:"+totalPriceForItem+"\n";
     }
+    public DalItemAcquisitionHistory ToDalObject (){
+        return new DalItemAcquisitionHistory(this.shopName,this.itemName,this.amount,this.totalPriceForItem);
+    }
 }
 //--------------------------------------------------------------------------------------------------------------------
 
@@ -98,6 +104,13 @@ public class AcquisitionHistory {
         for (ItemAcquisitionHistory acq : itemAcquisitionHistories)
             str.append(acq.toString());
         return str.toString();
-
+    }
+    public DalAcquisitionHistory toDalObject(){
+        List<DalItemAcquisitionHistory> itemAcqLst = new ArrayList<>();
+        for (ItemAcquisitionHistory itemAcq : this.itemAcquisitionHistories)
+        {
+            itemAcqLst.add(itemAcq.ToDalObject());
+        }
+        return new DalAcquisitionHistory(this.name,this.totalPriceBeforeDiscount,this.discount,this.totalPriceAfterDiscount,itemAcqLst);
     }
 }
