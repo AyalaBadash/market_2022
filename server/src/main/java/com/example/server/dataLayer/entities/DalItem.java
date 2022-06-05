@@ -2,7 +2,6 @@ package com.example.server.dataLayer.entities;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table (name = "items")
@@ -16,27 +15,24 @@ public class DalItem {
     private int rnk;
     private int rnkrs;
     private String category;
-//    @OneToMany
+
     @ElementCollection
     @Column (name = "keyword")
     @CollectionTable (name = "item_keywords", joinColumns = {@JoinColumn(name = "item_id")})
     private List<String> keywords;
-//    @OneToMany (mappedBy = "item")
-//    private Set<DalItemsForBasket> baskets;
 
-    public DalItem(int id, String name, int price, String info, int rnk, int rnkrs, String category) {
-        this.item_id = id;
+    public DalItem(int item_id, String name, int price, String info, int rnk, int rnkrs, String category, List<String> keywords) {
+        this.item_id = item_id;
         this.name = name;
         this.price = price;
         this.info = info;
         this.rnk = rnk;
         this.rnkrs = rnkrs;
         this.category = category;
-//        keywords = new ArrayList<>();
+        this.keywords = keywords;
     }
 
     public DalItem(){}
-
 
     public int getItem_id() {
         return item_id;
@@ -86,14 +82,6 @@ public class DalItem {
         this.rnkrs = rnkrs;
     }
 
-//    public List<DalKeyword> getKeywords() {
-//        return keywords;
-//    }
-//
-//    public void setKeywords(List<DalKeyword> keywords) {
-//        this.keywords = keywords;
-//    }
-
     public String getCategory() {
         return category;
     }
@@ -102,12 +90,11 @@ public class DalItem {
         this.category = category;
     }
 
+    public List<String> getKeywords() {
+        return keywords;
+    }
 
-//    public List<String> getKeywords() {
-//        return keywords;
-//    }
-//
-//    public void setKeywords(List<String> keywords) {
-//        this.keywords = keywords;
-//    }
+    public void setKeywords(List<String> keywords) {
+        this.keywords = keywords;
+    }
 }

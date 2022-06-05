@@ -3,7 +3,7 @@ package com.example.server.dataLayer.entities;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "market")
 public class DalMarket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
