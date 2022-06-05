@@ -3,7 +3,12 @@ package com.example.server.businessLayer.Publisher;
 import com.example.server.serviceLayer.Notifications.Notification;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,7 +64,7 @@ public class TextDispatcher extends Publisher{
         if(!messages.containsKey(sessionId)){
             return false;
         }
-        if( writeToText(dir, notification.getMessage(), sessionId+messages.get(sessionId)+".txt")){
+        if( writeToText(notification.getMessage(), sessionId+messages.get(sessionId)+".txt",sessionId)){
             int ret=messages.get(sessionId);
             messages.remove(sessionId);
             messages.put(sessionId,ret+1);
@@ -71,7 +76,7 @@ public class TextDispatcher extends Publisher{
 
     }
 
-    private boolean writeToText(String path,String message, String name){
+    private boolean writeToText(String message, String name, String sessionId){
         try {
             FileWriter myWriter = new FileWriter(name);
             myWriter.write(message);

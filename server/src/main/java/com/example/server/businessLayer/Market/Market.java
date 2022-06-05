@@ -117,7 +117,12 @@ public class Market {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
         }
-        readConfigurationFile(fileName);
+        if(fileName==null || fileName.isEmpty()){
+            readConfigurationFile();
+        }
+        else{
+            readConfigurationFile(fileName);
+        }
         register(userName, password);
         instance.systemManagerName = userName;
         instance.publisher = publisher;
