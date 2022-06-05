@@ -1,12 +1,15 @@
 package com.example.server.serviceLayer;
 
-import com.example.server.businessLayer.Payment.PaymentMock;
-import com.example.server.businessLayer.Supply.SupplyMock;
 import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
+import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 
 import com.example.server.dataLayer.entities.*;
 import com.example.server.dataLayer.repositories.*;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -74,9 +77,9 @@ public class Service implements IService {
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
-        PaymentMock paymentService = new PaymentMock();
-        SupplyMock supplyMock = new SupplyMock();
-        return marketService.firstInitMarket(paymentService,supplyMock, request.getUserName(), request.getPassword() );
+        PaymentServiceProxy paymentService = new PaymentServiceProxy(new WSEPPaymentServiceAdapter(),true);
+        SupplyServiceProxy supplyMock = new SupplyServiceProxy(new WSEPSupplyServiceAdapter(),true);
+        return marketService.firstInitMarket ( paymentService,supplyMock, request.getUserName(), request.getPassword() );
     }
 
     @Override
@@ -301,7 +304,7 @@ public class Service implements IService {
     @RequestMapping(value = "/getShopEmployeesInfo")
     @CrossOrigin
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(@RequestBody GetShopEmployeesRequest request) {
-        return marketService.getShopEmployeesInfo(request.getShopName(), request.getShopName());
+        return marketService.getShopEmployeesInfo(request.getShopManagerName(), request.getShopName());
     }
 
     @Override
@@ -366,6 +369,13 @@ public class Service implements IService {
         return marketService.getMarketInfo(request.getSysManager());
     }
 
+    @Override
+    @RequestMapping(value = "/addDiscountToShop")
+    @CrossOrigin
+    public Response addDiscountToShop(AddDiscountToShopRequest request) {
+        return marketService.addDiscountToShop(request.getVisitorName (), request.getShopName (), request.getDiscount ());
+    }
+
 
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);
@@ -378,4 +388,12 @@ public class Service implements IService {
     public ResponseT<ItemFacade> getItemById(int id) {
         return marketService.getItemById(id);
     }
+
+    @Override
+    @RequestMapping(value = "/isServerInit")
+    @CrossOrigin
+    public Response isServerInit(){
+        return marketService.isServerInit();
+    }
+
 }

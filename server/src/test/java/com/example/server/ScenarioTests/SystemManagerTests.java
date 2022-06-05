@@ -1,9 +1,8 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.businessLayer.Payment.PaymentHandler;
-import com.example.server.businessLayer.Payment.PaymentMock;
-import com.example.server.businessLayer.Supply.SupplyHandler;
-import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Visitor;
@@ -21,18 +20,20 @@ public class SystemManagerTests {
     static Market market;
     static String managerName = "userTest";
     static String managerpassword = "passTest";
-    static PaymentMock paymentService = new PaymentMock();
-    static SupplyMock supplyService = new SupplyMock();
-    PaymentMock paymentService2 = new PaymentMock();
-    SupplyMock supplyService2 = new SupplyMock();
+    static PaymentServiceProxy paymentService = new PaymentServiceProxy();
+    static SupplyServiceProxy supplyService = new SupplyServiceProxy();
+    static PaymentServiceProxy paymentService2 = new PaymentServiceProxy();
+    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
+    SupplyServiceProxy supplyService2 = new SupplyServiceProxy();
 
 
     @BeforeAll
     public static void setUp() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentHandler() == null)
-                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), managerName, managerpassword);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, textDispatcher,managerName, managerpassword);
+
             else
                 market.register(managerName, managerpassword);
         } catch (Exception e) {

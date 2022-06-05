@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
@@ -8,8 +9,9 @@ import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointmen
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
-import com.example.server.businessLayer.Market.Policies.Discount.DiscountPolicy;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.dataLayer.entities.DalItem;
 import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.repositories.ItemRepository;
@@ -66,7 +68,7 @@ public class Shop implements IHistory {
             DebugLog.getInstance ( ).Log ( String.format ( "%s: cannot find an appointment of %s", this.getShopName ( ), managerName ) );
             throw new MarketException ( String.format ( "%s: cannot find an appointment of %s", this.getShopName ( ), managerName ) );
         }
-        if (!oldAppointment.getSuperVisor ( ).equals ( superVisorName )) {
+        if (!oldAppointment.getSuperVisor( ).getName().equals ( superVisorName )) {
             DebugLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
@@ -160,9 +162,9 @@ public class Shop implements IHistory {
     }
 
     //Bar: adding the parameter buyer name for the notification send.
-    public synchronized double buyBasket(ShoppingBasket shoppingBasket,String buyer) throws MarketException {
+    public synchronized double buyBasket(Publisher publisher, ShoppingBasket shoppingBasket, String buyer) throws MarketException {
         //the notification to the shop owners publisher.
-        NotificationHandler notificationHandler= new NotificationHandler(new NotificationDispatcher());
+        NotificationHandler notificationHandler= new NotificationHandler(publisher);
         ArrayList<String> names = new ArrayList<>(getShopOwners().values().stream().collect(Collectors.toList()).stream()
                 .map(appointment -> appointment.getAppointed().getName()).collect(Collectors.toList()));
         String shopName = getShopName();
@@ -281,7 +283,7 @@ public class Shop implements IHistory {
         return this;
     }
 
-    private boolean isEmployee(String memberName) {
+    public boolean isEmployee(String memberName) {
         for ( Map.Entry<String, Appointment> appointment : shopManagers.entrySet ( ) ) {
             if (appointment.getValue ( ).getAppointed ( ).getName ( ).equals ( memberName )) {
                 return true;
@@ -403,8 +405,7 @@ public class Shop implements IHistory {
             if (itemNameExists(itemName))
                 throw new MarketException("different item with the same name already exists in this shop");
             addedItem = new Item(id, itemName, price, info, category, keywords);
-            itemRepository.save(addedItem.toDalObject());
-            itemMap.put (id, addedItem);
+            itemMap.put ( id, addedItem );
         }
         itemsCurrentAmount.put ( id, amount );
         return addedItem;
@@ -529,6 +530,26 @@ public class Shop implements IHistory {
         itemRepository = itemRep;
     }
 
+    }
+
+    public void addDiscountToShop(String visitorName, DiscountType discountType) throws MarketException {
+        if (!isShopOwner ( visitorName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        discountPolicy.addNewDiscount ( discountType );
+    }
+
+    public boolean hasItem(Item item) {
+        for(Map.Entry<Integer,Item> items: itemMap.entrySet()){
+            if( items.getValue().getID()==item.getID()){
+                if(items.getValue()==item) {
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        return false;
     public DalShop toDalObject(){
         List<DalItem> items = new ArrayList<>();
         List<Double> amounts = new ArrayList<>();

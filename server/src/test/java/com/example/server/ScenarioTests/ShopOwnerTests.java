@@ -1,10 +1,9 @@
 package com.example.server.ScenarioTests;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
-import com.example.server.businessLayer.Payment.PaymentHandler;
-import com.example.server.businessLayer.Payment.PaymentMock;
-import com.example.server.businessLayer.Supply.SupplyHandler;
-import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
@@ -24,8 +23,8 @@ public class ShopOwnerTests {
     Market market;
     String userName = "userTest";
     String password = "passTest";
-    PaymentMock paymentService = new PaymentMock();
-    SupplyMock supplyService = new SupplyMock();
+    PaymentServiceProxy paymentService = new PaymentServiceProxy();
+    SupplyServiceProxy supplyService = new SupplyServiceProxy();
     String shopOwnerName = "bar";
     String shopOwnerPassword = "pass";
     String memberName = "bar1";
@@ -40,6 +39,7 @@ public class ShopOwnerTests {
     int productAmount;
     Double productPrice;
     double newAmount;
+    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
 
 
     @BeforeAll
@@ -49,8 +49,9 @@ public class ShopOwnerTests {
             productAmount = 3;
             productPrice = 1.2;
             newAmount=10;
-            if (market.getPaymentHandler() == null)
-                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
+           if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop
@@ -557,6 +558,24 @@ public class ShopOwnerTests {
         } catch (MarketException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    @Test
+    @DisplayName("add new simple discount to shop")
+    public void addNewSimpleDiscountToShopSuccess() {
+        throw new UnsupportedOperationException (  );
+    }
+
+    @Test
+    @DisplayName("add new complex discount to shop")
+    public void addNewComplexDiscountToShopSuccess() {
+        throw new UnsupportedOperationException (  );
+    }
+
+    @Test
+    @DisplayName("add new complex discount to shop - existing simple discount")
+    public void addNewComplexDiscountToShopExistingSimpleDiscount() {
+        throw new UnsupportedOperationException (  );
     }
 
     public void loginMember(String name, String password) throws MarketException {

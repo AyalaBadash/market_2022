@@ -1,9 +1,12 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Payment.PaymentHandler;
+
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
-import com.example.server.businessLayer.Supply.SupplyHandler;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
@@ -11,6 +14,7 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.dataLayer.entities.DalAcquisition;
 import com.example.server.dataLayer.entities.DalShoppingCart;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Acquisition {
     private boolean paymentDone; //save
@@ -27,11 +31,19 @@ public class Acquisition {
         supplyConfirmed = false;
     }
 
-    public ShoppingCart buyShoppingCart(double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentHandler paymentHandler, SupplyHandler supplyHandler) throws MarketException {
-        // checks the price is correct
-       if(!isPriceCorrect(expectedPrice))
-           return shoppingCartToBuy;
+    public ShoppingCart buyShoppingCart(Publisher publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
 
+        // checks the price is correct
+        //todo: check why there is not an exception here.
+        if(!isPriceCorrect(publisher,expectedPrice))
+            return shoppingCartToBuy;
+
+        if(address==null){
+            throw new MarketException("Address not supplied.");
+        }
+        if(!address.isLegal()){
+            throw new MarketException("Address details are illegal.");
+        }
         supplyID=supplyHandler.supply(address);
         if(supplyID==-1){
             shoppingCartToBuy.cancelShopSave();
@@ -39,7 +51,14 @@ public class Acquisition {
             errorLog.Log("Supply has been failed.");
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
-        paymentID = paymentHandler.pay (paymentMethod);
+        supplyConfirmed = true;
+        if(paymentMethod==null){
+            throw new MarketException("Payment method not supplied.");
+        }
+        if(!paymentMethod.isLegal()){
+            throw new MarketException("Payment method details are illegal.");
+        }
+        paymentID = paymentHandler.pay(paymentMethod);
         if(paymentID==-1){
             shoppingCartToBuy.cancelShopSave();
             supplyHandler.cancelSupply(supplyID);
@@ -47,6 +66,7 @@ public class Acquisition {
             errorLog.Log("Payment has been failed.");
             throw new MarketException("payment has been failed. shopping cart did not change and supply was canceled");
         }
+        paymentDone = true;
         Visitor visitor = UserController.getInstance().getVisitor(buyerName);
         Member member = visitor.getMember ();
         if( member != null) {
@@ -55,13 +75,13 @@ public class Acquisition {
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
-        return null;
+        return shoppingCartToBuy;
     }
 
-    private  boolean isPriceCorrect(double expectedPrice) throws MarketException {
+    private  boolean isPriceCorrect(Publisher publisher,double expectedPrice) throws MarketException {
         double actualPrice;
         try {
-            actualPrice = shoppingCartToBuy.saveFromShops(buyerName);
+            actualPrice = shoppingCartToBuy.saveFromShops(publisher,buyerName);
         }catch (MarketException e){
             return false;
         }

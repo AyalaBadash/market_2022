@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Publisher;
 
 import com.example.server.serviceLayer.Notifications.Notification;
+import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
@@ -11,11 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Flow;
 
 
 @Service
 @EnableScheduling
-public class NotificationDispatcher {
+public class NotificationDispatcher extends Publisher {
     @Autowired
     private SimpMessagingTemplate template;
     private static NotificationDispatcher notificationDispatcher=null;
@@ -29,7 +31,7 @@ public class NotificationDispatcher {
         }
         return notificationDispatcher;
     }
-    public NotificationDispatcher() {
+    private NotificationDispatcher() {
         messages=new ConcurrentHashMap<>();
     }
 
@@ -60,6 +62,7 @@ public class NotificationDispatcher {
     }
 
     //removes a session by session.
+    @Override
     public List<Notification> remove(String sessionId) {
 
         if (!messages.containsKey(sessionId)) {
@@ -72,17 +75,22 @@ public class NotificationDispatcher {
 
 
     //Add new session to the map.
+    @Override
     public boolean add( String sessionId) {
 
         if(messages.containsKey(sessionId)){
             return false;
         }
         messages.put(sessionId,new ArrayList<>());
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createAnotherMessage("welcome to notifications service");
+        messages.get(sessionId).add(not);
         return true;
     }
 
 
     //sends message to user who just logged in.
+    @Override
     public boolean addMessgae(String sessionId, Notification notification) {
 
         if(!messages.containsKey(sessionId)){

@@ -1,9 +1,8 @@
 package com.example.server.ScenarioTests;
 
-import com.example.server.businessLayer.Payment.PaymentHandler;
-import com.example.server.businessLayer.Payment.PaymentMock;
-import com.example.server.businessLayer.Supply.SupplyHandler;
-import com.example.server.businessLayer.Supply.SupplyMock;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Visitor;
@@ -19,8 +18,8 @@ public class ShopManagerTests {
     Market market;
     String userName = "userTest";
     String password = "passTest";
-    PaymentMock paymentService = new PaymentMock();
-    SupplyMock supplyService = new SupplyMock();
+    PaymentServiceProxy paymentService = new PaymentServiceProxy();
+    SupplyServiceProxy supplyService = new SupplyServiceProxy();
     String shopOwnerName = "bar3";
     String shopOwnerPassword = "pass3";
     String managerName = "bar4";
@@ -30,6 +29,7 @@ public class ShopManagerTests {
     Double productPrice;
     double newAmount;
 
+    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
 
     @BeforeAll
     public void setUp() {
@@ -38,8 +38,9 @@ public class ShopManagerTests {
             productAmount = 3;
             productPrice = 1.2;
             newAmount=10;
-            if (market.getPaymentHandler () == null)
-                market.firstInitMarket(new PaymentHandler(paymentService), new SupplyHandler(supplyService), userName, password);
+            if (market.getPaymentService() == null)
+                market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);
             // open shop

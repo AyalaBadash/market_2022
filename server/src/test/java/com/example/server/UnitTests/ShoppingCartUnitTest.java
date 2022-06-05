@@ -5,6 +5,7 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,9 +76,10 @@ public class ShoppingCartUnitTest{
     {
             try{
 
-                Mockito.when(shop.buyBasket(basket,"some buyer name")).thenReturn(25.0);
-                Mockito.when(shop2.buyBasket(basket2, "some buyer name")).thenReturn(30.0);
-                double x = shoppingCart.saveFromShops("some buyer name");
+                TextDispatcher textDispatcher=TextDispatcher.getInstance();
+                Mockito.when(shop.buyBasket(textDispatcher,basket,"some buyer name")).thenReturn(25.0);
+                Mockito.when(shop2.buyBasket(textDispatcher,basket2, "some buyer name")).thenReturn(30.0);
+                double x = shoppingCart.saveFromShops(textDispatcher,"some buyer name");
                 Assertions.assertEquals(55.0,x);
             }
             catch (MarketException e){

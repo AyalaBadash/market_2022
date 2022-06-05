@@ -69,4 +69,12 @@ public class Address {
                 ", zip='" + zip + '\'' +
                 '}';
     }
+
+    public boolean isLegal() {
+        try{
+            Integer.parseInt(zip);
+        }
+        catch (Exception e){return false;}
+        return ((city!=null && !city.isEmpty()) & (address!=null && !address.isEmpty()) & (zip!=null && !zip.isEmpty()) & (country!=null && !country.isEmpty()));
+    }
 }

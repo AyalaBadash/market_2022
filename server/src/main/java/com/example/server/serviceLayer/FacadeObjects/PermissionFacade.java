@@ -6,10 +6,12 @@ import com.example.server.businessLayer.Market.Appointment.Permissions.IPermissi
 import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
 
 public class PermissionFacade implements FacadeObject{
-    private String name;
+
+    public PermissionFacade(){}
     public PermissionFacade(IPermission permission){
         this.name = permission.getName();
     }
+    private String name;
 
     public PermissionFacade(String name) {
         this.name = name;
@@ -25,7 +27,7 @@ public class PermissionFacade implements FacadeObject{
 
     @Override
     public IPermission toBusinessObject() {
-        if(name.equals ( "get_employees_info" ))
+        if(name.equals ( new EmployeesPermission().getName() ))
             return new EmployeesPermission ();
         return new PurchaseHistoryPermission ();
     }

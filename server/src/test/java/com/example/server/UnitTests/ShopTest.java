@@ -8,6 +8,7 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,6 +30,8 @@ public class ShopTest {
     Item item;
 
     List<String> keywords;
+
+    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
 
     @BeforeEach
     public void reset(){
@@ -314,7 +317,7 @@ public class ShopTest {
         currAmount.put(item2.getID(), 20.0);
         ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
         try {
-            Assertions.assertEquals(35.0,shop.buyBasket(basket, memberFounder.getName()));
+            Assertions.assertEquals(35.0,shop.buyBasket(textDispatcher,basket, memberFounder.getName()));
         } catch (MarketException e) {
             System.out.println(e.getMessage());
             assert false;

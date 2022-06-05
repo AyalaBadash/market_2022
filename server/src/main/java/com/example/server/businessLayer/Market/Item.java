@@ -102,8 +102,17 @@ public class Item implements IHistory {
     public int getRank(){return rank;}
     public int getRankers(){return rankers;}
 
-    public boolean equals(Item itemToCompare){
-        return  itemToCompare.ID == ID;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Double.compare(item.price, price) == 0 && rank == item.rank && rankers == item.rankers && ID.equals(item.ID) && name.equals(item.name) && info.equals(item.info) && category == item.category && keywords.equals(item.keywords);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ID, name, price, info, rank, rankers, category, keywords);
     }
 
     public DalItem toDalObject(){

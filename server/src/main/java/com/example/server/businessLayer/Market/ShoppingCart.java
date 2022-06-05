@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
@@ -14,8 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ShoppingCart implements IHistory {
     private Map<Shop, ShoppingBasket> cart; // <Shop ,basket for the shop>
     private double currentPrice;
-
-    //private static ShoppingBasketRepository repo;
 
 
     public ShoppingCart() {
@@ -67,14 +66,14 @@ public class ShoppingCart implements IHistory {
      *                         return all items to shops, MarketException message include missing items
      */
 
-    public synchronized double saveFromShops(String buyer) throws MarketException {
+    public synchronized double saveFromShops(Publisher publisher, String buyer) throws MarketException {
         boolean succeeded = true;
         List<Shop> succeedShops = new ArrayList<>();
         StringBuilder missing = new StringBuilder();
         double price = 0;
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             try {
-                price += shopToBasket.getKey().buyBasket(shopToBasket.getValue(),buyer);
+                price += shopToBasket.getKey().buyBasket(publisher,shopToBasket.getValue(),buyer);
                 succeedShops.add(shopToBasket.getKey());
             } catch (MarketException e) {
                 succeeded = false;
@@ -159,5 +158,14 @@ public class ShoppingCart implements IHistory {
     }
 
 
-
+    public boolean isEmpty() {
+        if (cart.isEmpty())
+            return true;
+        for(Map.Entry<Shop, ShoppingBasket> basket : cart.entrySet()){
+            if(basket.getValue().isEmpty()){
+                return true;
+            }
+        }
+        return false;
+    }
 }
