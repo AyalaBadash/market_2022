@@ -1,34 +1,41 @@
 package com.example.server.dataLayer.entities;
 
+import com.example.server.businessLayer.Market.Item;
+
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "shops")
 public class DalShop {
     @Id
-    private String name;
+    @Column(name = "shop_name")
+    private String shop_name;
     @OneToMany(targetEntity = DalItem.class,cascade =CascadeType.ALL )
-    @JoinColumn(name = "shop",referencedColumnName = "name")
+    @JoinColumn(name = "shop",referencedColumnName = "shop_name")
     private List<DalItem> items;
 
     //TODO add list of managers and list of owners
-
 //    @OneToMany(targetEntity = DalItem.class, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "amount", referencedColumnName = "itemCurrentAmount")
-//    private List<Double> itemCurrentAmount;
+//    @JoinColumn(name = "shop_name", referencedColumnName = "id")
+//    @MapKeyJoinColumn (name = "basket_id")
+//    private Map<Item, Double> itemsCurrentAmount;
     private boolean closed;
     private int rnk;
     private int rnkrs;
 
-    //todo add purchase history
+    @ElementCollection
+    @Column (name = "purchase_history")
+    @CollectionTable (name = "purchase_histories", joinColumns = {@JoinColumn(name = "shop_name")})
+    private List<String> purchaseHistory;
     //todo add discount policy
 
 
     public DalShop(){}
 
     public DalShop(String name, List<DalItem> items, List<Double> itemCurrentAmount, boolean closed, int rnk, int rnkrs) {
-        this.name = name;
+        this.shop_name = name;
         this.items = items;
 //        this.itemCurrentAmount = itemCurrentAmount;
         this.closed = closed;
@@ -45,11 +52,11 @@ public class DalShop {
     }
 
     public String getName() {
-        return name;
+        return shop_name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.shop_name = name;
     }
 
     public boolean isClosed() {

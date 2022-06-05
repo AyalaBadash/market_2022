@@ -6,7 +6,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "acquisitions")
 public class DalAcquisition {
     @Id
     private int cartID;

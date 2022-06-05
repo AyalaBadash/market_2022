@@ -6,7 +6,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "owner_appointments")
 @IdClass(AppointmentID.class)
 public class DalOwnerApp {
     @Id

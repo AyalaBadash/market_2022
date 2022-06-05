@@ -3,7 +3,7 @@ package com.example.server.dataLayer.entities;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "manager_appointments")
 @IdClass(AppointmentID.class)
 public class DalManagerApp {
     @Id

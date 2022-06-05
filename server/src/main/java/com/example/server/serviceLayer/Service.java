@@ -6,7 +6,6 @@ import com.example.server.businessLayer.Market.Item;
 
 import com.example.server.dataLayer.entities.*;
 import com.example.server.dataLayer.repositories.*;
-import com.example.server.dataLayer.repositoryToDelete;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class Service implements IService {
         keywords.add("keywordTest2");
         try {
             DalItem item = new DalItem(1, "itemTest", 5,
-                    "infoTest",1,2,"fruit");
+                    "infoTest",1,2,"fruit", keywords);
             itemRepository.save(item);
         }catch (Exception e){}
     }
