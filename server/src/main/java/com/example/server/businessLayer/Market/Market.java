@@ -131,8 +131,7 @@ public class Market {
         }
         register(userName, password);
         instance.systemManagerName = userName;
-        instance.paymentHandler = paymentHandler1;
-        instance.supplyHandler = supplyHandler1;
+
 
         Shop.setItemRepository(itemRepository);
         EventLog eventLog = EventLog.getInstance();

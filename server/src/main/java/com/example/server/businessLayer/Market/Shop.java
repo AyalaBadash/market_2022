@@ -198,7 +198,7 @@ public class Shop implements IHistory {
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
         try{
-            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
+            notificationHandler.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
         }
         catch (Exception e){}
         return shoppingBasket.getPrice ( );
@@ -549,14 +549,16 @@ public class Shop implements IHistory {
             }
         }
         return false;
-    public DalShop toDalObject(){
-        List<DalItem> items = new ArrayList<>();
-        List<Double> amounts = new ArrayList<>();
-        for (Map.Entry<Integer,Double> entry:itemsCurrentAmount.entrySet()){
-            items.add(itemMap.get(entry.getKey()).toDalObject());
-            amounts.add(entry.getValue());
-        }
-        DalShop res = new DalShop(this.shopName,items,amounts,this.closed,this.rank,this.rankers);
-        return res;
     }
-}
+        public DalShop toDalObject () {
+            List<DalItem> items = new ArrayList<>();
+            List<Double> amounts = new ArrayList<>();
+            for (Map.Entry<Integer, Double> entry : itemsCurrentAmount.entrySet()) {
+                items.add(itemMap.get(entry.getKey()).toDalObject());
+                amounts.add(entry.getValue());
+            }
+            DalShop res = new DalShop(this.shopName, items, amounts, this.closed, this.rank, this.rankers);
+            return res;
+        }
+    }
+
