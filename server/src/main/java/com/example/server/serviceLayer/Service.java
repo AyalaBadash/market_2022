@@ -39,7 +39,7 @@ public class Service implements IService {
 
 
     protected Service() {
-//        marketService = MarketService.getInstance();
+        marketService = MarketService.getInstance();
         purchaseService = PurchaseService.getInstance();
         userService = UserService.getInstance();
     }

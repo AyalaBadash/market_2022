@@ -198,7 +198,7 @@ public class Shop implements IHistory {
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
         try{
-            notificationHandler.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
+            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
         }
         catch (Exception e){}
         return shoppingBasket.getPrice ( );
@@ -529,7 +529,7 @@ public class Shop implements IHistory {
         itemRepository = itemRep;
     }
 
-    }
+
 
     public void addDiscountToShop(String visitorName, DiscountType discountType) throws MarketException {
         if (!isShopOwner ( visitorName ))
@@ -561,4 +561,5 @@ public class Shop implements IHistory {
             return res;
         }
     }
+
 
