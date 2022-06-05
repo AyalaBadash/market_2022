@@ -2,7 +2,7 @@ package com.example.server.businessLayer.Market;
 
 
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
-import com.example.server.businessLayer.Publisher.Publisher;
+import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
@@ -11,7 +11,6 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Acquisition {
     private boolean paymentDone;
@@ -28,7 +27,7 @@ public class Acquisition {
         supplyConfirmed = false;
     }
 
-    public ShoppingCart buyShoppingCart(Publisher publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
+    public ShoppingCart buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
 
         // checks the price is correct
         //todo: check why there is not an exception here.
@@ -75,7 +74,7 @@ public class Acquisition {
         return shoppingCartToBuy;
     }
 
-    private  boolean isPriceCorrect(Publisher publisher,double expectedPrice) throws MarketException {
+    private  boolean isPriceCorrect(NotificationHandler publisher, double expectedPrice) throws MarketException {
         double actualPrice;
         try {
             actualPrice = shoppingCartToBuy.saveFromShops(publisher,buyerName);

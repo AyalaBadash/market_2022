@@ -1,7 +1,7 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Publisher.Publisher;
+import com.example.server.businessLayer.Publisher.NotificationHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class ShoppingCart implements IHistory {
      *                         return all items to shops, MarketException message include missing items
      */
 
-    public synchronized double saveFromShops(Publisher publisher, String buyer) throws MarketException {
+    public synchronized double saveFromShops(NotificationHandler publisher, String buyer) throws MarketException {
         boolean succeeded = true;
         List<Shop> succeedShops = new ArrayList<>();
         StringBuilder missing = new StringBuilder();

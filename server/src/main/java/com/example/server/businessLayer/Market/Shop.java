@@ -7,11 +7,9 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
-import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
-import com.example.server.businessLayer.Publisher.Publisher;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,9 +156,8 @@ public class Shop implements IHistory {
     }
 
     //Bar: adding the parameter buyer name for the notification send.
-    public synchronized double buyBasket(Publisher publisher, ShoppingBasket shoppingBasket, String buyer) throws MarketException {
+    public synchronized double buyBasket(NotificationHandler publisher, ShoppingBasket shoppingBasket, String buyer) throws MarketException {
         //the notification to the shop owners publisher.
-        NotificationHandler notificationHandler= new NotificationHandler(publisher);
         ArrayList<String> names = new ArrayList<>(getShopOwners().values().stream().collect(Collectors.toList()).stream()
                 .map(appointment -> appointment.getAppointed().getName()).collect(Collectors.toList()));
         String shopName = getShopName();
@@ -195,7 +192,7 @@ public class Shop implements IHistory {
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
         try{
-            notificationHandler.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
+            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
         }
         catch (Exception e){}
         return shoppingBasket.getPrice ( );

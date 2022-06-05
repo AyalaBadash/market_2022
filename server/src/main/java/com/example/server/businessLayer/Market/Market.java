@@ -42,7 +42,6 @@ public class Market {
     private PaymentServiceProxy paymentServiceProxy;
     private SupplyServiceProxy supplyServiceProxy;
     private Publisher publisher;
-
     private static Market instance;
     Map<String, Integer> numOfAcqsPerShop;
 
@@ -56,6 +55,7 @@ public class Market {
         paymentServiceProxy = null;
         supplyServiceProxy = null;
         publisher = null;
+        notificationHandler=null;
     }
 
 
@@ -86,7 +86,7 @@ public class Market {
         instance.systemManagerName = userName;
         instance.paymentServiceProxy = paymentServiceProxy1;
         instance.supplyServiceProxy = supplyServiceProxy1;
-        instance.publisher = publisher;
+        notificationHandler=new NotificationHandler(publisher);
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -103,7 +103,6 @@ public class Market {
         readConfigurationFile();
         register(userName, password);
         instance.systemManagerName = userName;
-        instance.publisher = publisher;
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -125,7 +124,6 @@ public class Market {
         }
         register(userName, password);
         instance.systemManagerName = userName;
-        instance.publisher = publisher;
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -147,7 +145,7 @@ public class Market {
                 debugLog.Log("A market initialization failed . Lack of payment / supply services ");
                 throw new MarketException("market needs payment and supply services for initialize");
             }
-            if (publisher == null) {
+            if (publisher == null || notificationHandler==null) {
                 DebugLog debugLog = DebugLog.getInstance();
                 debugLog.Log("A market initialization failed . Lack of publisher services ");
                 throw new MarketException("market needs publisher services for initialize");
@@ -210,6 +208,7 @@ public class Market {
         } else {
             throw new MarketException("Failed to init notification service");
         }
+        notificationHandler=new NotificationHandler(publisher);
     }
 
     private void initSupplyService(String val) throws MarketException {
@@ -853,7 +852,7 @@ public class Market {
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
-            shoppingCartToReturn = acquisition.buyShoppingCart(publisher, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
+            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
         } catch (Exception e) {
 
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -948,8 +947,7 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss, firedAppointed);
         try {
-            NotificationHandler handler = new NotificationHandler(publisher);
-            handler.sendAppointmentRemovedNotification(firedAppointed, shopName);
+            notificationHandler.sendAppointmentRemovedNotification(firedAppointed, shopName);
         } catch (Exception e) {
         }
 
