@@ -4,6 +4,8 @@ package com.example.server.serviceLayer;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
@@ -411,6 +413,36 @@ public class MarketService {
         try {
             DiscountType discountType = discountTypeFacade.toBusinessObject();
             market.addDiscountToShop(visitorName, shopName, discountType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response removeDiscountFromShop(String visitorName, String shopName, DiscountTypeFacade discountTypeFacade) {
+        try {
+            DiscountType discountType = discountTypeFacade.toBusinessObject();
+            market.removeDiscountFromShop(visitorName, shopName, discountType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyTypeFacade purchasePolicyTypeFacade) {
+        try {
+            PurchasePolicyType purchasePolicyType = purchasePolicyTypeFacade.toBusinessObject();
+            market.addPurchasePolicyToShop (visitorName, shopName, purchasePolicyType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyTypeFacade purchasePolicyTypeFacade) {
+        try {
+            PurchasePolicyType purchasePolicyType = purchasePolicyTypeFacade.toBusinessObject();
+            market.removePurchasePolicyFromShop (visitorName, shopName, purchasePolicyType);
             return new Response();
         } catch (Exception e) {
             return new Response(e.getMessage());

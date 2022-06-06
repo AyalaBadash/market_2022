@@ -13,4 +13,11 @@ public abstract class CompositePurchasePolicyType extends PurchasePolicyType {
     }
 
 
+    public List<PurchasePolicyType> getPolicies() {
+        return policies;
+    }
+
+    public void setPolicies(List<PurchasePolicyType> policies) {
+        this.policies = policies;
+    }
 }

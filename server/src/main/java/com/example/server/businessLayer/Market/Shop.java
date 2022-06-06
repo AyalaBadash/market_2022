@@ -1,6 +1,8 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
@@ -33,6 +35,8 @@ public class Shop implements IHistory {
     //TODO getter,setter,constructor
     private DiscountPolicy discountPolicy;
 
+    private PurchasePolicy purchasePolicy;
+
     public Shop(String name,Member founder) {
         this.shopName = name;
         itemMap = new HashMap<> ( );
@@ -47,6 +51,8 @@ public class Shop implements IHistory {
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
         shopOwners.put(founder.getName(), shopOwnerAppointment);
         founder.addAppointmentToMe(shopOwnerAppointment);
+        discountPolicy = new DiscountPolicy ();
+        purchasePolicy = new PurchasePolicy ();
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
@@ -525,6 +531,24 @@ public class Shop implements IHistory {
         if (!isShopOwner ( visitorName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
         discountPolicy.addNewDiscount ( discountType );
+    }
+
+    public void removeDiscountFromShop(String visitorName, DiscountType discountType) throws MarketException {
+        if (!isShopOwner ( visitorName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        discountPolicy.removeDiscount ( discountType );
+    }
+
+    public void addPurchasePolicyToShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
+        if (!isShopOwner ( visitorName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add a purchase policy to the shop" );
+        purchasePolicy.addNewPurchasePolicy( purchasePolicyType );
+    }
+
+    public void removePurchasePolicyFromShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
+        if (!isShopOwner ( visitorName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        purchasePolicy.removePurchasePolicy ( purchasePolicyType );
     }
 
     public boolean hasItem(Item item) {
