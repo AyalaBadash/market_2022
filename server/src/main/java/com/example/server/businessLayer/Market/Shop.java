@@ -39,6 +39,7 @@ public class Shop implements IHistory {
     //TODO getter,setter,constructor
     private DiscountPolicy discountPolicy;
 
+
     public Shop(String name,Member founder) {
         this.shopName = name;
         itemMap = new HashMap<> ( );
@@ -404,9 +405,10 @@ public class Shop implements IHistory {
             if (itemNameExists(itemName))
                 throw new MarketException("different item with the same name already exists in this shop");
             addedItem = new Item(id, itemName, price, info, category, keywords);
-            itemMap.put ( id, addedItem );
+            itemMap.put( id, addedItem );
         }
         itemsCurrentAmount.put ( id, amount );
+        itemRepository.save(addedItem.toDalObject());
         return addedItem;
     }
 
@@ -551,13 +553,11 @@ public class Shop implements IHistory {
         return false;
     }
         public DalShop toDalObject () {
-            List<DalItem> items = new ArrayList<>();
-            List<Double> amounts = new ArrayList<>();
-            for (Map.Entry<Integer, Double> entry : itemsCurrentAmount.entrySet()) {
-                items.add(itemMap.get(entry.getKey()).toDalObject());
-                amounts.add(entry.getValue());
+            Map<DalItem, Double> dalItemAmounts = new HashMap<>();
+            for (Map.Entry<Integer, Item> entry : itemMap.entrySet()){
+                dalItemAmounts.put(entry.getValue().toDalObject(), itemsCurrentAmount.get(entry.getKey()));
             }
-            DalShop res = new DalShop(this.shopName, items, amounts, this.closed, this.rank, this.rankers);
+            DalShop res = new DalShop(this.shopName, dalItemAmounts, this.closed, this.rank, this.rankers);
             return res;
         }
     }

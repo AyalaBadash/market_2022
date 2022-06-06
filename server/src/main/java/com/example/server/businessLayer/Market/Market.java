@@ -20,7 +20,7 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.dataLayer.entities.DalMarket;
-import com.example.server.dataLayer.repositories.ItemRepository;
+import com.example.server.dataLayer.repositories.*;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Component
 public class Market {
     private UserController userController;
     private String systemManagerName;
@@ -50,7 +51,27 @@ public class Market {
     Map<String, Integer> numOfAcqsPerShop;
 
     @Autowired
+    private AcquisitionHistoryRepository acquisitionHistoryRepositorya;
+    @Autowired
+    private AcquisitionRepository acquisitionRepository;
+    @Autowired
+    private ItemAcqRepository itemAcqRepository;
+    @Autowired
     private ItemRepository itemRepository;
+    @Autowired
+    private ManagerAppRepository managerAppRepository;
+    @Autowired
+    private MarketRepository marketRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private OwnerAppRepository ownerAppRepository;
+    @Autowired
+    private ShoppingBasketRepository shoppingBasketRepository;
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
+    @Autowired
+    private ShopRepository shopRepository;
 
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -89,6 +110,7 @@ public class Market {
             throw new MarketException("market needs publisher services for initialize");
 
         }
+        initRepositories();
         register(userName, password);
         instance.systemManagerName = userName;
         instance.paymentServiceProxy = paymentServiceProxy1;
@@ -96,13 +118,15 @@ public class Market {
         notificationHandler=new NotificationHandler(publisher);
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
+    }
 
+    private void initRepositories(){
+        UserController.setMemberRepository(memberRepository);
+        Shop.setItemRepository(itemRepository);
     }
 
     //Loading systems configurations from file.
     public synchronized void firstInitMarket(String userName, String password) throws MarketException {
-
-
         if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
@@ -572,6 +596,7 @@ public class Market {
         try {
             Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment());
             updateMarketOnAddedItem(addedItem, shopName);
+            shopRepository.save(shop.toDalObject());
             EventLog.getInstance().Log("Item added to shop " + shopName);
             return shop;
         } catch (MarketException e) {
@@ -677,6 +702,7 @@ public class Market {
                     if (shopName == null || shopName.length() == 0)
                         throw new MarketException("shop name length has to be positive");
                     Shop shop = new Shop(shopName, curMember);
+                    shopRepository.save(shop.toDalObject());
 //                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
 //                shop.addEmployee(shopFounder);
                     shops.put(shopName, shop);

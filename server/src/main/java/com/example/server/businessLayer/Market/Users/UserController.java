@@ -7,6 +7,7 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.dataLayer.repositories.MemberRepository;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ public class UserController {
     private static UserController instance;
     private long registeredMembersAvg;
     private LocalDate openingDate;
+    private static MemberRepository memberRepository;
 
 
 
@@ -69,7 +71,9 @@ public class UserController {
     }
 
     public boolean register(String userName) throws MarketException {
-        members.put(userName,new Member(userName));
+        Member newMember = new Member(userName);
+        memberRepository.save(newMember.toDalObject());
+        members.put(userName,newMember);
         EventLog.getInstance().Log("Welcome to our new member: "+userName);
         return true;
     }
@@ -179,6 +183,10 @@ public class UserController {
         members = new HashMap<>();
         visitorsInMarket = new HashMap<>();
         nextUniqueNumber.reset();
+    }
+
+    public static void setMemberRepository(MemberRepository memRepository){
+        memberRepository = memRepository;
     }
 
 }
