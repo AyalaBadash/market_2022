@@ -110,6 +110,7 @@ public class Market {
             throw new MarketException("market needs publisher services for initialize");
 
         }
+        initRepositories();
         register(userName, password);
         instance.systemManagerName = userName;
         instance.paymentServiceProxy = paymentServiceProxy1;
@@ -117,13 +118,15 @@ public class Market {
         notificationHandler=new NotificationHandler(publisher);
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
+    }
 
+    private void initRepositories(){
+        UserController.setMemberRepository(memberRepository);
+        Shop.setItemRepository(itemRepository);
     }
 
     //Loading systems configurations from file.
     public synchronized void firstInitMarket(String userName, String password) throws MarketException {
-
-
         if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
@@ -593,6 +596,7 @@ public class Market {
         try {
             Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment());
             updateMarketOnAddedItem(addedItem, shopName);
+            shopRepository.save(shop.toDalObject());
             EventLog.getInstance().Log("Item added to shop " + shopName);
             return shop;
         } catch (MarketException e) {
@@ -698,6 +702,7 @@ public class Market {
                     if (shopName == null || shopName.length() == 0)
                         throw new MarketException("shop name length has to be positive");
                     Shop shop = new Shop(shopName, curMember);
+                    shopRepository.save(shop.toDalObject());
 //                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
 //                shop.addEmployee(shopFounder);
                     shops.put(shopName, shop);

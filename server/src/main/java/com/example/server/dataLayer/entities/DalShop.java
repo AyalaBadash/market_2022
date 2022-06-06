@@ -1,5 +1,8 @@
 package com.example.server.dataLayer.entities;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
@@ -36,25 +39,16 @@ public class DalShop {
     private List<String> purchaseHistory;
     //todo add discount policy
 
-
     public DalShop(){}
 
-    public DalShop(String name, List<DalItem> items, List<Double> itemCurrentAmount, boolean closed, int rnk, int rnkrs) {
+    public DalShop(String name, Map<DalItem, Double> itemsCurrentAmount, boolean closed, int rnk, int rnkrs) {
         this.shop_name = name;
-//        this.items = items;
-//        this.itemCurrentAmount = itemCurrentAmount;
+        this.itemsCurrentAmount = itemsCurrentAmount;
         this.closed = closed;
         this.rnk = rnk;
         this.rnkrs = rnkrs;
     }
-//
-//    public List<DalItem> getItems() {
-//        return items;
-//    }
-//
-//    public void setItems(List<DalItem> items) {
-//        this.items = items;
-//    }
+
 
     public String getName() {
         return shop_name;
@@ -95,4 +89,28 @@ public class DalShop {
 //    public void setItemCurrentAmount(List<Double> itemCurrentAmount) {
 //        this.itemCurrentAmount = itemCurrentAmount;
 //    }
+
+    public String getShop_name() {
+        return shop_name;
+    }
+
+    public void setShop_name(String shop_name) {
+        this.shop_name = shop_name;
+    }
+
+    public Map<DalItem, Double> getItemsCurrentAmount() {
+        return itemsCurrentAmount;
+    }
+
+    public void setItemsCurrentAmount(Map<DalItem, Double> itemsCurrentAmount) {
+        this.itemsCurrentAmount = itemsCurrentAmount;
+    }
+
+    public List<String> getPurchaseHistory() {
+        return purchaseHistory;
+    }
+
+    public void setPurchaseHistory(List<String> purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+    }
 }
