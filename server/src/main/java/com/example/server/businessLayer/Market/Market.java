@@ -84,8 +84,8 @@ public class Market {
         supplyServiceProxy = null;
         publisher = null;
         notificationHandler=null;
+        instance = this;
     }
-
 
     public synchronized static Market getInstance() {
         if (instance == null) {
@@ -123,6 +123,9 @@ public class Market {
     private void initRepositories(){
         UserController.setMemberRepository(memberRepository);
         Shop.setItemRepository(itemRepository);
+        ShoppingCart.setShoppingCartRepository(shoppingCartRepository);
+        ShoppingBasket.setShoppingBasketRepository(shoppingBasketRepository);
+        ShoppingBasket.setShoppingBasketRepository(shoppingBasketRepository);
     }
 
     //Loading systems configurations from file.
@@ -750,6 +753,7 @@ public class Market {
             throw new MarketException("Cannot add item that does not exists in the shop.");
         }
         shoppingCart.addItem(curShop, item, amount);
+//        shoppingCartRepository.save(shoppingCart.toDalObject());
         EventLog.getInstance().Log(amount + " " + item.getName() + " added to cart.");
     }
 

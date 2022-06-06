@@ -32,6 +32,7 @@ public class MarketService {
     private Market market;
 
     private MarketService() {
+        System.out.println("");
 //       market = Market.getInstance();
     }
 

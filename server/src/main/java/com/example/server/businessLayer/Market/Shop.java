@@ -540,17 +540,7 @@ public class Shop implements IHistory {
     }
 
     public boolean hasItem(Item item) {
-        for(Map.Entry<Integer,Item> items: itemMap.entrySet()){
-            if( items.getValue().getID()==item.getID()){
-                if(items.getValue()==item) {
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            }
-        }
-        return false;
+        return itemMap.get(item.getID()) != null;
     }
         public DalShop toDalObject () {
             Map<DalItem, Double> dalItemAmounts = new HashMap<>();

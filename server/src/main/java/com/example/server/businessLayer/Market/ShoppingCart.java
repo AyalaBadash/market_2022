@@ -6,6 +6,8 @@ import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
+import com.example.server.dataLayer.repositories.ShoppingBasketRepository;
+import com.example.server.dataLayer.repositories.ShoppingCartRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +19,10 @@ public class ShoppingCart implements IHistory {
 
     private Map<Shop, ShoppingBasket> cart; // <Shop ,basket for the shop>
     private double currentPrice;
+
+    private static ShoppingCartRepository shoppingCartRepository;
+
+    private static ShoppingBasketRepository shoppingBasketRepository;
 
 
     public ShoppingCart() {
@@ -104,6 +110,9 @@ public class ShoppingCart implements IHistory {
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addItem ( item, amount );
+        DalShoppingCart dsc = this.toDalObject();
+        shoppingCartRepository.save(dsc);
+        shoppingBasketRepository.save(shoppingBasket.toDalObject());
     }
 
     public void removeItem(Shop shop, Item item) throws MarketException {
@@ -169,5 +178,13 @@ public class ShoppingCart implements IHistory {
             }
         }
         return false;
+    }
+
+    public static void setShoppingCartRepository(ShoppingCartRepository scRepository){
+        shoppingCartRepository = scRepository;
+    }
+
+    public static void setShoppingBasketRepository(ShoppingBasketRepository sbRepository){
+        shoppingBasketRepository = sbRepository;
     }
 }

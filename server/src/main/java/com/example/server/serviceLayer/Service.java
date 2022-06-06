@@ -33,11 +33,11 @@ public class Service implements IService {
     @Autowired
     private OwnerAppRepository repo;
 
-
     protected Service() {
+        System.out.println("x");
 //        marketService = MarketService.getInstance();
-        purchaseService = PurchaseService.getInstance();
-        userService = UserService.getInstance();
+//        purchaseService = PurchaseService.getInstance();
+//        userService = UserService.getInstance();
     }
 
     public synchronized static Service getInstance() {
@@ -73,6 +73,8 @@ public class Service implements IService {
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
+        purchaseService = PurchaseService.getInstance();
+        userService = UserService.getInstance();
         PaymentServiceProxy paymentService = new PaymentServiceProxy(new WSEPPaymentServiceAdapter(),true);
         SupplyServiceProxy supplyMock = new SupplyServiceProxy(new WSEPSupplyServiceAdapter(),true);
         return marketService.firstInitMarket ( paymentService,supplyMock, request.getUserName(), request.getPassword() );
