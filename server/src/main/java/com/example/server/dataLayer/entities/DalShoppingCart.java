@@ -7,7 +7,6 @@ import java.util.Map;
 @Table (name = "shopping_carts")
 public class DalShoppingCart {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
 
 //    @OneToMany(targetEntity = DalShoppingBasket.class, cascade = CascadeType.ALL)
@@ -17,15 +16,15 @@ public class DalShoppingCart {
 
     @OneToMany(targetEntity = DalShoppingBasket.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "shopping_cart", referencedColumnName = "id")
+    @Column(name = "shop_name")
     @MapKeyJoinColumn(name = "shop_name")
-    private Map<DalShop, DalShoppingBasket> baskets;
+    private Map<String, DalShoppingBasket> baskets;
 
     private double currentPrice;
 
-
     public DalShoppingCart(){}
 
-    public DalShoppingCart(Map<DalShop, DalShoppingBasket> baskets, double currentPrice) {
+    public DalShoppingCart(int id,Map<String, DalShoppingBasket> baskets, double currentPrice) {
         this.baskets = baskets;
         this.currentPrice = currentPrice;
     }

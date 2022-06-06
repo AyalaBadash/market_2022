@@ -46,9 +46,9 @@ public class UserController {
      * @return a new visitor with a unique name and null member
      * getting unique name is the only sync code in this method
      */
-    public Visitor guestLogin() {
+    public Visitor guestLogin(int cartID) {
         String name = getNextUniqueName();
-        Visitor res = new Visitor(name,null,new ShoppingCart());
+        Visitor res = new Visitor(name,null,new ShoppingCart(cartID));
         this.visitorsInMarket.put(res.getName(),res);
         EventLog.getInstance().Log("A new visitor entered the market.");
         return res;
@@ -70,8 +70,8 @@ public class UserController {
         }
     }
 
-    public boolean register(String userName) throws MarketException {
-        Member newMember = new Member(userName);
+    public boolean register(String userName,int cartID) throws MarketException {
+        Member newMember = new Member(userName,cartID);
         memberRepository.save(newMember.toDalObject());
         members.put(userName,newMember);
         EventLog.getInstance().Log("Welcome to our new member: "+userName);
@@ -106,7 +106,7 @@ public class UserController {
         this.visitorsInMarket = visitorsInMarket;
     }
 
-    public String memberLogout(String member) throws MarketException {
+    public String memberLogout(String member,int nextCartID) throws MarketException {
         if (!members.containsKey(member)) {
             DebugLog.getInstance().Log("Non member tried to logout");
             throw new MarketException("no such member");
@@ -117,7 +117,7 @@ public class UserController {
         }
         visitorsInMarket.remove(member);
         String newVisitorName = getNextUniqueName();
-        Visitor newVisitor = new Visitor(newVisitorName);
+        Visitor newVisitor = new Visitor(newVisitorName,nextCartID);
         visitorsInMarket.put(newVisitorName, newVisitor);
         EventLog.getInstance().Log("Our beloved member " + member + " logged out.");
         return newVisitorName;

@@ -34,7 +34,6 @@ public class Service implements IService {
     private OwnerAppRepository repo;
 
     protected Service() {
-        System.out.println("x");
 //        marketService = MarketService.getInstance();
 //        purchaseService = PurchaseService.getInstance();
 //        userService = UserService.getInstance();

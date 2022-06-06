@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Publisher.Publisher;
+import com.example.server.dataLayer.entities.DalItem;
 import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
@@ -24,12 +25,19 @@ public class ShoppingCart implements IHistory {
 
     private static ShoppingBasketRepository shoppingBasketRepository;
 
+    private DalShoppingCart dalShoppingCart;
 
-    public ShoppingCart() {
+    private int id;
+
+
+
+    public ShoppingCart(int id) {
         this.currentPrice = 0;
         this.cart = new ConcurrentHashMap<>();
     }
-    public ShoppingCart(Map<Shop,ShoppingBasket> cart , double currentPrice){
+    public ShoppingCart(){}
+    public ShoppingCart(int id,Map<Shop,ShoppingBasket> cart , double currentPrice){
+        this.id = id;
         this.cart = cart;
         this.currentPrice = currentPrice;
     }
@@ -50,7 +58,6 @@ public class ShoppingCart implements IHistory {
             }
             review.append(String.format("Basket for %s:\n%s\n", shop.getShopName(), basket.getReview()));
             review.append(String.format("Overall Cart Price: %f", currentPrice));
-
         }
         return review;
     }
@@ -111,8 +118,20 @@ public class ShoppingCart implements IHistory {
         }
         shoppingBasket.addItem ( item, amount );
         DalShoppingCart dsc = this.toDalObject();
-        shoppingCartRepository.save(dsc);
-        shoppingBasketRepository.save(shoppingBasket.toDalObject());
+//        shoppingCartRepository.save(dsc);
+//        shoppingBasketRepository.save(shoppingBasket.toDalObject());
+//        shoppingCartRepository.save(new )
+//        DalShoppingBasket basket = new DalShoppingBasket(0, new HashMap<>());
+//        Map<String,DalShoppingBasket> map = new HashMap<>();
+//        map.put(shop.getShopName(), basket);
+//        DalShoppingCart cart = new DalShoppingCart(map, 0);
+//        shoppingBasketRepository.save(basket);
+            Map<String, DalShoppingBasket> baskets = new HashMap<>();
+            for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
+                baskets.put(entry.getKey().getShopName(),entry.getValue().toDalObject());
+            }
+//          shoppingCartRepository.updateBaskets(baskets);
+
     }
 
     public void removeItem(Shop shop, Item item) throws MarketException {
@@ -142,12 +161,29 @@ public class ShoppingCart implements IHistory {
         }
         basket.updateQuantity(amount, item);
     }
-    public DalShoppingCart toDalObject(){
-        Map<DalShop, DalShoppingBasket> baskets = new HashMap<>();
+    public DalShoppingCart getDalObject(){
+//        Map<DalShop, DalShoppingBasket> baskets = new HashMap<>();
+//        for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
+//            baskets.put(entry.getKey().toDalObject(),entry.getValue().toDalObject());
+//        }
+//        return new DalShoppingCart(baskets,this.currentPrice);
+        Map<String, DalShoppingBasket> baskets = new HashMap<>();
         for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
-            baskets.put(entry.getKey().toDalObject(),entry.getValue().toDalObject());
+            baskets.put(entry.getKey().getShopName(),entry.getValue().toDalObject());
         }
-        return new DalShoppingCart(baskets,this.currentPrice);
+        return new DalShoppingCart(this.id,baskets,this.currentPrice);
+    }
+
+    public DalShoppingCart toDalObject(){
+        if (this.dalShoppingCart==null)
+        {
+            Map<String, DalShoppingBasket> baskets = new HashMap<>();
+            for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
+                baskets.put(entry.getKey().getShopName(),entry.getValue().toDalObject());
+            }
+            this.dalShoppingCart= new DalShoppingCart(this.id,baskets,this.currentPrice);
+        }
+        return this.dalShoppingCart;
     }
 
 

@@ -26,10 +26,12 @@ class MemberTest {
     List<Appointment> appointedByMe = new ArrayList<>();
     List<Appointment> myAppointments = new ArrayList<>();
     List<ShoppingCart> purchaseHistory = new ArrayList<>();
+    int nextCartID;
 
     @BeforeEach
     public void initMemberTest() throws MarketException {
-        member = new Member(name);
+        member = new Member(name,1);
+        nextCartID=2;
         member.setMyCart(myCart);
 
     }
@@ -39,18 +41,18 @@ class MemberTest {
     @DisplayName("invalid inputs to constructor")
     public void constructorInvalid(){
         try{
-            Member m = new Member(null);
-            m = new Member("");
+            Member m = new Member(null,nextCartID);
+            m = new Member("",nextCartID);
             assert false;
-            m = new Member("asd@sad");
+            m = new Member("asd@sad",nextCartID);
             assert false;
-            m = new Member("asd!@!@#)@#$)(($#%&]sad");
+            m = new Member("asd!@!@#)@#$)(($#%&]sad",nextCartID);
             assert false;
-            m = new Member("asd[]`/");
+            m = new Member("asd[]`/",nextCartID);
             assert false;
-            m = new Member("test name");
+            m = new Member("test name",nextCartID);
             assert false;
-            m = new Member("test_name");
+            m = new Member("test_name",nextCartID);
             assert false;
             // TODO should catch market exception
         }catch (Exception ignore){};
@@ -61,7 +63,7 @@ class MemberTest {
     @DisplayName("valid inputs to constructor")
     public void constructorValid(){
         try{
-            new Member(name);
+            new Member(name,nextCartID);
         }catch (Exception ignore){};
         assert true;
     }
