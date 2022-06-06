@@ -20,7 +20,7 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.dataLayer.entities.DalMarket;
-import com.example.server.dataLayer.repositories.ItemRepository;
+import com.example.server.dataLayer.repositories.*;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Component
 public class Market {
     private UserController userController;
     private String systemManagerName;
@@ -50,7 +51,27 @@ public class Market {
     Map<String, Integer> numOfAcqsPerShop;
 
     @Autowired
+    private AcquisitionHistoryRepository acquisitionHistoryRepositorya;
+    @Autowired
+    private AcquisitionRepository acquisitionRepository;
+    @Autowired
+    private ItemAcqRepository itemAcqRepository;
+    @Autowired
     private ItemRepository itemRepository;
+    @Autowired
+    private ManagerAppRepository managerAppRepository;
+    @Autowired
+    private MarketRepository marketRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private OwnerAppRepository ownerAppRepository;
+    @Autowired
+    private ShoppingBasketRepository shoppingBasketRepository;
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
+    @Autowired
+    private ShopRepository shopRepository;
 
     private Market() {
         this.shops = new ConcurrentHashMap<>();
