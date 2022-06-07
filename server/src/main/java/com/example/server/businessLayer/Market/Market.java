@@ -538,6 +538,7 @@ public class Market {
         }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
             shops.remove(shopName);
+            shopRepository.delete(shops.get(shopName).getDalObject()); //TODO check
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
@@ -856,7 +857,7 @@ public class Market {
         if (shop == null)
             throw new MarketException("shop does not exist in the market");
         shop.editItem(newItem, id);
-        shopRepository.save(shop.getDalObject());
+        itemRepository.save(newItem.toDalObject());
     }
 
     public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
@@ -996,6 +997,7 @@ public class Market {
     }
 
 
+    //TODO dal
     public void removeMember(String manager, String memberToRemove) throws MarketException {
         if (manager.equals(memberToRemove)) {
             DebugLog.getInstance().Log("You cant remove yourself.");

@@ -122,13 +122,12 @@ public class ShoppingBasket implements IHistory {
         this.itemMap = itemMap;
     }
 
-    public DalShoppingBasket toDalObject(){
+    public DalShoppingBasket toDalObject(Shop shop){
         Map<DalItem,Double> dalItems = new HashMap<>();
         for (Map.Entry<Integer,Double> entry:this.items.entrySet()){
             dalItems.put(itemMap.get(entry.getKey()).toDalObject(),entry.getValue());
         }
-
-        return new DalShoppingBasket(this.price,dalItems);
+        return new DalShoppingBasket(this.price,dalItems, shop.getShopName());
     }
 
     public static void setShoppingBasketRepository(ShoppingBasketRepository sbRepository){

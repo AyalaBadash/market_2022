@@ -50,4 +50,5 @@ public class ChangeShopItemInfoRequest {
     public void setShopName(String shopName) {
         this.shopName = shopName;
     }
+
 }

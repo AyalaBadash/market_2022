@@ -117,21 +117,8 @@ public class ShoppingCart implements IHistory {
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addItem ( item, amount );
-        DalShoppingCart dsc = this.toDalObject();
-//        shoppingCartRepository.save(dsc);
 //        shoppingBasketRepository.save(shoppingBasket.toDalObject());
-//        shoppingCartRepository.save(new )
-//        DalShoppingBasket basket = new DalShoppingBasket(0, new HashMap<>());
-//        Map<String,DalShoppingBasket> map = new HashMap<>();
-//        map.put(shop.getShopName(), basket);
-//        DalShoppingCart cart = new DalShoppingCart(map, 0);
-//        shoppingBasketRepository.save(basket);
-            Map<String, DalShoppingBasket> baskets = new HashMap<>();
-            for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
-                baskets.put(entry.getKey().getShopName(),entry.getValue().toDalObject());
-            }
-//          shoppingCartRepository.updateBaskets(baskets);
-
+        shoppingCartRepository.save(this.toDalObject());
     }
 
     public void removeItem(Shop shop, Item item) throws MarketException {
@@ -161,29 +148,13 @@ public class ShoppingCart implements IHistory {
         }
         basket.updateQuantity(amount, item);
     }
-    public DalShoppingCart getDalObject(){
-//        Map<DalShop, DalShoppingBasket> baskets = new HashMap<>();
-//        for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
-//            baskets.put(entry.getKey().toDalObject(),entry.getValue().toDalObject());
-//        }
-//        return new DalShoppingCart(baskets,this.currentPrice);
-        Map<String, DalShoppingBasket> baskets = new HashMap<>();
-        for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
-            baskets.put(entry.getKey().getShopName(),entry.getValue().toDalObject());
-        }
-        return new DalShoppingCart(this.id,baskets,this.currentPrice);
-    }
 
     public DalShoppingCart toDalObject(){
-        if (this.dalShoppingCart==null)
-        {
-            Map<String, DalShoppingBasket> baskets = new HashMap<>();
-            for (Map.Entry<Shop,ShoppingBasket> entry:this.cart.entrySet()){
-                baskets.put(entry.getKey().getShopName(),entry.getValue().toDalObject());
-            }
-            this.dalShoppingCart= new DalShoppingCart(this.id,baskets,this.currentPrice);
+        List<DalShoppingBasket> baskets = new ArrayList<>();
+        for (Map.Entry<Shop, ShoppingBasket> entry : this.cart.entrySet()) {
+            baskets.add(entry.getValue().toDalObject(entry.getKey()));
         }
-        return this.dalShoppingCart;
+        return new DalShoppingCart(this.id,baskets,this.currentPrice);
     }
 
 
@@ -222,5 +193,9 @@ public class ShoppingCart implements IHistory {
 
     public static void setShoppingBasketRepository(ShoppingBasketRepository sbRepository){
         shoppingBasketRepository = sbRepository;
+    }
+
+    public int getId() {
+        return id;
     }
 }

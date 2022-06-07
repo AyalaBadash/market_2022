@@ -48,7 +48,7 @@ public class Shop implements IHistory {
         itemsCurrentAmount = new ConcurrentHashMap<>( );
         this.closed = false;
         purchaseHistory = new ArrayList<> ( );
-        rank = 1;
+        rank = 0;
         rankers = 0;
         this.shopFounder = founder;
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
@@ -392,7 +392,7 @@ public class Shop implements IHistory {
     }
 
     //TODO why do we need this.
-    public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
+public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
         if (amount < 0)
@@ -437,6 +437,7 @@ public class Shop implements IHistory {
         if (item == null)
             throw new MarketException ( "item does not exist in shop" );
         item.setInfo(info);
+        itemRepository.save(item.toDalObject());
     }
 
 //    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
@@ -544,14 +545,14 @@ public class Shop implements IHistory {
         return itemMap.get(item.getID()) != null;
     }
         public DalShop getDalObject() {
-            if (dalShop==null) {
+//            if (dalShop==null) {
                 Map<DalItem, Double> dalItemAmounts = new HashMap<>();
                 for (Map.Entry<Integer, Item> entry : itemMap.entrySet()) {
                     dalItemAmounts.put(entry.getValue().toDalObject(), itemsCurrentAmount.get(entry.getKey()));
                 }
                 DalShop res = new DalShop(this.shopName, dalItemAmounts, this.closed, this.rank, this.rankers);
                 this.dalShop = res;
-            }
+//            }
             return this.dalShop;
         }
     }

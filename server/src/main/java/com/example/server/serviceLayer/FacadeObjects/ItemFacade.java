@@ -119,4 +119,5 @@ public class ItemFacade implements FacadeObject<Item>{
     public void setRankers(int rankers) {
         this.rankers = rankers;
     }
+
 }

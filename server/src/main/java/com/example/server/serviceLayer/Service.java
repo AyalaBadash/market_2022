@@ -45,29 +45,6 @@ public class Service implements IService {
         return service;
     }
 
-    @RequestMapping(value = "/toDelete")
-    public void toDeleteMethod(){
-        List<String> keywords = new ArrayList<>();
-        keywords.add("keywordTest");
-        keywords.add("keywordTest2");
-        try {
-            DalItem item = new DalItem(1, "itemTest", 5,
-                    "infoTest",1,2,"fruit", keywords);
-            itemRepository.save(item);
-        }catch (Exception e){}
-    }
-    @RequestMapping(value = "/toDelete2")
-    public void toDeleteMethod2(){
-
-        try {
-            List<String> perms = new ArrayList<>();
-            perms.add("perm1");perms.add("perm2");
-            DalOwnerApp app = new DalOwnerApp("super","appointed","shop",true,false,true);
-            repo.save(app);
-
-        }catch (Exception e){}
-    }
-
     @Override
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
@@ -107,7 +84,6 @@ public class Service implements IService {
     public Response addPersonalQuery(@RequestBody AddPersonalQueryRequest request) {
         return userService.addPersonalQuery(request.getUserAdditionalQueries(), request.getUserAdditionalAnswers(), request.getMember());
     }
-
 
 
     @Override
@@ -372,7 +348,6 @@ public class Service implements IService {
     public Response addDiscountToShop(AddDiscountToShopRequest request) {
         return marketService.addDiscountToShop(request.getVisitorName (), request.getShopName (), request.getDiscount ());
     }
-
 
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);

@@ -140,7 +140,7 @@ public class Member implements IHistory {
         for (AcquisitionHistory acq : this.purchaseHistory){
             dalPurchaseHistory.add(acq.toDalObject());
         }
-        DalMember res = new DalMember(this.name,this.myCart.toDalObject(),managerAppsByMe,ownerAppsByMe,myManagerApps,myOwnerApps,dalPurchaseHistory);
+        DalMember res = new DalMember(this.name,this.myCart.getId(),managerAppsByMe,ownerAppsByMe,myManagerApps,myOwnerApps,dalPurchaseHistory);
         return res;
     }
 }
