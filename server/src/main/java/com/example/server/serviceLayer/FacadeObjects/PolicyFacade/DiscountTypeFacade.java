@@ -4,7 +4,7 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountT
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
 
-public abstract class DiscountTypeFacade implements FacadeObject {
+public abstract class DiscountTypeFacade implements FacadeObject<DiscountType> {
     protected int percentageOfDiscount;
     protected DiscountLevelStateFacade discountLevelState;
 
