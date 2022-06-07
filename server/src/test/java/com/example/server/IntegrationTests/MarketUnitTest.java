@@ -3,11 +3,9 @@ package com.example.server.IntegrationTests;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
-import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Security.Security;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
-import com.example.server.businessLayer.Supply.SupplyService;
 import com.example.server.businessLayer.Market.*;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
@@ -39,7 +37,7 @@ public class MarketUnitTest {
         PaymentServiceProxy paymentService = new PaymentServiceProxy();
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            Market.getInstance().firstInitMarket(paymentService, supplyService, NotificationDispatcher.getInstance(),"Ido","password");
+            Market.getInstance().firstInitMarket("Ido","password");
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -80,7 +78,7 @@ public class MarketUnitTest {
     public void initFailTest(){
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            market.firstInitMarket(null,supplyService,NotificationDispatcher.getInstance(),"raz","password");
+            market.firstInitMarket("raz","password");
             assert false;
         }
         catch (Exception e){
@@ -92,12 +90,12 @@ public class MarketUnitTest {
     @DisplayName("First init market - fail test - one service already exist")
     public void initFailTestOneServiceIsNotNull(){
         try {
-            market.setPaymentService(new PaymentServiceProxy(), "raz");
+            market.setPaymentServiceProxy(new PaymentServiceProxy(), "raz");
         } catch (MarketException e) {}
         PaymentServiceProxy paymentService = new PaymentServiceProxy();
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            market.firstInitMarket(paymentService,supplyService,NotificationDispatcher.getInstance(),"raz","password");
+            market.firstInitMarket("raz","password");
             assert false;
         }
         catch (Exception e){

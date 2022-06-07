@@ -3,14 +3,15 @@ package com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.SupplyService;
+import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.ResourcesObjects.*;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
@@ -24,8 +25,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.rmi.UnexpectedException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -66,33 +65,12 @@ public class Market {
         return instance;
     }
 
-    public synchronized void firstInitMarket(PaymentServiceProxy paymentServiceProxy1, SupplyServiceProxy supplyServiceProxy1, Publisher publisher, String userName, String password) throws MarketException {
-        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
-            DebugLog.getInstance().Log("A market initialization failed .already initialized");
-            throw new MarketException("market is already initialized");
-        }
-        if (paymentServiceProxy1 == null || supplyServiceProxy1 == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-            throw new MarketException("market needs payment and supply services for initialize");
-        }
-        if (publisher == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of publisher services ");
-            throw new MarketException("market needs publisher services for initialize");
-
-        }
-        register(userName, password);
-        instance.systemManagerName = userName;
-        instance.paymentServiceProxy = paymentServiceProxy1;
-        instance.supplyServiceProxy = supplyServiceProxy1;
-        notificationHandler=new NotificationHandler(publisher);
-        EventLog eventLog = EventLog.getInstance();
-        eventLog.Log("A market has been initialized successfully");
-
-    }
-
-    //Loading systems configurations from file.
+    /**
+     * init system from default files. With given system manager details.
+     * @param userName the system manager username
+     * @param password the system manager password.
+     * @throws MarketException
+     */
     public synchronized void firstInitMarket(String userName, String password) throws MarketException {
 
 
@@ -101,14 +79,92 @@ public class Market {
             throw new MarketException("market is already initialized");
         }
         readConfigurationFile();
-        register(userName, password);
-        instance.systemManagerName = userName;
+        readInitFile();
+        if(userName!=null && !userName.isEmpty() & password!=null && !password.isEmpty()) {
+            register(userName, password);
+            instance.systemManagerName = userName;
+        }
+        checkSysteminit();
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
     }
 
-    //Loading systems configurations from file.
+    private void checkSysteminit() throws MarketException {
+        if(paymentServiceProxy == null ){
+            EventLog eventLog = EventLog.getInstance();
+            eventLog.Log("The market did not initialized properly. Missing payment service");
+            throw new MarketException("The market did not initialized properly");
+        } else if ( supplyServiceProxy==null ) {
+            EventLog eventLog = EventLog.getInstance();
+            eventLog.Log("The market did not initialized properly. Missing supply service");
+            throw new MarketException("The market did not initialized properly");
+
+        } else if ( publisher ==null | notificationHandler==null) {
+            EventLog eventLog = EventLog.getInstance();
+            eventLog.Log("The market did not initialized properly. Missing notifications service");
+            throw new MarketException("The market did not initialized properly");
+
+        } else if (systemManagerName==null || systemManagerName.isEmpty()) {
+            EventLog eventLog = EventLog.getInstance();
+            eventLog.Log("The market did not initialized properly. Missing system manager");
+            throw new MarketException("The market did not initialized properly");
+        }
+    }
+
+    /**
+     * Init market using system manager details and the init data file's names.
+     * @param userName system manager username.
+     * @param password system manager password.
+     * @param servicesName the service's init file name.
+     * @param dataName the init data's file name.
+     * @throws MarketException
+     */
+    public synchronized void firstInitMarket(String userName, String password,String servicesName, String dataName) throws MarketException {
+
+
+        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
+            DebugLog.getInstance().Log("A market initialization failed .already initialized");
+            throw new MarketException("market is already initialized");
+        }
+        readConfigurationFile(servicesName);
+        readInitFile(dataName);
+        if(userName!=null && !userName.isEmpty() & password!=null && !password.isEmpty()) {
+            register(userName, password);
+            instance.systemManagerName = userName;
+        }
+        checkSysteminit();
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A market has been initialized successfully");
+
+    }
+
+    /**
+     * Init the system with default init file's names. The system manager must be in the file.
+     * @throws MarketException
+     */
+    public synchronized void firstInitMarket() throws MarketException {
+
+
+        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
+            DebugLog.getInstance().Log("A market initialization failed .already initialized");
+            throw new MarketException("market is already initialized");
+        }
+        readConfigurationFile();
+        readInitFile();
+        checkSysteminit();
+        EventLog eventLog = EventLog.getInstance();
+        eventLog.Log("A market has been initialized successfully");
+
+    }
+
+    /**
+     * init the system with system manager details and the service's configuration file's name.
+     * @param userName the system manager username.
+     * @param password the system manager password.
+     * @param fileName the services file name.
+     * @throws MarketException
+     */
     public synchronized void firstInitMarket(String userName, String password, String fileName) throws MarketException {
 
 
@@ -122,14 +178,17 @@ public class Market {
         else{
             readConfigurationFile(fileName);
         }
-        register(userName, password);
-        instance.systemManagerName = userName;
+        if(userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
+            register(userName, password);
+            instance.systemManagerName = userName;
+        }
+        checkSysteminit();
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
     }
 
-    private void readConfigurationFile() throws MarketException {
+    private void readConfigurationFile() {
 
         try {
 
@@ -140,25 +199,81 @@ public class Market {
                 String[] vals = data.split("::");
                 setService(vals[0], vals[1]);
             }
-            if (paymentServiceProxy == null || supplyServiceProxy == null) {
-                DebugLog debugLog = DebugLog.getInstance();
-                debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-                throw new MarketException("market needs payment and supply services for initialize");
-            }
-            if (publisher == null || notificationHandler==null) {
-                DebugLog debugLog = DebugLog.getInstance();
-                debugLog.Log("A market initialization failed . Lack of publisher services ");
-                throw new MarketException("market needs publisher services for initialize");
 
+        } catch (Exception e) {}
+    }
+
+    private void readInitFile()  {
+
+        try {
+
+            File myObj = new File(System.getProperty("user.dir") + "/config/" + "Data.txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] vals = data.split("::");
+                setData( vals);
             }
 
 
         } catch (Exception e) {
-            throw new MarketException("Could not init market");
         }
     }
 
-    private void readConfigurationFile(String name) throws MarketException {
+    private void readInitFile(String fileName) throws MarketException {
+
+        try {
+
+            File myObj = new File(System.getProperty("user.dir") + "/config/" + fileName);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] vals = data.split("::");
+                setData( vals);
+            }
+        } catch (Exception e) {}
+    }
+    private void setData(String[] vals)  {
+
+        try {
+            String command = vals[0];
+            if (command.contains("Register")) {
+                if (vals.length >= 3) {
+                    register(vals[1], vals[2]);
+                }
+            } else if (command.contains("Login")) {
+                try {
+                    if (vals.length >= 3) {
+                        Visitor vis = guestLogin();
+                        memberLogin(vals[1], vals[2]);
+                        validateSecurityQuestions(vals[1], new ArrayList<>(), vis.getName());
+                    }
+                } catch (Exception e) {
+                }
+            } else if (command.contains("Logout")) {
+                try {
+                    memberLogout(vals[1]);
+                } catch (Exception e) {
+                }
+            } else if (command.contains("Open_Shop")) {
+                try {
+                    openNewShop(vals[1], vals[2]);
+                } catch (Exception e) {
+                }
+            } else if (command.contains("Add_Item")) {
+                addItemToShop(vals[1], vals[2], Double.parseDouble(vals[3]), Item.Category.valueOf(vals[4]), vals[5], new ArrayList<>(), Integer.parseInt(vals[6]), vals[7]);
+
+            } else if (command.contains("Appoint_Manager")) {
+                appointShopManager(vals[1], vals[2], vals[3]);
+
+            } else if (command.contains("Appoint_Owner")) {
+                appointShopOwner(vals[1], vals[2], vals[3]);
+            }
+
+        }catch (Exception e){}
+    }
+
+    private void readConfigurationFile(String name) {
 
         try {
 
@@ -183,7 +298,6 @@ public class Market {
 
 
         } catch (Exception e) {
-            throw new MarketException("Could not init market");
         }
     }
 
@@ -196,7 +310,16 @@ public class Market {
         } else if (val.contains("Publisher")) {
             initNotificationService(val1);
         }
+        else if(systemManagerName== null || systemManagerName.isEmpty()){
+            initManager(val,val1);
+        }
 
+    }
+
+    private void initManager(String val, String val1) throws MarketException {
+
+        register(val,val1);
+        instance.systemManagerName=val;
     }
 
     private void initNotificationService(String val) throws MarketException {
@@ -407,7 +530,7 @@ public class Market {
      * @param memberName the paying member's name.
      * @throws MarketException
      */
-    public void setPaymentService(PaymentServiceProxy paymentService1, String memberName) throws MarketException {
+    public void setPaymentServiceProxy(PaymentServiceProxy paymentService1, String memberName) throws MarketException {
         if (!userController.isLoggedIn(memberName)) {
             DebugLog.getInstance().Log("Member must be logged in for making this action");
             throw new MarketException("Member must be logged in for making this action");
@@ -423,7 +546,20 @@ public class Market {
         this.paymentServiceProxy = paymentService1;
     }
 
-    public void setSupplyHandler(SupplyServiceProxy supplyServiceProxy1, String memberName) throws MarketException {
+    public boolean setPaymentService(PaymentService paymentService1, String memberName) throws MarketException {
+        if (!userController.isLoggedIn(memberName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        if (!memberName.equals(systemManagerName)) {
+            DebugLog.getInstance().Log("Only a system manager can change the payment service");
+            throw new MarketException("Only a system manager can change the payment service");
+        }
+
+        this.paymentServiceProxy.setService(paymentService1);
+        return true;
+    }
+    public boolean setSupplyService(SupplyService supplyService1, String memberName) throws MarketException {
         if (!userController.isLoggedIn(memberName)) {
             DebugLog.getInstance().Log("Member must be logged in for making this action");
             throw new MarketException("Member must be logged in for making this action");
@@ -432,12 +568,11 @@ public class Market {
             DebugLog.getInstance().Log("Only a system manager can change the supply service");
             throw new MarketException("Only a system manager can change the supply service");
         }
-        if (supplyServiceProxy1 == null) {
-            DebugLog.getInstance().Log("Try to initiate supply service with null");
-            throw new MarketException("Try to initiate supply service with null");
-        }
-        this.supplyServiceProxy = supplyServiceProxy1;
+
+        this.supplyServiceProxy.setService(supplyService1);
+        return true;
     }
+
 
     public Member validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException {
         Security security = Security.getInstance();
@@ -1036,5 +1171,19 @@ public class Market {
 
     public boolean isInit() {
         return this.systemManagerName != null && !this.systemManagerName.equals("");
+    }
+
+    public boolean setPublishService(Publisher o, String memberName) throws MarketException {
+        if (!userController.isLoggedIn(memberName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        if (!memberName.equals(systemManagerName)) {
+            DebugLog.getInstance().Log("Only a system manager can change the supply service");
+            throw new MarketException("Only a system manager can change the supply service");
+        }
+
+        this.notificationHandler.setService(o);
+        return true;
     }
 }

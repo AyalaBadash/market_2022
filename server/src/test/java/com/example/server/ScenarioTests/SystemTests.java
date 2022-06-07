@@ -11,16 +11,12 @@ public class SystemTests {
     Market market;
     String userName = "userTest";
     String password = "passTest";
-    PaymentServiceProxy paymentService = new PaymentServiceProxy();
-    SupplyServiceProxy supplyService = new SupplyServiceProxy();
-
-    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
     @BeforeEach
     public void setUp(){
         try {
             market = Market.getInstance();
         if (market.getPaymentService()==null)
-                market.firstInitMarket (paymentService, supplyService, textDispatcher,userName, password );
+                market.firstInitMarket (userName, password );
 
         }
         catch (Exception e){}
@@ -28,7 +24,7 @@ public class SystemTests {
     @Test
     public void initTwice() {
         try {
-            market.firstInitMarket (paymentService,supplyService, textDispatcher,userName, password );
+            market.firstInitMarket (userName, password );
             assert false;
         } catch (Exception e) {
             assert true;

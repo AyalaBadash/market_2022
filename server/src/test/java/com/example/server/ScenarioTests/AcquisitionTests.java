@@ -7,10 +7,7 @@ import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Payment.CreditCard;
-import com.example.server.businessLayer.Payment.PaymentServiceProxy;
-import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
@@ -25,9 +22,6 @@ public class AcquisitionTests {
     Market market;
     String userName = "userTest";
     String password = "passTest";
-    PaymentServiceProxy paymentService = new PaymentServiceProxy();
-    SupplyServiceProxy supplyService = new SupplyServiceProxy();
-    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
     String shopManagerName = "shaked";
     String shopManagerPassword = "shaked1234";
     String shopName = "kolbo";
@@ -42,7 +36,7 @@ public class AcquisitionTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+                market.firstInitMarket(userName, password);
 
             // shop manager register
             Visitor visitor = market.guestLogin();
@@ -242,7 +236,7 @@ public class AcquisitionTests {
             Double itemAmount = shop.getItemCurrentAmount(milk);
             double buyingAmount = itemAmount + 1;
             market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
-            market.setPaymentService(null,userName);
+            market.setPaymentServiceProxy(null,userName);
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
                 assert false;
@@ -267,7 +261,7 @@ public class AcquisitionTests {
             Double itemAmount = shop.getItemCurrentAmount(milk);
             double buyingAmount = itemAmount + 1;
             market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
-            market.setSupplyHandler(null,userName);
+            market.setSupplyService(null,userName);
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
                 assert false;

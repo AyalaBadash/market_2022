@@ -160,7 +160,7 @@ public class ServicesTests {
     public void initFromFile(){
         try{
             Market market = Market.getInstance();
-            market.firstInitMarket("AdminName","AdminPassword");
+            market.firstInitMarket();
             assert true;
         }
         catch(Exception e){
