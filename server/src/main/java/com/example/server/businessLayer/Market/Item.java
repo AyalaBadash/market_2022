@@ -10,6 +10,7 @@ public class Item implements IHistory {
 
     public enum Category {
         general,
+        snacks,
         fruit,
         meat,
         cellular,

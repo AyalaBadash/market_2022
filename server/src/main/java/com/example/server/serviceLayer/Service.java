@@ -39,9 +39,7 @@ public class Service implements IService {
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
-        PaymentServiceProxy paymentService = new PaymentServiceProxy(new WSEPPaymentServiceAdapter(),true);
-        SupplyServiceProxy supplyMock = new SupplyServiceProxy(new WSEPSupplyServiceAdapter(),true);
-        return marketService.firstInitMarket ( paymentService,supplyMock, request.getUserName(), request.getPassword() );
+        return marketService.firstInitMarket ( request.getUserName(), request.getPassword() );
     }
 
     @Override

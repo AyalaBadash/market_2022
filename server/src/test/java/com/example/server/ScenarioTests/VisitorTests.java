@@ -24,9 +24,6 @@ public class VisitorTests {
     Market market;
     String userName = "userTest";
     String password = "passTest";
-    PaymentServiceProxy paymentService = new PaymentServiceProxy();
-    SupplyServiceProxy supplyService = new SupplyServiceProxy();
-    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
     String shopManagerName = "shaked";
     String shopManagerPassword = "shaked1234";
     String shopName = "kolbo";
@@ -41,7 +38,7 @@ public class VisitorTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+                market.firstInitMarket(userName, password);
 
             // shop manager register
             Visitor visitor = market.guestLogin();

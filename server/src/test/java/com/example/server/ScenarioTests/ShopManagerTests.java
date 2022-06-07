@@ -18,8 +18,6 @@ public class ShopManagerTests {
     Market market;
     String userName = "userTest";
     String password = "passTest";
-    PaymentServiceProxy paymentService = new PaymentServiceProxy();
-    SupplyServiceProxy supplyService = new SupplyServiceProxy();
     String shopOwnerName = "bar3";
     String shopOwnerPassword = "pass3";
     String managerName = "bar4";
@@ -29,8 +27,6 @@ public class ShopManagerTests {
     Double productPrice;
     double newAmount;
 
-    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
-
     @BeforeAll
     public void setUp() {
         try {
@@ -39,7 +35,7 @@ public class ShopManagerTests {
             productPrice = 1.2;
             newAmount=10;
             if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+                market.firstInitMarket(userName, password);
 
             // shop manager register
             registerVisitor(shopOwnerName,shopOwnerPassword);

@@ -185,4 +185,8 @@ public class NotificationHandler {
         not.createShopPermissionDeniedMessage(shopName,firedAppointed);
         sendNotification(firedAppointed,not,true);
     }
+
+    public void setService(Publisher o) {
+        dispatcher=o;
+    }
 }
