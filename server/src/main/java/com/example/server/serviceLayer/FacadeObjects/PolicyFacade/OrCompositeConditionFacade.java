@@ -14,6 +14,7 @@ public class OrCompositeConditionFacade extends CompositeConditionFacade{
         super ( conditionFacadeList );
     }
 
+    public OrCompositeConditionFacade(){}
     @Override
     public Condition toBusinessObject() throws MarketException {
         List<Condition> conditions = new ArrayList<> (  );

@@ -12,6 +12,8 @@ public class CategoryLevelStateFacade extends DiscountLevelStateFacade {
         this.category = category;
     }
 
+    public CategoryLevelStateFacade(){}
+
     public Item.Category getCategory() {
         return category;
     }

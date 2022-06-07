@@ -7,4 +7,18 @@ import java.util.List;
 
 public abstract class CompositeDiscountLevelStateFacade extends DiscountLevelStateFacade {
     List<DiscountLevelStateFacade> discountLevelStateFacades;
+
+    public CompositeDiscountLevelStateFacade(List<DiscountLevelStateFacade> discountLevelStateFacades) {
+        this.discountLevelStateFacades = discountLevelStateFacades;
+    }
+
+    public CompositeDiscountLevelStateFacade(){}
+
+    public List<DiscountLevelStateFacade> getDiscountLevelStateFacades() {
+        return discountLevelStateFacades;
+    }
+
+    public void setDiscountLevelStateFacades(List<DiscountLevelStateFacade> discountLevelStateFacades) {
+        this.discountLevelStateFacades = discountLevelStateFacades;
+    }
 }

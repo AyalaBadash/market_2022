@@ -5,4 +5,20 @@ import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
 
 public abstract class PurchasePolicyTypeFacade implements FacadeObject<PurchasePolicyType> {
 
+    protected PurchasePolicyLevelStateFacade purchasePolicyLevelStateFacade;
+
+    public PurchasePolicyTypeFacade(PurchasePolicyLevelStateFacade purchasePolicyLevelStateFacade) {
+        this.purchasePolicyLevelStateFacade = purchasePolicyLevelStateFacade;
+    }
+
+    public PurchasePolicyTypeFacade(){}
+
+    public PurchasePolicyLevelStateFacade getPurchasePolicyLevelStateFacade() {
+        return purchasePolicyLevelStateFacade;
+    }
+
+
+    public void setPurchasePolicyLevelStateFacade(PurchasePolicyLevelStateFacade purchasePolicyLevelStateFacade) {
+        this.purchasePolicyLevelStateFacade = purchasePolicyLevelStateFacade;
+    }
 }

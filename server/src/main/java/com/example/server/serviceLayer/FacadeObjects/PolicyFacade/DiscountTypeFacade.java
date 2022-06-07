@@ -13,6 +13,8 @@ public abstract class DiscountTypeFacade implements FacadeObject<DiscountType> {
         this.discountLevelState = discountLevelState;
     }
 
+    public DiscountTypeFacade(){}
+
     public int getPercentageOfDiscount() {
         return percentageOfDiscount;
     }
@@ -28,7 +30,4 @@ public abstract class DiscountTypeFacade implements FacadeObject<DiscountType> {
     public void setDiscountLevelState(DiscountLevelStateFacade discountLevelState) {
         this.discountLevelState = discountLevelState;
     }
-
-    @Override
-    public abstract DiscountType toBusinessObject() throws MarketException;
 }

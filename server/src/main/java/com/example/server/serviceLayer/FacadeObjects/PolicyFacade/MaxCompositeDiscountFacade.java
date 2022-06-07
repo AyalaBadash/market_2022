@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaxCompositeDiscountFacade extends CompositeDiscountFacade{
-    public MaxCompositeDiscountFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState, List<DiscountTypeFacade> discountTypes, CompositeDiscountType compositeDiscountType) {
-        super ( percentageOfDiscount, discountLevelState, discountTypes, compositeDiscountType );
+    public MaxCompositeDiscountFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState, List<DiscountTypeFacade> discountTypes) {
+        super ( percentageOfDiscount, discountLevelState, discountTypes );
     }
+
+    public MaxCompositeDiscountFacade(){}
 
     @Override
     public DiscountType toBusinessObject() throws MarketException {

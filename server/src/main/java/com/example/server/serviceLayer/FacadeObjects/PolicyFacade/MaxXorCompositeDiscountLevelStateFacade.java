@@ -9,6 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaxXorCompositeDiscountLevelStateFacade extends CompositeDiscountLevelStateFacade{
+    public MaxXorCompositeDiscountLevelStateFacade(List<DiscountLevelStateFacade> discountLevelStateFacades) {
+        super ( discountLevelStateFacades );
+    }
+
+    public MaxXorCompositeDiscountLevelStateFacade(){}
+
     @Override
     public DiscountLevelState toBusinessObject() throws MarketException {
         List<DiscountLevelState> discountLevelStates = new ArrayList<> (  );

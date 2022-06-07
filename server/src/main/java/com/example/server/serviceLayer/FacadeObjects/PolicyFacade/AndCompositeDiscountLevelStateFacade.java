@@ -9,6 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AndCompositeDiscountLevelStateFacade extends CompositeDiscountLevelStateFacade {
+    public AndCompositeDiscountLevelStateFacade(List<DiscountLevelStateFacade> discountLevelStateFacades) {
+        super ( discountLevelStateFacades );
+    }
+
+    public AndCompositeDiscountLevelStateFacade(){}
+
     @Override
     public DiscountLevelState toBusinessObject() throws MarketException {
         List<DiscountLevelState> discountLevelStates = new ArrayList<> (  );

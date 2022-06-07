@@ -20,6 +20,8 @@ public abstract class CompositeConditionFacade extends ConditionFacade{
         this.conditionFacadeList = conditionFacadeList;
     }
 
+    public CompositeConditionFacade(){}
+
     public CompositeConditionType getCompositeConditionType() {
         return compositeConditionType;
     }
