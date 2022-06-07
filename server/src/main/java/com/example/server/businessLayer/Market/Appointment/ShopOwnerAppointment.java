@@ -33,32 +33,33 @@ public class ShopOwnerAppointment extends Appointment {
 
     @Override
     public DalOwnerApp toDalObject(){
-        boolean employeesPerm;
-        boolean purchaseHistoryPerm;
-        if (permissions.size()==0)
-        {
-            employeesPerm = false;
-            purchaseHistoryPerm = false;
-        }
-        else if (permissions.size()==2)
-        {
-            employeesPerm = true;
-            purchaseHistoryPerm = true;
-        }
-        else {
-            IPermission permission = permissions.get(0);
-            if (permission.getName().equals("get_employees_info"))
-            {
-                employeesPerm = true;
-                purchaseHistoryPerm = false;
-            }
-            else {
+        if (this.dalOwnerApp==null){
+            boolean employeesPerm;
+            boolean purchaseHistoryPerm;
+            if (permissions.size() == 0) {
                 employeesPerm = false;
+                purchaseHistoryPerm = false;
+            } else if (permissions.size() == 2) {
+                employeesPerm = true;
                 purchaseHistoryPerm = true;
-            }
+            } else {
+                IPermission permission = permissions.get(0);
+                if (permission.getName().equals("get_employees_info")) {
+                    employeesPerm = true;
+                    purchaseHistoryPerm = false;
+                } else {
+                    employeesPerm = false;
+                    purchaseHistoryPerm = true;
+                }
 
+            }
+            String name;
+            if (getSuperVisor() == null)
+                name = null;
+            else name = getSuperVisor().getName();
+            return new DalOwnerApp(name, getAppointed().getName(), getRelatedShop().getShopName(), employeesPerm, purchaseHistoryPerm, isShopFounder);
         }
-        return new DalOwnerApp(getSuperVisor().getName(),getAppointed().getName(),getRelatedShop().getShopName(),employeesPerm,purchaseHistoryPerm,isShopFounder);
+        else return this.dalOwnerApp;
     }
 
     @Override

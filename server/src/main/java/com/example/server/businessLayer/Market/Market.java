@@ -127,6 +127,8 @@ public class Market {
         ShoppingCart.setShoppingCartRepository(shoppingCartRepository);
         ShoppingBasket.setShoppingBasketRepository(shoppingBasketRepository);
         ShoppingCart.setShoppingBasketRepository(shoppingBasketRepository);
+        Shop.setManagerAppRepository(managerAppRepository);
+        Shop.setOwnerAppRepository(ownerAppRepository);
     }
 
     //Loading systems configurations from file.
