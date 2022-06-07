@@ -277,7 +277,7 @@ public class Market {
 
         try {
 
-            File myObj = new File(System.getProperty("user.dir") + "/config/" + name);
+            File myObj = new File(System.getProperty("user.dir") + "/server/config/" + name);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();

@@ -2,6 +2,7 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
@@ -9,8 +10,10 @@ import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
+import com.example.server.serviceLayer.MarketService;
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
+import com.example.server.serviceLayer.PurchaseService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -159,9 +162,12 @@ public class ServicesTests {
     @DisplayName("System init from file")
     public void initFromFile(){
         try{
-            Market market = Market.getInstance();
-            market.firstInitMarket();
-            assert true;
+
+            MarketService marketService= MarketService.getInstance();
+            marketService.firstInitMarket();
+            PurchaseService purchaseService= PurchaseService.getInstance();
+            UserController userController= UserController.getInstance();
+            Assertions.assertEquals(6,userController.getVisitorsInMarket().size());
         }
         catch(Exception e){
             assert false;
