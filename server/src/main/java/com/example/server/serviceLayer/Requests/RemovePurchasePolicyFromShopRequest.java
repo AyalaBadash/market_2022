@@ -1,6 +1,6 @@
 package com.example.server.serviceLayer.Requests;
 
-import com.example.server.serviceLayer.FacadeObjects.PurchasePolicyTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.PurchasePolicyTypeFacade;
 
 public class RemovePurchasePolicyFromShopRequest {
 

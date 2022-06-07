@@ -1,8 +1,6 @@
 package com.example.server.serviceLayer.Requests;
 
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
-import com.example.server.serviceLayer.FacadeObjects.PurchasePolicyTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.PurchasePolicyTypeFacade;
 
 public class AddPurchasePolicyToShopRequest {
 

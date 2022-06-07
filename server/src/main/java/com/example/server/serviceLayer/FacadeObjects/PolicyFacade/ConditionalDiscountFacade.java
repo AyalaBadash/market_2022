@@ -12,6 +12,8 @@ public class ConditionalDiscountFacade extends DiscountTypeFacade {
         this.conditionFacade = conditionFacade;
     }
 
+    public ConditionalDiscountFacade(){}
+
     public ConditionFacade getConditionFacade() {
         return conditionFacade;
     }

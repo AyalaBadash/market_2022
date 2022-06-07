@@ -8,19 +8,15 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositeDiscountFacade extends DiscountTypeFacade{
-    enum CompositeDiscountType{
-        max,
-        kindOf
-    }
+public abstract class CompositeDiscountFacade extends DiscountTypeFacade{
     protected List<DiscountTypeFacade> discountTypes;
-    protected CompositeDiscountType compositeDiscountType;
 
-    public CompositeDiscountFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState, List<DiscountTypeFacade> discountTypes, CompositeDiscountType compositeDiscountType) {
+    public CompositeDiscountFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState, List<DiscountTypeFacade> discountTypes) {
         super (percentageOfDiscount, discountLevelState );
         this.discountTypes = discountTypes;
-        this.compositeDiscountType = compositeDiscountType;
     }
+
+    public CompositeDiscountFacade(){}
 
     public List<DiscountTypeFacade> getDiscountTypes() {
         return discountTypes;
@@ -28,31 +24,5 @@ public class CompositeDiscountFacade extends DiscountTypeFacade{
 
     public void setDiscountTypes(List<DiscountTypeFacade> discountTypes) {
         this.discountTypes = discountTypes;
-    }
-
-    public CompositeDiscountType getCompositeDiscountType() {
-        return compositeDiscountType;
-    }
-
-    public void setCompositeDiscountType(CompositeDiscountType compositeDiscountType) {
-        this.compositeDiscountType = compositeDiscountType;
-    }
-
-    @Override
-    public DiscountType toBusinessObject() throws MarketException {
-        List<DiscountType> discountTypeList = new ArrayList<> (  );
-        for(DiscountTypeFacade discountTypeFacade: discountTypes)
-            discountTypeList.add ( discountTypeFacade.toBusinessObject () );
-        switch (compositeDiscountType){
-            case max -> {
-                return new MaxCompositeDiscount (discountTypeList );
-            }
-            case kindOf -> {
-                return new KindOfCompositeDiscount (discountTypeList );
-            }
-            default -> {
-                throw new MarketException ( "composite discount type does not exist" );
-            }
-        }
     }
 }

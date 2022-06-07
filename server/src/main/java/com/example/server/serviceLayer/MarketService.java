@@ -2,13 +2,11 @@ package com.example.server.serviceLayer;
 
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Publisher.Publisher;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.SupplyService;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;

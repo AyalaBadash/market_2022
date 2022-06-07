@@ -11,6 +11,8 @@ public class SimpleDiscountFacade extends DiscountTypeFacade {
         super (percentageOfDiscount, discountLevelState );
     }
 
+    public SimpleDiscountFacade(){}
+
     @Override
     public DiscountType toBusinessObject() throws MarketException {
         return new SimpleDiscount ( percentageOfDiscount, discountLevelState.toBusinessObject () );

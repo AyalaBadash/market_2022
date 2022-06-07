@@ -12,6 +12,8 @@ public class PriceConditionFacade extends ConditionFacade {
         this.price = price;
     }
 
+    public PriceConditionFacade(){}
+
     public int getPrice() {
         return price;
     }
