@@ -568,4 +568,12 @@ public class Shop implements IHistory {
     public List<PurchasePolicyType> getPurchasePolicies() {
         return purchasePolicy.getValidPurchasePolicies ();
     }
+  
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
+    }
+
+    public PurchasePolicy getPurchasePolicy() {
+        return purchasePolicy;
+    }
 }
