@@ -32,6 +32,7 @@ public class MarketUnitTest {
     String shopName;
     Security security;
     Item item;
+    int nextCartID;
     //TODO - approve - no test for validate cart - goes directly to basket.
 
     @BeforeAll
@@ -149,7 +150,7 @@ public class MarketUnitTest {
     @Test
     @DisplayName("Guest login")
     public void guestLogin(){
-        Visitor visitor = userController.guestLogin();
+        Visitor visitor = userController.guestLogin(nextCartID);
         Assertions.assertNotNull(visitor);
     }
 

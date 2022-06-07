@@ -1,5 +1,7 @@
 package com.example.server.dataLayer.entities;
 
+import com.example.server.businessLayer.Market.Shop;
+
 import javax.persistence.*;
 import java.util.Map;
 
@@ -17,9 +19,12 @@ public class DalShoppingBasket {
     private Map<DalItem, Double> items;
     private double price;
 
-    public DalShoppingBasket(double price, Map<DalItem, Double> items){
+    private String shop;
+
+    public DalShoppingBasket(double price, Map<DalItem, Double> items, String shop){
         this.price = price;
         this.items = items;
+        this.shop = shop;
     }
     public DalShoppingBasket(){}
 
@@ -45,5 +50,13 @@ public class DalShoppingBasket {
 
     public void setItems(Map<DalItem, Double> items) {
         this.items = items;
+    }
+
+    public String getShop() {
+        return shop;
+    }
+
+    public void setShop(String shop) {
+        this.shop = shop;
     }
 }

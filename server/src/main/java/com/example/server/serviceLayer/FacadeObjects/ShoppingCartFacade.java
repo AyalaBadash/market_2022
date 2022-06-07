@@ -12,6 +12,7 @@ import java.util.Map;
 public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
     Map<String, ShoppingBasketFacade> cart; // <Shop ,basket for the shop>
     double price;
+
     public ShoppingCartFacade(){}
     public ShoppingCartFacade(Map<String, ShoppingBasketFacade> cart,double price) {
         this.cart = cart;
@@ -46,7 +47,7 @@ public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
             Shop shop = Market.getInstance().getShopByName(entry.getKey());
             baskets.put(shop,entry.getValue().toBusinessObject());
         }
-        return new ShoppingCart(baskets,this.price);
+        return new ShoppingCart(-1,baskets,this.price);
 
     }
 

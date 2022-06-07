@@ -10,7 +10,6 @@ import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
-import com.example.server.businessLayer.Supply.SupplyService;
 import com.example.server.businessLayer.Market.ResourcesObjects.*;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
@@ -28,8 +27,6 @@ import org.springframework.stereotype.Component;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.rmi.UnexpectedException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -44,6 +41,7 @@ public class Market {
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
     private SynchronizedCounter nextItemID;
+    private SynchronizedCounter nextShoppingCartId;
     private PaymentServiceProxy paymentServiceProxy;
     private SupplyServiceProxy supplyServiceProxy;
     private Publisher publisher;
@@ -79,13 +77,14 @@ public class Market {
         this.itemByName = new ConcurrentHashMap<>();
         this.userController = UserController.getInstance();
         nextItemID = new SynchronizedCounter();
+        nextShoppingCartId = new SynchronizedCounter();
         this.numOfAcqsPerShop = new HashMap<>();
         paymentServiceProxy = null;
         supplyServiceProxy = null;
         publisher = null;
         notificationHandler=null;
+        instance = this;
     }
-
 
     public synchronized static Market getInstance() {
         if (instance == null) {
@@ -116,6 +115,7 @@ public class Market {
         instance.paymentServiceProxy = paymentServiceProxy1;
         instance.supplyServiceProxy = supplyServiceProxy1;
         notificationHandler=new NotificationHandler(publisher);
+        marketRepository.save(this.toDalObject());
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
     }
@@ -123,6 +123,9 @@ public class Market {
     private void initRepositories(){
         UserController.setMemberRepository(memberRepository);
         Shop.setItemRepository(itemRepository);
+        ShoppingCart.setShoppingCartRepository(shoppingCartRepository);
+        ShoppingBasket.setShoppingBasketRepository(shoppingBasketRepository);
+        ShoppingCart.setShoppingBasketRepository(shoppingBasketRepository);
     }
 
     //Loading systems configurations from file.
@@ -330,7 +333,7 @@ public class Market {
     public void register(String name, String password) throws MarketException {
         Security security = Security.getInstance();
         security.validateRegister(name, password);
-        userController.register(name);
+        userController.register(name,this.nextShoppingCartId.increment());
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A new user registered , welcome " + name);
     }
@@ -343,7 +346,7 @@ public class Market {
 
 
     public Visitor guestLogin() {
-        return userController.guestLogin();
+        return userController.guestLogin(this.nextShoppingCartId.increment());
     }
 
     public Shop getShopByName(String shopName) {
@@ -535,6 +538,7 @@ public class Market {
         }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
             shops.remove(shopName);
+            shopRepository.delete(shops.get(shopName).getDalObject()); //TODO check
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
@@ -576,6 +580,7 @@ public class Market {
         Item itemToDelete = shop.getItemMap().get(itemID);
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         shop.deleteItem(itemToDelete);
+        shopRepository.save(shop.getDalObject());
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
@@ -596,7 +601,7 @@ public class Market {
         try {
             Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment());
             updateMarketOnAddedItem(addedItem, shopName);
-            shopRepository.save(shop.toDalObject());
+            shopRepository.save(shop.getDalObject());
             EventLog.getInstance().Log("Item added to shop " + shopName);
             return shop;
         } catch (MarketException e) {
@@ -626,6 +631,7 @@ public class Market {
             throw new MarketException("shop does not exist in system");
         }
         shop.setItemAmount(shopOwnerName, item.getID(), amount);
+        shopRepository.save(shop.getDalObject());
         EventLog.getInstance().Log("Item " + item.getName() + " amount has been updated.");
     }
 
@@ -635,7 +641,7 @@ public class Market {
             debugLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
         }
-        return userController.memberLogout(member);
+        return userController.memberLogout(member,this.nextShoppingCartId.increment());
     }
 
     public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) throws MarketException {
@@ -702,7 +708,7 @@ public class Market {
                     if (shopName == null || shopName.length() == 0)
                         throw new MarketException("shop name length has to be positive");
                     Shop shop = new Shop(shopName, curMember);
-                    shopRepository.save(shop.toDalObject());
+                    shopRepository.save(shop.getDalObject());
 //                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
 //                shop.addEmployee(shopFounder);
                     shops.put(shopName, shop);
@@ -750,6 +756,7 @@ public class Market {
             throw new MarketException("Cannot add item that does not exists in the shop.");
         }
         shoppingCart.addItem(curShop, item, amount);
+//        shoppingCartRepository.save(shoppingCart.toDalObject());
         EventLog.getInstance().Log(amount + " " + item.getName() + " added to cart.");
     }
 
@@ -850,7 +857,7 @@ public class Market {
         if (shop == null)
             throw new MarketException("shop does not exist in the market");
         shop.editItem(newItem, id);
-
+        itemRepository.save(newItem.toDalObject());
     }
 
     public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
@@ -901,7 +908,7 @@ public class Market {
     }
 
     private ShoppingCart validateCart(ShoppingCart currentCart) {
-        ShoppingCart res = new ShoppingCart();
+        ShoppingCart res = new ShoppingCart(this.nextShoppingCartId.increment());
         double cartPrice = 0;
         Map<Shop, ShoppingBasket> baskets = currentCart.getCart();
         for (Map.Entry<Shop, ShoppingBasket> basketEntry : baskets.entrySet()) {
@@ -955,7 +962,8 @@ public class Market {
         Security.getInstance().reset();
         userController.reset();
         ClosedShopsHistory.getInstance().reset();
-        userController.register(systemManagerName);
+        instance.nextShoppingCartId.reset();
+        userController.register(systemManagerName,nextShoppingCartId.increment());
     }
 
     public String getSystemManagerName() {
@@ -989,6 +997,7 @@ public class Market {
     }
 
 
+    //TODO dal
     public void removeMember(String manager, String memberToRemove) throws MarketException {
         if (manager.equals(memberToRemove)) {
             DebugLog.getInstance().Log("You cant remove yourself.");

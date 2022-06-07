@@ -119,5 +119,4 @@ public class Item implements IHistory {
         return new DalItem(this.ID, this.name, (int)this.price, this.info,
                 this.rank, this.rankers, this.category.toString(), this.keywords);
     }
-
 }

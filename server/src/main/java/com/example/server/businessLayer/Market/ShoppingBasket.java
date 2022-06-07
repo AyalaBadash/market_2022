@@ -4,6 +4,8 @@ import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.entities.DalItem;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
+import com.example.server.dataLayer.repositories.ShoppingBasketRepository;
+import com.example.server.dataLayer.repositories.ShoppingCartRepository;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -14,6 +16,8 @@ public class ShoppingBasket implements IHistory {
     private Map<java.lang.Integer, Double> items;//<Item,quantity>
     private Map<java.lang.Integer, Item> itemMap;
     private double price;
+
+    private static ShoppingBasketRepository shoppingBasketRepository;
 
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
@@ -91,7 +95,7 @@ public class ShoppingBasket implements IHistory {
         else
             amount += items.get(item.getID());
         items.put(item.getID(),amount);
-    }
+}
 
     public void removeItem(Item item) {
         items.remove(item.getID());
@@ -118,12 +122,15 @@ public class ShoppingBasket implements IHistory {
         this.itemMap = itemMap;
     }
 
-    public DalShoppingBasket toDalObject(){
+    public DalShoppingBasket toDalObject(Shop shop){
         Map<DalItem,Double> dalItems = new HashMap<>();
         for (Map.Entry<Integer,Double> entry:this.items.entrySet()){
             dalItems.put(itemMap.get(entry.getKey()).toDalObject(),entry.getValue());
         }
+        return new DalShoppingBasket(this.price,dalItems, shop.getShopName());
+    }
 
-        return new DalShoppingBasket(this.price,dalItems);
+    public static void setShoppingBasketRepository(ShoppingBasketRepository sbRepository){
+         shoppingBasketRepository = sbRepository;
     }
 }

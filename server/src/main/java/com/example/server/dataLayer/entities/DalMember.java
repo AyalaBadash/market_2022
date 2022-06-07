@@ -10,9 +10,11 @@ public class DalMember {
     @Column(name = "name")
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shopping_cart", referencedColumnName = "id")
-    private DalShoppingCart myCart;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "shopping_cart", referencedColumnName = "id")
+//    private DalShoppingCart myCart;
+
+    private int shoppingCart;
 
     @OneToMany(cascade = CascadeType.ALL)
     //@JoinColumn(name = "appointedName",referencedColumnName = "name")
@@ -34,9 +36,9 @@ public class DalMember {
     @JoinColumn(name = "member_name", referencedColumnName = "name")
     private List<DalAcquisitionHistory> purchaseHistory;
 
-    public DalMember(String name, DalShoppingCart myCart, List<DalManagerApp> managerAppsByMe, List<DalOwnerApp> ownerAppsByMe, List<DalManagerApp> myManagerApps, List<DalOwnerApp> myOwnerApps, List<DalAcquisitionHistory> purchaseHistory) {
+    public DalMember(String name, int myCart, List<DalManagerApp> managerAppsByMe, List<DalOwnerApp> ownerAppsByMe, List<DalManagerApp> myManagerApps, List<DalOwnerApp> myOwnerApps, List<DalAcquisitionHistory> purchaseHistory) {
         this.name = name;
-        this.myCart = myCart;
+        this.shoppingCart = myCart;
         this.managerAppsByMe = managerAppsByMe;
         this.ownerAppsByMe = ownerAppsByMe;
         this.myManagerApps = myManagerApps;

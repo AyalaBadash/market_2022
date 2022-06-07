@@ -21,7 +21,7 @@ public class MemberConcurrencyTest {
 
     @BeforeEach
     public void initMemberTest() throws MarketException {
-        member = new Member(name);
+        member = new Member(name,-1);
         member.setMyCart(myCart);
         Thread[] threads = new Thread[10];
         for(int i = 0; i < 10; i ++){

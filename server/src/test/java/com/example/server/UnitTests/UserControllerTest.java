@@ -16,6 +16,7 @@ class UserControllerTest {
     @Mock
     Visitor visitor = Mockito.mock(Visitor.class);
     UserController controller;
+    int nextCartID;
 
 
 
@@ -25,21 +26,23 @@ class UserControllerTest {
         Map<String,Visitor> emptyMap = new HashMap<>();
         controller.setVisitorsInMarket(emptyMap);
         controller.setNextUniqueNumber(1);
+        nextCartID = 1;
     }
 
     @Test
     @DisplayName("Guest login test - good test")
     public void GuestLoginTest(){
-        controller.guestLogin();
+        controller.guestLogin(nextCartID);
+        nextCartID++;
         Assertions.assertEquals(1,controller.getVisitorsInMarket().size());
-        Visitor visit = controller.guestLogin();
+        Visitor visit = controller.guestLogin(nextCartID);
         Assertions.assertEquals("@visitor2",visit.getName());
     }
 
     @Test
     @DisplayName("Exit system - good test ")
     public void ExitSystemTest(){
-        Visitor visitor1 = controller.guestLogin();
+        Visitor visitor1 = controller.guestLogin(nextCartID);
         Assertions.assertEquals(1,controller.getVisitorsInMarket().size());
         try {
             controller.exitSystem(visitor1.getName());
@@ -52,7 +55,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Exit system - fail test - user not logged exit ")
     public void ExitSystemFailTest(){
-        Visitor visitor1 = controller.guestLogin();
+        Visitor visitor1 = controller.guestLogin(nextCartID);
         Assertions.assertEquals(1,controller.getVisitorsInMarket().size());
         try {
             controller.exitSystem("name");
@@ -67,7 +70,7 @@ class UserControllerTest {
     @DisplayName("Register test")
     public void RegisterTest(){
         try {
-            controller.register("shaked");
+            controller.register("shaked",nextCartID);
             Assertions.assertNotNull(controller.getMembers().get("shaked"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -79,9 +82,10 @@ class UserControllerTest {
     @DisplayName("Member log out test - good test")
     public void MemberLogout(){
         try {
-            controller.register("raz");
+            controller.register("raz",nextCartID);
+            nextCartID++;
             controller.finishLogin("raz","@visitor1");
-            controller.memberLogout("raz");
+            controller.memberLogout("raz",nextCartID);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;

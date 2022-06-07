@@ -49,6 +49,9 @@ public class DalShop {
         this.rnkrs = rnkrs;
     }
 
+    public void removeItemFromShop(DalItem itemToRemove){
+        itemsCurrentAmount.remove(itemToRemove);
+    }
 
     public String getName() {
         return shop_name;
@@ -82,14 +85,6 @@ public class DalShop {
         this.rnkrs = rnkrs;
     }
 
-//    public List<Double> getItemCurrentAmount() {
-//        return itemCurrentAmount;
-//    }
-//
-//    public void setItemCurrentAmount(List<Double> itemCurrentAmount) {
-//        this.itemCurrentAmount = itemCurrentAmount;
-//    }
-
     public String getShop_name() {
         return shop_name;
     }
@@ -113,4 +108,6 @@ public class DalShop {
     public void setPurchaseHistory(List<String> purchaseHistory) {
         this.purchaseHistory = purchaseHistory;
     }
+
+
 }

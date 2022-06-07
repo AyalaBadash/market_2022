@@ -23,6 +23,7 @@ public class UserService {
         market = Market.getInstance();
     }
 
+
     public synchronized static UserService getInstance() {
         if (instance == null)
             instance = new UserService();

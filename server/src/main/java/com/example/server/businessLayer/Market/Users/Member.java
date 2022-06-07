@@ -23,11 +23,11 @@ public class Member implements IHistory {
     private List<Appointment> myAppointments;
     private List<AcquisitionHistory> purchaseHistory;
 
-    public Member(String name) throws MarketException {
+    public Member(String name,int cartID) throws MarketException {
         if(name.charAt ( 0 ) == '@')
             throw new MarketException ( "cannot create a member with a username starts with @" );
         this.name = name;
-        myCart = new ShoppingCart();
+        myCart = new ShoppingCart(cartID);
         appointedByMe = new CopyOnWriteArrayList<>();
         myAppointments = new CopyOnWriteArrayList<>();
         purchaseHistory = new ArrayList<> (  );
@@ -140,7 +140,7 @@ public class Member implements IHistory {
         for (AcquisitionHistory acq : this.purchaseHistory){
             dalPurchaseHistory.add(acq.toDalObject());
         }
-        DalMember res = new DalMember(this.name,this.myCart.toDalObject(),managerAppsByMe,ownerAppsByMe,myManagerApps,myOwnerApps,dalPurchaseHistory);
+        DalMember res = new DalMember(this.name,this.myCart.getId(),managerAppsByMe,ownerAppsByMe,myManagerApps,myOwnerApps,dalPurchaseHistory);
         return res;
     }
 }
