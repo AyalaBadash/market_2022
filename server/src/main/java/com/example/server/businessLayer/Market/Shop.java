@@ -564,4 +564,12 @@ public class Shop implements IHistory {
         }
         return false;
     }
+
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
+    }
+
+    public PurchasePolicy getPurchasePolicy() {
+        return purchasePolicy;
+    }
 }

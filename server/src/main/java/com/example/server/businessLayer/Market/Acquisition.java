@@ -12,6 +12,8 @@ import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 
+import java.util.Map;
+
 public class Acquisition {
     private boolean paymentDone;
     private boolean supplyConfirmed;
@@ -65,9 +67,18 @@ public class Acquisition {
         paymentDone = true;
         Visitor visitor = UserController.getInstance().getVisitor(buyerName);
         Member member = visitor.getMember ();
+        double actualPrice = 0;
         if( member != null) {
             //todo - add discount calculation
-            AcquisitionHistory acq = new AcquisitionHistory(shoppingCartToBuy, member.getName(), expectedPrice, expectedPrice);
+            for (Map.Entry<Shop,ShoppingBasket> entry:shoppingCartToBuy.getCart().entrySet())
+            {
+                Shop currShop = entry.getKey();
+                if (!currShop.getPurchasePolicy().isPoliciesHeld(visitor,entry.getValue())){
+                    throw new MarketException("One of the baskets does not match its shop policy");
+                }
+                actualPrice = actualPrice + currShop.getDiscountPolicy().calculateDiscount(entry.getValue());
+            }
+            AcquisitionHistory acq = new AcquisitionHistory(shoppingCartToBuy, member.getName(), actualPrice, expectedPrice);
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
