@@ -564,4 +564,8 @@ public class Shop implements IHistory {
         }
         return false;
     }
+
+    public List<PurchasePolicyType> getPurchasePolicies() {
+        return purchasePolicy.getValidPurchasePolicies ();
+    }
 }

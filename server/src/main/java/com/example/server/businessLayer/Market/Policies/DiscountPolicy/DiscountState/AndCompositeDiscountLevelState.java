@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 import java.util.List;
 
@@ -32,5 +33,35 @@ public class AndCompositeDiscountLevelState extends CompositeDiscountLevelState{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isAnd(){
+        return true;
+    }
+
+    @Override
+    public DiscountLevelStateFacade visitToFacade(CategoryLevelStateFacade levelStateFacade) {
+        return null;
+    }
+
+    @Override
+    public DiscountLevelStateFacade visitToFacade(ItemLevelStateFacade levelStateFacade) {
+        return null;
+    }
+
+    @Override
+    public DiscountLevelStateFacade visitToFacade(ShopLevelStateFacade levelStateFacade) {
+        return null;
+    }
+
+    @Override
+    public DiscountLevelStateFacade visitToFacade(AndCompositeDiscountLevelStateFacade levelStateFacade) {
+        return levelStateFacade.toFacade ( this );
+    }
+
+    @Override
+    public DiscountLevelStateFacade visitToFacade(MaxXorCompositeDiscountLevelStateFacade levelStateFacade) {
+        return null;
     }
 }

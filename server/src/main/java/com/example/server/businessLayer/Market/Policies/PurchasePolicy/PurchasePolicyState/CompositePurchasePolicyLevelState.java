@@ -7,7 +7,7 @@ import org.springframework.aop.target.LazyInitTargetSource;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CompositePurchasePolicyLevelState implements PurchasePolicyLevelState{
+public abstract class CompositePurchasePolicyLevelState extends PurchasePolicyLevelState {
     List<PurchasePolicyLevelState> purchasePolicyLevelStates;
 
     public CompositePurchasePolicyLevelState(List<PurchasePolicyLevelState> purchasePolicyLevelStates) {
@@ -22,5 +22,12 @@ public abstract class CompositePurchasePolicyLevelState implements PurchasePolic
         return amounts;
     }
 
+    public List<PurchasePolicyLevelState> getPurchasePolicyLevelStates() {
+        return purchasePolicyLevelStates;
+    }
+
+    public void setPurchasePolicyLevelStates(List<PurchasePolicyLevelState> purchasePolicyLevelStates) {
+        this.purchasePolicyLevelStates = purchasePolicyLevelStates;
+    }
 }
 

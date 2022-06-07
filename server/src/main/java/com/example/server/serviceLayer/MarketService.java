@@ -512,4 +512,21 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
+//    public ResponseT<List<PurchasePolicyTypeFacade>> getPurchasePoliciesOfShop(String visitorName, String shopName) {
+//        try {
+//            List<PurchasePolicyType> purchasePolicyTypes = market.getPurchasePoliciesOfShop(visitorName, shopName);
+//            List<PurchasePolicyTypeFacade> purchasePolicyTypeFacades = new ArrayList<> (  );
+//            for(PurchasePolicyType purchasePolicyType: purchasePolicyTypes)
+//                purchasePolicyTypeFacades.add (createPurchasePolicyFacade(purchasePolicyType));
+//            return new ResponseT(purchasePolicyTypeFacades);
+//        } catch (Exception e) {
+//            return new ResponseT(e.getMessage());
+//        }
+//    }
+
+//    private PurchasePolicyTypeFacade createPurchasePolicyFacade(PurchasePolicyType purchasePolicyType) {
+//        if(purchasePolicyType.isAtLeast ())
+//
+//    }
 }

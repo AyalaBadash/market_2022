@@ -5,7 +5,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
 import java.util.List;
 
-public abstract class CompositePurchasePolicyLevelStateFacade implements PurchasePolicyLevelStateFacade {
+public abstract class CompositePurchasePolicyLevelStateFacade extends PurchasePolicyLevelStateFacade {
     protected List<PurchasePolicyLevelStateFacade> purchasePolicyLevelStateFacades;
 
     public CompositePurchasePolicyLevelStateFacade(List<PurchasePolicyLevelStateFacade> purchasePolicyLevelStateFacades) {

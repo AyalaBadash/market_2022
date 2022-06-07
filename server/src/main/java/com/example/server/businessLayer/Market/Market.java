@@ -1229,4 +1229,15 @@ public class Market {
         this.notificationHandler.setService(o);
         return true;
     }
+
+    public List<PurchasePolicyType> getPurchasePoliciesOfShop(String visitorName, String shopName) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        Shop shop = shops.get ( shopName );
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in market" );
+        return shop.getPurchasePolicies();
+    }
 }
