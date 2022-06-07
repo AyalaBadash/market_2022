@@ -8,16 +8,15 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositeConditionFacade extends ConditionFacade{
+public abstract class CompositeConditionFacade extends ConditionFacade{
     enum CompositeConditionType{
         or,
         and
     }
-    private CompositeConditionType compositeConditionType;
-    private List<ConditionFacade> conditionFacadeList;
+    protected CompositeConditionType compositeConditionType;
+    protected List<ConditionFacade> conditionFacadeList;
 
-    public CompositeConditionFacade(CompositeConditionType compositeConditionType, List<ConditionFacade> conditionFacadeList) {
-        this.compositeConditionType = compositeConditionType;
+    public CompositeConditionFacade(List<ConditionFacade> conditionFacadeList) {
         this.conditionFacadeList = conditionFacadeList;
     }
 
@@ -35,23 +34,5 @@ public class CompositeConditionFacade extends ConditionFacade{
 
     public void setConditionFacadeList(List<ConditionFacade> conditionFacadeList) {
         this.conditionFacadeList = conditionFacadeList;
-    }
-
-    @Override
-    public Condition toBusinessObject() throws MarketException {
-        List<Condition> conditions = new ArrayList<> (  );
-        for(ConditionFacade conditionFacade: conditionFacadeList)
-            conditions.add ( conditionFacade.toBusinessObject () );
-        switch (compositeConditionType){
-            case or -> {
-                return new OrCompositeCondition ( conditions );
-            }
-            case and -> {
-                return new AndCompositeCondition ( conditions );
-            }
-            default -> {
-                throw new MarketException ( "type of composite condition does not exist" );
-            }
-        }
     }
 }

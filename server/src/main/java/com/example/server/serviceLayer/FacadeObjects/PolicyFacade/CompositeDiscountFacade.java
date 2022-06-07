@@ -8,7 +8,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositeDiscountFacade extends DiscountTypeFacade{
+public abstract class CompositeDiscountFacade extends DiscountTypeFacade{
     enum CompositeDiscountType{
         max,
         kindOf
@@ -38,21 +38,21 @@ public class CompositeDiscountFacade extends DiscountTypeFacade{
         this.compositeDiscountType = compositeDiscountType;
     }
 
-    @Override
-    public DiscountType toBusinessObject() throws MarketException {
-        List<DiscountType> discountTypeList = new ArrayList<> (  );
-        for(DiscountTypeFacade discountTypeFacade: discountTypes)
-            discountTypeList.add ( discountTypeFacade.toBusinessObject () );
-        switch (compositeDiscountType){
-            case max -> {
-                return new MaxCompositeDiscount (discountTypeList );
-            }
-            case kindOf -> {
-                return new KindOfCompositeDiscount (discountTypeList );
-            }
-            default -> {
-                throw new MarketException ( "composite discount type does not exist" );
-            }
-        }
-    }
+//    @Override
+//    public DiscountType toBusinessObject() throws MarketException {
+//        List<DiscountType> discountTypeList = new ArrayList<> (  );
+//        for(DiscountTypeFacade discountTypeFacade: discountTypes)
+//            discountTypeList.add ( discountTypeFacade.toBusinessObject () );
+//        switch (compositeDiscountType){
+//            case max -> {
+//                return new MaxCompositeDiscount (discountTypeList );
+//            }
+//            case kindOf -> {
+//                return new KindOfCompositeDiscount (discountTypeList );
+//            }
+//            default -> {
+//                throw new MarketException ( "composite discount type does not exist" );
+//            }
+//        }
+//    }
 }
