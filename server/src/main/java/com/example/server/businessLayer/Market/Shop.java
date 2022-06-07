@@ -31,7 +31,7 @@ public class Shop implements IHistory {
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
     private static ItemRepository itemRepository;
-
+    private DalShop dalShop;
     Member shopFounder;//todo
     private int rank;
     private int rankers;
@@ -88,7 +88,8 @@ public class Shop implements IHistory {
 
 
     public void deleteItem(Item item) {
-        itemMap.remove ( item.getID() );
+        itemMap.remove( item.getID() );
+        getDalObject().removeItemFromShop(item.toDalObject());
     }
     /*
     private void addItem(Item item) throws MarketException {
@@ -542,13 +543,16 @@ public class Shop implements IHistory {
     public boolean hasItem(Item item) {
         return itemMap.get(item.getID()) != null;
     }
-        public DalShop toDalObject () {
-            Map<DalItem, Double> dalItemAmounts = new HashMap<>();
-            for (Map.Entry<Integer, Item> entry : itemMap.entrySet()){
-                dalItemAmounts.put(entry.getValue().toDalObject(), itemsCurrentAmount.get(entry.getKey()));
+        public DalShop getDalObject() {
+            if (dalShop==null) {
+                Map<DalItem, Double> dalItemAmounts = new HashMap<>();
+                for (Map.Entry<Integer, Item> entry : itemMap.entrySet()) {
+                    dalItemAmounts.put(entry.getValue().toDalObject(), itemsCurrentAmount.get(entry.getKey()));
+                }
+                DalShop res = new DalShop(this.shopName, dalItemAmounts, this.closed, this.rank, this.rankers);
+                this.dalShop = res;
             }
-            DalShop res = new DalShop(this.shopName, dalItemAmounts, this.closed, this.rank, this.rankers);
-            return res;
+            return this.dalShop;
         }
     }
 

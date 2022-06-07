@@ -140,7 +140,7 @@ public class UserController {
             visitor.getCart ().removeItem ( shop, itemToRemove);
         }
         for ( Member member: members.values ()){
-            member.getMyCart().removeItem( shop, itemToRemove);
+            member.getMyCart().removeItem( shop, itemToRemove); //TODO update dalMember
         }
         EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
     }

@@ -10,7 +10,6 @@ import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
-import com.example.server.businessLayer.Supply.SupplyService;
 import com.example.server.businessLayer.Market.ResourcesObjects.*;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
@@ -28,8 +27,6 @@ import org.springframework.stereotype.Component;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.rmi.UnexpectedException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -582,6 +579,7 @@ public class Market {
         Item itemToDelete = shop.getItemMap().get(itemID);
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         shop.deleteItem(itemToDelete);
+        shopRepository.save(shop.getDalObject());
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
@@ -602,7 +600,7 @@ public class Market {
         try {
             Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment());
             updateMarketOnAddedItem(addedItem, shopName);
-            shopRepository.save(shop.toDalObject());
+            shopRepository.save(shop.getDalObject());
             EventLog.getInstance().Log("Item added to shop " + shopName);
             return shop;
         } catch (MarketException e) {
@@ -632,6 +630,7 @@ public class Market {
             throw new MarketException("shop does not exist in system");
         }
         shop.setItemAmount(shopOwnerName, item.getID(), amount);
+        shopRepository.save(shop.getDalObject());
         EventLog.getInstance().Log("Item " + item.getName() + " amount has been updated.");
     }
 
@@ -708,7 +707,7 @@ public class Market {
                     if (shopName == null || shopName.length() == 0)
                         throw new MarketException("shop name length has to be positive");
                     Shop shop = new Shop(shopName, curMember);
-                    shopRepository.save(shop.toDalObject());
+                    shopRepository.save(shop.getDalObject());
 //                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
 //                shop.addEmployee(shopFounder);
                     shops.put(shopName, shop);
@@ -857,7 +856,7 @@ public class Market {
         if (shop == null)
             throw new MarketException("shop does not exist in the market");
         shop.editItem(newItem, id);
-
+        shopRepository.save(shop.getDalObject());
     }
 
     public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
