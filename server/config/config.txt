@@ -1,4 +1,4 @@
 PaymentService :: WSEP
 SupplyService :: WSEP
-Publisher :: Notifications
+Publisher ::Text
 u1::p1

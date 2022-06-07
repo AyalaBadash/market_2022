@@ -61,10 +61,8 @@ public class TextDispatcher extends Publisher{
     @Override
     public boolean addMessgae(String sessionId, Notification notification) {
 
-        if(!messages.containsKey(sessionId)){
-            return false;
-        }
-        if( writeToText(notification.getMessage(), sessionId+messages.get(sessionId)+".txt",sessionId)){
+
+        if( writeToText(notification.getMessage(), sessionId+".txt",sessionId)){
             int ret=messages.get(sessionId);
             messages.remove(sessionId);
             messages.put(sessionId,ret+1);

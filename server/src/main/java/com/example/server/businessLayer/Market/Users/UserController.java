@@ -11,6 +11,7 @@ import com.example.server.businessLayer.Market.ShoppingCart;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -181,4 +182,13 @@ public class UserController {
         nextUniqueNumber.reset();
     }
 
+    public boolean allInMarket(List<String> list) {
+
+        for(String name :list){
+            if(!visitorsInMarket.containsKey(name)){
+                return false;
+            }
+        }
+        return true;
+    }
 }

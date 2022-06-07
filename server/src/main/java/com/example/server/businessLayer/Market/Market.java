@@ -42,6 +42,8 @@ public class Market {
     private SupplyServiceProxy supplyServiceProxy;
     private Publisher publisher;
     private static Market instance;
+    boolean datainitialized=false;
+    boolean servicesInitialized=false;
     Map<String, Integer> numOfAcqsPerShop;
 
     private Market() {
@@ -78,8 +80,12 @@ public class Market {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
         }
-        readConfigurationFile();
-        readInitFile();
+        if(!servicesInitialized) {
+            readConfigurationFile();
+        }
+        if(!datainitialized) {
+            readInitFile();
+        }
         if(userName!=null && !userName.isEmpty() & password!=null && !password.isEmpty()) {
             register(userName, password);
             instance.systemManagerName = userName;
@@ -127,8 +133,12 @@ public class Market {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
         }
-        readConfigurationFile(servicesName);
-        readInitFile(dataName);
+        if(!servicesInitialized) {
+            readConfigurationFile(servicesName);
+        }
+        if(!datainitialized) {
+            readInitFile(dataName);
+        }
         if(userName!=null && !userName.isEmpty() & password!=null && !password.isEmpty()) {
             register(userName, password);
             instance.systemManagerName = userName;
@@ -150,8 +160,12 @@ public class Market {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
         }
-        readConfigurationFile();
-        readInitFile();
+        if(!servicesInitialized) {
+            readConfigurationFile();
+        }
+        if(!datainitialized) {
+            readInitFile();
+        }
         checkSysteminit();
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
@@ -172,15 +186,20 @@ public class Market {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
         }
-        if(fileName==null || fileName.isEmpty()){
+        if(fileName==null || fileName.isEmpty() & !servicesInitialized ){
             readConfigurationFile();
         }
         else{
-            readConfigurationFile(fileName);
+            if(!servicesInitialized) {
+                readConfigurationFile(fileName);
+            }
         }
         if(userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
             register(userName, password);
             instance.systemManagerName = userName;
+        }
+        if(!datainitialized) {
+            readInitFile();
         }
         checkSysteminit();
         EventLog eventLog = EventLog.getInstance();
@@ -192,13 +211,14 @@ public class Market {
 
         try {
 
-            File myObj = new File(System.getProperty("user.dir") + "/config/" + "config.txt");
+            File myObj = new File("/Users/bardamri/Documents/GitHub/market_2022/server/config/"  + "config.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] vals = data.split("::");
                 setService(vals[0], vals[1]);
             }
+            servicesInitialized=true;
 
         } catch (Exception e) {}
     }
@@ -207,14 +227,15 @@ public class Market {
 
         try {
 
-            File myObj = new File(System.getProperty("user.dir") + "/config/" + "Data.txt");
+            File myObj = new File("/Users/bardamri/Documents/GitHub/market_2022/server/config/" + "Data.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] vals = data.split("::");
-                setData( vals);
-            }
+                setData(vals);
 
+            }
+            datainitialized=true;
 
         } catch (Exception e) {
         }
@@ -224,13 +245,15 @@ public class Market {
 
         try {
 
-            File myObj = new File(System.getProperty("user.dir") + "/config/" + fileName);
+            File myObj = new File("/Users/bardamri/Documents/GitHub/market_2022/server/config/"  + fileName);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] vals = data.split("::");
-                setData( vals);
+                setData(vals);
+
             }
+            datainitialized=true;
         } catch (Exception e) {}
     }
     private void setData(String[] vals)  {
@@ -277,7 +300,7 @@ public class Market {
 
         try {
 
-            File myObj = new File(System.getProperty("user.dir") + "/server/config/" + name);
+            File myObj = new File("/Users/bardamri/Documents/GitHub/market_2022/server/config/"  + name);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -296,7 +319,7 @@ public class Market {
 
             }
 
-
+            servicesInitialized=true;
         } catch (Exception e) {
         }
     }
@@ -1185,5 +1208,10 @@ public class Market {
 
         this.notificationHandler.setService(o);
         return true;
+    }
+
+
+    public int getDelayedMessages(String name){
+        return notificationHandler.getDelayednots(name);
     }
 }

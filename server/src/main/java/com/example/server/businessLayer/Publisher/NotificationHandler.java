@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Publisher;
 
+import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +148,11 @@ public class NotificationHandler {
                     delayedMessages.put(name, new ArrayList<>());
                 }
                 delayedMessages.get(name).add(notification);
+                if(dispatcher instanceof TextDispatcher){
+                    DelayedNotifications not= new DelayedNotifications();
+                    not.createMessage("Delayed message: \n"+ notification.getMessage());
+                    dispatcher.addMessgae(name,not);
+                }
             }
         }
         return true;
@@ -188,5 +194,9 @@ public class NotificationHandler {
 
     public void setService(Publisher o) {
         dispatcher=o;
+    }
+
+    public int getDelayednots(String name){
+        return delayedMessages.get(name).size();
     }
 }
