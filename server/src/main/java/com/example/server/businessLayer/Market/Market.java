@@ -1254,9 +1254,9 @@ public class Market {
     }
 
 
-    public int getDelayedMessages(String name){
+    public int getDelayedMessages(String name) {
         return notificationHandler.getDelayednots(name);
-
+    }
     public List<PurchasePolicyType> getPurchasePoliciesOfShop(String visitorName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)) {
             DebugLog.getInstance().Log("Member must be logged in for making this action");
