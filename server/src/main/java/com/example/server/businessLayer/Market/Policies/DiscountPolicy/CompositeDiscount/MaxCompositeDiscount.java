@@ -3,6 +3,10 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Composit
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
 import java.awt.event.MouseAdapter;
 import java.util.List;
@@ -38,5 +42,20 @@ public class MaxCompositeDiscount extends CompositeDiscount{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(SimpleDiscountFacade discountFacade) {
+        return null;
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(ConditionalDiscountFacade discountFacade) {
+        return null;
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(MaxCompositeDiscountFacade discountFacade) {
+        return discountFacade.toFacade ( this );
     }
 }

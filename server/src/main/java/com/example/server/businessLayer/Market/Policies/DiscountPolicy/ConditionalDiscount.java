@@ -4,6 +4,10 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
 import java.lang.constant.Constable;
 
@@ -36,5 +40,25 @@ public class ConditionalDiscount extends DiscountType{
                     this.condition.equals ( toCompare.condition );
         }
         return false;
+    }
+
+    @Override
+    public boolean isConditional(){
+        return true;
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(SimpleDiscountFacade discountFacade) {
+        return null;
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(ConditionalDiscountFacade discountFacade) {
+        return discountFacade.toFacade ( this );
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(MaxCompositeDiscountFacade discountFacade) {
+        return null;
     }
 }

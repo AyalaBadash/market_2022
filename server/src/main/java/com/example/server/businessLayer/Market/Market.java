@@ -3,6 +3,7 @@ package com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
@@ -1192,6 +1193,48 @@ public class Market {
         shop.addDiscountToShop(visitorName, discountType);
     }
 
+    public void removeDiscountFromShop(String visitorName, String shopName, DiscountType discountType) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)) {
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("you must be a visitor in the market in order to make actions");
+            throw new MarketException("you must be a visitor in the market in order to make actions");
+        }
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
+            throw new MarketException("shop does not exist in the market");
+        }
+        shop.removeDiscountFromShop(visitorName, discountType);
+    }
+
+    public void addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyType purchasePolicyType) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)) {
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("you must be a visitor in the market in order to make actions");
+            throw new MarketException("you must be a visitor in the market in order to make actions");
+        }
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
+            throw new MarketException("shop does not exist in the market");
+        }
+        shop.addPurchasePolicyToShop (visitorName, purchasePolicyType);
+    }
+
+    public void removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyType purchasePolicyType) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)) {
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("you must be a visitor in the market in order to make actions");
+            throw new MarketException("you must be a visitor in the market in order to make actions");
+        }
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
+            throw new MarketException("shop does not exist in the market");
+        }
+        shop.removePurchasePolicyFromShop (visitorName, purchasePolicyType);
+    }
+
     public boolean isInit() {
         return this.systemManagerName != null && !this.systemManagerName.equals("");
     }
@@ -1213,5 +1256,15 @@ public class Market {
 
     public int getDelayedMessages(String name){
         return notificationHandler.getDelayednots(name);
+
+    public List<PurchasePolicyType> getPurchasePoliciesOfShop(String visitorName, String shopName) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        Shop shop = shops.get ( shopName );
+        if(shop == null)
+            throw new MarketException ( "shop does not exist in market" );
+        return shop.getPurchasePolicies();
     }
 }

@@ -2,11 +2,11 @@ package com.example.server.serviceLayer;
 
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Publisher.Publisher;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.SupplyService;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
@@ -437,6 +437,36 @@ public class MarketService {
         }
     }
 
+    public Response removeDiscountFromShop(String visitorName, String shopName, DiscountTypeFacade discountTypeFacade) {
+        try {
+            DiscountType discountType = discountTypeFacade.toBusinessObject();
+            market.removeDiscountFromShop(visitorName, shopName, discountType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyTypeFacade purchasePolicyTypeFacade) {
+        try {
+            PurchasePolicyType purchasePolicyType = purchasePolicyTypeFacade.toBusinessObject();
+            market.addPurchasePolicyToShop (visitorName, shopName, purchasePolicyType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyTypeFacade purchasePolicyTypeFacade) {
+        try {
+            PurchasePolicyType purchasePolicyType = purchasePolicyTypeFacade.toBusinessObject();
+            market.removePurchasePolicyFromShop (visitorName, shopName, purchasePolicyType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
     public Response isServerInit() {
         try {
             if (market.isInit()) {
@@ -482,4 +512,21 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
+//    public ResponseT<List<PurchasePolicyTypeFacade>> getPurchasePoliciesOfShop(String visitorName, String shopName) {
+//        try {
+//            List<PurchasePolicyType> purchasePolicyTypes = market.getPurchasePoliciesOfShop(visitorName, shopName);
+//            List<PurchasePolicyTypeFacade> purchasePolicyTypeFacades = new ArrayList<> (  );
+//            for(PurchasePolicyType purchasePolicyType: purchasePolicyTypes)
+//                purchasePolicyTypeFacades.add (createPurchasePolicyFacade(purchasePolicyType));
+//            return new ResponseT(purchasePolicyTypeFacades);
+//        } catch (Exception e) {
+//            return new ResponseT(e.getMessage());
+//        }
+//    }
+
+//    private PurchasePolicyTypeFacade createPurchasePolicyFacade(PurchasePolicyType purchasePolicyType) {
+//        if(purchasePolicyType.isAtLeast ())
+//
+//    }
 }

@@ -7,7 +7,7 @@ import com.example.server.businessLayer.Market.ShoppingBasket;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CompositeDiscountLevelState implements DiscountLevelState {
+public abstract class CompositeDiscountLevelState extends DiscountLevelState {
 
     protected List<DiscountLevelState> discountLevelStates;
 
@@ -28,4 +28,12 @@ public abstract class CompositeDiscountLevelState implements DiscountLevelState 
     protected abstract Double calculateAllDiscount(double price, List<Double> discounts) throws MarketException;
 
     public abstract boolean equals(Object object);
+
+    public List<DiscountLevelState> getDiscountLevelStates() {
+        return discountLevelStates;
+    }
+
+    public void setDiscountLevelStates(List<DiscountLevelState> discountLevelStates) {
+        this.discountLevelStates = discountLevelStates;
+    }
 }

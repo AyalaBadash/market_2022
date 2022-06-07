@@ -16,6 +16,8 @@ public class AddDiscountToShopRequest {
         this.visitorName = visitorName;
     }
 
+    AddDiscountToShopRequest(){}
+
     public DiscountTypeFacade getDiscount() {
         return discount;
     }

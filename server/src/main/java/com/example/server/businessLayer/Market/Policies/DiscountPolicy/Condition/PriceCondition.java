@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Conditio
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 public class PriceCondition extends Condition {
     private double priceNeeded;
@@ -29,5 +30,37 @@ public class PriceCondition extends Condition {
         return false;
     }
 
+    @Override
+    public boolean isPrice(){
+        return true;
+    }
 
+    @Override
+    public ConditionFacade visitToFacade(AmountOfItemConditionFacade conditionFacade) {
+        return null;
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(PriceConditionFacade conditionFacade) {
+        return conditionFacade.toFacade ( this );
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(AndCompositeConditionFacade conditionFacade) {
+        return null;
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(OrCompositeConditionFacade conditionFacade) {
+        return null;
+    }
+
+
+    public double getPriceNeeded() {
+        return priceNeeded;
+    }
+
+    public void setPriceNeeded(double priceNeeded) {
+        this.priceNeeded = priceNeeded;
+    }
 }
