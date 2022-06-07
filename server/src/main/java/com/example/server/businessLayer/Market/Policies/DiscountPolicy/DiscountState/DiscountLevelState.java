@@ -2,9 +2,36 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Discount
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
-public interface DiscountLevelState {
+public abstract class DiscountLevelState {
 
-    public double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) throws MarketException;
-    public boolean equals(Object object);
+    public abstract double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) throws MarketException;
+    public abstract boolean equals(Object object);
+
+    public boolean isItem(){
+        return false;
+    }
+
+    public boolean isCategory(){
+        return false;
+    }
+
+    public boolean isShop(){
+        return false;
+    }
+
+    public boolean isAnd(){
+        return false;
+    }
+
+    public boolean isMaxXor(){
+        return false;
+    }
+
+    public abstract DiscountLevelStateFacade visitToFacade(CategoryLevelStateFacade levelStateFacade);
+    public abstract  DiscountLevelStateFacade visitToFacade(ItemLevelStateFacade levelStateFacade);
+    public abstract DiscountLevelStateFacade visitToFacade(ShopLevelStateFacade levelStateFacade);
+    public abstract DiscountLevelStateFacade visitToFacade(AndCompositeDiscountLevelStateFacade levelStateFacade);
+    public abstract DiscountLevelStateFacade visitToFacade(MaxXorCompositeDiscountLevelStateFacade levelStateFacade);
 }

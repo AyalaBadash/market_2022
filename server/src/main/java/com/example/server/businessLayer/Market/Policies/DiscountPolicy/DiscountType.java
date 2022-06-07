@@ -4,6 +4,13 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountS
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.ShopLevelState;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
+import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
 public abstract class DiscountType {
     protected int percentageOfDiscount;
@@ -43,4 +50,21 @@ public abstract class DiscountType {
     public abstract boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException;
 
     public abstract boolean equals(Object object);
+
+    public boolean isSimple(){
+        return false;
+    }
+
+    public boolean isConditional(){
+        return false;
+    }
+
+    public boolean isMax(){
+        return false;
+    }
+
+    public abstract DiscountTypeFacade visitToFacade(SimpleDiscountFacade discountFacade);
+    public abstract  DiscountTypeFacade visitToFacade(ConditionalDiscountFacade discountFacade);
+    public abstract DiscountTypeFacade visitToFacade(MaxCompositeDiscountFacade discountFacade);
+
 }

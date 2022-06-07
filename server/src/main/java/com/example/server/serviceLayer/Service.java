@@ -305,57 +305,71 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeShopOwnerAppointment")
     @CrossOrigin
-    public Response removeShopOwnerAppointment(removeAppointmentRequest request) {
+    public Response removeShopOwnerAppointment(@RequestBody removeAppointmentRequest request) {
         return marketService.removeShopOwnerAppointment(request.getBoss(),request.getFiredAppointed(),request.getShopName());
     }
 
     @Override
     @RequestMapping(value = "/removeMember")
     @CrossOrigin
-    public Response removeMember(removeMemberRequest request) {
+    public Response removeMember(@RequestBody removeMemberRequest request) {
         return marketService.removeMember(request.getManager(),request.getMemberToRemove());
     }
 
     @Override
     @RequestMapping(value = "/getItemInfo")
     @CrossOrigin
-    public ResponseT<ItemFacade> getItemInfo(GetItemInfoRequest request) {
+    public ResponseT<ItemFacade> getItemInfo(@RequestBody GetItemInfoRequest request) {
         return marketService.getItemInfo(request.getName(), request.getItemId());
     }
     @Override
     @RequestMapping(value = "/getMarketInfo")
     @CrossOrigin
-    public ResponseT<String> getMarketInfo(GetMarketInfoRequest request) {
+    public ResponseT<String> getMarketInfo(@RequestBody GetMarketInfoRequest request) {
         return marketService.getMarketInfo(request.getSysManager());
     }
 
     @Override
     @RequestMapping(value = "/addDiscountToShop")
     @CrossOrigin
-    public Response addDiscountToShop(AddDiscountToShopRequest request) {
+    public Response addDiscountToShop(@RequestBody AddDiscountToShopRequest request) {
         return marketService.addDiscountToShop(request.getVisitorName (), request.getShopName (), request.getDiscount ());
     }
 
     @Override
     @RequestMapping(value = "/removeDiscountFromShop")
     @CrossOrigin
-    public Response removeDiscountFromShop(RemoveDiscountFromShopRequest request) {
+    public Response removeDiscountFromShop(@RequestBody RemoveDiscountFromShopRequest request) {
         return marketService.removeDiscountFromShop (request.getVisitorName (), request.getShopName (), request.getDiscount ());
     }
 
     @Override
     @RequestMapping(value = "/addPurchasePolicyToShop")
     @CrossOrigin
-    public Response addPurchasePolicyToShop(AddPurchasePolicyToShopRequest request) {
+    public Response addPurchasePolicyToShop(@RequestBody AddPurchasePolicyToShopRequest request) {
         return marketService.addPurchasePolicyToShop (request.getVisitorName (), request.getShopName (), request.getPolicy ());
     }
 
     @Override
     @RequestMapping(value = "/removePurchasePolicyFromShop")
     @CrossOrigin
-    public Response removePurchasePolicyFromShop(RemovePurchasePolicyFromShopRequest request) {
+    public Response removePurchasePolicyFromShop(@RequestBody RemovePurchasePolicyFromShopRequest request) {
         return marketService.removePurchasePolicyFromShop (request.getVisitorName (), request.getShopName (), request.getPolicy ());
     }
+
+//    @Override
+//    @RequestMapping(value = "/getPurchasePoliciesOfShop")
+//    @CrossOrigin
+//    public Response getPurchasePoliciesOfShop(@RequestBody GetPoliciesRequest request) {
+//        return marketService.getPurchasePoliciesOfShop(request.getVisitorName (), request.getShopName ());
+//    }
+
+//    @Override
+//    @RequestMapping(value = "/getDiscountTypesOfShop")
+//    @CrossOrigin
+//    public Response getDiscountTypesOfShop(@RequestBody GetPoliciesRequest request) {
+//        return marketService.getDiscountTypesOfShop(request.getVisitorName (), request.getShopName ());
+//    }
 
 
     public ResponseT<MemberFacade> getMember(String memberName) {

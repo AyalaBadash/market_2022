@@ -4,6 +4,10 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchaseP
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.ShopPurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.AtLeastPurchasePolicyTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.AtMostPurchasePolicyTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.OrCompositePurchasePolicyTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.PurchasePolicyTypeFacade;
 
 import java.util.List;
 
@@ -16,5 +20,35 @@ public class OrCompositePurchasePolicyType extends CompositePurchasePolicyType {
     @Override
     public boolean isPolicyHeld(Visitor visitor, ShoppingBasket shoppingBasket) {
         return false;
+    }
+
+    @Override
+    public boolean isAtLeast() {
+        return false;
+    }
+
+    @Override
+    public boolean isAtMost() {
+        return false;
+    }
+
+    @Override
+    public boolean isOrComposite() {
+        return true;
+    }
+
+    @Override
+    public PurchasePolicyTypeFacade visitToFacade(AtLeastPurchasePolicyTypeFacade policyTypeFacade) {
+        return policyTypeFacade.toFacade ( this );
+    }
+
+    @Override
+    public PurchasePolicyTypeFacade visitToFacade(AtMostPurchasePolicyTypeFacade policyTypeFacade) {
+        return null;
+    }
+
+    @Override
+    public PurchasePolicyTypeFacade visitToFacade(OrCompositePurchasePolicyTypeFacade policyTypeFacade) {
+        return null;
     }
 }

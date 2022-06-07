@@ -1,8 +1,7 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CategoryLevelState;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
 public class CategoryLevelStateFacade extends DiscountLevelStateFacade {
@@ -25,5 +24,35 @@ public class CategoryLevelStateFacade extends DiscountLevelStateFacade {
     @Override
     public DiscountLevelState toBusinessObject() throws MarketException {
         return new CategoryLevelState ( category );
+    }
+
+    @Override
+    public DiscountLevelStateFacade toFacade(ItemLevelState itemLevelState) {
+        return null;
+    }
+
+    @Override
+    public DiscountLevelStateFacade toFacade(CategoryLevelState categoryLevelState) {
+        return new CategoryLevelStateFacade ( categoryLevelState.getCategory () );
+    }
+
+    @Override
+    public DiscountLevelStateFacade toFacade(ShopLevelState shopLevelState) {
+        return null;
+    }
+
+    @Override
+    public DiscountLevelStateFacade toFacade(AndCompositeDiscountLevelState itemLevelState) {
+        return null;
+    }
+
+    @Override
+    public DiscountLevelStateFacade toFacade(MaxXorCompositeDiscountLevelState shopLevelState) {
+        return null;
+    }
+
+    @Override
+    public DiscountLevelStateFacade toFacade(DiscountLevelState discountLevelState) {
+        return discountLevelState.visitToFacade ( this );
     }
 }

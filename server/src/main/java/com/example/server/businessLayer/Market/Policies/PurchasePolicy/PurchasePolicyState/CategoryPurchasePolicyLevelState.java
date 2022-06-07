@@ -4,11 +4,12 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryPurchasePolicyLevelState implements PurchasePolicyLevelState{
+public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
     Item.Category category;
 
     public CategoryPurchasePolicyLevelState(Item.Category category) {
@@ -30,5 +31,78 @@ public class CategoryPurchasePolicyLevelState implements PurchasePolicyLevelStat
                 curAmount += shoppingBasket.getItems ().get ( itemId );
         amount.add ( curAmount );
         return amount;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        return false;
+    }
+
+    @Override
+    public boolean isItemLevel() {
+        return false;
+    }
+
+    @Override
+    public boolean isCategoryLevel() {
+        return true;
+    }
+
+    @Override
+    public boolean isShopLevel() {
+        return false;
+    }
+
+    @Override
+    public boolean isOrLevel() {
+        return false;
+    }
+
+    @Override
+    public boolean isXorLevel() {
+        return false;
+    }
+
+    @Override
+    public boolean isAndLevel() {
+        return false;
+    }
+
+    @Override
+    public PurchasePolicyLevelStateFacade visitToFacade(ItemPurchasePolicyLevelStateFacade levelStateFacade) {
+        return null;
+    }
+
+    @Override
+    public PurchasePolicyLevelStateFacade visitToFacade(CategoryPurchasePolicyLevelStateFacade levelStateFacade) {
+        return levelStateFacade.toFacade ( this );
+    }
+
+    @Override
+    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyFacade levelStateFacade) {
+        return null;
+    }
+
+    @Override
+    public PurchasePolicyLevelStateFacade visitToFacade(AndCompositePurchasePolicyLevelStateFacade levelStateFacade) {
+        return null;
+    }
+
+    @Override
+    public PurchasePolicyLevelStateFacade visitToFacade(XorCompositePurchasePolicyLevelStateFacade levelStateFacade) {
+        return null;
+    }
+
+    @Override
+    public PurchasePolicyLevelStateFacade visitToFacade(OrCompositePurchasePolicyLevelStateFacade levelStateFacade) {
+        return null;
+    }
+
+    public Item.Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Item.Category category) {
+        this.category = category;
     }
 }
