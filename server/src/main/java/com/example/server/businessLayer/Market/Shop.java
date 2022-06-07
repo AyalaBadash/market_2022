@@ -13,8 +13,12 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountP
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.dataLayer.entities.DalItem;
+import com.example.server.dataLayer.entities.DalManagerApp;
+import com.example.server.dataLayer.entities.DalOwnerApp;
 import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.repositories.ItemRepository;
+import com.example.server.dataLayer.repositories.ManagerAppRepository;
+import com.example.server.dataLayer.repositories.OwnerAppRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +35,8 @@ public class Shop implements IHistory {
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
     private static ItemRepository itemRepository;
+    private static ManagerAppRepository managerAppRepository;
+    private static OwnerAppRepository ownerAppRepository;
     private DalShop dalShop;
     Member shopFounder;//todo
     private int rank;
@@ -48,7 +54,7 @@ public class Shop implements IHistory {
         itemsCurrentAmount = new ConcurrentHashMap<>( );
         this.closed = false;
         purchaseHistory = new ArrayList<> ( );
-        rank = 1;
+        rank = 0;
         rankers = 0;
         this.shopFounder = founder;
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
@@ -326,6 +332,7 @@ public class Shop implements IHistory {
             if (newAppointment.isOwner ( ))
                 throw new MarketException ( "this member is already a shop owner" );
             shopManagers.put ( employeeName, newAppointment );
+            managerAppRepository.save((DalManagerApp) newAppointment.toDalObject());
         } else {
             oldAppointment = shopManagers.get ( employeeName );
             if (oldAppointment != null) {
@@ -334,9 +341,13 @@ public class Shop implements IHistory {
                 shopOwners.put ( employeeName, newAppointment );
             } else if (newAppointment.isOwner ( )) {
                 shopOwners.put(employeeName, newAppointment);
+                ownerAppRepository.save((DalOwnerApp)newAppointment.toDalObject());
             }
-            else
-                shopManagers.put ( employeeName, newAppointment );
+            else {
+                shopManagers.put(employeeName, newAppointment);
+                managerAppRepository.save((DalManagerApp) newAppointment.toDalObject());
+            }
+
         }
     }
 
@@ -516,20 +527,33 @@ public class Shop implements IHistory {
         {
             Appointment toCheck = entry.getValue();
             Member appMember = toCheck.getSuperVisor();
-            if (appMember!=null &&toCheck.getSuperVisor().getName().equals(firedAppointed))
-                removeShopOwnerAppointment(firedAppointed,toCheck.getAppointed().getName());
+            if (appMember!=null &&toCheck.getSuperVisor().getName().equals(firedAppointed)) {
+                removeShopOwnerAppointment(firedAppointed, toCheck.getAppointed().getName());
+                ownerAppRepository.delete((DalOwnerApp) toCheck.toDalObject());
+            }
+
         }
         for (Map.Entry<String,Appointment> entry:shopManagers.entrySet())
         {
             Appointment toCheck = entry.getValue();
-            if (toCheck.getSuperVisor().getName().equals(firedAppointed))
+            if (toCheck.getSuperVisor().getName().equals(firedAppointed)) {
                 shopManagers.remove(entry.getKey());
+                managerAppRepository.delete((DalManagerApp)toCheck.toDalObject());
+            }
         }
         shopOwners.remove(firedAppointed);
     }
 
     protected static void setItemRepository(ItemRepository itemRep){
         itemRepository = itemRep;
+    }
+    protected static void setManagerAppRepository(ManagerAppRepository managerAppRepo)
+    {
+        managerAppRepository = managerAppRepo;
+    }
+    protected static void setOwnerAppRepository(OwnerAppRepository ownerRepo)
+    {
+        ownerAppRepository=ownerRepo;
     }
 
 

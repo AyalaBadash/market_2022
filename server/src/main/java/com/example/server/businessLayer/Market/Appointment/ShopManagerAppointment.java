@@ -13,12 +13,16 @@ import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 import java.util.List;
 
 public class ShopManagerAppointment extends Appointment {
+    private DalManagerApp dalManagerApp;
+
     public ShopManagerAppointment(Member appointed, Member appoint, Shop relatedShop) {
         super(appointed, appoint, relatedShop );
+        this.dalManagerApp = toDalObject();
     }
 
     public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
         super(appointed, superVisor, relatedShop, permissions);
+        this.dalManagerApp = toDalObject();
     }
 
     @Override
@@ -70,14 +74,40 @@ public class ShopManagerAppointment extends Appointment {
         return shopManagerAppointmentFacade.toFacade ( this );
     }
 
+    public DalManagerApp getDalManagerApp() {
+        return dalManagerApp;
+    }
+
+    public void setDalManagerApp(DalManagerApp dalManagerApp) {
+        this.dalManagerApp = dalManagerApp;
+    }
 
     public void removePermission(IPermission permission){
-        if(permissions.contains ( permission ))
-            permissions.remove ( permission );
+        if(permissions.contains ( permission )) {
+            permissions.remove(permission);
+            if(permission.getName().equals("EmployeesPermission"))
+            {
+                this.dalManagerApp.setEmployeePerm(false);
+                //TODO call repo.save();
+            }
+            else{
+                this.dalManagerApp.setPurchaseHistoryPerm(false);
+                //repo.save();
+            }
+        }
+
     }
 
     public void addPermission(IPermission permission){
         permissions.add ( permission );
+        if(permission.getName().equals("EmployeesPermission"))
+        {
+            this.dalManagerApp.setEmployeePerm(true);
+        }
+        else{
+            this.dalManagerApp.setPurchaseHistoryPerm(true);
+        }
+        //TODO call repo.save();
     }
 
 

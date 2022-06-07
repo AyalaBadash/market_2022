@@ -11,12 +11,14 @@ import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
 public class ShopOwnerAppointment extends Appointment {
     private boolean isShopFounder;
+    private DalOwnerApp dalOwnerApp;
+
     //TODO - check appoint is not null unless it is founder
     public ShopOwnerAppointment(Member appointed, Member appoint, Shop relatedShop,
                                 boolean isShopFounder) {
         super(appointed, appoint, relatedShop);
         this.isShopFounder = isShopFounder;
-
+        this.dalOwnerApp = toDalObject();
     }
 
     @Override
@@ -72,5 +74,6 @@ public class ShopOwnerAppointment extends Appointment {
     public boolean isShopFounder() {
         return isShopFounder;
     }
+
 
 }
