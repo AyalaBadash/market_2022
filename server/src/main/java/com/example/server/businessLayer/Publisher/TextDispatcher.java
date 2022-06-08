@@ -7,10 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TextDispatcher extends Publisher{
@@ -62,7 +59,7 @@ public class TextDispatcher extends Publisher{
     public boolean addMessgae(String sessionId, Notification notification) {
 
 
-        if( writeToText(notification.getMessage(), sessionId+".txt",sessionId)){
+        if( writeToText(notification.getMessage()+"\n\n", sessionId+".txt")){
             int ret=messages.get(sessionId);
             messages.remove(sessionId);
             messages.put(sessionId,ret+1);
@@ -74,9 +71,13 @@ public class TextDispatcher extends Publisher{
 
     }
 
-    private boolean writeToText(String message, String name, String sessionId){
+    private boolean writeToText(String message, String name){
         try {
-            FileWriter myWriter = new FileWriter(name);
+            final File parentDir = new File("/Users/bardamri/Documents/GitHub/market_2022/server/notifications/");
+            parentDir.mkdir();
+            final File file = new File(parentDir, name);
+            file.createNewFile(); // Creates file crawl_html/abc.txt
+            FileWriter myWriter = new FileWriter(file,true);
             myWriter.write(message);
             myWriter.close();
         } catch (IOException e) {

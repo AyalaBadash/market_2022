@@ -1,0 +1,3 @@
+Delayed message: 
+The shopnew shop name was closed
+
