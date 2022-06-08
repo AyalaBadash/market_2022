@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
@@ -369,7 +370,7 @@ public class Shop implements IHistory {
     }
 
     public StringBuilder getPurchaseHistory(String shopManagerName) throws MarketException {
-        if (!hasPermission ( shopManagerName, "get_purchase_history" )) {
+        if (!hasPermission ( shopManagerName, "PurchaseHistoryPermission" )) {
             DebugLog.getInstance ( ).Log ( "Non authorized user tried to access shop's purchase history." );
             throw new MarketException ( shopManagerName + " is not authorized to see shop purchase history" );
         }
@@ -472,7 +473,7 @@ public class Shop implements IHistory {
         }
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) ))
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
-        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this );
+        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>(){{ add(new PurchaseHistoryPermission());}});
         addEmployee ( appointment );
     }
 

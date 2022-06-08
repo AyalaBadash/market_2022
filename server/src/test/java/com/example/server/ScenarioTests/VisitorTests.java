@@ -109,10 +109,8 @@ public class VisitorTests {
     public void shopInfoTest() {
 //        String shopName = "shopTest";
         try {
-            Visitor visitor = market.guestLogin();
-            Shop res = market.getShopInfo(visitor.getName(), shopName);
+            Shop res = market.getShopInfo(shopManagerName, shopName);
             assert res.getShopName().equals(shopName);
-            market.visitorExitSystem(visitor.getName());
             assert true;
         } catch (Exception e) {
             assert false;
