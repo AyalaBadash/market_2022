@@ -81,7 +81,7 @@ public class XorCompositePurchasePolicyLevelState extends CompositePurchasePolic
     }
 
     @Override
-    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyFacade levelStateFacade) {
+    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyLevelStateFacade levelStateFacade) {
         return null;
     }
 

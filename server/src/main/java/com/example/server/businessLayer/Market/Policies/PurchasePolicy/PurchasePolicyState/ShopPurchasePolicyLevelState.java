@@ -72,8 +72,8 @@ public class ShopPurchasePolicyLevelState extends PurchasePolicyLevelState {
     }
 
     @Override
-    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyFacade levelStateFacade) {
-        return new ShopPurchasePolicyFacade ();
+    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyLevelStateFacade levelStateFacade) {
+        return new ShopPurchasePolicyLevelStateFacade ();
     }
 
     @Override

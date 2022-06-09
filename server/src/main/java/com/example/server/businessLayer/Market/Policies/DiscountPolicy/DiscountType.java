@@ -4,19 +4,16 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountS
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.ShopLevelState;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
-import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
 public abstract class DiscountType {
-    protected int percentageOfDiscount;
+    protected double percentageOfDiscount;
     protected DiscountLevelState discountLevelState;
 
-    public DiscountType(int percentageOfDiscount, DiscountLevelState discountLevelState) {
+    public DiscountType(double percentageOfDiscount, DiscountLevelState discountLevelState) {
         this.percentageOfDiscount = percentageOfDiscount;
         this.discountLevelState = discountLevelState;
     }
@@ -26,11 +23,11 @@ public abstract class DiscountType {
         discountLevelState = new ShopLevelState ();
     }
 
-    public int getPercentageOfDiscount() {
+    public double getPercentageOfDiscount() {
         return percentageOfDiscount;
     }
 
-    public void setPercentageOfDiscount(int percentageOfDiscount) {
+    public void setPercentageOfDiscount(double percentageOfDiscount) {
         this.percentageOfDiscount = percentageOfDiscount;
     }
 
@@ -65,6 +62,6 @@ public abstract class DiscountType {
 
     public abstract DiscountTypeFacade visitToFacade(SimpleDiscountFacade discountFacade);
     public abstract  DiscountTypeFacade visitToFacade(ConditionalDiscountFacade discountFacade);
-    public abstract DiscountTypeFacade visitToFacade(MaxCompositeDiscountFacade discountFacade);
+    public abstract DiscountTypeFacade visitToFacade(MaxCompositeDiscountTypeFacade discountFacade);
 
 }

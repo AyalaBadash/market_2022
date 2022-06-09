@@ -82,7 +82,7 @@ public class ItemPurchasePolicyLevelState extends PurchasePolicyLevelState {
     }
 
     @Override
-    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyFacade levelStateFacade) {
+    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyLevelStateFacade levelStateFacade) {
         return null;
     }
 

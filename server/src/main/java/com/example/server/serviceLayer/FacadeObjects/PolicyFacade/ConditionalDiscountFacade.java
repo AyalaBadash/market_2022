@@ -11,7 +11,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 public class ConditionalDiscountFacade extends DiscountTypeFacade {
     ConditionFacade conditionFacade;
 
-    public ConditionalDiscountFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState, ConditionFacade conditionFacade) {
+    public ConditionalDiscountFacade(double percentageOfDiscount, DiscountLevelStateFacade discountLevelState, ConditionFacade conditionFacade) {
         super (percentageOfDiscount, discountLevelState );
         this.conditionFacade = conditionFacade;
     }

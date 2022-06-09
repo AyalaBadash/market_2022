@@ -2,15 +2,15 @@ package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
 import java.util.List;
 
-public abstract class CompositeDiscountFacade extends DiscountTypeFacade{
+public abstract class CompositeDiscountTypeFacade extends DiscountTypeFacade{
     protected List<DiscountTypeFacade> discountTypes;
 
-    public CompositeDiscountFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState, List<DiscountTypeFacade> discountTypes) {
+    public CompositeDiscountTypeFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState, List<DiscountTypeFacade> discountTypes) {
         super (percentageOfDiscount, discountLevelState );
         this.discountTypes = discountTypes;
     }
 
-    public CompositeDiscountFacade(){}
+    public CompositeDiscountTypeFacade(){}
 
     public List<DiscountTypeFacade> getDiscountTypes() {
         return discountTypes;
