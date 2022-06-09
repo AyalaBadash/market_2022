@@ -11,7 +11,7 @@ public class ShopLevelState extends DiscountLevelState {
 
     @Override
     public boolean equals(Object object){
-        if(object instanceof CategoryLevelState) return true;
+        if(object instanceof ShopLevelState) return true;
         return false;
     }
 

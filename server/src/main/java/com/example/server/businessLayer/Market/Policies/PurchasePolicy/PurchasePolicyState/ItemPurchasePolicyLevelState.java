@@ -33,6 +33,11 @@ public class ItemPurchasePolicyLevelState extends PurchasePolicyLevelState {
 
     @Override
     public boolean equals(Object object) {
+        if(object instanceof ItemPurchasePolicyLevelState){
+            ItemPurchasePolicyLevelState itemPurchasePolicyLevelState = (ItemPurchasePolicyLevelState) object;
+            if(itemPurchasePolicyLevelState.itemId == itemId)
+                return true;
+        }
         return false;
     }
 
