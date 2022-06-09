@@ -31,6 +31,8 @@ public class PaymentServiceProxy {
         super();
         this.testRequest=true;
     }
+
+
     /**
      * Send the payment post if the handshake works.
      * @param method the payment method. The credit card in this version.

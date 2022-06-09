@@ -183,7 +183,6 @@ public class ServicesTests {
     public void initFromFile(){
         try{
             MarketService marketService= MarketService.getInstance();
-            marketService.firstInitMarket();
             PurchaseService purchaseService= PurchaseService.getInstance();
             UserController userController= UserController.getInstance();
             List<String> list= new ArrayList<>();
