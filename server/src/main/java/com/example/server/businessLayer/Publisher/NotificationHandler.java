@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Publisher;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.Notification;
@@ -81,11 +82,14 @@ public class NotificationHandler {
 
     private void deleteDelayed(String name) {
         try {
-            final File parentDir = new File(getConfigDir() + name + ".txt");
-
+            File parentDir = new File(getConfigDir() );
             parentDir.mkdir();
-            final File file = new File(parentDir, name);
-            file.delete();
+            File file = new File(parentDir, name + ".txt");
+            if(file.delete()){}
+            else{
+                throw new MarketException("could not delete file");
+            }
+
         }
         catch (Exception e){}
 
