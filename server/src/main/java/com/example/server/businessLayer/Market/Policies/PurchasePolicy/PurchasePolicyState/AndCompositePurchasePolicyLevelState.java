@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
@@ -27,6 +28,18 @@ public class AndCompositePurchasePolicyLevelState extends CompositePurchasePolic
 
     @Override
     public boolean equals(Object object) {
+        if(object instanceof AndCompositePurchasePolicyLevelState){
+            AndCompositePurchasePolicyLevelState andCompositePurchasePolicyLevelState = (AndCompositePurchasePolicyLevelState) object;
+            for( PurchasePolicyLevelState purchasePolicyLevelState : andCompositePurchasePolicyLevelState.purchasePolicyLevelStates){
+                if (!this.purchasePolicyLevelStates.contains ( purchasePolicyLevelState ))
+                    return false;
+            }
+            for( PurchasePolicyLevelState purchasePolicyLevelState : this.purchasePolicyLevelStates){
+                if (!andCompositePurchasePolicyLevelState.purchasePolicyLevelStates.contains ( purchasePolicyLevelState ))
+                    return false;
+            }
+            return true;
+        }
         return false;
     }
 

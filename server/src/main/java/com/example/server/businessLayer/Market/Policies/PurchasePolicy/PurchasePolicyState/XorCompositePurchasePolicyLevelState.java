@@ -25,6 +25,18 @@ public class XorCompositePurchasePolicyLevelState extends CompositePurchasePolic
 
     @Override
     public boolean equals(Object object) {
+        if(object instanceof XorCompositePurchasePolicyLevelState){
+            XorCompositePurchasePolicyLevelState xorCompositePurchasePolicyLevelState = (XorCompositePurchasePolicyLevelState) object;
+            for( PurchasePolicyLevelState purchasePolicyLevelState : xorCompositePurchasePolicyLevelState.purchasePolicyLevelStates){
+                if (!this.purchasePolicyLevelStates.contains ( purchasePolicyLevelState ))
+                    return false;
+            }
+            for( PurchasePolicyLevelState purchasePolicyLevelState : this.purchasePolicyLevelStates){
+                if (!xorCompositePurchasePolicyLevelState.purchasePolicyLevelStates.contains ( purchasePolicyLevelState ))
+                    return false;
+            }
+            return true;
+        }
         return false;
     }
 
