@@ -337,17 +337,17 @@ public interface IService {
      */
     Response removePurchasePolicyFromShop(RemovePurchasePolicyFromShopRequest request);
 
-//    /**
-//     * @param request
-//     * @return
-//     */
-//    Response getPurchasePoliciesOfShop(GetPoliciesRequest request);
-//
-//    /**
-//     * @param request
-//     * @return
-//     */
-//    Response getDiscountTypesOfShop(GetPoliciesRequest request);
+    /**
+     * @param request
+     * @return
+     */
+    Response getPurchasePoliciesOfShop(GetPoliciesRequest request);
+
+    /**
+     * @param request
+     * @return
+     */
+    Response getDiscountTypesOfShop(GetPoliciesRequest request);
 
     /**
      *

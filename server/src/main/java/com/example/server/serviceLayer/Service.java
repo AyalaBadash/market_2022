@@ -357,19 +357,19 @@ public class Service implements IService {
         return marketService.removePurchasePolicyFromShop (request.getVisitorName (), request.getShopName (), request.getPolicy ());
     }
 
-//    @Override
-//    @RequestMapping(value = "/getPurchasePoliciesOfShop")
-//    @CrossOrigin
-//    public Response getPurchasePoliciesOfShop(@RequestBody GetPoliciesRequest request) {
-//        return marketService.getPurchasePoliciesOfShop(request.getVisitorName (), request.getShopName ());
-//    }
+    @Override
+    @RequestMapping(value = "/getPurchasePoliciesOfShop")
+    @CrossOrigin
+    public Response getPurchasePoliciesOfShop(@RequestBody GetPoliciesRequest request) {
+        return marketService.getPurchasePoliciesOfShop(request.getVisitorName (), request.getShopName ());
+    }
 
-//    @Override
-//    @RequestMapping(value = "/getDiscountTypesOfShop")
-//    @CrossOrigin
-//    public Response getDiscountTypesOfShop(@RequestBody GetPoliciesRequest request) {
-//        return marketService.getDiscountTypesOfShop(request.getVisitorName (), request.getShopName ());
-//    }
+    @Override
+    @RequestMapping(value = "/getDiscountTypesOfShop")
+    @CrossOrigin
+    public Response getDiscountTypesOfShop(@RequestBody GetPoliciesRequest request) {
+        return marketService.getDiscountTypesOfShop(request.getVisitorName (), request.getShopName ());
+    }
 
 
     public ResponseT<MemberFacade> getMember(String memberName) {

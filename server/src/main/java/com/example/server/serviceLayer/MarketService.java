@@ -1,8 +1,10 @@
 package com.example.server.serviceLayer;
 
 
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CategoryLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Payment.PaymentService;
@@ -513,20 +515,53 @@ public class MarketService {
         }
     }
 
-//    public ResponseT<List<PurchasePolicyTypeFacade>> getPurchasePoliciesOfShop(String visitorName, String shopName) {
-//        try {
-//            List<PurchasePolicyType> purchasePolicyTypes = market.getPurchasePoliciesOfShop(visitorName, shopName);
-//            List<PurchasePolicyTypeFacade> purchasePolicyTypeFacades = new ArrayList<> (  );
-//            for(PurchasePolicyType purchasePolicyType: purchasePolicyTypes)
-//                purchasePolicyTypeFacades.add (createPurchasePolicyFacade(purchasePolicyType));
-//            return new ResponseT(purchasePolicyTypeFacades);
-//        } catch (Exception e) {
-//            return new ResponseT(e.getMessage());
-//        }
-//    }
+    public ResponseT<List<PurchasePolicyTypeFacade>> getPurchasePoliciesOfShop(String visitorName, String shopName) {
+        try {
+            List<PurchasePolicyType> purchasePolicyTypes = market.getPurchasePoliciesOfShop(visitorName, shopName);
+            List<PurchasePolicyTypeFacade> purchasePolicyTypeFacades = new ArrayList<> (  );
+            for(PurchasePolicyType purchasePolicyType: purchasePolicyTypes)
+                purchasePolicyTypeFacades.add (createPurchasePolicyFacade(purchasePolicyType));
+            return new ResponseT(purchasePolicyTypeFacades);
+        } catch (Exception e) {
+            return new ResponseT(e.getMessage());
+        }
+    }
 
-//    private PurchasePolicyTypeFacade createPurchasePolicyFacade(PurchasePolicyType purchasePolicyType) {
-//        if(purchasePolicyType.isAtLeast ())
-//
-//    }
+    private PurchasePolicyTypeFacade createPurchasePolicyFacade(PurchasePolicyType purchasePolicyType) {
+        PurchasePolicyTypeFacade purchasePolicyTypeFacade;
+        if(purchasePolicyType.isAtLeast ()){
+            purchasePolicyTypeFacade = new AtLeastPurchasePolicyTypeFacade ( );
+        } else if (purchasePolicyType.isAtMost ()){
+            purchasePolicyTypeFacade = new AtMostPurchasePolicyTypeFacade ( );
+        } else {
+            purchasePolicyTypeFacade = new OrCompositePurchasePolicyTypeFacade ();
+        }
+        purchasePolicyTypeFacade = purchasePolicyTypeFacade.toFacade ( purchasePolicyType );
+        return purchasePolicyTypeFacade;
+    }
+
+    public ResponseT<List<DiscountTypeFacade>> getDiscountTypesOfShop(String visitorName, String shopName){
+        try {
+            List<DiscountType> discountTypeList = market.getDiscountTypesOfShop(visitorName, shopName);
+            List<DiscountTypeFacade> discountTypeFacades = new ArrayList<> (  );
+            for(DiscountType discountType: discountTypeList)
+                discountTypeFacades.add (createDiscountTypeFacade(discountType));
+            return new ResponseT(discountTypeFacades);
+        } catch (Exception e) {
+            return new ResponseT(e.getMessage());
+        }
+    }
+
+    private DiscountTypeFacade createDiscountTypeFacade(DiscountType discountType) {
+        DiscountTypeFacade discountTypeFacade;
+        if(discountType.isSimple ()){
+            discountTypeFacade = new SimpleDiscountFacade (  );
+        }else if(discountType.isConditional ()){
+            discountTypeFacade = new ConditionalDiscountFacade (  );
+        }else{
+            discountTypeFacade = new MaxCompositeDiscountTypeFacade (  );
+        }
+        discountTypeFacade = discountTypeFacade.toFacade ( discountType );
+        return discountTypeFacade;
+    }
 }
