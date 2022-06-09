@@ -37,7 +37,7 @@ public class MarketUnitTest {
         PaymentServiceProxy paymentService = new PaymentServiceProxy();
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            Market.getInstance().firstInitMarket("Ido","password");
+            Market.getInstance().firstInitMarket("Ido","password",true);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -78,7 +78,7 @@ public class MarketUnitTest {
     public void initFailTest(){
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            market.firstInitMarket("raz","password");
+            market.firstInitMarket("raz","password",true);
             assert false;
         }
         catch (Exception e){
@@ -95,7 +95,7 @@ public class MarketUnitTest {
         PaymentServiceProxy paymentService = new PaymentServiceProxy();
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            market.firstInitMarket("raz","password");
+            market.firstInitMarket("raz","password",true);
             assert false;
         }
         catch (Exception e){

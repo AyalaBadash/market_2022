@@ -140,12 +140,14 @@ public class NotificationHandler {
 
     /**
      * The main method for sending a notification for a user.
-     * @param name the name of the visitor to send the message
+     *
+     * @param name         the name of the visitor to send the message
      * @param notification the notification needed to be sent.
-     * @param isMember bool field that say if the visitor is a member.
+     * @param isMember     bool field that say if the visitor is a member.
+     * @param test
      * @return
      */
-    public boolean sendNotification(String name , Notification notification, boolean isMember){
+    public boolean sendNotification(String name , Notification notification, boolean isMember, boolean test){
 
         if(sessions.containsKey(name)){
             //if user logged.
@@ -156,11 +158,13 @@ public class NotificationHandler {
         else{
             //if not logged in. save if member
             if(isMember){
-                writeToText(notification.getMessage(), name);
-                if(dispatcher instanceof TextDispatcher){
+                if(test){
                     DelayedNotifications not= new DelayedNotifications();
                     not.createMessage("Delayed message: \n"+ notification.getMessage());
                     dispatcher.addMessgae(name,not);
+                }
+                else{
+                    writeToText(notification.getMessage(), name);
                 }
             }
         }
@@ -175,30 +179,30 @@ public class NotificationHandler {
      * @param itemsNames the baught items list.
      * @param prices the bought items prices.
      */
-    public void sendItemBaughtNotificationsBatch(String buyer, ArrayList<String> names, String shopName, ArrayList<String> itemsNames, ArrayList<Double> prices) {
+    public void sendItemBaughtNotificationsBatch(String buyer, ArrayList<String> names, String shopName, ArrayList<String> itemsNames, ArrayList<Double> prices,boolean test) {
 
         RealTimeNotifications not;
         for (String name : names) {
             for (int i = 0; i < itemsNames.size(); i++) {
                 not = new RealTimeNotifications();
                 not.createBuyingOfferMessage(buyer, shopName, itemsNames.get(i), prices.get(i));
-                sendNotification(name,not,true);
+                sendNotification(name,not,true, test);
             }
         }
     }
 
-    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName) {
+    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName,boolean test) {
         RealTimeNotifications not=new RealTimeNotifications();
         not.createShopClosedMessage(shopName);
         for(String name: strings){
-            sendNotification(name,not,true);
+            sendNotification(name,not,true, test);
         }
     }
 
-    public void sendAppointmentRemovedNotification(String firedAppointed, String shopName) {
+    public void sendAppointmentRemovedNotification(String firedAppointed, String shopName,boolean test) {
         RealTimeNotifications not= new RealTimeNotifications();
         not.createShopPermissionDeniedMessage(shopName,firedAppointed);
-        sendNotification(firedAppointed,not,true);
+        sendNotification(firedAppointed,not,true, test);
     }
 
     public void setService(Publisher o) {
@@ -255,16 +259,16 @@ public class NotificationHandler {
         return dir;
     }
 
-    public void sendNewshopManager(Member shopOwner, Member appointed, String shopName) {
+    public void sendNewshopManager(Member shopOwner, Member appointed, String shopName,boolean test) {
         RealTimeNotifications not= new RealTimeNotifications();
         not.createNewManagerMessage(shopOwner.getName(),appointed.getName(),shopName);
-        sendNotification(appointed.getName(),not,true);
+        sendNotification(appointed.getName(),not,true,  test);
     }
 
-    public void sendNewshopOwner(Member shopOwner, Member appointed, String shopName) {
+    public void sendNewshopOwner(Member shopOwner, Member appointed, String shopName,boolean test) {
 
         RealTimeNotifications not= new RealTimeNotifications();
         not.createNewOwnerMessage(shopOwner.getName(),appointed.getName(),shopName);
-        sendNotification(appointed.getName(),not,true);
+        sendNotification(appointed.getName(),not,true, test);
     }
 }

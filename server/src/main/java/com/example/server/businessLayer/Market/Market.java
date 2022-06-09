@@ -47,6 +47,7 @@ public class Market {
     private static Market instance;
     boolean datainitialized = false;
     boolean servicesInitialized = false;
+    boolean test= false;
     Map<String, Integer> numOfAcqsPerShop;
 
     private Market() {
@@ -77,9 +78,10 @@ public class Market {
      * @param password the system manager password.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password) throws MarketException {
+    public synchronized void firstInitMarket(String userName, String password,boolean test) throws MarketException {
 
         try {
+            this.test=test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
@@ -112,9 +114,10 @@ public class Market {
      * @param dataName     the init data's file name.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password, String servicesName, String dataName) throws MarketException {
+    public synchronized void firstInitMarket(String userName, String password, String servicesName, String dataName,boolean test) throws MarketException {
 
         try {
+            this.test=test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
@@ -142,9 +145,10 @@ public class Market {
      *
      * @throws MarketException
      */
-    public synchronized void firstInitMarket() throws MarketException {
+    public synchronized void firstInitMarket(boolean test) throws MarketException {
 
         try {
+            this.test=test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
@@ -171,9 +175,9 @@ public class Market {
      * @param fileName the services file name.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password, String fileName) throws MarketException {
+    public synchronized void firstInitMarket(String userName, String password, String fileName,boolean test) throws MarketException {
 
-
+        this.test=test;
         if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
@@ -382,7 +386,10 @@ public class Market {
 
     private void initNotificationService(String val) throws MarketException {
 
-        if (val.contains("Notifications")) {
+        if (test){
+            publisher = TextDispatcher.getInstance();
+        }
+        else if (val.contains("Notifications")) {
             publisher = NotificationDispatcher.getInstance();
         } else if (val.contains("Text")) {
             publisher = TextDispatcher.getInstance();
@@ -705,7 +712,7 @@ public class Market {
             try {
                 notificationHandler.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
                         .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
-                        .collect(Collectors.toList())), shopName);
+                        .collect(Collectors.toList())), shopName,test);
             } catch (Exception e) {
             }
             //
@@ -944,7 +951,7 @@ public class Market {
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopOwner(shopOwner, appointed);
         try {
-            notificationHandler.sendNewshopOwner(shopOwner,appointed, shopName);
+            notificationHandler.sendNewshopOwner(shopOwner,appointed, shopName,test);
         } catch (Exception e) {
         }
     }
@@ -966,7 +973,7 @@ public class Market {
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopManager(shopOwner, appointed);
         try {
-            notificationHandler.sendNewshopManager(shopOwner,appointed, shopName);
+            notificationHandler.sendNewshopManager(shopOwner,appointed, shopName,test);
         } catch (Exception e) {
         }
     }
@@ -1055,7 +1062,7 @@ public class Market {
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
-            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
+            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy,test);
         } catch (Exception e) {
 
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -1150,7 +1157,7 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss, firedAppointed);
         try {
-            notificationHandler.sendAppointmentRemovedNotification(firedAppointed, shopName);
+            notificationHandler.sendAppointmentRemovedNotification(firedAppointed, shopName,test);
         } catch (Exception e) {
         }
 
@@ -1184,7 +1191,7 @@ public class Market {
         handler.setService(NotificationDispatcher.getInstance());
         RealTimeNotifications not = new RealTimeNotifications();
         not.createMembershipDeniedMessage();
-        handler.sendNotification(memberToRemove, not, true);
+        handler.sendNotification(memberToRemove, not, true,test);
         //
     }
 

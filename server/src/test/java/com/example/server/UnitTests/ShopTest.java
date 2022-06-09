@@ -320,7 +320,7 @@ public class ShopTest {
         try {
             NotificationHandler nh= NotificationHandler.getInstance();
             nh.setService(textDispatcher);
-            Assertions.assertEquals(35.0,shop.buyBasket(nh,basket, memberFounder.getName()));
+            Assertions.assertEquals(35.0,shop.buyBasket(nh,basket, memberFounder.getName(),true));
         } catch (MarketException e) {
             System.out.println(e.getMessage());
             assert false;
