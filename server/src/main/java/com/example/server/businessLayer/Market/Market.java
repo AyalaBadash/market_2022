@@ -206,7 +206,7 @@ public class Market {
 
         try {
 
-            File myObj = new File("config/" + "config.txt");
+            File myObj = new File(getConfigDir() + "config.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -283,7 +283,7 @@ public class Market {
             } else if (command.contains("Logout")) {
                 try {
                     if (vals.length >= 2) {
-                        debugLog.Log("Method logout from init file has called. Args are: " + vals[1] + " " + vals[2]);
+                        debugLog.Log("Method logout from init file has called. Args are: " + vals[1] );
                         memberLogout(vals[1]);
                     }
                     else{
@@ -389,7 +389,8 @@ public class Market {
         } else {
             throw new MarketException("Failed to init notification service");
         }
-        notificationHandler = new NotificationHandler(publisher);
+        notificationHandler = NotificationHandler.getInstance();
+        notificationHandler.setService(publisher);
     }
 
     private void initSupplyService(String val) throws MarketException {
@@ -942,6 +943,10 @@ public class Market {
         }
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopOwner(shopOwner, appointed);
+        try {
+            notificationHandler.sendNewshopOwner(shopOwner,appointed, shopName);
+        } catch (Exception e) {
+        }
     }
 
     public void appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) throws MarketException {
@@ -960,6 +965,10 @@ public class Market {
         }
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopManager(shopOwner, appointed);
+        try {
+            notificationHandler.sendNewshopManager(shopOwner,appointed, shopName);
+        } catch (Exception e) {
+        }
     }
 
     public boolean editCart(double amount, Item item, String shopName, String visitorName) throws MarketException {
@@ -1171,7 +1180,8 @@ public class Market {
         Security security = Security.getInstance();
         security.removeMember(memberToRemove);
         //send the notification
-        NotificationHandler handler = new NotificationHandler(NotificationDispatcher.getInstance());
+        NotificationHandler handler = NotificationHandler.getInstance();
+        handler.setService(NotificationDispatcher.getInstance());
         RealTimeNotifications not = new RealTimeNotifications();
         not.createMembershipDeniedMessage();
         handler.sendNotification(memberToRemove, not, true);
@@ -1289,9 +1299,6 @@ public class Market {
     }
 
 
-    public int getDelayedMessages(String name) {
-        return notificationHandler.getDelayednots(name);
-    }
 
     public List<PurchasePolicyType> getPurchasePoliciesOfShop(String visitorName, String shopName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)) {
@@ -1387,7 +1394,10 @@ public class Market {
             }, false);
         }
         if (notificationHandler == null) {
-            notificationHandler = new NotificationHandler(TextDispatcher.getInstance());
+            {
+                notificationHandler = NotificationHandler.getInstance();
+                notificationHandler.setService(TextDispatcher.getInstance());
+            }
         }
     }
 

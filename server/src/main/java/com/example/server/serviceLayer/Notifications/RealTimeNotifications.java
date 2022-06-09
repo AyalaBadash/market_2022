@@ -1,5 +1,7 @@
 package com.example.server.serviceLayer.Notifications;
 
+import com.example.server.businessLayer.Market.Users.Member;
+
 public class RealTimeNotifications extends Notification{
 
     public RealTimeNotifications(){
@@ -35,4 +37,11 @@ public class RealTimeNotifications extends Notification{
     }
 
 
+    public void createNewManagerMessage(String shopOwner, String appointed,String shop) {
+        message= "you got appointed as manager to shop "+shop+ " by "+shopOwner;
+    }
+
+    public void createNewOwnerMessage(String shopOwner, String appointed, String shopName) {
+        message= "you got appointed as owner to shop "+shopName+ " by "+shopOwner;
+    }
 }

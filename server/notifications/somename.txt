@@ -1,0 +1,6 @@
+Delayed message: 
+some message
+
+Delayed message: 
+some message
+
