@@ -15,12 +15,9 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchaseP
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.ItemPurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.PurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
+import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
-import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
-import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.ResponseT;
 import org.junit.jupiter.api.*;
@@ -484,6 +481,44 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             Response response = buyShoppingCart(visitor.getName(), cart.getValue().getPrice(), creditCard, address);
             // should fail cause no yogurt.category has been added
             assert !response.isErrorOccurred();
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("check override works")
+    public void overridePolicy() {
+        try {
+            VisitorFacade visitor = guestLogin();
+            String memberName = "idoPolicyTest";
+            String password = "1";
+            register(memberName, password);
+            ResponseT<List<String>> questions = memberLogin(memberName, password);
+            MemberFacade member = validateSecurityQuestions(memberName, new ArrayList<>(), visitor.getName()).getValue();
+            String shopName = "policyTest";
+            openShop(memberName, shopName);
+            addItemToShop(memberName, "computer", 50, Item.Category.electricity,"good",new ArrayList<>(),3,shopName);
+            String kotegName = "Koteg";
+            addItemToShop(memberName, kotegName, 30, Item.Category.general,"good",new ArrayList<>(),3,shopName);
+            ItemFacade koteg = searchProductByName(kotegName).get(0);
+            CategoryPurchasePolicyLevelState categoryPurchasePolicyLevelState = new CategoryPurchasePolicyLevelState(Item.Category.electricity);
+            AtLeastPurchasePolicyType atLeastPurchasePolicyType = new AtLeastPurchasePolicyType(categoryPurchasePolicyLevelState, 1);
+            // add simple  policy
+            addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(atLeastPurchasePolicyType),shopName, memberName);
+            ResponseT<List<PurchasePolicyTypeWrapper>> purchasePoliciesOfShop = getPurchasePoliciesOfShop(memberName, shopName);
+            assert purchasePoliciesOfShop.getValue().size() == 1;
+            // create composite policy
+            PurchasePolicyLevelState kotegAtMost = new ItemPurchasePolicyLevelState(koteg.getId());
+            PurchasePolicyType atMostPolicy = new AtMostPurchasePolicyType(kotegAtMost, 1);
+            List<PurchasePolicyType> policies = new ArrayList<>();
+            policies.add(atLeastPurchasePolicyType);
+            policies.add(atMostPolicy);
+            PurchasePolicyType composite = new OrCompositePurchasePolicyType(policies);
+            // add composite policy
+            addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(composite),shopName, memberName);
+            purchasePoliciesOfShop = getPurchasePoliciesOfShop(memberName, shopName);
+            assert purchasePoliciesOfShop.getValue().size() == 1;
         } catch (Exception e) {
             assert false;
         }
