@@ -70,6 +70,10 @@ public class Market {
     private ShoppingCartRepository shoppingCartRepository;
     @Autowired
     private ShopRepository shopRepository;
+    @Autowired
+    private ItemRep itemRep;
+    @Autowired
+    private ShopRep shopRep;
 
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -126,6 +130,8 @@ public class Market {
         ShoppingCart.setShoppingCartRepository(shoppingCartRepository);
         ShoppingBasket.setShoppingBasketRepository(shoppingBasketRepository);
         ShoppingCart.setShoppingBasketRepository(shoppingBasketRepository);
+        Item.setItemRep(itemRep);
+        Shop.setShopRep(shopRep);
     }
 
     //Loading systems configurations from file.

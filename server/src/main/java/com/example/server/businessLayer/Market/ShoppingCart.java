@@ -3,7 +3,7 @@ package com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.dataLayer.entities.DalItem;
-import com.example.server.dataLayer.entities.DalShop;
+//import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
@@ -28,8 +28,6 @@ public class ShoppingCart implements IHistory {
     private DalShoppingCart dalShoppingCart;
 
     private int id;
-
-
 
     public ShoppingCart(int id) {
         this.currentPrice = 0;

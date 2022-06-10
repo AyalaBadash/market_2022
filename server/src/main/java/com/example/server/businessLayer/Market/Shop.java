@@ -7,15 +7,15 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
-import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
-import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.dataLayer.entities.DalItem;
 import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.repositories.ItemRepository;
+import com.example.server.dataLayer.repositories.ShopRep;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,22 +23,43 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Entity
 public class Shop implements IHistory {
+    @Id
+    @Column (name = "shop_name")
     private String shopName;
+    @Transient
     private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
+    @Transient //TODO
     private Map<String, Appointment> shopManagers;     //<name, appointment>
+    @Transient //TODO
     private Map<String, Appointment> shopOwners;     //<name, appointment>
+    @ElementCollection
+    @CollectionTable(name = "item_amounts")
+    @MapKeyColumn(name="item_id")
+    @Column(name="amount")
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
+    @Transient
     private static ItemRepository itemRepository;
+
+    @Transient
+    private static ShopRep shopRep;
+    @Transient
     private DalShop dalShop;
+    @Transient
     Member shopFounder;//todo
-    private int rank;
-    private int rankers;
+    private int rnk;
+    private int rnkers;
+    @ElementCollection
+    @Column (name = "purchase_history")
+    @CollectionTable (name = "purchase_histories_new")
     private List<StringBuilder> purchaseHistory;
     //TODO getter,setter,constructor
+    @Transient
     private DiscountPolicy discountPolicy;
 
+    public Shop(){}
 
     public Shop(String name,Member founder) {
         this.shopName = name;
@@ -48,12 +69,13 @@ public class Shop implements IHistory {
         itemsCurrentAmount = new ConcurrentHashMap<>( );
         this.closed = false;
         purchaseHistory = new ArrayList<> ( );
-        rank = 0;
-        rankers = 0;
+        rnk = 0;
+        rnkers = 0;
         this.shopFounder = founder;
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
         shopOwners.put(founder.getName(), shopOwnerAppointment);
         founder.addAppointmentToMe(shopOwnerAppointment);
+        shopRep.save(this);
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
@@ -410,6 +432,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         }
         itemsCurrentAmount.put ( id, amount );
         itemRepository.save(addedItem.toDalObject());
+        shopRep.save(this);
         return addedItem;
     }
 
@@ -422,12 +445,12 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
     }
 
     public void addRank(int rankN) {
-        rank = ((rank * rankers) + rankN) / (rankers + 1);
-        rankers++;
+        rnk = ((rnk * rnkers) + rankN) / (rnkers + 1);
+        rnkers++;
     }
 
-    public int getRank() {
-        return rank;
+    public int getRnk() {
+        return rnk;
     }
 
     public void changeShopItemInfo(String shopOwnerName, String info, java.lang.Integer oldItemID) throws MarketException {
@@ -550,10 +573,14 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
                 for (Map.Entry<Integer, Item> entry : itemMap.entrySet()) {
                     dalItemAmounts.put(entry.getValue().toDalObject(), itemsCurrentAmount.get(entry.getKey()));
                 }
-                DalShop res = new DalShop(this.shopName, dalItemAmounts, this.closed, this.rank, this.rankers);
+                DalShop res = new DalShop(this.shopName, dalItemAmounts, this.closed, this.rnk, this.rnkers);
                 this.dalShop = res;
 //            }
             return this.dalShop;
+        }
+
+        public static void setShopRep(ShopRep shopRepToSet){
+            shopRep = shopRepToSet;
         }
     }
 

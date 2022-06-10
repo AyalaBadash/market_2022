@@ -3,10 +3,13 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.entities.DalItem;
+import com.example.server.dataLayer.repositories.ItemRep;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Item implements IHistory {
     public enum Category {
         general,
@@ -16,14 +19,24 @@ public class Item implements IHistory {
         electricity
     }
 
+    @Id
     private java.lang.Integer ID;
     private String name;
     private double price;
     private String info;
-    private int rank;
-    private int rankers;
+    private int rnk;
+    private int rnkers;
+    @Enumerated(EnumType.STRING)
     private Category category;
+
+    private static ItemRep itemRep;
+
+    @ElementCollection
+    @Column(name = "keyword")
+    @CollectionTable(name = "item_keywords", joinColumns = {@JoinColumn(name = "ID")})
     private List<String> keywords;
+
+    public Item(){}
     public Item(java.lang.Integer ID, String name, double price, String info,
                 Category category, List<String> keywords) throws MarketException {
         if (ID <1)
@@ -36,8 +49,9 @@ public class Item implements IHistory {
         this.keywords = keywords;
         this.info = info;
         this.category = Objects.requireNonNullElse(category, Category.general);
-        rank= 1;
-        rankers=0;
+        rnk = 0;
+        rnkers =0;
+        itemRep.save(this);
     }
 
 
@@ -96,27 +110,31 @@ public class Item implements IHistory {
 
 
     public void addRank(int rankN){
-        rank=((rank*rankers)+rankN)/(rankers+1);
-        rankers++;
+        rnk =((rnk * rnkers)+rankN)/(rnkers +1);
+        rnkers++;
     }
-    public int getRank(){return rank;}
-    public int getRankers(){return rankers;}
+    public int getRnk(){return rnk;}
+    public int getRnkers(){return rnkers;}
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return Double.compare(item.price, price) == 0 && rank == item.rank && rankers == item.rankers && ID.equals(item.ID) && name.equals(item.name) && info.equals(item.info) && category == item.category && keywords.equals(item.keywords);
+        return Double.compare(item.price, price) == 0 && rnk == item.rnk && rnkers == item.rnkers && ID.equals(item.ID) && name.equals(item.name) && info.equals(item.info) && category == item.category && keywords.equals(item.keywords);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, name, price, info, rank, rankers, category, keywords);
+        return Objects.hash(ID, name, price, info, rnk, rnkers, category, keywords);
     }
 
     public DalItem toDalObject(){
         return new DalItem(this.ID, this.name, (int)this.price, this.info,
-                this.rank, this.rankers, this.category.toString(), this.keywords);
+                this.rnk, this.rnkers, this.category.toString(), this.keywords);
+    }
+
+    public static void setItemRep(ItemRep itemRepToSet){
+        itemRep = itemRepToSet;
     }
 }
