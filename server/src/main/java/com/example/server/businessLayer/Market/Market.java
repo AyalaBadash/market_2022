@@ -220,6 +220,7 @@ public class Market {
             servicesInitialized = true;
 
         } catch (Exception e) {
+            System.out.println (e.getMessage () );
         }
     }
 
@@ -373,7 +374,7 @@ public class Market {
             initPaymentService(val1);
         } else if (val.contains("SupplyService")) {
             initSupplyService(val1);
-        } else if (val.contains("Publisher") && systemManagerName == null || systemManagerName.isEmpty()) {
+        } else if (val.contains("Publisher") && (systemManagerName == null || systemManagerName.isEmpty())) {
             initNotificationService(val1);
         }
     }
@@ -1421,7 +1422,7 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir").split("/market_2022")[0];
-        dir += "/market_2022/server/config/";
+        dir += "\\config\\";
         return dir;
     }
 }
