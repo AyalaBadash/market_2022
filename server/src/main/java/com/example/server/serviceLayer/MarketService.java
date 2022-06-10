@@ -47,7 +47,7 @@ public class MarketService {
 
     public Response firstInitMarket(String userName, String password) {
         try {
-            market.firstInitMarket(userName, password,false);
+            market.firstInitMarket(userName, password, false);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());
@@ -57,9 +57,9 @@ public class MarketService {
         }
     }
 
-    public Response firstInitMarket(String userName, String password,String services,String data) {
+    public Response firstInitMarket(String userName, String password, String services, String data) {
         try {
-            market.firstInitMarket(userName, password,services,data,false);
+            market.firstInitMarket(userName, password, services, data, false);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());
@@ -80,6 +80,7 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {
         ResponseT<List<ItemFacade>> toReturn;
         try {
@@ -461,7 +462,7 @@ public class MarketService {
     public Response addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
         try {
             PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();
-            market.addPurchasePolicyToShop (visitorName, shopName, purchasePolicyType);
+            market.addPurchasePolicyToShop(visitorName, shopName, purchasePolicyType);
             return new Response();
         } catch (Exception e) {
             return new Response(e.getMessage());
@@ -471,7 +472,7 @@ public class MarketService {
     public Response removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
         try {
             PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();
-            market.removePurchasePolicyFromShop (visitorName, shopName, purchasePolicyType);
+            market.removePurchasePolicyFromShop(visitorName, shopName, purchasePolicyType);
             return new Response();
         } catch (Exception e) {
             return new Response(e.getMessage());
@@ -492,7 +493,7 @@ public class MarketService {
 
     public Response setPaymentService(PaymentService o, String managerName) {
         try {
-            if (market.setPaymentService(o,managerName)) {
+            if (market.setPaymentService(o, managerName)) {
                 return new Response();
             } else {
                 return new Response("fAILED TO SET SERVICE");
@@ -501,9 +502,10 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
     public Response setSupplyService(SupplyService o, String managerName) {
         try {
-            if (market.setSupplyService(o,managerName)) {
+            if (market.setSupplyService(o, managerName)) {
                 return new Response();
             } else {
                 return new Response("fAILED TO SET SERVICE");
@@ -512,9 +514,10 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
     public Response setPublishService(Publisher o, String managerName) {
         try {
-            if (market.setPublishService(o,managerName)) {
+            if (market.setPublishService(o, managerName)) {
                 return new Response();
             } else {
                 return new Response("fAILED TO SET SERVICE");
@@ -527,174 +530,27 @@ public class MarketService {
     public ResponseT<List<PurchasePolicyTypeWrapper>> getPurchasePoliciesOfShop(String visitorName, String shopName) {
         try {
             List<PurchasePolicyType> purchasePolicyTypes = market.getPurchasePoliciesOfShop(visitorName, shopName);
-            List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers = new ArrayList<> (  );
-            for(PurchasePolicyType purchasePolicyType: purchasePolicyTypes)
-                purchasePolicyTypeWrappers.add (createPurchasePolicyWrapper(purchasePolicyType));
+            List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers = new ArrayList<>();
+            for (PurchasePolicyType purchasePolicyType : purchasePolicyTypes)
+                purchasePolicyTypeWrappers.add(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(purchasePolicyType));
             return new ResponseT(purchasePolicyTypeWrappers);
         } catch (Exception e) {
             return new ResponseT(e.getMessage());
         }
     }
 
-    private PurchasePolicyTypeWrapper createPurchasePolicyWrapper(PurchasePolicyType purchasePolicyType) {
-        PurchasePolicyTypeWrapper purchasePolicyTypeWrapper = new PurchasePolicyTypeWrapper ( );;
-        if(purchasePolicyType.isAtLeast ()){
-            AtLeastPurchasePolicyType atLeastPurchasePolicyType = (AtLeastPurchasePolicyType) purchasePolicyType;
-            purchasePolicyTypeWrapper.setPurchasePolicyTypeWrapperType ( PurchasePolicyTypeWrapper.PurchasePolicyTypeWrapperType.AtLeastPurchasePolicyTypeFacade );
-            purchasePolicyTypeWrapper.setPurchasePolicyLevelStateWrapper ( createPurchasePolicyLevelStateWrapper(purchasePolicyType.getPurchasePolicyLevelState () ));
-            purchasePolicyTypeWrapper.setAmount ( atLeastPurchasePolicyType.getAmount () );
-        } else if (purchasePolicyType.isAtMost ()){
-            AtMostPurchasePolicyType atMostPurchasePolicyType = (AtMostPurchasePolicyType) purchasePolicyType;
-            purchasePolicyTypeWrapper.setPurchasePolicyTypeWrapperType ( PurchasePolicyTypeWrapper.PurchasePolicyTypeWrapperType.AtMostPurchasePolicyTypeFacade );
-            purchasePolicyTypeWrapper.setPurchasePolicyLevelStateWrapper ( createPurchasePolicyLevelStateWrapper(purchasePolicyType.getPurchasePolicyLevelState () ));
-            purchasePolicyTypeWrapper.setAmount ( atMostPurchasePolicyType.getAmount () );
-        } else {
-            List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers = new ArrayList<> (  );
-            OrCompositePurchasePolicyType orCompositePurchasePolicyType = (OrCompositePurchasePolicyType) purchasePolicyType;
-            for( PurchasePolicyType cur : orCompositePurchasePolicyType.getPolicies ()){
-                purchasePolicyTypeWrappers.add ( createPurchasePolicyWrapper ( cur ) );
-            }
-            purchasePolicyTypeWrapper.setCompositePurchasePolicyTypeWrapperType ( PurchasePolicyTypeWrapper.PurchasePolicyTypeWrapperType.OrCompositePurchasePolicyTypeFacade );
-            purchasePolicyTypeWrapper.setPurchasePolicyTypeWrappers ( purchasePolicyTypeWrappers );
-        }
-        return purchasePolicyTypeWrapper;
-    }
 
-    private PurchasePolicyLevelStateWrapper createPurchasePolicyLevelStateWrapper(PurchasePolicyLevelState purchasePolicyLevelState){
-        PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper = new PurchasePolicyLevelStateWrapper ();
-        if(purchasePolicyLevelState.isItemLevel ()){
-            ItemPurchasePolicyLevelState itemPurchasePolicyLevelState = (ItemPurchasePolicyLevelState) purchasePolicyLevelState;
-            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.ItemPurchasePolicyLevelStateFacade );
-            purchasePolicyLevelStateWrapper.setItemID ( itemPurchasePolicyLevelState.getItemId () );
-        } else if (purchasePolicyLevelState.isCategoryLevel ()) {
-            CategoryPurchasePolicyLevelState categoryPurchasePolicyLevelState = (CategoryPurchasePolicyLevelState) purchasePolicyLevelState;
-            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.CategoryPurchasePolicyLevelStateFacade );
-            purchasePolicyLevelStateWrapper.setCategory ( categoryPurchasePolicyLevelState.getCategory () );
-        } else if (purchasePolicyLevelState.isShopLevel ()) {
-            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.ShopPurchasePolicyLevelStateFacade );
-        } else if (purchasePolicyLevelState.isOrLevel ()){
-            OrCompositePurchasePolicyLevelState orCompositePurchasePolicyLevelState = (OrCompositePurchasePolicyLevelState) purchasePolicyLevelState;
-            List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers = new ArrayList<> (  );
-            for(PurchasePolicyLevelState cur : orCompositePurchasePolicyLevelState.getPurchasePolicyLevelStates ()){
-                purchasePolicyLevelStateWrappers.add ( createPurchasePolicyLevelStateWrapper ( (cur) ) );
-            }
-            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.OrCompositePurchasePolicyLevelStateFacade );
-            purchasePolicyLevelStateWrapper.setPurchasePolicyLevelStateWrappers ( purchasePolicyLevelStateWrappers );
-        } else if (purchasePolicyLevelState.isXorLevel ()) {
-            XorCompositePurchasePolicyLevelState xorCompositePurchasePolicyLevelState = (XorCompositePurchasePolicyLevelState) purchasePolicyLevelState;
-            List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers = new ArrayList<> (  );
-            for(PurchasePolicyLevelState cur : xorCompositePurchasePolicyLevelState.getPurchasePolicyLevelStates ()){
-                purchasePolicyLevelStateWrappers.add ( createPurchasePolicyLevelStateWrapper ( (cur) ) );
-            }
-            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.XorCompositePurchasePolicyLevelStateFacade );
-            purchasePolicyLevelStateWrapper.setPurchasePolicyLevelStateWrappers ( purchasePolicyLevelStateWrappers );
-        } else {
-            AndCompositePurchasePolicyLevelState andCompositePurchasePolicyLevelState = (AndCompositePurchasePolicyLevelState) purchasePolicyLevelState;
-            List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers = new ArrayList<> (  );
-            for(PurchasePolicyLevelState cur : andCompositePurchasePolicyLevelState.getPurchasePolicyLevelStates ()){
-                purchasePolicyLevelStateWrappers.add ( createPurchasePolicyLevelStateWrapper ( (cur) ) );
-            }
-            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.AndCompositePurchasePolicyLevelStateFacade );
-            purchasePolicyLevelStateWrapper.setPurchasePolicyLevelStateWrappers ( purchasePolicyLevelStateWrappers );
-        }
-        return purchasePolicyLevelStateWrapper;
-    }
 
-    public ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(String visitorName, String shopName){
+    public ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(String visitorName, String shopName) {
         try {
             List<DiscountType> discountTypeList = market.getDiscountTypesOfShop(visitorName, shopName);
-            List<DiscountTypeWrapper> discountTypeWrappers = new ArrayList<> (  );
-            for(DiscountType discountType: discountTypeList)
-                discountTypeWrappers.add (createDiscountTypeWrapper(discountType));
+            List<DiscountTypeWrapper> discountTypeWrappers = new ArrayList<>();
+            for (DiscountType discountType : discountTypeList)
+                discountTypeWrappers.add(DiscountTypeWrapper.createDiscountTypeWrapper(discountType));
             return new ResponseT(discountTypeWrappers);
         } catch (Exception e) {
             return new ResponseT(e.getMessage());
         }
-    }
-
-    private DiscountTypeWrapper createDiscountTypeWrapper(DiscountType discountType) {
-        DiscountTypeWrapper discountTypeWrapper = new DiscountTypeWrapper (  );
-        discountTypeWrapper.setPercentageOfDiscount ( discountType.getPercentageOfDiscount () );
-        discountTypeWrapper.setDiscountLevelStateWrapper ( createDiscountLevelStateWrapper(discountType.getDiscountLevelState ()) );
-        if(discountType.isSimple ()){
-            discountTypeWrapper.setCompositeDiscountTypeWrapperType ( DiscountTypeWrapper.DiscountTypeWrapperType.SimpleDiscountFacade );
-        }else if(discountType.isConditional ()){
-            ConditionalDiscount conditionalDiscount = (ConditionalDiscount) discountType;
-            discountTypeWrapper.setCompositeDiscountTypeWrapperType ( DiscountTypeWrapper.DiscountTypeWrapperType.ConditionalDiscountFacade );
-            discountTypeWrapper.setConditionWrapper ( createConditionWrapper(conditionalDiscount.getCondition ()) );
-        }else{
-            MaxCompositeDiscount maxCompositeDiscount = (MaxCompositeDiscount) discountType;
-            List<DiscountTypeWrapper> discountTypeWrappers = new ArrayList<> (  );
-            for(DiscountType cur : maxCompositeDiscount.getDiscountTypes ()){
-                discountTypeWrappers.add ( createDiscountTypeWrapper ( cur ) );
-            }
-            discountTypeWrapper.setCompositeDiscountTypeWrapperType ( DiscountTypeWrapper.DiscountTypeWrapperType.MaxCompositeDiscountTypeFacade );
-            discountTypeWrapper.setDiscountTypeWrappers ( discountTypeWrappers );
-        }
-        return discountTypeWrapper;
-    }
-
-    private ConditionWrapper createConditionWrapper(Condition condition) {
-        ConditionWrapper conditionWrapper = new ConditionWrapper (  );
-        if(condition.isPrice ()){
-            PriceCondition priceCondition = (PriceCondition) condition;
-            conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.PriceConditionFacade );
-            conditionWrapper.setPrice ( priceCondition.getPriceNeeded () );
-        } else if (condition.isAmountOfItem ()) {
-            AmountOfItemCondition amountOfItemCondition = (AmountOfItemCondition) condition;
-            conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.AmountOfItemConditionFacade );
-            conditionWrapper.setAmount ( amountOfItemCondition.getAmountNeeded () );
-            conditionWrapper.setItemID ( amountOfItemCondition.getItemNeeded () );
-        } else if (condition.isAnd ()) {
-            AndCompositeCondition andCompositeCondition = (AndCompositeCondition) condition;
-            List<ConditionWrapper> conditionWrappers = new ArrayList<> (  );
-            for(Condition cur : andCompositeCondition.getConditions ()){
-                conditionWrappers.add ( createConditionWrapper ( cur ) );
-            }
-            conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.AndCompositeConditionFacade );
-            conditionWrapper.setConditionWrappers ( conditionWrappers );
-        } else{
-            OrCompositeCondition orCompositeCondition = (OrCompositeCondition) condition;
-            List<ConditionWrapper> conditionWrappers = new ArrayList<> (  );
-            for(Condition cur : orCompositeCondition.getConditions ()){
-                conditionWrappers.add ( createConditionWrapper ( cur ) );
-            }
-            conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.OrCompositeConditionFacade );
-            conditionWrapper.setConditionWrappers ( conditionWrappers );
-        }
-        return conditionWrapper;
-    }
-
-    private DiscountLevelStateWrapper createDiscountLevelStateWrapper(DiscountLevelState discountLevelState) {
-        DiscountLevelStateWrapper discountLevelStateWrapper = new DiscountLevelStateWrapper (  );
-        if(discountLevelState.isItem ()){
-            ItemLevelState itemLevelState = (ItemLevelState) discountLevelState;
-            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.ItemLevelStateFacade );
-            discountLevelStateWrapper.setItemID ( itemLevelState.getItemID () );
-        } else if (discountLevelState.isCategory ()) {
-            CategoryLevelState categoryLevelState = (CategoryLevelState) discountLevelState;
-            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.CategoryLevelStateFacade );
-            discountLevelStateWrapper.setCategory ( categoryLevelState.getCategory () );
-        } else if (discountLevelState.isShop ()) {
-            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.ShopLevelStateFacade );
-        } else if (discountLevelState.isAnd ()) {
-            AndCompositeDiscountLevelState andCompositeDiscountLevelState = (AndCompositeDiscountLevelState) discountLevelState;
-            List<DiscountLevelStateWrapper> discountLevelStateWrappers = new ArrayList<> (  );
-            for(DiscountLevelState cur : andCompositeDiscountLevelState.getDiscountLevelStates ()){
-                discountLevelStateWrappers.add ( createDiscountLevelStateWrapper ( cur ) );
-            }
-            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.AndCompositeDiscountLevelStateFacade );
-            discountLevelStateWrapper.setDiscountLevelStateWrappers ( discountLevelStateWrappers );
-        } else {
-            MaxXorCompositeDiscountLevelState maxXorCompositeDiscountLevelState = (MaxXorCompositeDiscountLevelState) discountLevelState;
-            List<DiscountLevelStateWrapper> discountLevelStateWrappers = new ArrayList<> (  );
-            for(DiscountLevelState cur : maxXorCompositeDiscountLevelState.getDiscountLevelStates ()){
-                discountLevelStateWrappers.add ( createDiscountLevelStateWrapper ( cur ) );
-            }
-            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.MaxXorCompositeDiscountLevelStateFacade );
-            discountLevelStateWrapper.setDiscountLevelStateWrappers ( discountLevelStateWrappers );
-        }
-        return discountLevelStateWrapper;
     }
 
 

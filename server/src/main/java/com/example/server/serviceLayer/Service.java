@@ -37,7 +37,7 @@ public class Service implements IService {
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
-        return marketService.firstInitMarket ( request.getUserName(), request.getPassword() );
+        return marketService.firstInitMarket(request.getUserName(), request.getPassword());
     }
 
     @Override
@@ -70,7 +70,6 @@ public class Service implements IService {
     }
 
 
-
     @Override
     @RequestMapping(value = "/searchProductByName")
     @CrossOrigin
@@ -96,7 +95,7 @@ public class Service implements IService {
     @RequestMapping(value = "/filterItemByCategory")
     @CrossOrigin
     public ResponseT<List<ItemFacade>> filterItemByCategory(@RequestBody FilterItemByCategoryRequest request) {
-        return marketService.filterItemByCategory(request.getItems(),request.getCategory());
+        return marketService.filterItemByCategory(request.getItems(), request.getCategory());
     }
 
     @Override
@@ -110,7 +109,7 @@ public class Service implements IService {
     @RequestMapping(value = "/addItemToShoppingCart")
     @CrossOrigin
     public Response addItemToShoppingCart(@RequestBody AddItemToShoppingCartRequest request) {
-        return purchaseService.addItemToShoppingCart(request.getItemToInsert(),request.getAmount(),request.getShopName(),request.getVisitorName());
+        return purchaseService.addItemToShoppingCart(request.getItemToInsert(), request.getAmount(), request.getShopName(), request.getVisitorName());
     }
     @Override
     @RequestMapping(value = "/showShoppingCart")
@@ -118,13 +117,15 @@ public class Service implements IService {
     public ResponseT<ShoppingCartFacade> showShoppingCart(@RequestBody RequestVisitorName request) {
         return purchaseService.showShoppingCart(request.getName());
     }
+
     @Override
     @RequestMapping(value = "/editItemFromShoppingCart")
     @CrossOrigin
     public Response editItemFromShoppingCart(@RequestBody EditItemFromShoppingCartRequest request) {
-        return purchaseService.editItemFromShoppingCart(request.getAmount(),request.getItemFacade() ,
-                request.getShopName(),request.getVisitorName());
+        return purchaseService.editItemFromShoppingCart(request.getAmount(), request.getItemFacade(),
+                request.getShopName(), request.getVisitorName());
     }
+
 
     @Override
     @RequestMapping(value = "/calculateShoppingCart")
@@ -145,16 +146,15 @@ public class Service implements IService {
     @RequestMapping(value = "/memberLogin")
     @CrossOrigin
     public ResponseT<List<String>> memberLogin(@RequestBody NamePasswordRequest request) {
-        return userService.memberLogin(request.getName(),request.getPassword());
+        return userService.memberLogin(request.getName(), request.getPassword());
     }
 
     @Override
     @RequestMapping(value = "/validateSecurityQuestions")
     @CrossOrigin
     public ResponseT<MemberFacade> validateSecurityQuestions(@RequestBody ValidateSecurityRequest request) {
-        return userService.validateSecurityQuestions (request.getUserName(), request.getAnswers(), request.getVisitorName() );
+        return userService.validateSecurityQuestions(request.getUserName(), request.getAnswers(), request.getVisitorName());
     }//TODO- where are we getting visitorName from
-
 
 
     @Override
@@ -168,7 +168,7 @@ public class Service implements IService {
     @RequestMapping(value = "/openNewShop")
     @CrossOrigin
     public Response openNewShop(@RequestBody OpenNewShopRequest request) {
-        return marketService.openNewShop ( request.getMemberName(), request.getShopName() );
+        return marketService.openNewShop(request.getMemberName(), request.getShopName());
     }
 
     @Override
@@ -176,8 +176,8 @@ public class Service implements IService {
     @CrossOrigin
     public Response updateShopItemAmount(@RequestBody UpdateShopItemAmountRequest request) {
 
-        return marketService.updateShopItemAmount (request.getShopOwnerName(), request.getItem(),
-                request.getAmount(), request.getShopName() );
+        return marketService.updateShopItemAmount(request.getShopOwnerName(), request.getItem(),
+                request.getAmount(), request.getShopName());
     }
 
 
@@ -185,7 +185,7 @@ public class Service implements IService {
     @RequestMapping(value = "/removeItemFromShop")
     @CrossOrigin
     public Response removeItemFromShop(@RequestBody RemoveItemFromShopRequest request) {
-        return marketService.removeItemFromShop(request.getShopOwnerName(),request.getItem(),request.getShopName());
+        return marketService.removeItemFromShop(request.getShopOwnerName(), request.getItem(), request.getShopName());
     }
 
     @Override
@@ -209,30 +209,30 @@ public class Service implements IService {
     @RequestMapping(value = "/changeShopItemInfo")
     @CrossOrigin
     public Response changeShopItemInfo(@RequestBody ChangeShopItemInfoRequest request) {
-        return marketService.changeShopItemInfo (request.getShopOwnerName(), request.getUpdatedInfo(),
-                request.getOldItem(), request.getShopName() );
+        return marketService.changeShopItemInfo(request.getShopOwnerName(), request.getUpdatedInfo(),
+                request.getOldItem(), request.getShopName());
     }
 
     @Override
     @RequestMapping(value = "/editItemRequest")
     @CrossOrigin
     public Response editItem(@RequestBody editItemRequest request) {
-        return marketService.editItem (request.getNewItem (), request.getId ());
+        return marketService.editItem(request.getNewItem(), request.getId());
     }
-
 
 
     @Override
     @RequestMapping(value = "/appointShopOwner")
     @CrossOrigin
     public Response appointShopOwner(@RequestBody AppointmentShopOwnerRequest request) {
-        return userService.appointShopOwner (request.getShopOwnerName(), request.getAppointedShopOwner(), request.getShopName() );
+        return userService.appointShopOwner(request.getShopOwnerName(), request.getAppointedShopOwner(), request.getShopName());
     }
+
     @Override
     @RequestMapping(value = "/appointShopManager")
     @CrossOrigin
     public Response appointShopManager(@RequestBody AppointmentShopManagerRequest request) {
-        return userService.appointShopManager(request.getShopOwnerName(),request.getAppointedShopManager(),request.getShopName());
+        return userService.appointShopManager(request.getShopOwnerName(), request.getAppointedShopManager(), request.getShopName());
     }
 
     @Override
@@ -240,13 +240,13 @@ public class Service implements IService {
     @CrossOrigin
     public Response editShopManagerPermissions(@RequestBody EditShopManagerPermissionsRequest request) {
         return this.userService.editShopManagerPermissions(
-                request.getShopOwnerName(), request.getManagerName() , request.getRelatedShop(), request.getUpdatedAppointment());
+                request.getShopOwnerName(), request.getManagerName(), request.getRelatedShop(), request.getUpdatedAppointment());
     }
 
     @Override
     @RequestMapping(value = "/getManagerPermission")
     @CrossOrigin
-    public ResponseT<AppointmentFacade> getManagerPermission(@RequestBody GetManagerPermissionRequest request){
+    public ResponseT<AppointmentFacade> getManagerPermission(@RequestBody GetManagerPermissionRequest request) {
         return this.userService.getManagerAppointment(request.getShopOwnerName(),
                 request.getManagerName(), request.getRelatedShop());
     }
@@ -276,42 +276,42 @@ public class Service implements IService {
     @RequestMapping(value = "/getShopPurchaseHistory")
     @CrossOrigin
     public ResponseT<String> getShopPurchaseHistory(@RequestBody TwoStringRequest request) {
-        return marketService.getShopPurchaseHistory (request.getName(), request.getShopName() );
+        return marketService.getShopPurchaseHistory(request.getName(), request.getShopName());
     }
 
     @Override
     @RequestMapping(value = "/getAllSystemPurchaseHistory")
     @CrossOrigin
     public ResponseT<String> getAllSystemPurchaseHistory(@RequestBody GetAllSystemPurchaseHistoryRequest request) {
-        return marketService.getAllSystemPurchaseHistory ( request.getSystemManagerName() );
+        return marketService.getAllSystemPurchaseHistory(request.getSystemManagerName());
     }
 
     @Override
     @RequestMapping(value = "/getHistoryByShop")
     @CrossOrigin
     public ResponseT<String> getHistoryByShop(@RequestBody TwoStringRequest request) {
-        return marketService.getHistoryByShop (request.getName(), request.getShopName() );
+        return marketService.getHistoryByShop(request.getName(), request.getShopName());
     }
 
     @Override
     @RequestMapping(value = "/getHistoryByMember")
     @CrossOrigin
     public ResponseT<String> getHistoryByMember(@RequestBody GetHistoryByMemberRequest request) {
-        return marketService.getHistoryByMember (request.getSystemManagerName(), request.getMemberName() );
+        return marketService.getHistoryByMember(request.getSystemManagerName(), request.getMemberName());
     }
 
     @Override
     @RequestMapping(value = "/removeShopOwnerAppointment")
     @CrossOrigin
     public Response removeShopOwnerAppointment(@RequestBody removeAppointmentRequest request) {
-        return marketService.removeShopOwnerAppointment(request.getBoss(),request.getFiredAppointed(),request.getShopName());
+        return marketService.removeShopOwnerAppointment(request.getBoss(), request.getFiredAppointed(), request.getShopName());
     }
 
     @Override
     @RequestMapping(value = "/removeMember")
     @CrossOrigin
     public Response removeMember(@RequestBody removeMemberRequest request) {
-        return marketService.removeMember(request.getManager(),request.getMemberToRemove());
+        return marketService.removeMember(request.getManager(), request.getMemberToRemove());
     }
 
     @Override
@@ -320,6 +320,7 @@ public class Service implements IService {
     public ResponseT<ItemFacade> getItemInfo(@RequestBody GetItemInfoRequest request) {
         return marketService.getItemInfo(request.getName(), request.getItemId());
     }
+
     @Override
     @RequestMapping(value = "/getMarketInfo")
     @CrossOrigin
@@ -331,42 +332,43 @@ public class Service implements IService {
     @RequestMapping(value = "/addDiscountToShop")
     @CrossOrigin
     public Response addDiscountToShop(@RequestBody AddDiscountToShopRequest request) {
-        return marketService.addDiscountToShop(request.getVisitorName (), request.getShopName (), request.getDiscount ());
+        return marketService.addDiscountToShop(request.getVisitorName(), request.getShopName(), request.getDiscount());
     }
 
     @Override
     @RequestMapping(value = "/removeDiscountFromShop")
     @CrossOrigin
     public Response removeDiscountFromShop(@RequestBody RemoveDiscountFromShopRequest request) {
-        return marketService.removeDiscountFromShop (request.getVisitorName (), request.getShopName (), request.getDiscount ());
+        return marketService.removeDiscountFromShop(request.getVisitorName(), request.getShopName(), request.getDiscount());
     }
 
     @Override
     @RequestMapping(value = "/addPurchasePolicyToShop")
     @CrossOrigin
     public Response addPurchasePolicyToShop(@RequestBody AddPurchasePolicyToShopRequest request) {
-        return marketService.addPurchasePolicyToShop (request.getVisitorName (), request.getShopName (), request.getPolicy ());
+        return marketService.addPurchasePolicyToShop(request.getVisitorName(), request.getShopName(), request.getPolicy());
     }
 
     @Override
     @RequestMapping(value = "/removePurchasePolicyFromShop")
     @CrossOrigin
     public Response removePurchasePolicyFromShop(@RequestBody RemovePurchasePolicyFromShopRequest request) {
-        return marketService.removePurchasePolicyFromShop (request.getVisitorName (), request.getShopName (), request.getPolicy ());
+        return marketService.removePurchasePolicyFromShop(request.getVisitorName(), request.getShopName(), request.getPolicy());
     }
 
     @Override
     @RequestMapping(value = "/getPurchasePoliciesOfShop")
     @CrossOrigin
     public ResponseT<List<PurchasePolicyTypeWrapper>> getPurchasePoliciesOfShop(@RequestBody GetPoliciesRequest request) {
-        return marketService.getPurchasePoliciesOfShop(request.getVisitorName (), request.getShopName ());
+        return marketService.getPurchasePoliciesOfShop(request.getVisitorName(), request.getShopName());
     }
 
+    //TODO change request body- should be discount request, may be TwoStringRequest.
     @Override
     @RequestMapping(value = "/getDiscountTypesOfShop")
     @CrossOrigin
     public ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(@RequestBody GetPoliciesRequest request) {
-        return marketService.getDiscountTypesOfShop(request.getVisitorName (), request.getShopName ());
+        return marketService.getDiscountTypesOfShop(request.getVisitorName(), request.getShopName());
     }
 
 
@@ -385,7 +387,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/isServerInit")
     @CrossOrigin
-    public Response isServerInit(){
+    public Response isServerInit() {
         return marketService.isServerInit();
     }
 

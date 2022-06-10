@@ -107,4 +107,35 @@ public class ConditionWrapper implements FacadeObject<Condition> {
     public void setCompositeConditionWrapperType(ConditionWrapperType conditionWrapperType) {
         this.conditionWrapperType = conditionWrapperType;
     }
+
+    public static ConditionWrapper createConditionWrapper(Condition condition) {
+        ConditionWrapper conditionWrapper = new ConditionWrapper (  );
+        if(condition.isPrice ()){
+            PriceCondition priceCondition = (PriceCondition) condition;
+            conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.PriceConditionFacade );
+            conditionWrapper.setPrice ( priceCondition.getPriceNeeded () );
+        } else if (condition.isAmountOfItem ()) {
+            AmountOfItemCondition amountOfItemCondition = (AmountOfItemCondition) condition;
+            conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.AmountOfItemConditionFacade );
+            conditionWrapper.setAmount ( amountOfItemCondition.getAmountNeeded () );
+            conditionWrapper.setItemID ( amountOfItemCondition.getItemNeeded () );
+        } else if (condition.isAnd ()) {
+            AndCompositeCondition andCompositeCondition = (AndCompositeCondition) condition;
+            List<ConditionWrapper> conditionWrappers = new ArrayList<> (  );
+            for(Condition cur : andCompositeCondition.getConditions ()){
+                conditionWrappers.add ( createConditionWrapper ( cur ) );
+            }
+            conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.AndCompositeConditionFacade );
+            conditionWrapper.setConditionWrappers ( conditionWrappers );
+        } else{
+            OrCompositeCondition orCompositeCondition = (OrCompositeCondition) condition;
+            List<ConditionWrapper> conditionWrappers = new ArrayList<> (  );
+            for(Condition cur : orCompositeCondition.getConditions ()){
+                conditionWrappers.add ( createConditionWrapper ( cur ) );
+            }
+            conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.OrCompositeConditionFacade );
+            conditionWrapper.setConditionWrappers ( conditionWrappers );
+        }
+        return conditionWrapper;
+    }
 }

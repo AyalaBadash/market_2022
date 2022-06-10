@@ -95,4 +95,37 @@ public class DiscountLevelStateWrapper implements FacadeObject<DiscountLevelStat
     public void setCompositeDiscountLevelStateWrapperType(DiscountLevelStateWrapperType discountLevelStateWrapperType) {
         this.discountLevelStateWrapperType = discountLevelStateWrapperType;
     }
+
+
+    public static DiscountLevelStateWrapper createDiscountLevelStateWrapper(DiscountLevelState discountLevelState) {
+        DiscountLevelStateWrapper discountLevelStateWrapper = new DiscountLevelStateWrapper (  );
+        if(discountLevelState.isItem ()){
+            ItemLevelState itemLevelState = (ItemLevelState) discountLevelState;
+            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.ItemLevelStateFacade );
+            discountLevelStateWrapper.setItemID ( itemLevelState.getItemID () );
+        } else if (discountLevelState.isCategory ()) {
+            CategoryLevelState categoryLevelState = (CategoryLevelState) discountLevelState;
+            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.CategoryLevelStateFacade );
+            discountLevelStateWrapper.setCategory ( categoryLevelState.getCategory () );
+        } else if (discountLevelState.isShop ()) {
+            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.ShopLevelStateFacade );
+        } else if (discountLevelState.isAnd ()) {
+            AndCompositeDiscountLevelState andCompositeDiscountLevelState = (AndCompositeDiscountLevelState) discountLevelState;
+            List<DiscountLevelStateWrapper> discountLevelStateWrappers = new ArrayList<> (  );
+            for(DiscountLevelState cur : andCompositeDiscountLevelState.getDiscountLevelStates ()){
+                discountLevelStateWrappers.add ( createDiscountLevelStateWrapper ( cur ) );
+            }
+            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.AndCompositeDiscountLevelStateFacade );
+            discountLevelStateWrapper.setDiscountLevelStateWrappers ( discountLevelStateWrappers );
+        } else {
+            MaxXorCompositeDiscountLevelState maxXorCompositeDiscountLevelState = (MaxXorCompositeDiscountLevelState) discountLevelState;
+            List<DiscountLevelStateWrapper> discountLevelStateWrappers = new ArrayList<> (  );
+            for(DiscountLevelState cur : maxXorCompositeDiscountLevelState.getDiscountLevelStates ()){
+                discountLevelStateWrappers.add ( createDiscountLevelStateWrapper ( cur ) );
+            }
+            discountLevelStateWrapper.setCompositeDiscountLevelStateWrapperType ( DiscountLevelStateWrapper.DiscountLevelStateWrapperType.MaxXorCompositeDiscountLevelStateFacade );
+            discountLevelStateWrapper.setDiscountLevelStateWrappers ( discountLevelStateWrappers );
+        }
+        return discountLevelStateWrapper;
+    }
 }
