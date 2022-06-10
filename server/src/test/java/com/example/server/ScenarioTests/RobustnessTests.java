@@ -4,6 +4,7 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
@@ -13,6 +14,7 @@ import com.example.server.serviceLayer.PurchaseService;
 import com.example.server.serviceLayer.ResponseT;
 import com.example.server.serviceLayer.UserService;
 import org.junit.jupiter.api.*;
+import org.yaml.snakeyaml.error.Mark;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,7 +70,8 @@ public class RobustnessTests {
             throw new RuntimeException(e);
         }
         marketService= MarketService.getInstance();
-        marketService.firstInitMarket();
+        marketService.firstInitMarket(true);
+        Market market=Market.getInstance();
         purchaseService=PurchaseService.getInstance();
         userService= UserService.getInstance();
 

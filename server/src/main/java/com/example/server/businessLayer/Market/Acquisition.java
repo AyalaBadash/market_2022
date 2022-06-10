@@ -29,11 +29,11 @@ public class Acquisition {
         supplyConfirmed = false;
     }
 
-    public ShoppingCart buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
+    public ShoppingCart buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler,boolean test) throws MarketException, Exception {
 
         // checks the price is correct
         //todo: check why there is not an exception here.
-        if(!isPriceCorrect(publisher,expectedPrice))
+        if(!isPriceCorrect(publisher,expectedPrice,test))
             return shoppingCartToBuy;
 
         if(address==null){
@@ -85,10 +85,10 @@ public class Acquisition {
         return shoppingCartToBuy;
     }
 
-    private  boolean isPriceCorrect(NotificationHandler publisher, double expectedPrice) throws MarketException {
+    private  boolean isPriceCorrect(NotificationHandler publisher, double expectedPrice,boolean test) throws MarketException {
         double actualPrice;
         try {
-            actualPrice = shoppingCartToBuy.saveFromShops(publisher,buyerName);
+            actualPrice = shoppingCartToBuy.saveFromShops(publisher,buyerName,test);
         }catch (MarketException e){
             return false;
         }

@@ -318,7 +318,9 @@ public class ShopTest {
         currAmount.put(item2.getID(), 20.0);
         ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
         try {
-            Assertions.assertEquals(35.0,shop.buyBasket(new NotificationHandler(textDispatcher),basket, memberFounder.getName()));
+            NotificationHandler nh= NotificationHandler.getInstance();
+            nh.setService(textDispatcher);
+            Assertions.assertEquals(35.0,shop.buyBasket(nh,basket, memberFounder.getName(),true));
         } catch (MarketException e) {
             System.out.println(e.getMessage());
             assert false;

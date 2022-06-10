@@ -163,7 +163,7 @@ public class Shop implements IHistory {
     }
 
     //Bar: adding the parameter buyer name for the notification send.
-    public synchronized double buyBasket(NotificationHandler publisher, ShoppingBasket shoppingBasket, String buyer) throws MarketException {
+    public synchronized double buyBasket(NotificationHandler publisher, ShoppingBasket shoppingBasket, String buyer,boolean test) throws MarketException {
         //the notification to the shop owners publisher.
         ArrayList<String> names = new ArrayList<>(getShopOwners().values().stream().collect(Collectors.toList()).stream()
                 .map(appointment -> appointment.getAppointed().getName()).collect(Collectors.toList()));
@@ -199,7 +199,7 @@ public class Shop implements IHistory {
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
         try{
-            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
+            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices,test);
         }
         catch (Exception e){}
         return shoppingBasket.getPrice ( );

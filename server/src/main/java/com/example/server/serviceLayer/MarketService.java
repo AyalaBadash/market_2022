@@ -38,7 +38,7 @@ public class MarketService {
 
     public Response firstInitMarket(String userName, String password) {
         try {
-            market.firstInitMarket(userName, password);
+            market.firstInitMarket(userName, password,false);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());
@@ -50,7 +50,7 @@ public class MarketService {
 
     public Response firstInitMarket(String userName, String password,String services,String data) {
         try {
-            market.firstInitMarket(userName, password,services,data);
+            market.firstInitMarket(userName, password,services,data,false);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());
@@ -60,9 +60,9 @@ public class MarketService {
         }
     }
 
-    public Response firstInitMarket() {
+    public Response firstInitMarket(boolean b) {
         try {
-            market.firstInitMarket();
+            market.firstInitMarket(b);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());

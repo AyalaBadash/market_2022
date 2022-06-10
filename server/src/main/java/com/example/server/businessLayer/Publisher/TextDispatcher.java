@@ -73,7 +73,7 @@ public class TextDispatcher extends Publisher{
 
     private boolean writeToText(String message, String name){
         try {
-            final File parentDir = new File("/Users/bardamri/Documents/GitHub/market_2022/server/notifications/");
+            final File parentDir = new File(getConfigDir());
             parentDir.mkdir();
             final File file = new File(parentDir, name);
             file.createNewFile(); // Creates file crawl_html/abc.txt
@@ -90,5 +90,11 @@ public class TextDispatcher extends Publisher{
     }
     public void clean(){
         messages.clear();
+    }
+
+    private String getConfigDir() {
+        String dir = System.getProperty("user.dir").split("/market_2022")[0];
+        dir += "/market_2022/server/notifications";
+        return dir;
     }
 }

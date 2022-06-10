@@ -4,6 +4,7 @@ import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -25,8 +26,9 @@ public class SystemManagerTests {
     public static void setUp() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
-                market.firstInitMarket(managerName, managerpassword);
+            if (market.getPaymentService() == null) {
+                market.firstInitMarket(managerName, managerpassword,true);
+            }
 
             else
                 market.register(managerName, managerpassword);

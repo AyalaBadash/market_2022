@@ -7,6 +7,7 @@ import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -35,8 +36,10 @@ public class AcquisitionTests {
     public void setUp() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
-                market.firstInitMarket(userName, password);
+            if (market.getPaymentService() == null) {
+                market.firstInitMarket(userName, password,true);
+
+            }
 
             // shop manager register
             Visitor visitor = market.guestLogin();

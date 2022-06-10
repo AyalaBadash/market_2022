@@ -1,30 +1,37 @@
 package com.example.server.businessLayer.Publisher;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class NotificationHandler {
 
-    //TODO ADD TEXT DISPATCHER
+    private static NotificationHandler instance=null;
     //holds notifications to send to each domain(by the member name)
-    private Map<String, List<Notification>> delayedMessages;
     private Publisher dispatcher;
 
     //Map for sessionId-name pairs.
     private Map<String, String> sessions;
 
 
-    @Autowired
-    public NotificationHandler(Publisher dispatcher) {
+    public static NotificationHandler getInstance(){
+        if(instance==null){
+            instance=new NotificationHandler(NotificationDispatcher.getInstance());
+        }
+        return instance;
+    }
+    private NotificationHandler(Publisher dispatcher) {
         this.dispatcher = dispatcher;
-        delayedMessages = new ConcurrentHashMap<>();
         sessions = new ConcurrentHashMap<>();
     }
 
@@ -45,13 +52,10 @@ public class NotificationHandler {
      */
     public synchronized boolean add(String name, String sessionId) {
 
-        if(delayedMessages.containsKey(name)){
-            return false;
-        }
+
         sessions.put(name,sessionId);
-        delayedMessages.put(name,new ArrayList<>());
         if(dispatcher.add(sessionId)){
-            return sendAllDelayedNotifications(name);
+            return true;
         }
         else{
             return false;
@@ -63,20 +67,32 @@ public class NotificationHandler {
      * @param name name of the new visitor that logged in.
      * @return
      */
-    private boolean sendAllDelayedNotifications(String name) {
+    private boolean sendAllDelayedNotifications(List<Notification> nots, String name) {
 
-        if(!delayedMessages.containsKey(name)){
-            return true;
-        }
-        List<Notification> notifications= delayedMessages.get(name);
-        for(Notification not : notifications){
+
+        for(Notification not : nots){
             if(! sendMessageToLogged(name, not)){
                 return false;
             }
         }
 
-        delayedMessages.get(name).clear();
+        deleteDelayed(name);
         return true;
+    }
+
+    private void deleteDelayed(String name) {
+        try {
+            File parentDir = new File(getConfigDir() );
+            parentDir.mkdir();
+            File file = new File(parentDir, name + ".txt");
+            if(file.delete()){}
+            else{
+                throw new MarketException("could not delete file");
+            }
+
+        }
+        catch (Exception e){}
+
     }
 
     /**
@@ -86,15 +102,14 @@ public class NotificationHandler {
      * @return
      */
     public synchronized boolean remove(String name, String sessionId) {
-        if (!delayedMessages.containsKey(name)) {
-            return false;
-        }
+
         List<Notification> nots= dispatcher.remove(sessionId);
         if(!nots.isEmpty()){
-            delayedMessages.get(name).addAll(nots);
+            for(Notification not : nots) {
+                writeToText(not.getMessage(),name);
+            }
         }
         sessions.remove(name);
-        delayedMessages.remove(name);
         return true;
     }
 
@@ -115,10 +130,11 @@ public class NotificationHandler {
         }
         List<Notification> nots= dispatcher.remove(sessionId);
         if(!nots.isEmpty()){
-            delayedMessages.get(name).addAll(nots);
+            for(Notification not : nots) {
+                writeToText(not.getMessage(),name);
+            }
         }
         sessions.remove(name);
-        delayedMessages.remove(name);
         return true;
     }
     //Check for the market if a memeber/user is logged in .
@@ -128,12 +144,14 @@ public class NotificationHandler {
 
     /**
      * The main method for sending a notification for a user.
-     * @param name the name of the visitor to send the message
+     *
+     * @param name         the name of the visitor to send the message
      * @param notification the notification needed to be sent.
-     * @param isMember bool field that say if the visitor is a member.
+     * @param isMember     bool field that say if the visitor is a member.
+     * @param test
      * @return
      */
-    public boolean sendNotification(String name , Notification notification, boolean isMember){
+    public boolean sendNotification(String name , Notification notification, boolean isMember, boolean test){
 
         if(sessions.containsKey(name)){
             //if user logged.
@@ -144,14 +162,13 @@ public class NotificationHandler {
         else{
             //if not logged in. save if member
             if(isMember){
-                if(!delayedMessages.containsKey(name)){
-                    delayedMessages.put(name, new ArrayList<>());
-                }
-                delayedMessages.get(name).add(notification);
-                if(dispatcher instanceof TextDispatcher){
+                if(test){
                     DelayedNotifications not= new DelayedNotifications();
                     not.createMessage("Delayed message: \n"+ notification.getMessage());
                     dispatcher.addMessgae(name,not);
+                }
+                else{
+                    writeToText(notification.getMessage(), name);
                 }
             }
         }
@@ -166,37 +183,96 @@ public class NotificationHandler {
      * @param itemsNames the baught items list.
      * @param prices the bought items prices.
      */
-    public void sendItemBaughtNotificationsBatch(String buyer, ArrayList<String> names, String shopName, ArrayList<String> itemsNames, ArrayList<Double> prices) {
+    public void sendItemBaughtNotificationsBatch(String buyer, ArrayList<String> names, String shopName, ArrayList<String> itemsNames, ArrayList<Double> prices,boolean test) {
 
         RealTimeNotifications not;
         for (String name : names) {
             for (int i = 0; i < itemsNames.size(); i++) {
                 not = new RealTimeNotifications();
                 not.createBuyingOfferMessage(buyer, shopName, itemsNames.get(i), prices.get(i));
-                sendNotification(name,not,true);
+                sendNotification(name,not,true, test);
             }
         }
     }
 
-    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName) {
+    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName,boolean test) {
         RealTimeNotifications not=new RealTimeNotifications();
         not.createShopClosedMessage(shopName);
         for(String name: strings){
-            sendNotification(name,not,true);
+            sendNotification(name,not,true, test);
         }
     }
 
-    public void sendAppointmentRemovedNotification(String firedAppointed, String shopName) {
+    public void sendAppointmentRemovedNotification(String firedAppointed, String shopName,boolean test) {
         RealTimeNotifications not= new RealTimeNotifications();
         not.createShopPermissionDeniedMessage(shopName,firedAppointed);
-        sendNotification(firedAppointed,not,true);
+        sendNotification(firedAppointed,not,true, test);
     }
 
     public void setService(Publisher o) {
         dispatcher=o;
     }
 
-    public int getDelayednots(String name){
-        return delayedMessages.get(name).size();
+
+    public void login(String name, String visitor, String sessionId) {
+
+        List<Notification> nots = readDelayedMessages(name);
+        sessions.remove(visitor);
+        sessions.put(name,sessionId);
+        sendAllDelayedNotifications(nots,name);
+    }
+
+    private boolean writeToText(String message, String name){
+        try {
+            final File parentDir = new File(getConfigDir());
+            parentDir.mkdir();
+            final File file = new File(parentDir, name+".txt");
+            file.createNewFile(); // Creates file crawl_html/abc.txt
+            FileWriter myWriter = new FileWriter(file,true);
+            myWriter.write(message);
+            myWriter.close();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+    private List<Notification> readDelayedMessages(String name) {
+
+        try {
+            List<Notification> nots= new ArrayList<>();
+            File myObj = new File(getConfigDir() + name+".txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                if(data.isEmpty())
+                    continue;
+                DelayedNotifications del= new DelayedNotifications();
+                del.createMessage(data);
+                nots.add(del);
+            }
+            return nots;
+
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+
+    }
+    private String getConfigDir() {
+        String dir = System.getProperty("user.dir").split("/market_2022")[0];
+        dir += "/market_2022/server/notifications/delayed/";
+        return dir;
+    }
+
+    public void sendNewshopManager(Member shopOwner, Member appointed, String shopName,boolean test) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewManagerMessage(shopOwner.getName(),appointed.getName(),shopName);
+        sendNotification(appointed.getName(),not,true,  test);
+    }
+
+    public void sendNewshopOwner(Member shopOwner, Member appointed, String shopName,boolean test) {
+
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewOwnerMessage(shopOwner.getName(),appointed.getName(),shopName);
+        sendNotification(appointed.getName(),not,true, test);
     }
 }

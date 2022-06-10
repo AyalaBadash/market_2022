@@ -16,7 +16,7 @@ public class SystemTests {
         try {
             market = Market.getInstance();
         if (market.getPaymentService()==null)
-                market.firstInitMarket (userName, password );
+                market.firstInitMarket (userName, password ,true);
 
         }
         catch (Exception e){}
@@ -24,7 +24,7 @@ public class SystemTests {
     @Test
     public void initTwice() {
         try {
-            market.firstInitMarket (userName, password );
+            market.firstInitMarket (userName, password ,true);
             assert false;
         } catch (Exception e) {
             assert true;
