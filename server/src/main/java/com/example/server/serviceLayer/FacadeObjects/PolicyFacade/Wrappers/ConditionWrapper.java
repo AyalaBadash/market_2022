@@ -11,12 +11,15 @@ public class ConditionWrapper {
         PriceConditionFacade;
     }
 
+    private CompositeConditionWrapperType compositeConditionWrapperType;
+
     private List<ConditionWrapper> conditionWrappers;
     private int itemID;
     private double amount;
     private double price;
 
-    public ConditionWrapper(List<ConditionWrapper> conditionWrappers, int itemID, double amount, double price) {
+    public ConditionWrapper(CompositeConditionWrapperType compositeConditionWrapperType, List<ConditionWrapper> conditionWrappers, int itemID, double amount, double price) {
+        this.compositeConditionWrapperType = compositeConditionWrapperType;
         this.conditionWrappers = conditionWrappers;
         this.itemID = itemID;
         this.amount = amount;
@@ -56,5 +59,13 @@ public class ConditionWrapper {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public CompositeConditionWrapperType getCompositeConditionWrapperType() {
+        return compositeConditionWrapperType;
+    }
+
+    public void setCompositeConditionWrapperType(CompositeConditionWrapperType compositeConditionWrapperType) {
+        this.compositeConditionWrapperType = compositeConditionWrapperType;
     }
 }

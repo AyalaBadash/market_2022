@@ -13,11 +13,13 @@ public class PurchasePolicyLevelStateWrapper {
         ItemPurchasePolicyLevelStateFacade,
         ShopPurchasePolicyLevelStateFacade
     }
+    private CompositeDiscountLevelStateWrapperType compositeDiscountLevelStateWrapperType;
     private int itemID;
     private Item.Category category;
     private List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers;
 
-    public PurchasePolicyLevelStateWrapper(int itemID, Item.Category category, List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers) {
+    public PurchasePolicyLevelStateWrapper(CompositeDiscountLevelStateWrapperType compositeDiscountLevelStateWrapperType, int itemID, Item.Category category, List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers) {
+        this.compositeDiscountLevelStateWrapperType = compositeDiscountLevelStateWrapperType;
         this.itemID = itemID;
         this.category = category;
         this.purchasePolicyLevelStateWrappers = purchasePolicyLevelStateWrappers;
@@ -48,5 +50,13 @@ public class PurchasePolicyLevelStateWrapper {
 
     public void setPurchasePolicyLevelStateWrappers(List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers) {
         this.purchasePolicyLevelStateWrappers = purchasePolicyLevelStateWrappers;
+    }
+
+    public CompositeDiscountLevelStateWrapperType getCompositeDiscountLevelStateWrapperType() {
+        return compositeDiscountLevelStateWrapperType;
+    }
+
+    public void setCompositeDiscountLevelStateWrapperType(CompositeDiscountLevelStateWrapperType compositeDiscountLevelStateWrapperType) {
+        this.compositeDiscountLevelStateWrapperType = compositeDiscountLevelStateWrapperType;
     }
 }

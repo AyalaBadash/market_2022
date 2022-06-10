@@ -12,11 +12,13 @@ public class DiscountLevelStateWrapper {
         ShopLevelStateFacade,
         CategoryLevelStateFacade
     }
+    private CompositeDiscountLevelStateWrapperType compositeDiscountLevelStateWrapperType;
     private int itemID;
     private Item.Category category;
     private List<DiscountLevelStateWrapper> discountLevelStateWrappers;
 
-    public DiscountLevelStateWrapper(int itemID, Item.Category category, List<DiscountLevelStateWrapper> discountLevelStateWrappers) {
+    public DiscountLevelStateWrapper(CompositeDiscountLevelStateWrapperType compositeDiscountLevelStateWrapperType, int itemID, Item.Category category, List<DiscountLevelStateWrapper> discountLevelStateWrappers) {
+        this.compositeDiscountLevelStateWrapperType = compositeDiscountLevelStateWrapperType;
         this.itemID = itemID;
         this.category = category;
         this.discountLevelStateWrappers = discountLevelStateWrappers;
@@ -47,5 +49,13 @@ public class DiscountLevelStateWrapper {
 
     public void setDiscountLevelStateWrappers(List<DiscountLevelStateWrapper> discountLevelStateWrappers) {
         this.discountLevelStateWrappers = discountLevelStateWrappers;
+    }
+
+    public CompositeDiscountLevelStateWrapperType getCompositeDiscountLevelStateWrapperType() {
+        return compositeDiscountLevelStateWrapperType;
+    }
+
+    public void setCompositeDiscountLevelStateWrapperType(CompositeDiscountLevelStateWrapperType compositeDiscountLevelStateWrapperType) {
+        this.compositeDiscountLevelStateWrapperType = compositeDiscountLevelStateWrapperType;
     }
 }
