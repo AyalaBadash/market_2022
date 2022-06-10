@@ -913,7 +913,7 @@ public class Market {
             DebugLog.getInstance().Log("Cant add item with negative or zero amount");
             throw new MarketException("Cant add item with negative amount");
         }
-        if (!shops.get(curShop.getShopName()).hasItem(item)) {
+        if (!curShop.hasItem(item)) {
             DebugLog.getInstance().Log("Cannot add item that does not exists in the shop.");
             throw new MarketException("Cannot add item that does not exists in the shop.");
         }
