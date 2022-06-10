@@ -96,4 +96,29 @@ public class DiscountTypeWrapper implements FacadeObject<DiscountType> {
     public void setCompositeDiscountTypeWrapperType(DiscountTypeWrapperType discountTypeWrapperType) {
         this.discountTypeWrapperType = discountTypeWrapperType;
     }
+
+
+    public static DiscountTypeWrapper createDiscountTypeWrapper(DiscountType discountType) {
+        DiscountTypeWrapper discountTypeWrapper = new DiscountTypeWrapper (  );
+        discountTypeWrapper.setPercentageOfDiscount ( discountType.getPercentageOfDiscount () );
+        discountTypeWrapper.setDiscountLevelStateWrapper (  DiscountLevelStateWrapper.createDiscountLevelStateWrapper(discountType.getDiscountLevelState ()) );
+        if(discountType.isSimple ()){
+            discountTypeWrapper.setCompositeDiscountTypeWrapperType ( DiscountTypeWrapper.DiscountTypeWrapperType.SimpleDiscountFacade );
+        }else if(discountType.isConditional ()){
+            ConditionalDiscount conditionalDiscount = (ConditionalDiscount) discountType;
+            discountTypeWrapper.setCompositeDiscountTypeWrapperType ( DiscountTypeWrapper.DiscountTypeWrapperType.ConditionalDiscountFacade );
+            discountTypeWrapper.setConditionWrapper ( ConditionWrapper.createConditionWrapper(conditionalDiscount.getCondition ()) );
+        }else{
+            MaxCompositeDiscount maxCompositeDiscount = (MaxCompositeDiscount) discountType;
+            List<DiscountTypeWrapper> discountTypeWrappers = new ArrayList<> (  );
+            for(DiscountType cur : maxCompositeDiscount.getDiscountTypes ()){
+                discountTypeWrappers.add ( createDiscountTypeWrapper ( cur ) );
+            }
+            discountTypeWrapper.setCompositeDiscountTypeWrapperType ( DiscountTypeWrapper.DiscountTypeWrapperType.MaxCompositeDiscountTypeFacade );
+            discountTypeWrapper.setDiscountTypeWrappers ( discountTypeWrappers );
+        }
+        return discountTypeWrapper;
+    }
+
+
 }

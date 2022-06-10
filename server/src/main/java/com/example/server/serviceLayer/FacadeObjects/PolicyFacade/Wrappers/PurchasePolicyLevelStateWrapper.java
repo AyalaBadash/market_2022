@@ -104,4 +104,44 @@ public class PurchasePolicyLevelStateWrapper implements FacadeObject<PurchasePol
     public void setCompositeDiscountLevelStateWrapperType(PurchasePolicyLevelStateWrapperType purchasePolicyLevelStateWrapperType) {
         this.purchasePolicyLevelStateWrapperType = purchasePolicyLevelStateWrapperType;
     }
+
+    public static PurchasePolicyLevelStateWrapper createPurchasePolicyLevelStateWrapper(PurchasePolicyLevelState purchasePolicyLevelState) {
+        PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper = new PurchasePolicyLevelStateWrapper();
+        if (purchasePolicyLevelState.isItemLevel()) {
+            ItemPurchasePolicyLevelState itemPurchasePolicyLevelState = (ItemPurchasePolicyLevelState) purchasePolicyLevelState;
+            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType(PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.ItemPurchasePolicyLevelStateFacade);
+            purchasePolicyLevelStateWrapper.setItemID(itemPurchasePolicyLevelState.getItemId());
+        } else if (purchasePolicyLevelState.isCategoryLevel()) {
+            CategoryPurchasePolicyLevelState categoryPurchasePolicyLevelState = (CategoryPurchasePolicyLevelState) purchasePolicyLevelState;
+            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType(PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.CategoryPurchasePolicyLevelStateFacade);
+            purchasePolicyLevelStateWrapper.setCategory(categoryPurchasePolicyLevelState.getCategory());
+        } else if (purchasePolicyLevelState.isShopLevel()) {
+            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType(PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.ShopPurchasePolicyLevelStateFacade);
+        } else if (purchasePolicyLevelState.isOrLevel()) {
+            OrCompositePurchasePolicyLevelState orCompositePurchasePolicyLevelState = (OrCompositePurchasePolicyLevelState) purchasePolicyLevelState;
+            List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers = new ArrayList<>();
+            for (PurchasePolicyLevelState cur : orCompositePurchasePolicyLevelState.getPurchasePolicyLevelStates()) {
+                purchasePolicyLevelStateWrappers.add(createPurchasePolicyLevelStateWrapper((cur)));
+            }
+            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType(PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.OrCompositePurchasePolicyLevelStateFacade);
+            purchasePolicyLevelStateWrapper.setPurchasePolicyLevelStateWrappers(purchasePolicyLevelStateWrappers);
+        } else if (purchasePolicyLevelState.isXorLevel()) {
+            XorCompositePurchasePolicyLevelState xorCompositePurchasePolicyLevelState = (XorCompositePurchasePolicyLevelState) purchasePolicyLevelState;
+            List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers = new ArrayList<>();
+            for (PurchasePolicyLevelState cur : xorCompositePurchasePolicyLevelState.getPurchasePolicyLevelStates()) {
+                purchasePolicyLevelStateWrappers.add(createPurchasePolicyLevelStateWrapper((cur)));
+            }
+            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType(PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.XorCompositePurchasePolicyLevelStateFacade);
+            purchasePolicyLevelStateWrapper.setPurchasePolicyLevelStateWrappers(purchasePolicyLevelStateWrappers);
+        } else {
+            AndCompositePurchasePolicyLevelState andCompositePurchasePolicyLevelState = (AndCompositePurchasePolicyLevelState) purchasePolicyLevelState;
+            List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers = new ArrayList<>();
+            for (PurchasePolicyLevelState cur : andCompositePurchasePolicyLevelState.getPurchasePolicyLevelStates()) {
+                purchasePolicyLevelStateWrappers.add(createPurchasePolicyLevelStateWrapper((cur)));
+            }
+            purchasePolicyLevelStateWrapper.setCompositeDiscountLevelStateWrapperType(PurchasePolicyLevelStateWrapper.PurchasePolicyLevelStateWrapperType.AndCompositePurchasePolicyLevelStateFacade);
+            purchasePolicyLevelStateWrapper.setPurchasePolicyLevelStateWrappers(purchasePolicyLevelStateWrappers);
+        }
+        return purchasePolicyLevelStateWrapper;
+    }
 }

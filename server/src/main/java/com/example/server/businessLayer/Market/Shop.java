@@ -552,15 +552,10 @@ public class Shop implements IHistory {
         purchasePolicy.removePurchasePolicy ( purchasePolicyType );
     }
 
-    public boolean hasItem(Item item) {
-        for(Map.Entry<Integer,Item> items: itemMap.entrySet()){
-            if( items.getValue().getID()==item.getID()){
-                if(items.getValue()==item) {
-                    return true;
-                }
-                else{
-                    return false;
-                }
+    public boolean hasItem(Item itemToCheck) {
+        for(Map.Entry<Integer,Item> item: itemMap.entrySet()){
+            if(item.getValue().getID().equals(itemToCheck.getID())){
+                return item.getValue().equals(itemToCheck);
             }
         }
         return false;

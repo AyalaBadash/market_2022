@@ -3,6 +3,7 @@ package com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.AtLeastPurchasePolicyType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.AtMostPurchasePolicyType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.OrCompositePurchasePolicyType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
@@ -96,4 +97,31 @@ public class PurchasePolicyTypeWrapper implements FacadeObject<PurchasePolicyTyp
     public void setPurchasePolicyLevelStateWrapper(PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper) {
         this.purchasePolicyLevelStateWrapper = purchasePolicyLevelStateWrapper;
     }
+
+    public static PurchasePolicyTypeWrapper createPurchasePolicyWrapper(PurchasePolicyType purchasePolicyType) {
+        PurchasePolicyTypeWrapper purchasePolicyTypeWrapper = new PurchasePolicyTypeWrapper();
+        ;
+        if (purchasePolicyType.isAtLeast()) {
+            AtLeastPurchasePolicyType atLeastPurchasePolicyType = (AtLeastPurchasePolicyType) purchasePolicyType;
+            purchasePolicyTypeWrapper.setPurchasePolicyTypeWrapperType(PurchasePolicyTypeWrapper.PurchasePolicyTypeWrapperType.AtLeastPurchasePolicyTypeFacade);
+            purchasePolicyTypeWrapper.setPurchasePolicyLevelStateWrapper(PurchasePolicyLevelStateWrapper.createPurchasePolicyLevelStateWrapper(purchasePolicyType.getPurchasePolicyLevelState()));
+            purchasePolicyTypeWrapper.setAmount(atLeastPurchasePolicyType.getAmount());
+        } else if (purchasePolicyType.isAtMost()) {
+            AtMostPurchasePolicyType atMostPurchasePolicyType = (AtMostPurchasePolicyType) purchasePolicyType;
+            purchasePolicyTypeWrapper.setPurchasePolicyTypeWrapperType(PurchasePolicyTypeWrapper.PurchasePolicyTypeWrapperType.AtMostPurchasePolicyTypeFacade);
+            purchasePolicyTypeWrapper.setPurchasePolicyLevelStateWrapper(PurchasePolicyLevelStateWrapper.createPurchasePolicyLevelStateWrapper(purchasePolicyType.getPurchasePolicyLevelState()));
+            purchasePolicyTypeWrapper.setAmount(atMostPurchasePolicyType.getAmount());
+        } else {
+            List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers = new ArrayList<>();
+            OrCompositePurchasePolicyType orCompositePurchasePolicyType = (OrCompositePurchasePolicyType) purchasePolicyType;
+            for (PurchasePolicyType cur : orCompositePurchasePolicyType.getPolicies()) {
+                purchasePolicyTypeWrappers.add(createPurchasePolicyWrapper(cur));
+            }
+            purchasePolicyTypeWrapper.setCompositePurchasePolicyTypeWrapperType(PurchasePolicyTypeWrapper.PurchasePolicyTypeWrapperType.OrCompositePurchasePolicyTypeFacade);
+            purchasePolicyTypeWrapper.setPurchasePolicyTypeWrappers(purchasePolicyTypeWrappers);
+        }
+        return purchasePolicyTypeWrapper;
+    }
+
+
 }
