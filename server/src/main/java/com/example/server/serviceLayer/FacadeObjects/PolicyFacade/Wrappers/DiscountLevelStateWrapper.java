@@ -11,7 +11,7 @@ import java.util.List;
 public class DiscountLevelStateWrapper implements FacadeObject<DiscountLevelState> {
 
 
-    enum DiscountLevelStateWrapperType {
+    public enum DiscountLevelStateWrapperType {
         MaxXorCompositeDiscountLevelStateFacade,
         AndCompositeDiscountLevelStateFacade,
         ItemLevelStateFacade,

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ConditionWrapper implements FacadeObject<Condition> {
 
-    enum ConditionWrapperType {
+    public enum ConditionWrapperType {
         AndCompositeConditionFacade,
         OrCompositeConditionFacade,
         AmountOfItemConditionFacade,

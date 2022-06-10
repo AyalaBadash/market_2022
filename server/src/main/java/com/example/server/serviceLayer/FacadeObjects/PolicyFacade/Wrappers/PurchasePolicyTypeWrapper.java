@@ -13,7 +13,7 @@ import java.util.List;
 public class PurchasePolicyTypeWrapper implements FacadeObject<PurchasePolicyType> {
 
 
-    enum PurchasePolicyTypeWrapperType {
+    public enum PurchasePolicyTypeWrapperType {
         OrCompositePurchasePolicyTypeFacade,
         AtLeastPurchasePolicyTypeFacade,
         AtMostPurchasePolicyTypeFacade;

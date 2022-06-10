@@ -12,7 +12,7 @@ import java.util.List;
 public class PurchasePolicyLevelStateWrapper implements FacadeObject<PurchasePolicyLevelState> {
 
 
-    enum PurchasePolicyLevelStateWrapperType {
+    public enum PurchasePolicyLevelStateWrapperType {
         AndCompositePurchasePolicyLevelStateFacade,
         XorCompositePurchasePolicyLevelStateFacade,
         OrCompositePurchasePolicyLevelStateFacade,

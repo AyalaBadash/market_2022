@@ -13,7 +13,7 @@ import java.util.List;
 public class DiscountTypeWrapper implements FacadeObject<DiscountType> {
 
 
-    enum DiscountTypeWrapperType {
+    public enum DiscountTypeWrapperType {
         MaxCompositeDiscountTypeFacade,
         SimpleDiscountFacade,
         ConditionalDiscountFacade;
