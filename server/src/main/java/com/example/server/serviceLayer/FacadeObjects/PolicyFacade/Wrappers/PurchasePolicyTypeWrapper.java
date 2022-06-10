@@ -1,25 +1,61 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers;
 
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.AtLeastPurchasePolicyType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.AtMostPurchasePolicyType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.OrCompositePurchasePolicyType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class PurchasePolicyTypeWrapper {
-    enum CompositePurchasePolicyTypeWrapperType {
+public class PurchasePolicyTypeWrapper implements FacadeObject<PurchasePolicyType> {
+
+
+    enum PurchasePolicyTypeWrapperType {
         OrCompositePurchasePolicyTypeFacade,
         AtLeastPurchasePolicyTypeFacade,
-        AtMostPurchasePolicyTypeFacade
+        AtMostPurchasePolicyTypeFacade;
     }
-    private CompositePurchasePolicyTypeWrapperType compositePurchasePolicyTypeWrapperType;
+    private PurchasePolicyTypeWrapperType purchasePolicyTypeWrapperType;
     private double amount;
+
+    private PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper;
     private List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers;
 
-    public PurchasePolicyTypeWrapper(CompositePurchasePolicyTypeWrapperType compositePurchasePolicyTypeWrapperType, double amount, List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers) {
-        this.compositePurchasePolicyTypeWrapperType = compositePurchasePolicyTypeWrapperType;
+    public PurchasePolicyTypeWrapper(PurchasePolicyTypeWrapperType purchasePolicyTypeWrapperType, double amount, PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper, List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers) {
+        this.purchasePolicyTypeWrapperType = purchasePolicyTypeWrapperType;
         this.amount = amount;
+        this.purchasePolicyLevelStateWrapper = purchasePolicyLevelStateWrapper;
         this.purchasePolicyTypeWrappers = purchasePolicyTypeWrappers;
     }
 
     public PurchasePolicyTypeWrapper() {
     }
+
+    @Override
+    public PurchasePolicyType toBusinessObject() throws MarketException {
+        switch (purchasePolicyTypeWrapperType){
+            case AtMostPurchasePolicyTypeFacade -> {
+                return new AtMostPurchasePolicyType ( purchasePolicyLevelStateWrapper.toBusinessObject (), amount );
+            }
+            case AtLeastPurchasePolicyTypeFacade -> {
+                return new AtLeastPurchasePolicyType ( purchasePolicyLevelStateWrapper.toBusinessObject (), amount );
+            }
+            case OrCompositePurchasePolicyTypeFacade -> {
+                List<PurchasePolicyType> purchasePolicyTypes = new ArrayList<> (  );
+                for(PurchasePolicyTypeWrapper purchasePolicyTypeWrapper : purchasePolicyTypeWrappers){
+                    purchasePolicyTypes.add ( purchasePolicyTypeWrapper.toBusinessObject () );
+                }
+                return new OrCompositePurchasePolicyType ( purchasePolicyTypes );
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
 
     public double getAmount() {
         return amount;
@@ -37,11 +73,27 @@ public class PurchasePolicyTypeWrapper {
         this.purchasePolicyTypeWrappers = purchasePolicyTypeWrappers;
     }
 
-    public CompositePurchasePolicyTypeWrapperType getCompositePurchasePolicyTypeWrapperType() {
-        return compositePurchasePolicyTypeWrapperType;
+    public PurchasePolicyTypeWrapperType getCompositePurchasePolicyTypeWrapperType() {
+        return purchasePolicyTypeWrapperType;
     }
 
-    public void setCompositePurchasePolicyTypeWrapperType(CompositePurchasePolicyTypeWrapperType compositePurchasePolicyTypeWrapperType) {
-        this.compositePurchasePolicyTypeWrapperType = compositePurchasePolicyTypeWrapperType;
+    public void setCompositePurchasePolicyTypeWrapperType(PurchasePolicyTypeWrapperType purchasePolicyTypeWrapperType) {
+        this.purchasePolicyTypeWrapperType = purchasePolicyTypeWrapperType;
+    }
+
+    public PurchasePolicyTypeWrapperType getPurchasePolicyTypeWrapperType() {
+        return purchasePolicyTypeWrapperType;
+    }
+
+    public void setPurchasePolicyTypeWrapperType(PurchasePolicyTypeWrapperType purchasePolicyTypeWrapperType) {
+        this.purchasePolicyTypeWrapperType = purchasePolicyTypeWrapperType;
+    }
+
+    public PurchasePolicyLevelStateWrapper getPurchasePolicyLevelStateWrapper() {
+        return purchasePolicyLevelStateWrapper;
+    }
+
+    public void setPurchasePolicyLevelStateWrapper(PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper) {
+        this.purchasePolicyLevelStateWrapper = purchasePolicyLevelStateWrapper;
     }
 }

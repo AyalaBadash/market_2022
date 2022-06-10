@@ -16,6 +16,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 
 
 import java.util.ArrayList;
@@ -429,7 +430,7 @@ public class MarketService {
         }
     }
 
-    public Response addDiscountToShop(String visitorName, String shopName, DiscountTypeFacade discountTypeFacade) {
+    public Response addDiscountToShop(String visitorName, String shopName, DiscountTypeWrapper discountTypeFacade) {
         try {
             DiscountType discountType = discountTypeFacade.toBusinessObject();
             market.addDiscountToShop(visitorName, shopName, discountType);
