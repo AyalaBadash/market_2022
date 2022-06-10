@@ -17,7 +17,7 @@ public class AndCompositePurchasePolicyLevelState extends CompositePurchasePolic
         for ( PurchasePolicyLevelState purchasePolicyLevelState : purchasePolicyLevelStates ) {
             List<Double> amounts = purchasePolicyLevelState.getAmount ( shoppingBasket );
             for(Double cur : amounts)
-                if((greater && cur <= amount) || cur > amount)
+                if(cur != 0 && ((greater && cur <= amount) || cur > amount))
                     return false;
         }
         return true;

@@ -16,9 +16,15 @@ public class XorCompositePurchasePolicyLevelState extends CompositePurchasePolic
     public boolean isPolicyHeld(ShoppingBasket shoppingBasket, double amount, boolean greater) throws MarketException {
         for ( PurchasePolicyLevelState purchasePolicyLevelState : purchasePolicyLevelStates ) {
             List<Double> amounts = purchasePolicyLevelState.getAmount ( shoppingBasket );
-            for(Double cur : amounts)
-                if((greater && cur > amount) || cur <= amount)
+            int numOfZeroes = 0;
+            for(Double cur : amounts) {
+                if ((greater && cur > amount) || cur <= amount)
                     return true;
+                if (cur == 0)
+                    numOfZeroes++;
+            }
+            if(numOfZeroes == amounts.size ())
+                return true;
         }
         return false;
     }

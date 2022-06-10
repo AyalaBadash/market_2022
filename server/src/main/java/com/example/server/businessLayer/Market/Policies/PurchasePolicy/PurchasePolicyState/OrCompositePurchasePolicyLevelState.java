@@ -20,7 +20,7 @@ public class OrCompositePurchasePolicyLevelState extends CompositePurchasePolicy
             for(Double cur : amounts)
                 curAmount += cur;
         }
-        return ((greater && curAmount > amount) || curAmount <= amount);
+        return curAmount == 0 || (((greater && curAmount > amount) || curAmount <= amount));
     }
 
     @Override
