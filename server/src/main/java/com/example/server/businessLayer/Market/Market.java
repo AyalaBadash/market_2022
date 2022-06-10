@@ -1318,6 +1318,17 @@ public class Market {
         return shop.getPurchasePolicies();
     }
 
+    public List<DiscountType> getDiscountTypesOfShop(String visitorName, String shopName) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        Shop shop = shops.get(shopName);
+        if (shop == null)
+            throw new MarketException("shop does not exist in market");
+        return shop.getDiscountTypes();
+    }
+
     /**
      * check that all services are initialized from the config file.
      *

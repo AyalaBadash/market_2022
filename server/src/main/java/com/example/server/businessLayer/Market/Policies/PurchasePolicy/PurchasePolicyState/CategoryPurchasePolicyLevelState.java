@@ -19,7 +19,7 @@ public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
     @Override
     public boolean isPolicyHeld(ShoppingBasket shoppingBasket, double amount, boolean greater) throws MarketException {
         double curAmount = getAmount ( shoppingBasket ).get ( 0 );
-        return (greater && curAmount > amount) || curAmount <= amount;
+        return curAmount == 0 || ((greater && curAmount > amount) || curAmount <= amount);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
     }
 
     @Override
-    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyFacade levelStateFacade) {
+    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyLevelStateFacade levelStateFacade) {
         return null;
     }
 

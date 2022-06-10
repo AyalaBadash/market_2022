@@ -1,11 +1,9 @@
 package com.example.server.serviceLayer;
 
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.businessLayer.Payment.PaymentServiceProxy;
-import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
-import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
 import com.example.server.serviceLayer.Requests.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -357,19 +355,19 @@ public class Service implements IService {
         return marketService.removePurchasePolicyFromShop (request.getVisitorName (), request.getShopName (), request.getPolicy ());
     }
 
-//    @Override
-//    @RequestMapping(value = "/getPurchasePoliciesOfShop")
-//    @CrossOrigin
-//    public Response getPurchasePoliciesOfShop(@RequestBody GetPoliciesRequest request) {
-//        return marketService.getPurchasePoliciesOfShop(request.getVisitorName (), request.getShopName ());
-//    }
+    @Override
+    @RequestMapping(value = "/getPurchasePoliciesOfShop")
+    @CrossOrigin
+    public ResponseT<List<PurchasePolicyTypeWrapper>> getPurchasePoliciesOfShop(@RequestBody GetPoliciesRequest request) {
+        return marketService.getPurchasePoliciesOfShop(request.getVisitorName (), request.getShopName ());
+    }
 
-//    @Override
-//    @RequestMapping(value = "/getDiscountTypesOfShop")
-//    @CrossOrigin
-//    public Response getDiscountTypesOfShop(@RequestBody GetPoliciesRequest request) {
-//        return marketService.getDiscountTypesOfShop(request.getVisitorName (), request.getShopName ());
-//    }
+    @Override
+    @RequestMapping(value = "/getDiscountTypesOfShop")
+    @CrossOrigin
+    public ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(@RequestBody GetPoliciesRequest request) {
+        return marketService.getDiscountTypesOfShop(request.getVisitorName (), request.getShopName ());
+    }
 
 
     public ResponseT<MemberFacade> getMember(String memberName) {

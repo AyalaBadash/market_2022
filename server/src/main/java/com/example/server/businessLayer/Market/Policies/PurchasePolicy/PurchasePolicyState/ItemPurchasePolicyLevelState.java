@@ -17,7 +17,7 @@ public class ItemPurchasePolicyLevelState extends PurchasePolicyLevelState {
     @Override
     public boolean isPolicyHeld(ShoppingBasket shoppingBasket, double amount, boolean greater) throws MarketException {
         double curAmount = getAmount ( shoppingBasket ).get ( 0 );
-        return (greater && curAmount > amount) || curAmount <= amount;
+        return curAmount == 0 || ((greater && curAmount > amount) || curAmount <= amount);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ItemPurchasePolicyLevelState extends PurchasePolicyLevelState {
         Double curAmount;
         curAmount = shoppingBasket.getItems ().get ( itemId );
         if(curAmount == null)
-            amount.add ( Double.valueOf ( 0 ) );
+            curAmount = ( Double.valueOf ( 0 ) );
         amount.add ( curAmount );
         return amount;
     }
@@ -82,7 +82,7 @@ public class ItemPurchasePolicyLevelState extends PurchasePolicyLevelState {
     }
 
     @Override
-    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyFacade levelStateFacade) {
+    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyLevelStateFacade levelStateFacade) {
         return null;
     }
 

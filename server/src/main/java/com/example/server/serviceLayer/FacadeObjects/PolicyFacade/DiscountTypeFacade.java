@@ -1,33 +1,29 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CategoryLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.ShopLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.SimpleDiscount;
-import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
 
 public abstract class DiscountTypeFacade implements FacadeObject<DiscountType> {
-    protected int percentageOfDiscount;
+    protected double percentageOfDiscount;
     protected DiscountLevelStateFacade discountLevelState;
 
-    public DiscountTypeFacade(int percentageOfDiscount, DiscountLevelStateFacade discountLevelState) {
+    public DiscountTypeFacade(double percentageOfDiscount, DiscountLevelStateFacade discountLevelState) {
         this.percentageOfDiscount = percentageOfDiscount;
         this.discountLevelState = discountLevelState;
     }
 
     public DiscountTypeFacade(){}
 
-    public int getPercentageOfDiscount() {
+    public double getPercentageOfDiscount() {
         return percentageOfDiscount;
     }
 
-    public void setPercentageOfDiscount(int percentageOfDiscount) {
+    public void setPercentageOfDiscount(double percentageOfDiscount) {
         this.percentageOfDiscount = percentageOfDiscount;
     }
 
@@ -87,7 +83,7 @@ public abstract class DiscountTypeFacade implements FacadeObject<DiscountType> {
         } else if(discountType.isConditional ()){
             discountTypeFacade = new ConditionalDiscountFacade (  );
         }else {
-            discountTypeFacade = new MaxCompositeDiscountFacade (  );
+            discountTypeFacade = new MaxCompositeDiscountTypeFacade (  );
         }
         discountTypeFacade = discountTypeFacade.toFacade ( discountType );
         return discountTypeFacade;

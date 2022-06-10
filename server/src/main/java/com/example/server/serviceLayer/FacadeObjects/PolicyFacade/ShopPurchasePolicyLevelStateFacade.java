@@ -3,7 +3,7 @@ package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
-public class ShopPurchasePolicyFacade extends PurchasePolicyLevelStateFacade {
+public class ShopPurchasePolicyLevelStateFacade extends PurchasePolicyLevelStateFacade {
     @Override
     public PurchasePolicyLevelState toBusinessObject() throws MarketException {
         return new ShopPurchasePolicyLevelState ();
@@ -21,7 +21,7 @@ public class ShopPurchasePolicyFacade extends PurchasePolicyLevelStateFacade {
 
     @Override
     public PurchasePolicyLevelStateFacade toFacade(ShopPurchasePolicyLevelState levelState) {
-        return new ShopPurchasePolicyFacade ();
+        return new ShopPurchasePolicyLevelStateFacade ();
     }
 
     @Override

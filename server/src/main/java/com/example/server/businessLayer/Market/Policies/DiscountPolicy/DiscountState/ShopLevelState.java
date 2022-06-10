@@ -5,7 +5,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 public class ShopLevelState extends DiscountLevelState {
     @Override
-    public double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) {
+    public double calculateDiscount(ShoppingBasket shoppingBasket, double percentageOfDiscount) {
         return shoppingBasket.getPrice()*(100-percentageOfDiscount)/100;
     }
 

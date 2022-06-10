@@ -1,8 +1,6 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.*;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
-import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
 
 public abstract class PurchasePolicyLevelStateFacade implements FacadeObject<PurchasePolicyLevelState> {
@@ -28,7 +26,7 @@ public abstract class PurchasePolicyLevelStateFacade implements FacadeObject<Pur
         } else if(purchasePolicyLevelState.isCategoryLevel ()){
             purchasePolicyLevelStateFacade = new CategoryPurchasePolicyLevelStateFacade (  );
         }else if(purchasePolicyLevelState.isShopLevel ()){
-            purchasePolicyLevelStateFacade = new ShopPurchasePolicyFacade (  );
+            purchasePolicyLevelStateFacade = new ShopPurchasePolicyLevelStateFacade (  );
         }else if(purchasePolicyLevelState.isOrLevel ()){
             purchasePolicyLevelStateFacade = new OrCompositePurchasePolicyLevelStateFacade (  );
         }else if(purchasePolicyLevelState.isAndLevel ()){

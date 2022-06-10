@@ -50,4 +50,12 @@ public class DiscountPolicy {
         if(validDiscounts.contains ( discountType ))
             validDiscounts.remove ( discountType );
     }
+
+    public List<DiscountType> getValidDiscounts() {
+        return validDiscounts;
+    }
+
+    public void setValidDiscounts(List<DiscountType> validDiscounts) {
+        this.validDiscounts = validDiscounts;
+    }
 }

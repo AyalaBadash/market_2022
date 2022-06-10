@@ -4,12 +4,12 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountS
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
 public class SimpleDiscount extends DiscountType{
 
-    public SimpleDiscount(int percentageOfDiscount, DiscountLevelState discountLevelState) {
+    public SimpleDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState) {
         super(percentageOfDiscount, discountLevelState);
     }
 
@@ -45,7 +45,7 @@ public class SimpleDiscount extends DiscountType{
     }
 
     @Override
-    public DiscountTypeFacade visitToFacade(MaxCompositeDiscountFacade discountFacade) {
+    public DiscountTypeFacade visitToFacade(MaxCompositeDiscountTypeFacade discountFacade) {
         return null;
     }
 }

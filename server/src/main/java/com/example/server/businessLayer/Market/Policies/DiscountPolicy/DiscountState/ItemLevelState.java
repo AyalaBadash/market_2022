@@ -15,7 +15,7 @@ public class ItemLevelState extends DiscountLevelState{
         this.itemID = itemID;
     }
     @Override
-    public double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) throws MarketException {
+    public double calculateDiscount(ShoppingBasket shoppingBasket, double percentageOfDiscount) throws MarketException {
         double price = shoppingBasket.getPrice();
         Item item=Market.getInstance().getItemByID(itemID);
         Map<java.lang.Integer,Double> items= shoppingBasket.getItems();

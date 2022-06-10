@@ -1,14 +1,14 @@
 package com.example.server.serviceLayer.Requests;
 
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.PurchasePolicyTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
 
 public class AddPurchasePolicyToShopRequest {
 
-    private PurchasePolicyTypeFacade purchasePolicyTypeFacade;
+    private PurchasePolicyTypeWrapper purchasePolicyTypeFacade;
     private String shopName;
     private String visitorName;
 
-    public AddPurchasePolicyToShopRequest(PurchasePolicyTypeFacade purchasePolicyTypeFacade, String shopName, String visitorName) {
+    public AddPurchasePolicyToShopRequest(PurchasePolicyTypeWrapper purchasePolicyTypeFacade, String shopName, String visitorName) {
         this.purchasePolicyTypeFacade = purchasePolicyTypeFacade;
         this.shopName = shopName;
         this.visitorName = visitorName;
@@ -16,11 +16,11 @@ public class AddPurchasePolicyToShopRequest {
 
     AddPurchasePolicyToShopRequest(){}
 
-    public PurchasePolicyTypeFacade getPolicy() {
+    public PurchasePolicyTypeWrapper getPolicy() {
         return purchasePolicyTypeFacade;
     }
 
-    public void setPolicy(PurchasePolicyTypeFacade purchasePolicyTypeFacade) {
+    public void setPolicy(PurchasePolicyTypeWrapper purchasePolicyTypeFacade) {
         this.purchasePolicyTypeFacade = purchasePolicyTypeFacade;
     }
 

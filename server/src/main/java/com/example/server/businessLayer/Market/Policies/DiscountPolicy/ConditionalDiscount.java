@@ -6,15 +6,13 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
-
-import java.lang.constant.Constable;
 
 public class ConditionalDiscount extends DiscountType{
     private Condition condition;
 
-    public ConditionalDiscount(int percentageOfDiscount, DiscountLevelState discountLevelState, Condition condition) {
+    public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Condition condition) {
         super ( percentageOfDiscount, discountLevelState );
         this.condition = condition;
     }
@@ -58,7 +56,7 @@ public class ConditionalDiscount extends DiscountType{
     }
 
     @Override
-    public DiscountTypeFacade visitToFacade(MaxCompositeDiscountFacade discountFacade) {
+    public DiscountTypeFacade visitToFacade(MaxCompositeDiscountTypeFacade discountFacade) {
         return null;
     }
 }
