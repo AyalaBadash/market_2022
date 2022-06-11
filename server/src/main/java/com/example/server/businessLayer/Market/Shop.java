@@ -40,13 +40,10 @@ public class Shop implements IHistory {
     @Column(name="amount")
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
-    @Transient
-    private static ItemRepository itemRepository;
+
 
     @Transient
     private static ShopRep shopRep;
-    @Transient
-    private DalShop dalShop;
     @Transient
     Member shopFounder;//todo
     private int rnk;
@@ -111,7 +108,7 @@ public class Shop implements IHistory {
 
     public void deleteItem(Item item) {
         itemMap.remove( item.getID() );
-        getDalObject().removeItemFromShop(item.toDalObject());
+//        getDalObject().removeItemFromShop(item.toDalObject()); //todo
     }
     /*
     private void addItem(Item item) throws MarketException {
@@ -431,7 +428,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
             itemMap.put( id, addedItem );
         }
         itemsCurrentAmount.put ( id, amount );
-        itemRepository.save(addedItem.toDalObject());
+//        itemRepository.save(addedItem.toDalObject()); //todo
         shopRep.save(this);
         return addedItem;
     }
@@ -460,7 +457,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         if (item == null)
             throw new MarketException ( "item does not exist in shop" );
         item.setInfo(info);
-        itemRepository.save(item.toDalObject());
+//        itemRepository.save(item.toDalObject()); //todo
     }
 
 //    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
@@ -552,10 +549,6 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         shopOwners.remove(firedAppointed);
     }
 
-    protected static void setItemRepository(ItemRepository itemRep){
-        itemRepository = itemRep;
-    }
-
 
 
     public void addDiscountToShop(String visitorName, DiscountType discountType) throws MarketException {
@@ -567,17 +560,6 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
     public boolean hasItem(Item item) {
         return itemMap.get(item.getID()) != null;
     }
-        public DalShop getDalObject() {
-//            if (dalShop==null) {
-                Map<DalItem, Double> dalItemAmounts = new HashMap<>();
-                for (Map.Entry<Integer, Item> entry : itemMap.entrySet()) {
-                    dalItemAmounts.put(entry.getValue().toDalObject(), itemsCurrentAmount.get(entry.getKey()));
-                }
-                DalShop res = new DalShop(this.shopName, dalItemAmounts, this.closed, this.rnk, this.rnkers);
-                this.dalShop = res;
-//            }
-            return this.dalShop;
-        }
 
         public static void setShopRep(ShopRep shopRepToSet){
             shopRep = shopRepToSet;

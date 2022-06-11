@@ -49,31 +49,13 @@ public class Market {
     Map<String, Integer> numOfAcqsPerShop;
 
     @Autowired
-    private AcquisitionHistoryRepository acquisitionHistoryRepositorya;
-    @Autowired
-    private AcquisitionRepository acquisitionRepository;
-    @Autowired
-    private ItemAcqRepository itemAcqRepository;
-    @Autowired
-    private ItemRepository itemRepository;
-    @Autowired
-    private ManagerAppRepository managerAppRepository;
-    @Autowired
-    private MarketRepository marketRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private OwnerAppRepository ownerAppRepository;
-    @Autowired
-    private ShoppingBasketRepository shoppingBasketRepository;
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
-    @Autowired
-    private ShopRepository shopRepository;
-    @Autowired
     private ItemRep itemRep;
     @Autowired
     private ShopRep shopRep;
+    @Autowired
+    private ShoppingCartRep shoppingCartRep;
+    @Autowired
+    private ShoppingBasketRep shoppingBasketRep;
 
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -119,19 +101,17 @@ public class Market {
         instance.paymentServiceProxy = paymentServiceProxy1;
         instance.supplyServiceProxy = supplyServiceProxy1;
         notificationHandler=new NotificationHandler(publisher);
-        marketRepository.save(this.toDalObject());
+//        marketRepository.save(this.toDalObject()); //TODO
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
     }
 
     private void initRepositories(){
-        UserController.setMemberRepository(memberRepository);
-        Shop.setItemRepository(itemRepository);
-        ShoppingCart.setShoppingCartRepository(shoppingCartRepository);
-        ShoppingBasket.setShoppingBasketRepository(shoppingBasketRepository);
-        ShoppingCart.setShoppingBasketRepository(shoppingBasketRepository);
         Item.setItemRep(itemRep);
         Shop.setShopRep(shopRep);
+        ShoppingBasket.setShoppingBasketRep(shoppingBasketRep);
+        ShoppingCart.setShoppingCartRep(shoppingCartRep);
+        ShoppingCart.setShoppingBasketRep(shoppingBasketRep);
     }
 
     //Loading systems configurations from file.
@@ -166,7 +146,6 @@ public class Market {
         instance.systemManagerName = userName;
 
 
-        Shop.setItemRepository(itemRepository);
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -544,7 +523,7 @@ public class Market {
         }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
             shops.remove(shopName);
-            shopRepository.delete(shops.get(shopName).getDalObject()); //TODO check
+//            shopRepository.delete(shops.get(shopName).getDalObject()); //TODO check
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
@@ -586,7 +565,7 @@ public class Market {
         Item itemToDelete = shop.getItemMap().get(itemID);
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         shop.deleteItem(itemToDelete);
-        shopRepository.save(shop.getDalObject());
+//        shopRepository.save(shop.getDalObject()); //todo
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
@@ -607,7 +586,7 @@ public class Market {
         try {
             Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment());
             updateMarketOnAddedItem(addedItem, shopName);
-            shopRepository.save(shop.getDalObject());
+//            shopRepository.save(shop.getDalObject()); //todo
             EventLog.getInstance().Log("Item added to shop " + shopName);
             return shop;
         } catch (MarketException e) {
@@ -637,7 +616,7 @@ public class Market {
             throw new MarketException("shop does not exist in system");
         }
         shop.setItemAmount(shopOwnerName, item.getID(), amount);
-        shopRepository.save(shop.getDalObject());
+//        shopRepository.save(shop.getDalObject()); //todo
         EventLog.getInstance().Log("Item " + item.getName() + " amount has been updated.");
     }
 
@@ -714,7 +693,7 @@ public class Market {
                     if (shopName == null || shopName.length() == 0)
                         throw new MarketException("shop name length has to be positive");
                     Shop shop = new Shop(shopName, curMember);
-                    shopRepository.save(shop.getDalObject());
+//                    shopRepository.save(shop.getDalObject()); //todo
 //                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
 //                shop.addEmployee(shopFounder);
                     shops.put(shopName, shop);
@@ -863,7 +842,7 @@ public class Market {
         if (shop == null)
             throw new MarketException("shop does not exist in the market");
         shop.editItem(newItem, id);
-        itemRepository.save(newItem.toDalObject());
+//        itemRepository.save(newItem.toDalObject()); //todo
     }
 
     public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,

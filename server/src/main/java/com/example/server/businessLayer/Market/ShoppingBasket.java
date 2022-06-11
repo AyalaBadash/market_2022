@@ -4,20 +4,27 @@ import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.entities.DalItem;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
+import com.example.server.dataLayer.repositories.ShoppingBasketRep;
 import com.example.server.dataLayer.repositories.ShoppingBasketRepository;
-import com.example.server.dataLayer.repositories.ShoppingCartRepository;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-public class ShoppingBasket implements IHistory {
+@Entity
+@Table(name = "shopping_baskets_new")
+public class ShoppingBasket implements IHistory , Serializable {
+    @Id
+    @GeneratedValue
+    private long basket_id;
+    @Transient
     private Map<java.lang.Integer, Double> items;//<Item,quantity>
+    @Transient
     private Map<java.lang.Integer, Item> itemMap;
     private double price;
-
-    private static ShoppingBasketRepository shoppingBasketRepository;
+    private static ShoppingBasketRep shoppingBasketRep;
 
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
@@ -28,6 +35,7 @@ public class ShoppingBasket implements IHistory {
         this.items = items;
         this.itemMap = itemMap;
         this.price = price;
+        shoppingBasketRep.save(this);
     }
 
     @Override
@@ -95,6 +103,7 @@ public class ShoppingBasket implements IHistory {
         else
             amount += items.get(item.getID());
         items.put(item.getID(),amount);
+        shoppingBasketRep.save(this);
 }
 
     public void removeItem(Item item) {
@@ -130,7 +139,15 @@ public class ShoppingBasket implements IHistory {
         return new DalShoppingBasket(this.price,dalItems, shop.getShopName());
     }
 
-    public static void setShoppingBasketRepository(ShoppingBasketRepository sbRepository){
-         shoppingBasketRepository = sbRepository;
+    public static void setShoppingBasketRep(ShoppingBasketRep sbRepositoryToSet){
+        shoppingBasketRep = sbRepositoryToSet;
+    }
+
+    public long getBasket_id() {
+        return basket_id;
+    }
+
+    public void setBasket_id(long id) {
+        this.basket_id = id;
     }
 }

@@ -7,35 +7,40 @@ import com.example.server.dataLayer.entities.DalItem;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
+import com.example.server.dataLayer.repositories.ShoppingBasketRep;
 import com.example.server.dataLayer.repositories.ShoppingBasketRepository;
+import com.example.server.dataLayer.repositories.ShoppingCartRep;
 import com.example.server.dataLayer.repositories.ShoppingCartRepository;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+@Entity
 public class ShoppingCart implements IHistory {
-
+    @Id
+    @GeneratedValue
+    private int id;
+    @ManyToMany (cascade = CascadeType.ALL)
+    @JoinTable (name = "baskets", joinColumns = {@JoinColumn(name = "shopping_cart",
+        referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "basket", referencedColumnName = "basket_id")})
+    @MapKeyJoinColumn (name = "shop_na")
     private Map<Shop, ShoppingBasket> cart; // <Shop ,basket for the shop>
     private double currentPrice;
 
-    private static ShoppingCartRepository shoppingCartRepository;
-
-    private static ShoppingBasketRepository shoppingBasketRepository;
-
-    private DalShoppingCart dalShoppingCart;
-
-    private int id;
+    private static ShoppingBasketRep shoppingBasketRep;
+    private static ShoppingCartRep shoppingCartRep;
 
     public ShoppingCart(int id) {
         this.currentPrice = 0;
         this.cart = new ConcurrentHashMap<>();
     }
     public ShoppingCart(){}
-    public ShoppingCart(int id,Map<Shop,ShoppingBasket> cart , double currentPrice){
-        this.id = id;
+    public ShoppingCart(int id,Map<Shop,ShoppingBasket> cart , double currentPrice){ //todo remove id?
+//        this.id = id;
         this.cart = cart;
         this.currentPrice = currentPrice;
     }
@@ -115,8 +120,7 @@ public class ShoppingCart implements IHistory {
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addItem ( item, amount );
-//        shoppingBasketRepository.save(shoppingBasket.toDalObject());
-        shoppingCartRepository.save(this.toDalObject());
+        shoppingCartRep.save(this);
     }
 
     public void removeItem(Shop shop, Item item) throws MarketException {
@@ -185,15 +189,21 @@ public class ShoppingCart implements IHistory {
         return false;
     }
 
-    public static void setShoppingCartRepository(ShoppingCartRepository scRepository){
-        shoppingCartRepository = scRepository;
+    public static void setShoppingCartRep(ShoppingCartRep scRepository){
+        shoppingCartRep = scRepository;
     }
 
-    public static void setShoppingBasketRepository(ShoppingBasketRepository sbRepository){
-        shoppingBasketRepository = sbRepository;
+    public static void setShoppingBasketRep(ShoppingBasketRep sbRepository){
+        shoppingBasketRep = sbRepository;
     }
 
     public int getId() {
         return id;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
 }
