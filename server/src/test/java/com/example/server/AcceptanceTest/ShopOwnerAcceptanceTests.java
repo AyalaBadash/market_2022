@@ -15,12 +15,9 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchaseP
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.ItemPurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.PurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
-import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
+import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
-import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
-import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
-import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.ResponseT;
 import org.junit.jupiter.api.*;
@@ -38,7 +35,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     static private String steakInfo;
 
     static private DiscountType simpleDiscountYogurt;
-    static private DiscountType composite;
+    static private DiscountType maxCompositeDiscount;
     // atleast 1 of yogurt's category
     static private PurchasePolicyType atLeastOnePolicy;
     // atmost 1 yogurt (item), atleast 1 of steak category.
@@ -60,9 +57,9 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         List<DiscountType> discountTypeList = new ArrayList<>();
         discountTypeList.add(simpleDiscount);
         discountTypeList.add(simpleDiscount2);
-        DiscountType condDisc = new ConditionalDiscount(10, new ShopLevelState(), new PriceCondition(applePrice));
+        DiscountType condDisc = new ConditionalDiscount(10, new ShopLevelState(), new PriceCondition(2 * applePrice));
         discountTypeList.add(condDisc);
-        composite = new MaxCompositeDiscount(discountTypeList);
+        maxCompositeDiscount = new MaxCompositeDiscount(discountTypeList);
         // simple
         simpleDiscountYogurt = new SimpleDiscount(50, new ShopLevelState());
 
@@ -351,7 +348,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     @DisplayName("add composite discount")
     @Order(5)
     public void addCompositeDiscount() {
-        DiscountTypeWrapper discountTypeWrapper = DiscountTypeWrapper.createDiscountTypeWrapper(composite);
+        DiscountTypeWrapper discountTypeWrapper = DiscountTypeWrapper.createDiscountTypeWrapper(maxCompositeDiscount);
         ResponseT<List<DiscountTypeWrapper>> discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
         assert !discounts.isErrorOccurred();
         int curNum = discounts.getValue().size();
@@ -369,14 +366,14 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         ResponseT<List<DiscountTypeWrapper>> discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
         assert !discounts.isErrorOccurred();
         int currAmount = discounts.getValue().size();
-        Response response = this.removeDiscountFromShop(DiscountTypeWrapper.createDiscountTypeWrapper(this.composite), shopName
+        Response response = this.removeDiscountFromShop(DiscountTypeWrapper.createDiscountTypeWrapper(this.maxCompositeDiscount), shopName
                 , shopOwnerName);
         assert !response.isErrorOccurred();
         discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
         assert !discounts.isErrorOccurred();
         assert currAmount - 1 == discounts.getValue().size();
         //return to prev state
-        Response returnState = this.addDiscountToShop(DiscountTypeWrapper.createDiscountTypeWrapper(this.composite), shopName
+        Response returnState = this.addDiscountToShop(DiscountTypeWrapper.createDiscountTypeWrapper(this.maxCompositeDiscount), shopName
                 , shopOwnerName);
         assert !returnState.isErrorOccurred();
         discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
@@ -391,7 +388,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         // price is already 50% on yogurt by discount
         try {
             VisitorFacade visitor = guestLogin();
-            addItemToCart(yogurt, 4, shopName, visitor.getName());
+            addItemToCart(yogurt, 4,  visitor.getName());
             ResponseT<ShoppingCartFacade> cart = this.showShoppingCart(visitor.getName());
             double expected = yogurt.getPrice() * 2;
             assert expected == cart.getValue().getPrice();
@@ -458,7 +455,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         // already set as demanding for atleast one
         try {
             VisitorFacade visitor = guestLogin();
-            addItemToCart(apple, 1, shopName, visitor.getName());
+            addItemToCart(apple, 1,  visitor.getName());
             ResponseT<ShoppingCartFacade> cart = showShoppingCart(visitor.getName());
             // check it doesn't prevent from adding to cart'
             assert cart.getValue().getCart().size() > 0;
@@ -477,7 +474,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         // already set as demanding for atleast one
         try {
             VisitorFacade visitor = guestLogin();
-            addItemToCart(yogurt, 1, shopName, visitor.getName());
+            addItemToCart(yogurt, 1,  visitor.getName());
             ResponseT<ShoppingCartFacade> cart = showShoppingCart(visitor.getName());
             // check it doesn't prevent from adding to cart'
             assert cart.getValue().getCart().size() > 0;
@@ -489,5 +486,67 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         }
     }
 
+    @Test
+    @DisplayName("check override works")
+    @Order(13)
+    public void overridePolicy() {
+        try {
+            // setting new shop
+            VisitorFacade visitor = guestLogin();
+            String memberName = "idoPolicyTest";
+            String password = "1";
+            register(memberName, password);
+            ResponseT<List<String>> questions = memberLogin(memberName, password);
+            MemberFacade member = validateSecurityQuestions(memberName, new ArrayList<>(), visitor.getName()).getValue();
+            String shopName = "policyTest";
+            openShop(memberName, shopName);
+            addItemToShop(memberName, "computer", 50, Item.Category.electricity,"good",new ArrayList<>(),3,shopName);
+            String kotegName = "Koteg";
+            addItemToShop(memberName, kotegName, 30, Item.Category.general,"good",new ArrayList<>(),3,shopName);
+            ItemFacade koteg = searchProductByName(kotegName).get(0);
+            CategoryPurchasePolicyLevelState categoryPurchasePolicyLevelState = new CategoryPurchasePolicyLevelState(Item.Category.electricity);
+            AtLeastPurchasePolicyType atLeastPurchasePolicyType = new AtLeastPurchasePolicyType(categoryPurchasePolicyLevelState, 1);
+            // add simple  policy
+            addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(atLeastPurchasePolicyType),shopName, memberName);
+            ResponseT<List<PurchasePolicyTypeWrapper>> purchasePoliciesOfShop = getPurchasePoliciesOfShop(memberName, shopName);
+            assert purchasePoliciesOfShop.getValue().size() == 1;
+            // create composite policy
+            PurchasePolicyLevelState kotegAtMost = new ItemPurchasePolicyLevelState(koteg.getId());
+            PurchasePolicyType atMostPolicy = new AtMostPurchasePolicyType(kotegAtMost, 1);
+            List<PurchasePolicyType> policies = new ArrayList<>();
+            policies.add(atLeastPurchasePolicyType);
+            policies.add(atMostPolicy);
+            PurchasePolicyType composite = new OrCompositePurchasePolicyType(policies);
+            // add composite policy
+            addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(composite),shopName, memberName);
+            purchasePoliciesOfShop = getPurchasePoliciesOfShop(memberName, shopName);
+            assert purchasePoliciesOfShop.getValue().size() == 1;
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("check discount condition works")
+    @Order(14)
+    public void conditionalDiscountTest(){
+        // remove the simple discount, stays only with the composite discount
+        try {
+            removeDiscountFromShop(DiscountTypeWrapper.createDiscountTypeWrapper(simpleDiscountYogurt), shopName, shopOwnerName);
+            VisitorFacade visitor = guestLogin();
+            addItemToCart(apple, 1,  visitor.getName());
+            ShoppingCartFacade cart = showShoppingCart(visitor.getName()).getValue();
+            // check whether condition discount didn't count (must have atleast 2 apples)
+            assert cart.getPrice() == applePrice;
+            addItemToCart(apple, 2,  visitor.getName());
+            cart = showShoppingCart(visitor.getName()).getValue();
+            assert cart.getPrice() < applePrice * 3;
+            // return to base state
+            Response response = addDiscountToShop(DiscountTypeWrapper.createDiscountTypeWrapper(simpleDiscountYogurt), shopName, shopOwnerName);
+            assert !response.isErrorOccurred();
+        } catch (Exception e) {
+            assert false;
+        }
+    }
 
 }
