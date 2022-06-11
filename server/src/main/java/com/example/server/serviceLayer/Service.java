@@ -303,7 +303,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeShopOwnerAppointment")
     @CrossOrigin
-    public Response removeShopOwnerAppointment(@RequestBody removeAppointmentRequest request) {
+    public Response removeShopOwnerAppointment(@RequestBody RemoveAppointmentRequest request) {
         return marketService.removeShopOwnerAppointment(request.getBoss(), request.getFiredAppointed(), request.getShopName());
     }
 
