@@ -240,7 +240,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             VisitorFacade visitor = guestLogin();
             List<ItemFacade> res = searchProductByName("milk");
             ItemFacade milk = res.get(1);
-            Response response = addItemToCart(milk, 3, shopName, visitor.getName());
+            Response response = addItemToCart(milk, 3,  visitor.getName());
             assert !response.isErrorOccurred();
             //check shopping basket includes only the milk
             visitor = getVisitor(visitor.getName());
@@ -255,7 +255,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
                 assert entry.getValue().getItems().get(milk.getId()).equals(3.0);
             }
             // checks adding item
-            response = addItemToCart(milk, 2, shopName, visitor.getName());
+            response = addItemToCart(milk, 2,  visitor.getName());
             visitor = getVisitor(visitor.getName());
             assert !response.isErrorOccurred();
             for(Map.Entry<String, ShoppingBasketFacade> entry:visitor.getCart().getCart().entrySet()){
@@ -273,7 +273,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             VisitorFacade visitor = guestLogin();
             List<ItemFacade> res = searchProductByName("milk");
             ItemFacade milk = res.get(0);
-            Response response = addItemToCart(milk, 3, shopName, visitor.getName());
+            Response response = addItemToCart(milk, 3,  visitor.getName());
             assert !response.isErrorOccurred();
             visitor = getVisitor(visitor.getName());
             assert !visitor.getCart().getCart().isEmpty();
@@ -292,7 +292,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             VisitorFacade visitor = guestLogin();
             List<ItemFacade> res = searchProductByName("milk");
             ItemFacade milk = res.get(0);
-            Response response = addItemToCart(milk, 0, shopName, visitor.getName());
+            Response response = addItemToCart(milk, 0,  visitor.getName());
             assert response.isErrorOccurred();
             visitor = getVisitor(visitor.getName());
             assert visitor.getCart().getCart().isEmpty();
@@ -312,7 +312,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             ItemFacade bamba = res.get(0);
             Double itemAmount = shop.getItemsCurrentAmount().get(bamba.getId());
             double buyingAmount = itemAmount - 1;
-            Response response = addItemToCart(bamba, buyingAmount, shopName, visitor.getName());
+            Response response = addItemToCart(bamba, buyingAmount,  visitor.getName());
             Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             assert !result.isErrorOccurred();
             shop = getShopInfo(shopOwnerName, shopName).getValue();
@@ -335,7 +335,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             ItemFacade milk = res.get(1);
             Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
             double buyingAmount = itemAmount + 1;
-            Response response = addItemToCart(milk, buyingAmount, shopName, visitor.getName());
+            Response response = addItemToCart(milk, buyingAmount,  visitor.getName());
             // add not existing item shouldn't fail
             assert !response.isErrorOccurred();
             Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
@@ -359,7 +359,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             ItemFacade bamba = res.get(0);
             Double itemAmount = shop.getItemsCurrentAmount().get(bamba.getId());
             double buyingAmount = itemAmount;
-            Response response = addItemToCart(bamba, buyingAmount, shopName, visitor.getName());
+            Response response = addItemToCart(bamba, buyingAmount,  visitor.getName());
             // add not existing item shouldn't fail
             assert !response.isErrorOccurred();
             Double amount = shop.getItemsCurrentAmount().get(bamba.getId());

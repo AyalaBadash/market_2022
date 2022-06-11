@@ -109,7 +109,7 @@ public class Service implements IService {
     @RequestMapping(value = "/addItemToShoppingCart")
     @CrossOrigin
     public Response addItemToShoppingCart(@RequestBody AddItemToShoppingCartRequest request) {
-        return purchaseService.addItemToShoppingCart(request.getItemToInsert(), request.getAmount(), request.getShopName(), request.getVisitorName());
+        return purchaseService.addItemToShoppingCart(request.getItemToInsert(), request.getAmount(), request.getVisitorName());
     }
     @Override
     @RequestMapping(value = "/showShoppingCart")

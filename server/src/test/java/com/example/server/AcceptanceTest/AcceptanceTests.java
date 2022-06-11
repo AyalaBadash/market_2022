@@ -108,8 +108,8 @@ public class AcceptanceTests {
         return result;
     }
 
-    protected Response addItemToCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws Exception {
-        AddItemToShoppingCartRequest request = new AddItemToShoppingCartRequest(itemToInsert, amount, shopName, visitorName);
+    protected Response addItemToCart(ItemFacade itemToInsert, double amount, String visitorName) throws Exception {
+        AddItemToShoppingCartRequest request = new AddItemToShoppingCartRequest(itemToInsert, amount,  visitorName);
         Response result = Service.getInstance().addItemToShoppingCart(request);
         return result;
     }

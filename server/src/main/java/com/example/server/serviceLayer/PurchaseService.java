@@ -24,7 +24,7 @@ public class PurchaseService {
         return purchaseService;
     }
 
-    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) {
+    public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String visitorName) {
         try {
             Item item = itemToInsert.toBusinessObject();
             market.addItemToShoppingCart(item, amount, visitorName);
