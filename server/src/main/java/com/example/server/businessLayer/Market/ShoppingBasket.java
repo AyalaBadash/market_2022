@@ -105,7 +105,7 @@ public class ShoppingBasket implements IHistory , Serializable {
         else
             amount += items.get(item.getID());
         items.put(item.getID(),amount);
-        shoppingBasketRep.save(this);
+//        shoppingBasketRep.save(this);
 }
 
     public void removeItem(Item item) {

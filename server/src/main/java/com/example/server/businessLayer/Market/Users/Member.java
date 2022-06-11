@@ -36,6 +36,7 @@ public class Member implements IHistory {
             throw new MarketException ( "cannot create a member with a username starts with @" );
         this.name = name;
         myCart = new ShoppingCart();
+        ShoppingCart.getShoppingCartRep().save(myCart);
         appointedByMe = new CopyOnWriteArrayList<>();
         myAppointments = new CopyOnWriteArrayList<>();
         purchaseHistory = new ArrayList<> (  );
@@ -50,7 +51,8 @@ public class Member implements IHistory {
         this.purchaseHistory = purchaseHistory;
     }
 
-    public Member(){}
+    public Member(){
+    }
 
 
     public String getName() {

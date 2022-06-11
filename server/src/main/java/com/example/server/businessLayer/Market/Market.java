@@ -894,7 +894,6 @@ public class Market {
     }
 
     private ShoppingCart validateCart(ShoppingCart currentCart) {
-        ShoppingCart res = new ShoppingCart();
         double cartPrice = 0;
         Map<Shop, ShoppingBasket> baskets = currentCart.getCart();
         for (Map.Entry<Shop, ShoppingBasket> basketEntry : baskets.entrySet()) {

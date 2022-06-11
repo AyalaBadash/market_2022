@@ -32,7 +32,8 @@ public class ShoppingCart implements IHistory {
     public ShoppingCart() {
         this.currentPrice = 0;
         this.cart = new ConcurrentHashMap<>();
-        shoppingCartRep.save(this);
+//        shoppingCartRep.save(this);
+        System.out.println("hi from shopping cart");
     }
     public ShoppingCart(Map<Shop,ShoppingBasket> cart , double currentPrice){
         this.cart = cart;
@@ -199,5 +200,7 @@ public class ShoppingCart implements IHistory {
         this.id = id;
     }
 
-
+    public static ShoppingCartRep getShoppingCartRep() {
+        return shoppingCartRep;
+    }
 }
