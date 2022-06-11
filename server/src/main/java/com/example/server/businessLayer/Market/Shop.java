@@ -10,9 +10,6 @@ import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
-import com.example.server.dataLayer.entities.DalItem;
-import com.example.server.dataLayer.entities.DalShop;
-import com.example.server.dataLayer.repositories.ItemRepository;
 import com.example.server.dataLayer.repositories.ShopRep;
 
 import javax.persistence.*;
@@ -35,7 +32,7 @@ public class Shop implements IHistory {
     @Transient //TODO
     private Map<String, Appointment> shopOwners;     //<name, appointment>
     @ElementCollection
-    @CollectionTable(name = "item_amounts")
+    @CollectionTable(name = "items_in_shop")
     @MapKeyColumn(name="item_id")
     @Column(name="amount")
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
@@ -50,7 +47,7 @@ public class Shop implements IHistory {
     private int rnkers;
     @ElementCollection
     @Column (name = "purchase_history")
-    @CollectionTable (name = "purchase_histories_new")
+    @CollectionTable (name = "purchase_histories")
     private List<StringBuilder> purchaseHistory;
     //TODO getter,setter,constructor
     @Transient

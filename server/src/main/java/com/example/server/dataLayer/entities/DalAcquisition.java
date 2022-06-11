@@ -3,7 +3,6 @@ package com.example.server.dataLayer.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
 @Table(name = "acquisitions")
 public class DalAcquisition implements Serializable {
     @Id

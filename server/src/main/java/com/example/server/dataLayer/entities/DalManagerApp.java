@@ -2,7 +2,6 @@ package com.example.server.dataLayer.entities;
 
 import javax.persistence.*;
 
-@Entity
 @Table(name = "manager_appointments")
 @IdClass(AppointmentID.class)
 public class DalManagerApp extends DalAppointment{

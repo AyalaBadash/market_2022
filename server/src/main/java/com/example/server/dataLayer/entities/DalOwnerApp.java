@@ -5,7 +5,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
-@Entity
 @Table(name = "owner_appointments")
 @IdClass(AppointmentID.class)
 public class DalOwnerApp extends DalAppointment{

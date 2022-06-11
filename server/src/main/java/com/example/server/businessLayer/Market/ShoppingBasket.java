@@ -5,7 +5,6 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.entities.DalItem;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.repositories.ShoppingBasketRep;
-import com.example.server.dataLayer.repositories.ShoppingBasketRepository;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 @Entity
-@Table(name = "shopping_baskets_new")
+@Table(name = "shopping_baskets")
 public class ShoppingBasket implements IHistory , Serializable {
     @Id
     @GeneratedValue

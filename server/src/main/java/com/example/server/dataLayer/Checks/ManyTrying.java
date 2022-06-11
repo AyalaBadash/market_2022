@@ -3,7 +3,7 @@ package com.example.server.dataLayer.Checks;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
+
 public class ManyTrying {
     @Id
     @GeneratedValue

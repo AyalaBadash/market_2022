@@ -5,7 +5,6 @@ import com.example.server.businessLayer.Market.Shop;
 import javax.persistence.*;
 import java.util.Map;
 
-@Entity
 @Table (name = "shopping_baskets")
 public class DalShoppingBasket {
     @Id

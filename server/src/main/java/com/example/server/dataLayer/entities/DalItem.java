@@ -3,7 +3,6 @@ package com.example.server.dataLayer.entities;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
 @Table (name = "items")
 public class DalItem {
     @Id

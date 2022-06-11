@@ -1,20 +1,15 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Publisher.Publisher;
-import com.example.server.dataLayer.entities.DalItem;
 //import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.dataLayer.repositories.ShoppingBasketRep;
-import com.example.server.dataLayer.repositories.ShoppingBasketRepository;
 import com.example.server.dataLayer.repositories.ShoppingCartRep;
-import com.example.server.dataLayer.repositories.ShoppingCartRepository;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,10 +19,10 @@ public class ShoppingCart implements IHistory {
     @GeneratedValue
     private int id;
     @ManyToMany (cascade = CascadeType.ALL)
-    @JoinTable (name = "baskets", joinColumns = {@JoinColumn(name = "shopping_cart",
+    @JoinTable (name = "baskets_in_cart", joinColumns = {@JoinColumn(name = "shopping_cart_id",
         referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "basket", referencedColumnName = "basket_id")})
-    @MapKeyJoinColumn (name = "shop_na")
+        inverseJoinColumns = {@JoinColumn(name = "basket_id", referencedColumnName = "basket_id")})
+    @MapKeyJoinColumn (name = "shop_name")
     private Map<Shop, ShoppingBasket> cart; // <Shop ,basket for the shop>
     private double currentPrice;
 

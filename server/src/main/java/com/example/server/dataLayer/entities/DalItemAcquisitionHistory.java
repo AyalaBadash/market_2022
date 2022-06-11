@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Entity
 @Table(name="Item_Acquisitions_History")
 public class DalItemAcquisitionHistory implements Serializable {
     @Id

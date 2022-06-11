@@ -28,10 +28,6 @@ public class Service implements IService {
     MarketService marketService;
     PurchaseService purchaseService;
     UserService userService;
-    @Autowired
-    private ItemRepository itemRepository;
-    @Autowired
-    private OwnerAppRepository repo;
 
     protected Service() {
 //        marketService = MarketService.getInstance();

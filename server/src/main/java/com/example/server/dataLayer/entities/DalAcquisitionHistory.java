@@ -7,7 +7,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
 @Table(name = "Acquisitions_History")
 public class DalAcquisitionHistory {
 
