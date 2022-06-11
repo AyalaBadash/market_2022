@@ -104,7 +104,7 @@ public class RobustnessTests {
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = itemAmount;
-            purchaseService.addItemToShoppingCart(chocolate, buyingAmount,shop.getValue().getShopName(), visitor.getValue().getName());
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
             assert true;
         } catch (Exception e) {
@@ -122,7 +122,7 @@ public class RobustnessTests {
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = itemAmount;
-            purchaseService.addItemToShoppingCart(chocolate, buyingAmount,shop.getValue().getShopName(), visitor.getValue().getName());
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
             assert true;
         } catch (Exception e) {
@@ -140,7 +140,7 @@ public class RobustnessTests {
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = itemAmount;
-            purchaseService.addItemToShoppingCart(chocolate, buyingAmount,shop.getValue().getShopName(), visitor.getValue().getName());
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
             assert true;
         } catch (Exception e) {

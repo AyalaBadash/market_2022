@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 public class SystemAcceptanceTests extends AcceptanceTests {
 
-    static AcceptanceTestService config = new AcceptanceTestService();
 
     @BeforeAll
     public static void setup() {
@@ -42,7 +41,7 @@ public class SystemAcceptanceTests extends AcceptanceTests {
     }
 
     public static Response initMarket(){
-        InitMarketRequest request = new InitMarketRequest(config.systemManagerName, config.systemManagerPassword);
+        InitMarketRequest request = new InitMarketRequest(systemManagerName, systemManagerPassword);
         String methodCall = "/firstInitMarket";
         Response res = Service.getInstance().firstInitMarket(request);
         return res;

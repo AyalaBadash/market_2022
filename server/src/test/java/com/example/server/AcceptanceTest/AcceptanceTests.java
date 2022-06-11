@@ -1,13 +1,11 @@
 package com.example.server.AcceptanceTest;
 
 import com.example.server.businessLayer.Payment.CreditCard;
-import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyLevelStateWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
 import com.example.server.serviceLayer.Requests.*;
 import com.example.server.serviceLayer.Response;
@@ -15,17 +13,17 @@ import com.example.server.serviceLayer.ResponseT;
 import com.example.server.serviceLayer.Service;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AcceptanceTests {
 
+    static String systemManagerName = "ido";
+    static String systemManagerPassword = "1234Ido";
     static String shopOwnerName = "shaked";
     static String shopOwnerPassword = "shaked1234";
     static String shopName = "Shufersal";
-    static AcceptanceTestService config = new AcceptanceTestService();
     static Double productAmount;
     static Double productPrice;
     static CreditCard creditCard;
@@ -178,7 +176,7 @@ public class AcceptanceTests {
     }
 
     protected static Response initMarket() {
-        InitMarketRequest request = new InitMarketRequest(config.systemManagerName, config.systemManagerPassword);
+        InitMarketRequest request = new InitMarketRequest(systemManagerName, systemManagerPassword);
         Response res = Service.getInstance().firstInitMarket(request);
         return res;
     }
@@ -292,6 +290,12 @@ public class AcceptanceTests {
     protected  ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(String visitorName, String shopName) {
         GetPoliciesRequest request = new GetPoliciesRequest(visitorName, shopName);
         return Service.getInstance().getDiscountTypesOfShop(request);
+    }
+
+
+    public Response removeMember(String manager, String memberToRemove) {
+        RemoveMemberRequest request = new RemoveMemberRequest(manager, memberToRemove);
+        return Service.getInstance().removeMember(request);
     }
 
 

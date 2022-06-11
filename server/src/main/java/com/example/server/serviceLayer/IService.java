@@ -297,7 +297,7 @@ public interface IService {
      * @param request
      * @return
      */
-    public Response removeMember(removeMemberRequest request);
+    public Response removeMember(RemoveMemberRequest request);
 
     /**
      *

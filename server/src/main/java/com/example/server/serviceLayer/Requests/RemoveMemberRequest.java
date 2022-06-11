@@ -1,14 +1,14 @@
 package com.example.server.serviceLayer.Requests;
 
-public class removeMemberRequest {
+public class RemoveMemberRequest {
     String manager;
     String MemberToRemove;
 
-    public removeMemberRequest(String manager, String memberToRemove) {
+    public RemoveMemberRequest(String manager, String memberToRemove) {
         this.manager = manager;
         MemberToRemove = memberToRemove;
     }
-    public removeMemberRequest(){}
+    public RemoveMemberRequest(){}
 
     public String getManager() {
         return manager;
