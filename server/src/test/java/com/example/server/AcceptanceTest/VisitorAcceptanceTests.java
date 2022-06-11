@@ -19,7 +19,6 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     static String shopOwnerName = "shaked";
     static String shopOwnerPassword = "shaked1234";
     static String shopName = "kolbo";
-    AcceptanceTestService config = new AcceptanceTestService();
     static Double productAmount;
     static Double productPrice;
     static CreditCard creditCard;

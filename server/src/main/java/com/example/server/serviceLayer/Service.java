@@ -310,7 +310,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeMember")
     @CrossOrigin
-    public Response removeMember(@RequestBody removeMemberRequest request) {
+    public Response removeMember(@RequestBody RemoveMemberRequest request) {
         return marketService.removeMember(request.getManager(), request.getMemberToRemove());
     }
 
