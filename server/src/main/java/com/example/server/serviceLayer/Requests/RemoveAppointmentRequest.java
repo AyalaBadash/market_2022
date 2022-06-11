@@ -1,16 +1,16 @@
 package com.example.server.serviceLayer.Requests;
 
-public class removeAppointmentRequest {
+public class RemoveAppointmentRequest {
     String boss;
     String firedAppointed;
     String shopName;
 
 
-    public removeAppointmentRequest(){
+    public RemoveAppointmentRequest(){
 
     }
 
-    public removeAppointmentRequest(String boss, String firedAppointed, String shopName){
+    public RemoveAppointmentRequest(String boss, String firedAppointed, String shopName){
         this.shopName = shopName;
         this.boss = boss;
         this.firedAppointed = firedAppointed;

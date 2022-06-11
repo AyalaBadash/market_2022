@@ -45,7 +45,7 @@ public class Market {
     private SupplyServiceProxy supplyServiceProxy;
     private Publisher publisher;
     private static Market instance;
-    boolean datainitialized = false;
+    boolean dataInitialized = false;
     boolean servicesInitialized = false;
     boolean test= false;
     Map<String, Integer> numOfAcqsPerShop;
@@ -89,7 +89,7 @@ public class Market {
             if (!servicesInitialized) {
                 readConfigurationFile();
             }
-            if (!datainitialized) {
+            if (!dataInitialized) {
                 readInitFile();
             }
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
@@ -125,7 +125,7 @@ public class Market {
             if (!servicesInitialized) {
                 readConfigurationFile(servicesName);
             }
-            if (!datainitialized) {
+            if (!dataInitialized) {
                 readInitFile(dataName);
             }
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
@@ -156,7 +156,7 @@ public class Market {
             if (!servicesInitialized) {
                 readConfigurationFile();
             }
-            if (!datainitialized) {
+            if (!dataInitialized) {
                 readInitFile();
             }
             checkSysteminit();
@@ -193,7 +193,7 @@ public class Market {
             register(userName, password);
             instance.systemManagerName = userName;
         }
-        if (!datainitialized) {
+        if (!dataInitialized) {
             readInitFile();
         }
         checkSysteminit();
@@ -236,7 +236,7 @@ public class Market {
                 setData(vals);
 
             }
-            datainitialized = true;
+            dataInitialized = true;
 
         } catch (Exception e) {
         }
@@ -254,7 +254,7 @@ public class Market {
                 setData(vals);
 
             }
-            datainitialized = true;
+            dataInitialized = true;
         } catch (Exception e) {
         }
     }

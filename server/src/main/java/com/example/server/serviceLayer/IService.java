@@ -290,7 +290,7 @@ public interface IService {
      * @param request
      * @return
      */
-    public Response removeShopOwnerAppointment(removeAppointmentRequest request);
+    public Response removeShopOwnerAppointment(RemoveAppointmentRequest request);
 
     /**
      *

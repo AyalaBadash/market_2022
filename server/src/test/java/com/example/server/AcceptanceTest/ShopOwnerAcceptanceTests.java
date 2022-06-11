@@ -42,6 +42,12 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     // or composite
     static private PurchasePolicyType compositePolicy;
 
+    static boolean setupFailed;
+    static private MemberFacade ownerA;
+    static private MemberFacade ownerB;
+    static private MemberFacade ownerC;
+    static private ShopFacade removingShop;
+
 
     @BeforeAll
     public static void shopSetup() {
@@ -76,6 +82,31 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         policies.add(atLeastOnePolicy2);
         policies.add(atMostPolicy);
         compositePolicy = new OrCompositePurchasePolicyType(policies);
+
+        // REMOVE APPOINTMENTS
+        try {
+            setupFailed = false;
+            String removerA = "removerA";
+            register(removerA, "1");
+            VisitorFacade visitor = guestLogin();
+            ResponseT<List<String>> questions1 = memberLogin(removerA, "1");
+            ownerA = validateSecurityQuestions(removerA, new ArrayList<>(),visitor.getName() ).getValue();
+            String removerB = "removerB";
+            register(removerB, "1");
+            visitor = guestLogin();
+            ResponseT<List<String>> questions2 = memberLogin(removerB, "1");
+            ownerB = validateSecurityQuestions(removerB, new ArrayList<>(), visitor.getName()).getValue();
+            String removerC = "removerC";
+            register(removerC, "1");
+            visitor = guestLogin();
+            ResponseT<List<String>> questions3 = memberLogin(removerC, "1");
+            ownerC = validateSecurityQuestions(removerC, new ArrayList<>(),visitor.getName() ).getValue();
+            String shopName = "removingShop";
+            openShop(removerA, shopName);
+            removingShop = getShopInfo(ownerA.getName(), shopName).getValue();
+        } catch (Exception e) {
+            setupFailed = true;
+        }
     }
 
     @BeforeEach
@@ -388,7 +419,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         // price is already 50% on yogurt by discount
         try {
             VisitorFacade visitor = guestLogin();
-            addItemToCart(yogurt, 4,  visitor.getName());
+            addItemToCart(yogurt, 4, visitor.getName());
             ResponseT<ShoppingCartFacade> cart = this.showShoppingCart(visitor.getName());
             double expected = yogurt.getPrice() * 2;
             assert expected == cart.getValue().getPrice();
@@ -455,7 +486,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         // already set as demanding for atleast one
         try {
             VisitorFacade visitor = guestLogin();
-            addItemToCart(apple, 1,  visitor.getName());
+            addItemToCart(apple, 1, visitor.getName());
             ResponseT<ShoppingCartFacade> cart = showShoppingCart(visitor.getName());
             // check it doesn't prevent from adding to cart'
             assert cart.getValue().getCart().size() > 0;
@@ -474,7 +505,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         // already set as demanding for atleast one
         try {
             VisitorFacade visitor = guestLogin();
-            addItemToCart(yogurt, 1,  visitor.getName());
+            addItemToCart(yogurt, 1, visitor.getName());
             ResponseT<ShoppingCartFacade> cart = showShoppingCart(visitor.getName());
             // check it doesn't prevent from adding to cart'
             assert cart.getValue().getCart().size() > 0;
@@ -500,14 +531,14 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             MemberFacade member = validateSecurityQuestions(memberName, new ArrayList<>(), visitor.getName()).getValue();
             String shopName = "policyTest";
             openShop(memberName, shopName);
-            addItemToShop(memberName, "computer", 50, Item.Category.electricity,"good",new ArrayList<>(),3,shopName);
+            addItemToShop(memberName, "computer", 50, Item.Category.electricity, "good", new ArrayList<>(), 3, shopName);
             String kotegName = "Koteg";
-            addItemToShop(memberName, kotegName, 30, Item.Category.general,"good",new ArrayList<>(),3,shopName);
+            addItemToShop(memberName, kotegName, 30, Item.Category.general, "good", new ArrayList<>(), 3, shopName);
             ItemFacade koteg = searchProductByName(kotegName).get(0);
             CategoryPurchasePolicyLevelState categoryPurchasePolicyLevelState = new CategoryPurchasePolicyLevelState(Item.Category.electricity);
             AtLeastPurchasePolicyType atLeastPurchasePolicyType = new AtLeastPurchasePolicyType(categoryPurchasePolicyLevelState, 1);
             // add simple  policy
-            addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(atLeastPurchasePolicyType),shopName, memberName);
+            addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(atLeastPurchasePolicyType), shopName, memberName);
             ResponseT<List<PurchasePolicyTypeWrapper>> purchasePoliciesOfShop = getPurchasePoliciesOfShop(memberName, shopName);
             assert purchasePoliciesOfShop.getValue().size() == 1;
             // create composite policy
@@ -518,7 +549,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             policies.add(atMostPolicy);
             PurchasePolicyType composite = new OrCompositePurchasePolicyType(policies);
             // add composite policy
-            addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(composite),shopName, memberName);
+            addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(composite), shopName, memberName);
             purchasePoliciesOfShop = getPurchasePoliciesOfShop(memberName, shopName);
             assert purchasePoliciesOfShop.getValue().size() == 1;
         } catch (Exception e) {
@@ -529,16 +560,16 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     @Test
     @DisplayName("check discount condition works")
     @Order(14)
-    public void conditionalDiscountTest(){
+    public void conditionalDiscountTest() {
         // remove the simple discount, stays only with the composite discount
         try {
             removeDiscountFromShop(DiscountTypeWrapper.createDiscountTypeWrapper(simpleDiscountYogurt), shopName, shopOwnerName);
             VisitorFacade visitor = guestLogin();
-            addItemToCart(apple, 1,  visitor.getName());
+            addItemToCart(apple, 1, visitor.getName());
             ShoppingCartFacade cart = showShoppingCart(visitor.getName()).getValue();
             // check whether condition discount didn't count (must have atleast 2 apples)
             assert cart.getPrice() == applePrice;
-            addItemToCart(apple, 2,  visitor.getName());
+            addItemToCart(apple, 2, visitor.getName());
             cart = showShoppingCart(visitor.getName()).getValue();
             assert cart.getPrice() < applePrice * 3;
             // return to base state
@@ -549,4 +580,58 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         }
     }
 
+    @Test
+    @DisplayName("remove appointment base")
+    @Order(15)
+    public void removeAppointmentBase() {
+        try {
+            assert !setupFailed;
+            // A appoints B.
+            int curNum = getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
+            assert !appointShopOwner(ownerA.getName(), ownerB.getName(), removingShop.getShopName()).isErrorOccurred();
+            assert curNum + 1 == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
+            // A removing B
+            assert !removeShopOwnerAppointment(ownerA.getName(), ownerB.getName(), removingShop.getShopName()).isErrorOccurred();
+            assert curNum == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("remove not self appointment")
+    @Order(16)
+    public void removeOtherAppointed() {
+        try {
+            assert !setupFailed;
+            // A appoints B.
+            int curNum = getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
+            assert !appointShopOwner(ownerA.getName(), ownerB.getName(), removingShop.getShopName()).isErrorOccurred();
+            assert curNum + 1 == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
+            // A appoints C
+            assert !appointShopOwner(ownerA.getName(), ownerC.getName(), removingShop.getShopName()).isErrorOccurred();
+            assert curNum + 2 == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
+
+            // C removing B
+            assert removeShopOwnerAppointment(ownerC.getName(), ownerB.getName(), removingShop.getShopName()).isErrorOccurred();
+            assert curNum + 2 == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("remove recursive appointment")
+    @Order(17)
+    public void removeRecAppointment() {
+        try {
+            assert !setupFailed;
+            // B and C already appointed
+            // A removing B-> should remove B and C as well
+            assert !removeShopOwnerAppointment(ownerA.getName(), ownerB.getName(), removingShop.getShopName()).isErrorOccurred();
+            Assertions.assertEquals(1 , getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size());
+        } catch (Exception e) {
+            assert false;
+        }
+    }
 }

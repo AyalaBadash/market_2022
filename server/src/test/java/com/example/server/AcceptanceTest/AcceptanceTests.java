@@ -126,7 +126,7 @@ public class AcceptanceTests {
         return result;
     }
 
-    protected ResponseT<ShopFacade> getShopInfo(String name, String shopName) {
+    protected static ResponseT<ShopFacade> getShopInfo(String name, String shopName) {
         TwoStringRequest request = new TwoStringRequest(name, shopName);
         ResponseT<ShopFacade> result = Service.getInstance().getShopInfo(request);
         return result;
@@ -296,6 +296,11 @@ public class AcceptanceTests {
     public Response removeMember(String manager, String memberToRemove) {
         RemoveMemberRequest request = new RemoveMemberRequest(manager, memberToRemove);
         return Service.getInstance().removeMember(request);
+    }
+
+    public Response removeShopOwnerAppointment(String boss, String firedAppointed, String shopName) {
+        RemoveAppointmentRequest request = new RemoveAppointmentRequest(boss, firedAppointed,shopName);
+        return Service.getInstance().removeShopOwnerAppointment(request);
     }
 
 
