@@ -29,13 +29,12 @@ public class ShoppingCart implements IHistory {
     private static ShoppingBasketRep shoppingBasketRep;
     private static ShoppingCartRep shoppingCartRep;
 
-    public ShoppingCart(int id) {
+    public ShoppingCart() {
         this.currentPrice = 0;
         this.cart = new ConcurrentHashMap<>();
+        shoppingCartRep.save(this);
     }
-    public ShoppingCart(){}
-    public ShoppingCart(int id,Map<Shop,ShoppingBasket> cart , double currentPrice){ //todo remove id?
-//        this.id = id;
+    public ShoppingCart(Map<Shop,ShoppingBasket> cart , double currentPrice){
         this.cart = cart;
         this.currentPrice = currentPrice;
     }

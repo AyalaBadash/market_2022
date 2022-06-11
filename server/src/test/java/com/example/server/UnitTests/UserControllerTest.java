@@ -32,17 +32,17 @@ class UserControllerTest {
     @Test
     @DisplayName("Guest login test - good test")
     public void GuestLoginTest(){
-        controller.guestLogin(nextCartID);
+        controller.guestLogin();
         nextCartID++;
         Assertions.assertEquals(1,controller.getVisitorsInMarket().size());
-        Visitor visit = controller.guestLogin(nextCartID);
+        Visitor visit = controller.guestLogin();
         Assertions.assertEquals("@visitor2",visit.getName());
     }
 
     @Test
     @DisplayName("Exit system - good test ")
     public void ExitSystemTest(){
-        Visitor visitor1 = controller.guestLogin(nextCartID);
+        Visitor visitor1 = controller.guestLogin();
         Assertions.assertEquals(1,controller.getVisitorsInMarket().size());
         try {
             controller.exitSystem(visitor1.getName());
@@ -55,7 +55,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Exit system - fail test - user not logged exit ")
     public void ExitSystemFailTest(){
-        Visitor visitor1 = controller.guestLogin(nextCartID);
+        Visitor visitor1 = controller.guestLogin();
         Assertions.assertEquals(1,controller.getVisitorsInMarket().size());
         try {
             controller.exitSystem("name");
@@ -70,7 +70,7 @@ class UserControllerTest {
     @DisplayName("Register test")
     public void RegisterTest(){
         try {
-            controller.register("shaked",nextCartID);
+            controller.register("shaked");
             Assertions.assertNotNull(controller.getMembers().get("shaked"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -82,10 +82,10 @@ class UserControllerTest {
     @DisplayName("Member log out test - good test")
     public void MemberLogout(){
         try {
-            controller.register("raz",nextCartID);
+            controller.register("raz");
             nextCartID++;
             controller.finishLogin("raz","@visitor1");
-            controller.memberLogout("raz",nextCartID);
+            controller.memberLogout("raz");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assert false;

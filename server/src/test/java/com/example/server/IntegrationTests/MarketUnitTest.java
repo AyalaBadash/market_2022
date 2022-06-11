@@ -150,7 +150,7 @@ public class MarketUnitTest {
     @Test
     @DisplayName("Guest login")
     public void guestLogin(){
-        Visitor visitor = userController.guestLogin(nextCartID);
+        Visitor visitor = userController.guestLogin();
         Assertions.assertNotNull(visitor);
     }
 

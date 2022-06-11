@@ -15,12 +15,10 @@ class VisitorTest {
     Member member = null;
     ShoppingCart cart = Mockito.mock(ShoppingCart.class);
     Visitor visitor;
-    int nextCartID;
     @BeforeEach
     public void initVisitor(){
         try {
-            visitor =  new Visitor(name,1);
-            nextCartID=2;
+            visitor =  new Visitor(name);
             assert true;
         } catch (MarketException e) {
             System.out.println(e.getMessage());
@@ -32,11 +30,11 @@ class VisitorTest {
     @DisplayName("Constructor test - invalid")
     public void testConstructorInvalid(){
         try{
-            new Visitor("",nextCartID);
+            new Visitor("");
             assert false;
         }catch (Exception e){
             try {
-                new Visitor(null,nextCartID);
+                new Visitor(null);
                 assert false;
             }
             catch (Exception ex){
@@ -49,7 +47,7 @@ class VisitorTest {
     @DisplayName("Constructor test - valid details")
     public void ConstructorTest(){
         try {
-            new Visitor("raz",nextCartID);
+            new Visitor("raz");
             assert true;
         }
         catch (Exception e)

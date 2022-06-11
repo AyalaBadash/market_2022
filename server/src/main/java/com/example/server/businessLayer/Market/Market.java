@@ -41,7 +41,6 @@ public class Market {
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
     private SynchronizedCounter nextItemID;
-    private SynchronizedCounter nextShoppingCartId;
     private PaymentServiceProxy paymentServiceProxy;
     private SupplyServiceProxy supplyServiceProxy;
     private Publisher publisher;
@@ -56,6 +55,8 @@ public class Market {
     private ShoppingCartRep shoppingCartRep;
     @Autowired
     private ShoppingBasketRep shoppingBasketRep;
+    @Autowired
+    private MemberRep memberRep;
 
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -63,7 +64,6 @@ public class Market {
         this.itemByName = new ConcurrentHashMap<>();
         this.userController = UserController.getInstance();
         nextItemID = new SynchronizedCounter();
-        nextShoppingCartId = new SynchronizedCounter();
         this.numOfAcqsPerShop = new HashMap<>();
         paymentServiceProxy = null;
         supplyServiceProxy = null;
@@ -112,6 +112,7 @@ public class Market {
         ShoppingBasket.setShoppingBasketRep(shoppingBasketRep);
         ShoppingCart.setShoppingCartRep(shoppingCartRep);
         ShoppingCart.setShoppingBasketRep(shoppingBasketRep);
+        Member.setMemberRep(memberRep);
     }
 
     //Loading systems configurations from file.
@@ -318,7 +319,7 @@ public class Market {
     public void register(String name, String password) throws MarketException {
         Security security = Security.getInstance();
         security.validateRegister(name, password);
-        userController.register(name,this.nextShoppingCartId.increment());
+        userController.register(name);
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A new user registered , welcome " + name);
     }
@@ -331,7 +332,7 @@ public class Market {
 
 
     public Visitor guestLogin() {
-        return userController.guestLogin(this.nextShoppingCartId.increment());
+        return userController.guestLogin();
     }
 
     public Shop getShopByName(String shopName) {
@@ -626,7 +627,7 @@ public class Market {
             debugLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
         }
-        return userController.memberLogout(member,this.nextShoppingCartId.increment());
+        return userController.memberLogout(member);
     }
 
     public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) throws MarketException {
@@ -893,7 +894,7 @@ public class Market {
     }
 
     private ShoppingCart validateCart(ShoppingCart currentCart) {
-        ShoppingCart res = new ShoppingCart(this.nextShoppingCartId.increment());
+        ShoppingCart res = new ShoppingCart();
         double cartPrice = 0;
         Map<Shop, ShoppingBasket> baskets = currentCart.getCart();
         for (Map.Entry<Shop, ShoppingBasket> basketEntry : baskets.entrySet()) {
@@ -947,8 +948,7 @@ public class Market {
         Security.getInstance().reset();
         userController.reset();
         ClosedShopsHistory.getInstance().reset();
-        instance.nextShoppingCartId.reset();
-        userController.register(systemManagerName,nextShoppingCartId.increment());
+        userController.register(systemManagerName);
     }
 
     public String getSystemManagerName() {

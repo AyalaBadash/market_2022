@@ -47,7 +47,7 @@ public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
             Shop shop = Market.getInstance().getShopByName(entry.getKey());
             baskets.put(shop,entry.getValue().toBusinessObject());
         }
-        return new ShoppingCart(-1,baskets,this.price);
+        return new ShoppingCart(baskets,this.price);
 
     }
 

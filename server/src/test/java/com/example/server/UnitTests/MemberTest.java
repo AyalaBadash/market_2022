@@ -30,7 +30,7 @@ class MemberTest {
 
     @BeforeEach
     public void initMemberTest() throws MarketException {
-        member = new Member(name,1);
+        member = new Member(name);
         nextCartID=2;
         member.setMyCart(myCart);
 
@@ -41,18 +41,18 @@ class MemberTest {
     @DisplayName("invalid inputs to constructor")
     public void constructorInvalid(){
         try{
-            Member m = new Member(null,nextCartID);
-            m = new Member("",nextCartID);
+            Member m = new Member(null);
+            m = new Member("");
             assert false;
-            m = new Member("asd@sad",nextCartID);
+            m = new Member("asd@sad");
             assert false;
-            m = new Member("asd!@!@#)@#$)(($#%&]sad",nextCartID);
+            m = new Member("asd!@!@#)@#$)(($#%&]sad");
             assert false;
-            m = new Member("asd[]`/",nextCartID);
+            m = new Member("asd[]`/");
             assert false;
-            m = new Member("test name",nextCartID);
+            m = new Member("test name");
             assert false;
-            m = new Member("test_name",nextCartID);
+            m = new Member("test_name");
             assert false;
             // TODO should catch market exception
         }catch (Exception ignore){};
@@ -63,7 +63,7 @@ class MemberTest {
     @DisplayName("valid inputs to constructor")
     public void constructorValid(){
         try{
-            new Member(name,nextCartID);
+            new Member(name);
         }catch (Exception ignore){};
         assert true;
     }

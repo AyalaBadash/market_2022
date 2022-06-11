@@ -18,7 +18,10 @@ public class ShoppingBasket implements IHistory , Serializable {
     @Id
     @GeneratedValue
     private long basket_id;
-    @Transient
+    @ElementCollection
+    @CollectionTable(name = "items_in_basket")
+    @Column(name = "amount")
+    @MapKeyColumn(name = "item_id")
     private Map<java.lang.Integer, Double> items;//<Item,quantity>
     @Transient
     private Map<java.lang.Integer, Item> itemMap;

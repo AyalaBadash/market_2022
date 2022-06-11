@@ -9,12 +9,12 @@ public class Visitor {
     private Member member;
     private ShoppingCart cart;
 
-    public Visitor(String name,int cartID) throws MarketException {
+    public Visitor(String name) throws MarketException {
         if (name == null || name.equals(""))
             throw new MarketException("Name cant be null or empty string");
         this.name = name;
         this.member = null;
-        this.cart = new ShoppingCart(cartID);
+        this.cart = new ShoppingCart();
     }
 
     public Visitor(String name, Member member, ShoppingCart cart) {
