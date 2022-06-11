@@ -510,7 +510,6 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             // check it doesn't prevent from adding to cart'
             assert cart.getValue().getCart().size() > 0;
             Response response = buyShoppingCart(visitor.getName(), cart.getValue().getPrice(), creditCard, address);
-            // should fail cause no yogurt.category has been added
             assert !response.isErrorOccurred();
         } catch (Exception e) {
             assert false;
