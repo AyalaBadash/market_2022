@@ -57,7 +57,7 @@ public class Market {
     private ShoppingBasketRep shoppingBasketRep;
     @Autowired
     private MemberRep memberRep;
-
+    //constructor
     private Market() {
         this.shops = new ConcurrentHashMap<>();
         this.allItemsInMarketToShop = new ConcurrentHashMap<>();

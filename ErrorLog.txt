@@ -1,0 +1,28 @@
+Level Error : Tried to appoint shop manager for non existing shop.
+Level Error : Tried to appoint shop manager for non existing shop.
+Level Error : Tried to appoint shop manager for non existing shop.
+Level Error : Tried to appoint shop manager for non existing shop.
+Level Error : Tried to appoint shop owner for non existing shop.
+Level Error : Tried to appoint shop manager for non existing shop.
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Tried to appoint shop manager for non existing shop.
+Level Error : Member raz tried to log in but has password mismatch.
+Level Error : Tried to appoint shop manager for non existing shop.
+Level Error : Tried to appoint shop manager for non existing shop.
+Level Error : A market initialization failed .already initialized
+Level Error : could not execute statement; nested exception is org.hibernate.exception.GenericJDBCException: could not execute statement
+Level Error : could not execute statement; nested exception is org.hibernate.exception.GenericJDBCException: could not execute statement
+Level Error : Cannot invoke "com.example.server.dataLayer.repositories.ShoppingBasketRepository.save(Object)" because "com.example.server.businessLayer.Market.ShoppingCart.shoppingBasketRepository" is null
+Level Error : could not execute statement; nested exception is org.hibernate.exception.GenericJDBCException: could not execute statement
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
+Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
