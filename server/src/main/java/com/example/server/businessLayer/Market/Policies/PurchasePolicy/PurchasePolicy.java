@@ -28,9 +28,9 @@ public class PurchasePolicy {
         throw new UnsupportedOperationException (  );
     }
 
-    public boolean isPoliciesHeld(Visitor visitor, ShoppingBasket shoppingBasket) throws MarketException {
+    public boolean isPoliciesHeld(ShoppingBasket shoppingBasket) throws MarketException {
         for(PurchasePolicyType purchasePolicyType : validPurchasePolicies){
-            if (!purchasePolicyType.isPolicyHeld ( visitor, shoppingBasket ))
+            if (!purchasePolicyType.isPolicyHeld (shoppingBasket ))
                 return false;
         }
         return true;

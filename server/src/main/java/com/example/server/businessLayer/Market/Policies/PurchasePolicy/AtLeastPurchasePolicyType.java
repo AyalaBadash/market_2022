@@ -17,7 +17,7 @@ public class AtLeastPurchasePolicyType extends PurchasePolicyType {
         this.amount = amount;
     }
     @Override
-    public boolean isPolicyHeld(Visitor visitor, ShoppingBasket shoppingBasket) throws MarketException {
+    public boolean isPolicyHeld(ShoppingBasket shoppingBasket) throws MarketException {
         return purchasePolicyLevelState.isPolicyHeld ( shoppingBasket, amount, true);
     }
 

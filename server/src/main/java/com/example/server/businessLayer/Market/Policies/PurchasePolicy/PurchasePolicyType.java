@@ -21,7 +21,7 @@ public abstract class PurchasePolicyType {
         this.purchasePolicyLevelState = purchasePolicyLevelState;
     }
 
-    public abstract boolean isPolicyHeld(Visitor visitor, ShoppingBasket shoppingBasket) throws MarketException;
+    public abstract boolean isPolicyHeld(ShoppingBasket shoppingBasket) throws MarketException;
 
     public abstract boolean isAtLeast();
 

@@ -850,9 +850,10 @@ public class Market {
             throw new MarketException("only a system manager can get information about a closed shop");
         }
         Shop shop = shops.get(shopName);
-        if (!shop.isEmployee(member)) {
-            throw new MarketException("You are not employee in this shop");
-        }
+        //TODO - need to be an employee or not??
+//        if (!shop.isEmployee(member)) {
+//            throw new MarketException("You are not employee in this shop");
+//        }
         return shop.getShopInfo(member);
     }
 
@@ -1076,14 +1077,14 @@ public class Market {
         return shoppingCartToReturn;
     }
 
-    private ShoppingCart validateCart(ShoppingCart currentCart) {
+    private ShoppingCart validateCart(ShoppingCart currentCart) throws MarketException {
         ShoppingCart res = new ShoppingCart();
         double cartPrice = 0;
         Map<Shop, ShoppingBasket> baskets = currentCart.getCart();
         for (Map.Entry<Shop, ShoppingBasket> basketEntry : baskets.entrySet()) {
             ShoppingBasket updatedBasket = basketEntry.getKey().validateBasket(basketEntry.getValue());
             basketEntry.setValue(updatedBasket);
-            cartPrice = cartPrice + updatedBasket.getPrice();
+            cartPrice = cartPrice + basketEntry.getKey ().getPriceOfShoppingBasket (updatedBasket);
         }
         currentCart.setCurrentPrice(cartPrice);
         return currentCart;

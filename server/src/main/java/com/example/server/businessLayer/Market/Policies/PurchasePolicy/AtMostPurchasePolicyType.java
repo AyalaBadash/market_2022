@@ -17,7 +17,7 @@ public class AtMostPurchasePolicyType extends PurchasePolicyType {
     }
 
     @Override
-    public boolean isPolicyHeld(Visitor visitor, ShoppingBasket shoppingBasket) {
+    public boolean isPolicyHeld(ShoppingBasket shoppingBasket) {
         return false;
     }
 
