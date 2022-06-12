@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Publisher;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
@@ -67,7 +68,7 @@ public class NotificationHandler {
      * @param name name of the new visitor that logged in.
      * @return
      */
-    private boolean sendAllDelayedNotifications(List<Notification> nots, String name) {
+    private synchronized boolean sendAllDelayedNotifications(List<Notification> nots, String name) {
 
 
         for(Notification not : nots){
@@ -80,7 +81,7 @@ public class NotificationHandler {
         return true;
     }
 
-    private void deleteDelayed(String name) {
+    private synchronized void deleteDelayed(String name) {
         try {
             File parentDir = new File(getConfigDir() );
             parentDir.mkdir();
@@ -118,7 +119,7 @@ public class NotificationHandler {
      * @param sessionId the sessionId to send to.
      * @return
      */
-    public boolean removeErr(String sessionId) {
+    public synchronized boolean removeErr(String sessionId) {
         String name="";
         for(Map.Entry<String ,String> set : sessions.entrySet()){
             if(set.getValue().equals(sessionId)){
@@ -137,10 +138,6 @@ public class NotificationHandler {
         sessions.remove(name);
         return true;
     }
-    //Check for the market if a memeber/user is logged in .
-    public boolean isLogged(String name){
-        return sessions.containsKey(name);
-    }
 
     /**
      * The main method for sending a notification for a user.
@@ -151,9 +148,10 @@ public class NotificationHandler {
      * @param test
      * @return
      */
-    public boolean sendNotification(String name , Notification notification, boolean isMember, boolean test){
+    public synchronized boolean sendNotification(String name , Notification notification, boolean isMember, boolean test){
 
-        if(sessions.containsKey(name)){
+        UserController userController= UserController.getInstance();
+        if(sessions.containsKey(name)|( test && userController.isLoggedIn(name))){
             //if user logged.
             String session= sessions.get(name);
             dispatcher.addMessgae(session,notification);
@@ -162,6 +160,7 @@ public class NotificationHandler {
         else{
             //if not logged in. save if member
             if(isMember){
+                //in case of a test, save the notification as a delayed message header.
                 if(test){
                     DelayedNotifications not= new DelayedNotifications();
                     not.createMessage("Delayed message: \n"+ notification.getMessage());
