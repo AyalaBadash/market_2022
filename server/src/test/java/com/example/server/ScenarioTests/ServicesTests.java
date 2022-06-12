@@ -183,7 +183,11 @@ public class ServicesTests {
     public void initFromFile(){
         try{
             MarketService marketService= MarketService.getInstance();
-            marketService.firstInitMarket(true);
+            try {
+                marketService.firstInitMarket ( true );
+            }catch (Exception e){
+                System.out.println (e.getMessage () );
+            }
             PurchaseService purchaseService= PurchaseService.getInstance();
             UserController userController= UserController.getInstance();
             List<String> list= new ArrayList<>();
@@ -196,6 +200,7 @@ public class ServicesTests {
             assert false;
         }
     }
+
     @Test
     @DisplayName("System init from no file")
     public void initFromNoFile(){
@@ -224,23 +229,22 @@ public class ServicesTests {
            } catch (Exception e) {
            }
            // shop manager register
-           registerVisitor(shopOwnerName, shopOwnerPassword);
-           loginMember(shopOwnerName, shopOwnerPassword);
-           openShop();
-           market.closeShop(shopOwnerName, shopName);
-           logoutMember(shopOwnerName);
-           market.removeMember( market.getSystemManagerName(),shopOwnerName);
+           registerVisitor("notificationTestUser", shopOwnerPassword);
+           loginMember("notificationTestUser", shopOwnerPassword);
+           market.openNewShop("notificationTestUser", "notificationShop");
+           itemAdded = market.addItemToShopItem("notificationTestUser", ItemName, productPrice, Item.Category.electricity, "", new ArrayList<>(), productAmount, "notificationShop");
+           market.closeShop("notificationTestUser", "notificationShop");
+           logoutMember("notificationTestUser");
            assert true;
        } catch (Exception e) {
            assert false;
        }
        try {
-           logoutMember(shopOwnerName);
+           logoutMember("notificationTestUser");
        } catch (MarketException ex) {
            System.out.println(ex.getMessage());
        }
    }
-
 
     public void loginMember(String name, String password) throws MarketException {
         if(UserController.getInstance().isLoggedIn(name))

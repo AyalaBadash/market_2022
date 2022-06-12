@@ -47,9 +47,8 @@ public class MarketUnitTest {
     @BeforeEach
     public void marketUnitTestInit(){
         try {
-            //todo - check why after reset there is no ido member in security , while he exist in userController.(needs to be in both)
-            Market.getInstance().reset();
-        } catch (Exception e){}
+            Market.getInstance().reset("password", null, null);
+        } catch (MarketException e){}
         List<String> keywords = new ArrayList<>();
         keywords.add("dairy");
         shopsHistory = ClosedShopsHistory.getInstance();
