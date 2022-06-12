@@ -57,6 +57,12 @@ public class Market {
     private ShoppingBasketRep shoppingBasketRep;
     @Autowired
     private MemberRep memberRep;
+    @Autowired
+    private AcquisitionRep acquisitionRep;
+    @Autowired
+    private AcquisitionHistoryRep acquisitionHistoryRep;
+    @Autowired
+    private ClosedShopsHistoryRep closedShopsHistoryRep;
     //constructor
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -113,6 +119,9 @@ public class Market {
         ShoppingCart.setShoppingCartRep(shoppingCartRep);
         ShoppingCart.setShoppingBasketRep(shoppingBasketRep);
         Member.setMemberRep(memberRep);
+        Acquisition.setAcquisitionRep(acquisitionRep);
+        AcquisitionHistory.setAcquisitionHistoryRep(acquisitionHistoryRep);
+        ClosedShopsHistory.setClosedShopsHistoryRep(closedShopsHistoryRep);
     }
 
     //Loading systems configurations from file.

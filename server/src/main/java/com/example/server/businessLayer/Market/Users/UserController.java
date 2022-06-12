@@ -8,36 +8,49 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Entity
 public class UserController {
+    @Id
+    @GeneratedValue
+    private long id;
+    @Transient
     private Map<String, Member> members;
+    @Transient //TODO
     private Map<String, Visitor> visitorsInMarket;
     //TODO synchronized next
+    @Transient //TODO
     private SynchronizedCounter nextUniqueNumber;
     private static UserController instance;
     private long registeredMembersAvg;
     private LocalDate openingDate;
 
-
-
     public synchronized static UserController getInstance() {
         if (instance == null)
-            instance = new UserController();
+            instance = new UserController(1);
         return instance;
     }
 
-    private UserController() {
+    private UserController(int i) {
         members = new ConcurrentHashMap<>();
         visitorsInMarket = new ConcurrentHashMap<>();
         nextUniqueNumber = new SynchronizedCounter();
         this.registeredMembersAvg = 0;
         this.openingDate = LocalDate.now();
     }
+
+    public UserController(){}
+
+
 
     /**
      *

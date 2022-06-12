@@ -311,19 +311,19 @@ public class Service implements IService {
         return marketService.getHistoryByMember (request.getSystemManagerName(), request.getMemberName() );
     }
 
-    @Override
-    @RequestMapping(value = "/removeShopOwnerAppointment")
-    @CrossOrigin
-    public Response removeShopOwnerAppointment(removeAppointmentRequest request) {
-        return marketService.removeShopOwnerAppointment(request.getBoss(),request.getFiredAppointed(),request.getShopName());
-    }
-
-    @Override
-    @RequestMapping(value = "/removeMember")
-    @CrossOrigin
-    public Response removeMember(removeMemberRequest request) {
-        return marketService.removeMember(request.getManager(),request.getMemberToRemove());
-    }
+//    @Override
+//    @RequestMapping(value = "/removeShopOwnerAppointment")
+//    @CrossOrigin
+//    public Response removeShopOwnerAppointment(removeAppointmentRequest request) {
+//        return marketService.removeShopOwnerAppointment(request.getBoss(),request.getFiredAppointed(),request.getShopName());
+//    }
+//
+//    @Override
+//    @RequestMapping(value = "/removeMember")
+//    @CrossOrigin
+//    public Response removeMember(removeMemberRequest request) {
+//        return marketService.removeMember(request.getManager(),request.getMemberToRemove());
+//    }
 
     @Override
     @RequestMapping(value = "/getItemInfo")

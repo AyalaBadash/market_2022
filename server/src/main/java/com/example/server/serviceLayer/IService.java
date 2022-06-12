@@ -291,14 +291,14 @@ public interface IService {
      * @param request
      * @return
      */
-    public Response removeShopOwnerAppointment(removeAppointmentRequest request);
+//    public Response removeShopOwnerAppointment(removeAppointmentRequest request);
 
     /**
      *
      * @param request
      * @return
      */
-    public Response removeMember(removeMemberRequest request);
+//    public Response removeMember(removeMemberRequest request);
 
     /**
      *

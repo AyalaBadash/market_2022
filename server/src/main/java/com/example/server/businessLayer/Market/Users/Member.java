@@ -1,16 +1,10 @@
 package com.example.server.businessLayer.Market.Users;
-
-
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.AcquisitionHistory;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.IHistory;
 import com.example.server.businessLayer.Market.ShoppingCart;
-import com.example.server.dataLayer.entities.DalAcquisitionHistory;
-import com.example.server.dataLayer.entities.DalManagerApp;
-import com.example.server.dataLayer.entities.DalMember;
-import com.example.server.dataLayer.entities.DalOwnerApp;
 import com.example.server.dataLayer.repositories.MemberRep;
 
 import javax.persistence.*;
@@ -27,7 +21,8 @@ public class Member implements IHistory {
     private List<Appointment> appointedByMe;
     @Transient //todo
     private List<Appointment> myAppointments;
-    @Transient //todo
+    @OneToMany(targetEntity =  AcquisitionHistory.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_name", referencedColumnName = "name")
     private List<AcquisitionHistory> purchaseHistory;
     private static MemberRep memberRep;
 
@@ -111,6 +106,7 @@ public class Member implements IHistory {
 
     public void savePurchase(AcquisitionHistory acquisitionHistory) {
         purchaseHistory.add (acquisitionHistory);
+        memberRep.save(this);
     }
 
     @Override

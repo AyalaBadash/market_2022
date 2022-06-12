@@ -13,22 +13,34 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.dataLayer.entities.DalAcquisition;
 import com.example.server.dataLayer.entities.DalShoppingCart;
+import com.example.server.dataLayer.repositories.AcquisitionRep;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import javax.persistence.*;
+
+@Entity
 public class Acquisition {
-    private boolean paymentDone; //save
-    private boolean supplyConfirmed; //save
+    @Id
+    @GeneratedValue
+    private long id;
+    private boolean paymentDone;
+    private boolean supplyConfirmed;
+    @OneToOne (cascade = CascadeType.ALL)
     ShoppingCart shoppingCartToBuy;
     String buyerName;
     int supplyID;
     int paymentID;
+    private static AcquisitionRep acquisitionRep;
 
     public Acquisition(ShoppingCart shoppingCartToBuy, String buyerName) {
         this.shoppingCartToBuy = shoppingCartToBuy;
         this.buyerName = buyerName;
         paymentDone = false;
         supplyConfirmed = false;
+        acquisitionRep.save(this);
     }
+
+    public Acquisition(){}
 
     public ShoppingCart buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
 
@@ -74,6 +86,7 @@ public class Acquisition {
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
+        acquisitionRep.save(this);
         return shoppingCartToBuy;
     }
 
@@ -129,5 +142,17 @@ public class Acquisition {
 
     public void setBuyerName(String buyerName) {
         this.buyerName = buyerName;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static void setAcquisitionRep(AcquisitionRep acquisitionRep) {
+        Acquisition.acquisitionRep = acquisitionRep;
     }
 }

@@ -26,3 +26,6 @@ Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested 
 Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
 Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
 Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : Non member visitor tried to log in.
+Level Error : Member s tried to log in but has password mismatch.
+Level Error : Shopping cart is not exists for the user.

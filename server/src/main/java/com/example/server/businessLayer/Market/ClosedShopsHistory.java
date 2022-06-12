@@ -3,27 +3,41 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.repositories.ClosedShopsHistoryRep;
 
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Entity
 public class ClosedShopsHistory {
+    @Id
+    @GeneratedValue
+    private long id;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "shop_to_closed_shop_history",
+            joinColumns = {@JoinColumn(name = "ClosedShopsHistoryId", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "shop_name", referencedColumnName = "shop_name")})
+    @MapKeyColumn(name = "shop")
     private Map<String, Shop> closedShops;
     private StringBuilder overallHistory;
     private static ClosedShopsHistory instance;
+    private static ClosedShopsHistoryRep closedShopsHistoryRep;
 
-    private ClosedShopsHistory(){
+    private ClosedShopsHistory(int i){
         this.closedShops = new ConcurrentHashMap<> ();
         this.overallHistory = new StringBuilder();
     }
 
     public synchronized static ClosedShopsHistory getInstance(){
         if (instance == null){
-            instance =  new ClosedShopsHistory();
+            instance =  new ClosedShopsHistory(1);
         }
         return instance;
     }
+
+    public ClosedShopsHistory(){}
 
     public void closeShop(Shop closedShop) throws MarketException {
         if (closedShop == null){
@@ -36,6 +50,7 @@ public class ClosedShopsHistory {
             throw new MarketException ( String.format ( "shop %s is already closed", closedShop.getShopName () ));
         }
         closedShops.put (closedShop.getShopName (), closedShop);
+        closedShopsHistoryRep.save(this);
     }
 
     public void addPurchaseHistory(String purchaseReview, Shop shop) throws MarketException {
@@ -44,6 +59,7 @@ public class ClosedShopsHistory {
         if (purchaseReview != null && purchaseReview != ""){
             overallHistory.append("\n").append(purchaseReview);
         }
+        closedShopsHistoryRep.save(this);
     }
 
     public Map<String, Shop> getClosedShops() {
@@ -69,5 +85,9 @@ public class ClosedShopsHistory {
     public void reset() {
         closedShops = new HashMap<>();
         overallHistory = new StringBuilder();
+    }
+
+    public static void setClosedShopsHistoryRep(ClosedShopsHistoryRep closedShopsHistoryRep) {
+        ClosedShopsHistory.closedShopsHistoryRep = closedShopsHistoryRep;
     }
 }
