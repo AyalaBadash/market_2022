@@ -105,11 +105,6 @@ public class Acquisition {
         }
         return true;
     }
-    private DalAcquisition toDalObject(){
-        //TODO check this code
-        int cartID = this.shoppingCartToBuy.toDalObject().getId();
-        return new DalAcquisition(cartID,this.buyerName,this.paymentDone,this.supplyConfirmed,this.supplyID,this.paymentID);
-    }
 
 
     public boolean isPaymentDone() {

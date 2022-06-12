@@ -26,14 +26,11 @@ public class ShoppingCart implements IHistory {
     private Map<Shop, ShoppingBasket> cart; // <Shop ,basket for the shop>
     private double currentPrice;
 
-    private static ShoppingBasketRep shoppingBasketRep;
     private static ShoppingCartRep shoppingCartRep;
 
     public ShoppingCart() {
         this.currentPrice = 0;
         this.cart = new ConcurrentHashMap<>();
-//        shoppingCartRep.save(this);
-        System.out.println("hi from shopping cart");
     }
     public ShoppingCart(Map<Shop,ShoppingBasket> cart , double currentPrice){
         this.cart = cart;
@@ -42,8 +39,8 @@ public class ShoppingCart implements IHistory {
 
     public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
+        shoppingCartRep.save(this);
     }
-
 
     @Override
     public StringBuilder getReview() {
@@ -70,6 +67,7 @@ public class ShoppingCart implements IHistory {
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             shopToBasket.getKey().releaseItems(shopToBasket.getValue());
         }
+        shoppingCartRep.save(this);
     }
 
     /**
@@ -101,11 +99,13 @@ public class ShoppingCart implements IHistory {
             }
             throw new MarketException(missing.toString());
         }
+        shoppingCartRep.save(this);
         return price;
     }
 
     public void clear() {
         this.cart.clear();
+        shoppingCartRep.save(this);
     }
 
     public void addItem(Shop shop, Item item, double amount) throws MarketException {
@@ -123,6 +123,7 @@ public class ShoppingCart implements IHistory {
         if(shoppingBasket == null)
             return;
         shoppingBasket.removeItem ( item);
+        shoppingCartRep.save(this);
     }
 
     public void calculate() {
@@ -130,6 +131,7 @@ public class ShoppingCart implements IHistory {
         for(ShoppingBasket shoppingBasket : cart.values ())
             price += shoppingBasket.getPrice ();
         currentPrice = price;
+        shoppingCartRep.save(this);
     }
 
     public void editQuantity(double amount, Item item, String shopName) throws MarketException {
@@ -144,14 +146,6 @@ public class ShoppingCart implements IHistory {
             throw new MarketException("The basket does not exist in the cart.");
         }
         basket.updateQuantity(amount, item);
-    }
-
-    public DalShoppingCart toDalObject(){
-        List<DalShoppingBasket> baskets = new ArrayList<>();
-        for (Map.Entry<Shop, ShoppingBasket> entry : this.cart.entrySet()) {
-            baskets.add(entry.getValue().toDalObject(entry.getKey()));
-        }
-        return new DalShoppingCart(this.id,baskets,this.currentPrice);
     }
 
 
@@ -186,10 +180,6 @@ public class ShoppingCart implements IHistory {
 
     public static void setShoppingCartRep(ShoppingCartRep scRepository){
         shoppingCartRep = scRepository;
-    }
-
-    public static void setShoppingBasketRep(ShoppingBasketRep sbRepository){
-        shoppingBasketRep = sbRepository;
     }
 
     public int getId() {

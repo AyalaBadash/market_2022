@@ -130,11 +130,6 @@ public class Item implements IHistory {
         return Objects.hash(ID, name, price, info, rnk, rnkers, category, keywords);
     }
 
-    public DalItem toDalObject(){
-        return new DalItem(this.ID, this.name, (int)this.price, this.info,
-                this.rnk, this.rnkers, this.category.toString(), this.keywords);
-    }
-
     public static void setItemRep(ItemRep itemRepToSet){
         itemRep = itemRepToSet;
     }

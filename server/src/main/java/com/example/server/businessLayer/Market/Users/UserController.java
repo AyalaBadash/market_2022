@@ -7,11 +7,9 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.dataLayer.repositories.UserControllerRep;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -25,14 +23,19 @@ public class UserController {
     private long id;
     @Transient
     private Map<String, Member> members;
-    @Transient //TODO
+    @OneToMany
+    @JoinTable(name = "visitors_in_market",
+            joinColumns = {@JoinColumn(name = "us", referencedColumnName = "id")})
+    @MapKeyColumn(name = "visitor") // the key column
     private Map<String, Visitor> visitorsInMarket;
     //TODO synchronized next
     @Transient //TODO
     private SynchronizedCounter nextUniqueNumber;
     private static UserController instance;
+    @Transient
     private long registeredMembersAvg;
     private LocalDate openingDate;
+    private static UserControllerRep userControllerRep;
 
     public synchronized static UserController getInstance() {
         if (instance == null)
@@ -61,6 +64,7 @@ public class UserController {
         String name = getNextUniqueName();
         Visitor res = new Visitor(name,null,new ShoppingCart());
         this.visitorsInMarket.put(res.getName(),res);
+        userControllerRep.save(this);
         EventLog.getInstance().Log("A new visitor entered the market.");
         return res;
     }
@@ -72,6 +76,7 @@ public class UserController {
     public void exitSystem(String visitorName) throws MarketException {
         if (this.visitorsInMarket.containsKey(visitorName)) {
             this.visitorsInMarket.remove(visitorName);
+            userControllerRep.save(this);
             EventLog.getInstance().Log("User left the market.");
         }
         else
@@ -130,6 +135,7 @@ public class UserController {
         String newVisitorName = getNextUniqueName();
         Visitor newVisitor = new Visitor(newVisitorName);
         visitorsInMarket.put(newVisitorName, newVisitor);
+        userControllerRep.save(this);
         EventLog.getInstance().Log("Our beloved member " + member + " logged out.");
         return newVisitorName;
     }
@@ -138,8 +144,8 @@ public class UserController {
         if(visitorsInMarket.containsKey(userName))
             throw new MarketException("member is already logged in");
         visitorsInMarket.put(userName,newVisitorMember);
-        visitorsInMarket.remove ( visitorName );
-
+        visitorsInMarket.remove(visitorName);
+        userControllerRep.save(this);
         EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();
     }
@@ -151,7 +157,8 @@ public class UserController {
             visitor.getCart ().removeItem ( shop, itemToRemove);
         }
         for ( Member member: members.values ()){
-            member.getMyCart().removeItem( shop, itemToRemove); //TODO update dalMember
+            member.getMyCart().removeItem( shop, itemToRemove);
+            userControllerRep.save(this);
         }
         EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
     }
@@ -173,6 +180,7 @@ public class UserController {
   
     public void setNextUniqueNumber(int nextUniqueNumber) {
         this.nextUniqueNumber.setValue(nextUniqueNumber);
+        userControllerRep.save(this);
     }
 
     public String getUsersInfo(){
@@ -196,4 +204,7 @@ public class UserController {
         nextUniqueNumber.reset();
     }
 
+    public static void setUserControllerRep(UserControllerRep userControllerRep) {
+        UserController.userControllerRep = userControllerRep;
+    }
 }

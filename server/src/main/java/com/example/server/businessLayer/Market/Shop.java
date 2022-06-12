@@ -73,8 +73,6 @@ public class Shop implements IHistory {
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
-
-
         Appointment ownerAppointment = shopOwners.get ( superVisorName );
         if (ownerAppointment == null) {
             DebugLog.getInstance ( ).Log ( String.format ( "%s: cannot find an owner '%s'", shopName, superVisorName ) );
@@ -90,6 +88,7 @@ public class Shop implements IHistory {
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
         this.shopManagers.put ( managerName, appointment );
+        shopRep.save(this);
     }
 
 
@@ -99,12 +98,15 @@ public class Shop implements IHistory {
         int oldItemId = java.lang.Integer.parseInt(id);
         if (newItemId != oldItemId)
             throw new MarketException ( "must not change the item id" );
-        itemMap.put ( newItem.getID ( ), newItem );
+        itemMap.put( newItem.getID ( ), newItem );
+        //todo save
     }
 
 
     public void deleteItem(Item item) {
         itemMap.remove( item.getID() );
+        itemsCurrentAmount.remove(item.getID());
+        shopRep.save(this);
 //        getDalObject().removeItemFromShop(item.toDalObject()); //todo
     }
     /*
@@ -136,6 +138,7 @@ public class Shop implements IHistory {
             throw new MarketException("item does not exist in the shop");
         }
         itemsCurrentAmount.replace ( item, amount );
+        shopRep.save(this);
     }
     /*
     public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
@@ -177,6 +180,7 @@ public class Shop implements IHistory {
             Double newAmount =this.itemsCurrentAmount.get ( itemAmount.getKey() )+  itemAmount.getValue ( );//
             this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
         }
+        shopRep.save(this);
     }
 
     //Bar: adding the parameter buyer name for the notification send.
@@ -219,6 +223,7 @@ public class Shop implements IHistory {
             publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
         }
         catch (Exception e){}
+        shopRep.save(this);
         return shoppingBasket.getPrice ( );
     }
 
@@ -332,6 +337,7 @@ public class Shop implements IHistory {
                 currentItem.setValue ( itemsCurrentAmount.get ( currentItem.getKey ( ) ) );
             }
         }
+        shopRep.save(this);
         return basket;
     }
 
@@ -354,6 +360,7 @@ public class Shop implements IHistory {
             else
                 shopManagers.put ( employeeName, newAppointment );
         }
+        shopRep.save(this);
     }
 
     public List<Item> getItemsByCategory(Item.Category category) {
@@ -454,7 +461,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         if (item == null)
             throw new MarketException ( "item does not exist in shop" );
         item.setInfo(info);
-//        itemRepository.save(item.toDalObject()); //todo
+        shopRep.save(this);
     }
 
 //    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
@@ -484,6 +491,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         }
         ShopOwnerAppointment appointment = new ShopOwnerAppointment ( appointedShopOwner, shopOwner, this, false );
         addEmployee ( appointment );
+        shopRep.save(this);
     }
 
     public void appointShopManager(Member shopOwner, Member appointed) throws MarketException {
@@ -495,6 +503,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this );
         addEmployee ( appointment );
+        shopRep.save(this);
     }
 
     private boolean isShopManager(String name) {
@@ -544,6 +553,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
                 shopManagers.remove(entry.getKey());
         }
         shopOwners.remove(firedAppointed);
+        shopRep.save(this);
     }
 
 
@@ -552,6 +562,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         if (!isShopOwner ( visitorName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
         discountPolicy.addNewDiscount ( discountType );
+        shopRep.save(this);
     }
 
     public boolean hasItem(Item item) {

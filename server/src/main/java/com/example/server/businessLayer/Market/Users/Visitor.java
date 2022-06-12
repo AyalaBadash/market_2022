@@ -3,11 +3,22 @@ package com.example.server.businessLayer.Market.Users;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.dataLayer.repositories.VisitorRep;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class Visitor {
+    @Id
     private String name;
+    @OneToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Member member;
+    @OneToOne (cascade = CascadeType.ALL)
     private ShoppingCart cart;
+    private static VisitorRep visitorRep;
 
     public Visitor(String name) throws MarketException {
         if (name == null || name.equals(""))
@@ -15,13 +26,16 @@ public class Visitor {
         this.name = name;
         this.member = null;
         this.cart = new ShoppingCart();
+        visitorRep.save(this);
     }
 
     public Visitor(String name, Member member, ShoppingCart cart) {
         this.name = name;
         this.member = member;
         this.cart = cart;
+        visitorRep.save(this);
     }
+    public Visitor(){}
 
 
     public String getName() {
@@ -56,6 +70,11 @@ public class Visitor {
 
     public boolean updateAmountInCart(double amount, Item item, String shopName) throws MarketException {
         cart.editQuantity (amount,item,shopName);
+        visitorRep.save(this);
         return true;
+    }
+
+    public static void setVisitorRep(VisitorRep visitorRep) {
+        Visitor.visitorRep = visitorRep;
     }
 }

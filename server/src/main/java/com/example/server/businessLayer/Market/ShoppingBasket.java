@@ -37,7 +37,6 @@ public class ShoppingBasket implements IHistory , Serializable {
         this.items = items;
         this.itemMap = itemMap;
         this.price = price;
-        shoppingBasketRep.save(this);
     }
 
     @Override
@@ -56,6 +55,7 @@ public class ShoppingBasket implements IHistory , Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+        shoppingBasketRep.save(this);
     }
 
     //TODO - needs to stay without checking the discount
@@ -77,6 +77,7 @@ public class ShoppingBasket implements IHistory , Serializable {
         DecimalFormat format = new DecimalFormat("#.###");
         price = Double.parseDouble(format.format(price));
         setPrice(price);
+        shoppingBasketRep.save(this);
         return price;
     }
 
@@ -105,11 +106,12 @@ public class ShoppingBasket implements IHistory , Serializable {
         else
             amount += items.get(item.getID());
         items.put(item.getID(),amount);
-//        shoppingBasketRep.save(this);
+        shoppingBasketRep.save(this);
 }
 
     public void removeItem(Item item) {
         items.remove(item.getID());
+        shoppingBasketRep.save(this);
     }
 
 
@@ -123,6 +125,7 @@ public class ShoppingBasket implements IHistory , Serializable {
             throw new MarketException("Cant put negative amount for item");
         }
         items.replace(item.getID(), amount);
+        shoppingBasketRep.save(this);
     }
 
     public Map<java.lang.Integer, Item> getItemMap() {
@@ -131,14 +134,6 @@ public class ShoppingBasket implements IHistory , Serializable {
 
     public void setItemMap(Map<java.lang.Integer, Item> itemMap) {
         this.itemMap = itemMap;
-    }
-
-    public DalShoppingBasket toDalObject(Shop shop){
-        Map<DalItem,Double> dalItems = new HashMap<>();
-        for (Map.Entry<Integer,Double> entry:this.items.entrySet()){
-            dalItems.put(itemMap.get(entry.getKey()).toDalObject(),entry.getValue());
-        }
-        return new DalShoppingBasket(this.price,dalItems, shop.getShopName());
     }
 
     public static void setShoppingBasketRep(ShoppingBasketRep sbRepositoryToSet){

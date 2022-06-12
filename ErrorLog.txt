@@ -29,3 +29,4 @@ Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested 
 Level Error : Non member visitor tried to log in.
 Level Error : Member s tried to log in but has password mismatch.
 Level Error : Shopping cart is not exists for the user.
+Level Error : detached entity passed to persist: com.example.server.businessLayer.Market.ShoppingCart; nested exception is org.hibernate.PersistentObjectException: detached entity passed to persist: com.example.server.businessLayer.Market.ShoppingCart
