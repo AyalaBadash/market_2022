@@ -9,7 +9,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFa
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
-public abstract class DiscountType {
+public abstract class  DiscountType {
     protected double percentageOfDiscount;
     protected DiscountLevelState discountLevelState;
 

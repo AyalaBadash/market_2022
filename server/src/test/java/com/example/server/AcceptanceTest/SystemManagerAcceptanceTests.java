@@ -1,5 +1,6 @@
 package com.example.server.AcceptanceTest;
 
+import com.example.server.businessLayer.Market.Market;
 import com.example.server.serviceLayer.FacadeObjects.MemberFacade;
 import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.Response;
@@ -36,6 +37,7 @@ public class SystemManagerAcceptanceTests extends AcceptanceTests {
             registerAndLoginNewUser();
             String memberName = currentMember.getName();
             exitMarket(memberName);
+            systemManagerName = Market.getInstance ( ).getSystemManagerName ();
             Response response = removeMember(systemManagerName, memberName);
             assert !response.isErrorOccurred();
             response = loginToExistingMember(memberName, currentMemberPassword);

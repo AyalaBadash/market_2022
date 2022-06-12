@@ -18,7 +18,7 @@ public class OrCompositePurchasePolicyType extends CompositePurchasePolicyType {
     }
 
     @Override
-    public boolean isPolicyHeld(Visitor visitor, ShoppingBasket shoppingBasket) {
+    public boolean isPolicyHeld(ShoppingBasket shoppingBasket) {
         return false;
     }
 

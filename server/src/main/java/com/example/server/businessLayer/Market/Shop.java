@@ -10,6 +10,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
@@ -201,8 +202,11 @@ public class Shop implements IHistory {
         try{
             publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices,test);
         }
+        //todo - need to be handled
         catch (Exception e){}
-        return shoppingBasket.getPrice ( );
+        if(purchasePolicy.isPoliciesHeld (shoppingBasket ))
+            return discountPolicy.calculateDiscount ( shoppingBasket );
+        throw new MarketException ( "shopping basket does not held the purchase policy" );
     }
 
 
@@ -316,6 +320,10 @@ public class Shop implements IHistory {
             }
         }
         return basket;
+    }
+
+    public double getPriceOfShoppingBasket(ShoppingBasket shoppingBasket) throws MarketException {
+        return discountPolicy.calculateDiscount ( shoppingBasket );
     }
 
     public void addEmployee(Appointment newAppointment) throws MarketException {

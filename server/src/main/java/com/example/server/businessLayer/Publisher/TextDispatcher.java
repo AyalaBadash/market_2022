@@ -94,7 +94,7 @@ public class TextDispatcher extends Publisher{
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir").split("/market_2022")[0];
-        dir += "/market_2022/server/notifications";
+        dir += "\\notifications";
         return dir;
     }
 }

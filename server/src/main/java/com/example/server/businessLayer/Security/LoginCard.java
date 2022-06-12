@@ -16,6 +16,8 @@ public class LoginCard {
         this.name = name;
         this.password = password;
         this.QandA =  new ConcurrentHashMap<>();
+        if(questions == null && answers == null)
+            return;
         if (questions.size() != answers.size()){
             throw new MarketException ("in login request - number of answers does not match the numver of questions");
         }
