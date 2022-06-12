@@ -1,8 +1,5 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CategoryLevelState;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.ShopLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.AtLeastPurchasePolicyType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.AtMostPurchasePolicyType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.OrCompositePurchasePolicyType;
@@ -43,7 +40,7 @@ public abstract class PurchasePolicyTypeFacade implements FacadeObject<PurchaseP
         } else if(purchasePolicyLevelState.isCategoryLevel ()){
             purchasePolicyLevelStateFacade = new CategoryPurchasePolicyLevelStateFacade (  );
         }else if(purchasePolicyLevelState.isShopLevel ()){
-            purchasePolicyLevelStateFacade = new ShopPurchasePolicyFacade (  );
+            purchasePolicyLevelStateFacade = new ShopPurchasePolicyLevelStateFacade (  );
         }else if(purchasePolicyLevelState.isOrLevel ()){
             purchasePolicyLevelStateFacade = new OrCompositePurchasePolicyLevelStateFacade (  );
         }else if(purchasePolicyLevelState.isAndLevel ()){

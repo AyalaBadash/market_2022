@@ -6,9 +6,15 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Visitor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PurchasePolicy {
+
+    public PurchasePolicy() {
+        this.validPurchasePolicies = new ArrayList<>();
+    }
+
     private List<PurchasePolicyType> validPurchasePolicies;
     public List<PurchasePolicyType> getValidPurchasePolicies() {
         return validPurchasePolicies;

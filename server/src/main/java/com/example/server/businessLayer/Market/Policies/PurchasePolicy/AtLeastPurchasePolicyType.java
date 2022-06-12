@@ -10,7 +10,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.OrCompositePur
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.PurchasePolicyTypeFacade;
 
 public class AtLeastPurchasePolicyType extends PurchasePolicyType {
-    double amount;
+    private double amount;
 
     public AtLeastPurchasePolicyType(PurchasePolicyLevelState purchasePolicyLevelState, double amount) {
         super ( purchasePolicyLevelState );

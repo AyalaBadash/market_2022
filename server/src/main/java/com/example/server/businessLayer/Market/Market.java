@@ -27,7 +27,6 @@ import org.apache.http.NameValuePair;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,7 +45,7 @@ public class Market {
     private SupplyServiceProxy supplyServiceProxy;
     private Publisher publisher;
     private static Market instance;
-    boolean datainitialized = false;
+    boolean dataInitialized = false;
     boolean servicesInitialized = false;
     boolean test= false;
     Map<String, Integer> numOfAcqsPerShop;
@@ -79,7 +78,7 @@ public class Market {
      * @param password the system manager password.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password,boolean test) throws MarketException, FileNotFoundException {
+    public synchronized void firstInitMarket(String userName, String password,boolean test) throws MarketException {
 
         try {
             this.test=test;
@@ -87,36 +86,15 @@ public class Market {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
             }
-            try{
             if (!servicesInitialized) {
                 readConfigurationFile();
             }
-            }
-            catch(Exception e){
-                ErrorLog eventLog = ErrorLog.getInstance();
-                eventLog.Log("Failed to init market's services.");
-                throw new MarketException("Failed to init market's services.");
-            }
-            try{
-            if (!datainitialized) {
+            if (!dataInitialized) {
                 readInitFile();
             }
-            }
-            catch(Exception e){
-                ErrorLog eventLog = ErrorLog.getInstance();
-                eventLog.Log("Failed to init market's data.");
-                throw new MarketException("Failed to init market's data.");
-            }
-            try{
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
                 instance.systemManagerName = userName;
-            }
-            }
-            catch(Exception e){
-                ErrorLog eventLog = ErrorLog.getInstance();
-                eventLog.Log("Failed to init market's manager.");
-                throw new MarketException("Failed to init market's manager.");
             }
             checkSysteminit();
             EventLog eventLog = EventLog.getInstance();
@@ -136,7 +114,7 @@ public class Market {
      * @param dataName     the init data's file name.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password, String servicesName, String dataName,boolean test) throws Exception {
+    public synchronized void firstInitMarket(String userName, String password, String servicesName, String dataName,boolean test) throws MarketException {
 
         try {
             this.test=test;
@@ -144,36 +122,15 @@ public class Market {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
             }
-            try{
             if (!servicesInitialized) {
                 readConfigurationFile(servicesName);
             }
+            if (!dataInitialized) {
+                readInitFile(dataName);
             }
-            catch(Exception e){
-                ErrorLog eventLog = ErrorLog.getInstance();
-                eventLog.Log("Failed to init market's services.");
-                throw new MarketException("Failed to init market's services.");
-            }
-            try {
-                if (!datainitialized) {
-                    readInitFile(dataName);
-                }
-            }
-            catch(Exception e){
-                ErrorLog eventLog = ErrorLog.getInstance();
-                eventLog.Log("Failed to init market's data.");
-                throw new MarketException("Failed to init market's data.");
-            }
-            try{
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
                 instance.systemManagerName = userName;
-            }
-            }
-            catch(Exception e){
-                ErrorLog eventLog = ErrorLog.getInstance();
-                eventLog.Log("Failed to init market's manager.");
-                throw new MarketException("Failed to init market's manager.");
             }
             checkSysteminit();
             EventLog eventLog = EventLog.getInstance();
@@ -188,31 +145,19 @@ public class Market {
      *
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(boolean test) throws MarketException, FileNotFoundException {
+    public synchronized void firstInitMarket(boolean test) throws MarketException {
 
         try {
-            this.test = test;
+            this.test=test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
             }
-            try {
-                if (!servicesInitialized) {
-                    readConfigurationFile();
-                }
-            } catch (Exception e) {
-                ErrorLog eventLog = ErrorLog.getInstance();
-                eventLog.Log("Failed to init market's services.");
-                throw new MarketException("Failed to init market's services.");
+            if (!servicesInitialized) {
+                readConfigurationFile();
             }
-            try {
-                if (!datainitialized) {
-                    readInitFile();
-                }
-            } catch (Exception e) {
-                ErrorLog eventLog = ErrorLog.getInstance();
-                eventLog.Log("Failed to init market's data.");
-                throw new MarketException("Failed to init market's data.");
+            if (!dataInitialized) {
+                readInitFile();
             }
             checkSysteminit();
             EventLog eventLog = EventLog.getInstance();
@@ -237,39 +182,19 @@ public class Market {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
         }
-        try {
-            if (fileName == null || fileName.isEmpty() & !servicesInitialized) {
-                readConfigurationFile();
-            } else {
-                if (!servicesInitialized) {
-                    readConfigurationFile(fileName);
-                }
+        if (fileName == null || fileName.isEmpty() & !servicesInitialized) {
+            readConfigurationFile();
+        } else {
+            if (!servicesInitialized) {
+                readConfigurationFile(fileName);
             }
         }
-        catch(Exception e){
-            ErrorLog eventLog = ErrorLog.getInstance();
-            eventLog.Log("Failed to init market's services.");
-            throw new MarketException("Failed to init market's services.");
-        }
-        try{
         if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
             register(userName, password);
             instance.systemManagerName = userName;
         }
-        }
-        catch(Exception e){
-            ErrorLog eventLog = ErrorLog.getInstance();
-            eventLog.Log("Failed to init market's manager.");
-            throw new MarketException("Failed to init market's manager.");
-        }
-        try {
-            if (!datainitialized) {
-                readInitFile();
-            }
-        } catch(Exception e){
-            ErrorLog eventLog = ErrorLog.getInstance();
-            eventLog.Log("Failed to init market's data.");
-            throw new MarketException("Failed to init market's data.");
+        if (!dataInitialized) {
+            readInitFile();
         }
         checkSysteminit();
         EventLog eventLog = EventLog.getInstance();
@@ -281,7 +206,7 @@ public class Market {
      * Config the external services of the system.
      * The data is in text file name config.txt
      */
-    private void readConfigurationFile() throws MarketException, FileNotFoundException {
+    private void readConfigurationFile() {
 
         try {
 
@@ -295,45 +220,11 @@ public class Market {
             servicesInitialized = true;
 
         } catch (Exception e) {
-            paymentServiceProxy=null;
-            supplyServiceProxy=null;
-            publisher=null;
-            throw e;
+            System.out.println (e.getMessage () );
         }
     }
 
-    private void readConfigurationFile(String name) throws MarketException, FileNotFoundException {
-
-        try {
-
-            File myObj = new File(getConfigDir() + name);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] vals = data.split("::");
-                setService(vals[0], vals[1]);
-            }
-            if (paymentServiceProxy == null || supplyServiceProxy == null) {
-                DebugLog debugLog = DebugLog.getInstance();
-                debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-                throw new MarketException("market needs payment and supply services for initialize");
-            }
-            if (publisher == null) {
-                DebugLog debugLog = DebugLog.getInstance();
-                debugLog.Log("A market initialization failed . Lack of publisher services ");
-                throw new MarketException("market needs publisher services for initialize");
-
-            }
-
-            servicesInitialized = true;
-        } catch (Exception e) {
-            paymentServiceProxy=null;
-            supplyServiceProxy=null;
-            publisher=null;
-            throw e;
-        }
-    }
-    private void readInitFile() throws FileNotFoundException, MarketException {
+    private void readInitFile() {
 
         try {
 
@@ -345,17 +236,13 @@ public class Market {
                 setData(vals);
 
             }
-            datainitialized = true;
+            dataInitialized = true;
 
         } catch (Exception e) {
-            try{
-                reset();
-            }catch (Exception ex){}
-            throw e;
         }
     }
 
-    private void readInitFile(String fileName) throws Exception {
+    private void readInitFile(String fileName) throws MarketException {
 
         try {
 
@@ -367,12 +254,8 @@ public class Market {
                 setData(vals);
 
             }
-            datainitialized = true;
+            dataInitialized = true;
         } catch (Exception e) {
-            try{
-                reset();
-            }catch (Exception ex){}
-            throw e;
         }
     }
 
@@ -450,7 +333,33 @@ public class Market {
         }
     }
 
+    private void readConfigurationFile(String name) {
 
+        try {
+
+            File myObj = new File(getConfigDir() + name);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] vals = data.split("::");
+                setService(vals[0], vals[1]);
+            }
+            if (paymentServiceProxy == null || supplyServiceProxy == null) {
+                DebugLog debugLog = DebugLog.getInstance();
+                debugLog.Log("A market initialization failed . Lack of payment / supply services ");
+                throw new MarketException("market needs payment and supply services for initialize");
+            }
+            if (publisher == null) {
+                DebugLog debugLog = DebugLog.getInstance();
+                debugLog.Log("A market initialization failed . Lack of publisher services ");
+                throw new MarketException("market needs publisher services for initialize");
+
+            }
+
+            servicesInitialized = true;
+        } catch (Exception e) {
+        }
+    }
 
     /**
      * init service by the line from config file.
@@ -467,9 +376,6 @@ public class Market {
             initSupplyService(val1);
         } else if (val.contains("Publisher") && (systemManagerName == null || systemManagerName.isEmpty())) {
             initNotificationService(val1);
-        }
-        else  {
-            initManager(val,val1);
         }
     }
 
@@ -1007,7 +913,7 @@ public class Market {
             DebugLog.getInstance().Log("Cant add item with negative or zero amount");
             throw new MarketException("Cant add item with negative amount");
         }
-        if (!shops.get(curShop.getShopName()).hasItem(item)) {
+        if (!curShop.hasItem(item)) {
             DebugLog.getInstance().Log("Cannot add item that does not exists in the shop.");
             throw new MarketException("Cannot add item that does not exists in the shop.");
         }
@@ -1413,6 +1319,17 @@ public class Market {
         return shop.getPurchasePolicies();
     }
 
+    public List<DiscountType> getDiscountTypesOfShop(String visitorName, String shopName) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        Shop shop = shops.get(shopName);
+        if (shop == null)
+            throw new MarketException("shop does not exist in market");
+        return shop.getDiscountTypes();
+    }
+
     /**
      * check that all services are initialized from the config file.
      *
@@ -1505,7 +1422,7 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir").split("/market_2022")[0];
-        dir += "/market_2022/server/config/";
+        dir += "\\config\\";
         return dir;
     }
 }

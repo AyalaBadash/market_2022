@@ -1,8 +1,17 @@
 package com.example.server.serviceLayer;
 
 
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.*;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Payment.PaymentService;
@@ -14,6 +23,8 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.*;
+import org.springframework.boot.ansi.Ansi8BitColor;
 
 
 import java.util.ArrayList;
@@ -36,7 +47,7 @@ public class MarketService {
 
     public Response firstInitMarket(String userName, String password) {
         try {
-            market.firstInitMarket(userName, password,false);
+            market.firstInitMarket(userName, password, false);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());
@@ -46,9 +57,9 @@ public class MarketService {
         }
     }
 
-    public Response firstInitMarket(String userName, String password,String services,String data) {
+    public Response firstInitMarket(String userName, String password, String services, String data) {
         try {
-            market.firstInitMarket(userName, password,services,data,false);
+            market.firstInitMarket(userName, password, services, data, false);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());
@@ -69,6 +80,7 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {
         ResponseT<List<ItemFacade>> toReturn;
         try {
@@ -427,9 +439,9 @@ public class MarketService {
         }
     }
 
-    public Response addDiscountToShop(String visitorName, String shopName, DiscountTypeFacade discountTypeFacade) {
+    public Response addDiscountToShop(String visitorName, String shopName, DiscountTypeWrapper discountTypeWrapper) {
         try {
-            DiscountType discountType = discountTypeFacade.toBusinessObject();
+            DiscountType discountType = discountTypeWrapper.toBusinessObject();
             market.addDiscountToShop(visitorName, shopName, discountType);
             return new Response();
         } catch (Exception e) {
@@ -437,9 +449,9 @@ public class MarketService {
         }
     }
 
-    public Response removeDiscountFromShop(String visitorName, String shopName, DiscountTypeFacade discountTypeFacade) {
+    public Response removeDiscountFromShop(String visitorName, String shopName, DiscountTypeWrapper discountTypeWrapper) {
         try {
-            DiscountType discountType = discountTypeFacade.toBusinessObject();
+            DiscountType discountType = discountTypeWrapper.toBusinessObject();
             market.removeDiscountFromShop(visitorName, shopName, discountType);
             return new Response();
         } catch (Exception e) {
@@ -447,20 +459,20 @@ public class MarketService {
         }
     }
 
-    public Response addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyTypeFacade purchasePolicyTypeFacade) {
+    public Response addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
         try {
-            PurchasePolicyType purchasePolicyType = purchasePolicyTypeFacade.toBusinessObject();
-            market.addPurchasePolicyToShop (visitorName, shopName, purchasePolicyType);
+            PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();
+            market.addPurchasePolicyToShop(visitorName, shopName, purchasePolicyType);
             return new Response();
         } catch (Exception e) {
             return new Response(e.getMessage());
         }
     }
 
-    public Response removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyTypeFacade purchasePolicyTypeFacade) {
+    public Response removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
         try {
-            PurchasePolicyType purchasePolicyType = purchasePolicyTypeFacade.toBusinessObject();
-            market.removePurchasePolicyFromShop (visitorName, shopName, purchasePolicyType);
+            PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();
+            market.removePurchasePolicyFromShop(visitorName, shopName, purchasePolicyType);
             return new Response();
         } catch (Exception e) {
             return new Response(e.getMessage());
@@ -481,7 +493,7 @@ public class MarketService {
 
     public Response setPaymentService(PaymentService o, String managerName) {
         try {
-            if (market.setPaymentService(o,managerName)) {
+            if (market.setPaymentService(o, managerName)) {
                 return new Response();
             } else {
                 return new Response("fAILED TO SET SERVICE");
@@ -490,9 +502,10 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
     public Response setSupplyService(SupplyService o, String managerName) {
         try {
-            if (market.setSupplyService(o,managerName)) {
+            if (market.setSupplyService(o, managerName)) {
                 return new Response();
             } else {
                 return new Response("fAILED TO SET SERVICE");
@@ -501,9 +514,10 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
     public Response setPublishService(Publisher o, String managerName) {
         try {
-            if (market.setPublishService(o,managerName)) {
+            if (market.setPublishService(o, managerName)) {
                 return new Response();
             } else {
                 return new Response("fAILED TO SET SERVICE");
@@ -513,20 +527,31 @@ public class MarketService {
         }
     }
 
-//    public ResponseT<List<PurchasePolicyTypeFacade>> getPurchasePoliciesOfShop(String visitorName, String shopName) {
-//        try {
-//            List<PurchasePolicyType> purchasePolicyTypes = market.getPurchasePoliciesOfShop(visitorName, shopName);
-//            List<PurchasePolicyTypeFacade> purchasePolicyTypeFacades = new ArrayList<> (  );
-//            for(PurchasePolicyType purchasePolicyType: purchasePolicyTypes)
-//                purchasePolicyTypeFacades.add (createPurchasePolicyFacade(purchasePolicyType));
-//            return new ResponseT(purchasePolicyTypeFacades);
-//        } catch (Exception e) {
-//            return new ResponseT(e.getMessage());
-//        }
-//    }
+    public ResponseT<List<PurchasePolicyTypeWrapper>> getPurchasePoliciesOfShop(String visitorName, String shopName) {
+        try {
+            List<PurchasePolicyType> purchasePolicyTypes = market.getPurchasePoliciesOfShop(visitorName, shopName);
+            List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers = new ArrayList<>();
+            for (PurchasePolicyType purchasePolicyType : purchasePolicyTypes)
+                purchasePolicyTypeWrappers.add(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(purchasePolicyType));
+            return new ResponseT(purchasePolicyTypeWrappers);
+        } catch (Exception e) {
+            return new ResponseT(e.getMessage());
+        }
+    }
 
-//    private PurchasePolicyTypeFacade createPurchasePolicyFacade(PurchasePolicyType purchasePolicyType) {
-//        if(purchasePolicyType.isAtLeast ())
-//
-//    }
+
+
+    public ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(String visitorName, String shopName) {
+        try {
+            List<DiscountType> discountTypeList = market.getDiscountTypesOfShop(visitorName, shopName);
+            List<DiscountTypeWrapper> discountTypeWrappers = new ArrayList<>();
+            for (DiscountType discountType : discountTypeList)
+                discountTypeWrappers.add(DiscountTypeWrapper.createDiscountTypeWrapper(discountType));
+            return new ResponseT(discountTypeWrappers);
+        } catch (Exception e) {
+            return new ResponseT(e.getMessage());
+        }
+    }
+
+
 }

@@ -1,12 +1,9 @@
 package com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AndCompositePurchasePolicyLevelState extends CompositePurchasePolicyLevelState{
@@ -20,7 +17,7 @@ public class AndCompositePurchasePolicyLevelState extends CompositePurchasePolic
         for ( PurchasePolicyLevelState purchasePolicyLevelState : purchasePolicyLevelStates ) {
             List<Double> amounts = purchasePolicyLevelState.getAmount ( shoppingBasket );
             for(Double cur : amounts)
-                if((greater && cur <= amount) || cur > amount)
+                if(cur != 0 && ((greater && cur <= amount) || cur > amount))
                     return false;
         }
         return true;
@@ -84,7 +81,7 @@ public class AndCompositePurchasePolicyLevelState extends CompositePurchasePolic
     }
 
     @Override
-    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyFacade levelStateFacade) {
+    public PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyLevelStateFacade levelStateFacade) {
         return null;
     }
 

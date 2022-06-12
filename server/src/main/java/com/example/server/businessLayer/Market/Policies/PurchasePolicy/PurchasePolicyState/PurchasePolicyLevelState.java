@@ -20,7 +20,7 @@ public abstract class PurchasePolicyLevelState {
 
     public abstract PurchasePolicyLevelStateFacade visitToFacade(ItemPurchasePolicyLevelStateFacade levelStateFacade);
     public abstract  PurchasePolicyLevelStateFacade visitToFacade(CategoryPurchasePolicyLevelStateFacade levelStateFacade);
-    public abstract PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyFacade levelStateFacade);
+    public abstract PurchasePolicyLevelStateFacade visitToFacade(ShopPurchasePolicyLevelStateFacade levelStateFacade);
 
     public abstract  PurchasePolicyLevelStateFacade visitToFacade(AndCompositePurchasePolicyLevelStateFacade levelStateFacade);
     public abstract PurchasePolicyLevelStateFacade visitToFacade(XorCompositePurchasePolicyLevelStateFacade levelStateFacade);

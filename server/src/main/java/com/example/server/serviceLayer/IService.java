@@ -290,14 +290,14 @@ public interface IService {
      * @param request
      * @return
      */
-    public Response removeShopOwnerAppointment(removeAppointmentRequest request);
+    public Response removeShopOwnerAppointment(RemoveAppointmentRequest request);
 
     /**
      *
      * @param request
      * @return
      */
-    public Response removeMember(removeMemberRequest request);
+    public Response removeMember(RemoveMemberRequest request);
 
     /**
      *
@@ -337,17 +337,17 @@ public interface IService {
      */
     Response removePurchasePolicyFromShop(RemovePurchasePolicyFromShopRequest request);
 
-//    /**
-//     * @param request
-//     * @return
-//     */
-//    Response getPurchasePoliciesOfShop(GetPoliciesRequest request);
-//
-//    /**
-//     * @param request
-//     * @return
-//     */
-//    Response getDiscountTypesOfShop(GetPoliciesRequest request);
+    /**
+     * @param request
+     * @return
+     */
+    Response getPurchasePoliciesOfShop(GetPoliciesRequest request);
+
+    /**
+     * @param request
+     * @return
+     */
+    Response getDiscountTypesOfShop(GetPoliciesRequest request);
 
     /**
      *

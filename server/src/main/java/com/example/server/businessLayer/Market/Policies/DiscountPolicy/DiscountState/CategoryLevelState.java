@@ -16,7 +16,7 @@ public class CategoryLevelState extends DiscountLevelState {
     }
 
     @Override
-    public double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) throws MarketException {
+    public double calculateDiscount(ShoppingBasket shoppingBasket, double percentageOfDiscount) throws MarketException {
         Map<java.lang.Integer, Double> items = shoppingBasket.getItems();
         double generalDiscount = 0;
         double discount = 0;

@@ -6,7 +6,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 public abstract class DiscountLevelState {
 
-    public abstract double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) throws MarketException;
+    public abstract double calculateDiscount(ShoppingBasket shoppingBasket, double percentageOfDiscount) throws MarketException;
     public abstract boolean equals(Object object);
 
     public boolean isItem(){
