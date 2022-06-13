@@ -1,0 +1,17 @@
+Register::u2::p2
+Register::u3::p3
+Register::u4::p4
+Register::u5::p5
+Register::u6::p6
+Login::u1::p1
+Login::u2::p2
+Login::u3::p3
+Login::u4::p4
+Login::u5::p5
+Login::u6::p6
+Open_Shop::u2::s1
+Add_Item::u2::Bamba::30::snacks::::20::s1
+Appoint_Manager::u2::u3::s1
+Logout::u5
+Appoint_Owner::u2::u4::s1
+Appoint_Owner::u2::u5::s1
