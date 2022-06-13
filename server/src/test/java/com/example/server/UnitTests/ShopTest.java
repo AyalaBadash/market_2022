@@ -8,6 +8,8 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.UserController;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import org.junit.jupiter.api.*;
@@ -31,13 +33,20 @@ public class ShopTest {
     Item item;
 
     List<String> keywords;
+    UserController userController;
 
     static TextDispatcher textDispatcher= TextDispatcher.getInstance();
 
     @BeforeEach
     public void reset(){
+        userController = Mockito.mock ( UserController.class );
         memberFounder = Mockito.mock(Member.class);
         Mockito.when(memberFounder.getName()).thenReturn("The founder");
+        try {
+            Mockito.when ( userController.getVisitor ("The founder" ) ).thenReturn ( new Visitor ( "The founder" ) );
+        } catch (MarketException e) {
+            throw new RuntimeException ( e );
+        }
         ownerAppointment = Mockito.mock(ShopOwnerAppointment.class);
         Mockito.when(ownerAppointment.getAppointed()).thenReturn(memberFounder);
         Mockito.when(ownerAppointment.getAppointed().getName()).thenReturn("The founder");
@@ -318,7 +327,9 @@ public class ShopTest {
         currAmount.put(item2.getID(), 20.0);
         ReflectionTestUtils.setField(shop, "itemsCurrentAmount", currAmount);
         try {
-            Assertions.assertEquals(35.0,shop.buyBasket(new NotificationHandler(textDispatcher),basket, memberFounder.getName()));
+            NotificationHandler nh= NotificationHandler.getInstance();
+            nh.setService(textDispatcher);
+            Assertions.assertEquals(35.0,shop.buyBasket(nh,basket, memberFounder.getName(),true));
         } catch (MarketException e) {
             System.out.println(e.getMessage());
             assert false;

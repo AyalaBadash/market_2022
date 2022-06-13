@@ -64,9 +64,6 @@ public class ShoppingBasket implements IHistory , Serializable {
     }
 
     //TODO - add calculationOfDiscount
-    public double getPriceWithDiscount() {
-        throw new UnsupportedOperationException();
-    }
 
     private double calculatePrice() {
         double price = 0;

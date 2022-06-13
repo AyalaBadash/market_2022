@@ -1,34 +1,635 @@
-Level Error : Tried to appoint shop manager for non existing shop.
-Level Error : Tried to appoint shop manager for non existing shop.
-Level Error : Tried to appoint shop manager for non existing shop.
-Level Error : Tried to appoint shop manager for non existing shop.
-Level Error : Tried to appoint shop owner for non existing shop.
-Level Error : Tried to appoint shop manager for non existing shop.
-Level Error : you must be a visitor in the market in order to make actions
-Level Error : you must be a visitor in the market in order to make actions
-Level Error : Tried to appoint shop manager for non existing shop.
-Level Error : Member raz tried to log in but has password mismatch.
-Level Error : Tried to appoint shop manager for non existing shop.
-Level Error : Tried to appoint shop manager for non existing shop.
-Level Error : A market initialization failed .already initialized
-Level Error : could not execute statement; nested exception is org.hibernate.exception.GenericJDBCException: could not execute statement
-Level Error : could not execute statement; nested exception is org.hibernate.exception.GenericJDBCException: could not execute statement
-Level Error : Cannot invoke "com.example.server.dataLayer.repositories.ShoppingBasketRepository.save(Object)" because "com.example.server.businessLayer.Market.ShoppingCart.shoppingBasketRepository" is null
-Level Error : could not execute statement; nested exception is org.hibernate.exception.GenericJDBCException: could not execute statement
-Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
-Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
-Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
-Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
-Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
-Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.Member.getName()" because the return value of "com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment.getSuperVisor()" is null
-Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
-Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
-Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
-Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
-Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
 Level Error : Non member visitor tried to log in.
-Level Error : Member s tried to log in but has password mismatch.
-Level Error : Shopping cart is not exists for the user.
-Level Error : detached entity passed to persist: com.example.server.businessLayer.Market.ShoppingCart; nested exception is org.hibernate.PersistentObjectException: detached entity passed to persist: com.example.server.businessLayer.Market.ShoppingCart
-Level Error : detached entity passed to persist: com.example.server.businessLayer.Market.ShoppingCart; nested exception is org.hibernate.PersistentObjectException: detached entity passed to persist: com.example.server.businessLayer.Market.ShoppingCart
-Level Error : Address details are illegal.
+Level Error : Non member visitor tried to log in.
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Non member visitor tried to log in.
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : A market initialization failed .already initialized
+Level Error : A market initialization failed .already initialized
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Non member visitor tried to log in.
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : User tried to register with taken name.
+Level Error : Non member visitor tried to log in.

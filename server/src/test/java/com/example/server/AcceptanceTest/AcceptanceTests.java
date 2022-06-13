@@ -1,11 +1,12 @@
 package com.example.server.AcceptanceTest;
 
 import com.example.server.businessLayer.Payment.CreditCard;
-import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
 import com.example.server.serviceLayer.Requests.*;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.ResponseT;
@@ -18,10 +19,11 @@ import java.util.List;
 
 public class AcceptanceTests {
 
+    static String systemManagerName = "ido";
+    static String systemManagerPassword = "1234Ido";
     static String shopOwnerName = "shaked";
     static String shopOwnerPassword = "shaked1234";
     static String shopName = "Shufersal";
-    static AcceptanceTestService config = new AcceptanceTestService();
     static Double productAmount;
     static Double productPrice;
     static CreditCard creditCard;
@@ -57,8 +59,7 @@ public class AcceptanceTests {
             openShop(shopOwnerName, shopName);
             productAmount = 3.0;
             productPrice = 1.2;
-            addItemToShop(shopOwnerName, "yogurt", productPrice, Item.Category.general,
-                    "soy", new ArrayList<>(), productAmount, shopName);
+            addItemToShop(shopOwnerName, "yogurt", productPrice, Item.Category.general, "soy", new ArrayList<>(), productAmount, shopName);
             List<ItemFacade> res = searchProductByName("yogurt");
             yogurt = res.get(0);
 
@@ -81,11 +82,10 @@ public class AcceptanceTests {
             onePlusKeywords.add("best seller");
             onePlusKeywords.add("in sale");
             onePlusInfo = "9-5g";
-            addItemToShop(shopOwnerName, onePlusName, onePlusPrice, onePlusCategory,
-                    onePlusInfo, onePlusKeywords, onePlusAmount, shopName);
+            addItemToShop(shopOwnerName, onePlusName, onePlusPrice, onePlusCategory, onePlusInfo, onePlusKeywords, onePlusAmount, shopName);
             onePlus = searchProductByName(onePlusName).get(0);
-            creditCard = new CreditCard("1234567890", "5","24", "555","Ido livne","204534839");
-            address = new Address("Bar Damri","Ben Gurion 3","Tel Aviv", "Israel", "1234");
+            creditCard = new CreditCard("1234567890", "5", "24", "555", "Ido livne", "204534839");
+            address = new Address("Bar Damri", "Ben Gurion 3", "Tel Aviv", "Israel", "1234");
         } catch (Exception e) {
             String msg = e.getMessage();
         }
@@ -106,28 +106,27 @@ public class AcceptanceTests {
         return result;
     }
 
-    protected Response addItemToCart(ItemFacade itemToInsert, double amount, String shopName, String visitorName) throws Exception {
-        AddItemToShoppingCartRequest request = new AddItemToShoppingCartRequest(itemToInsert, amount, shopName, visitorName);
+    protected Response addItemToCart(ItemFacade itemToInsert, double amount, String visitorName) throws Exception {
+        AddItemToShoppingCartRequest request = new AddItemToShoppingCartRequest(itemToInsert, amount,  visitorName);
         Response result = Service.getInstance().addItemToShoppingCart(request);
         return result;
     }
-
+    protected ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName){
+        return Service.getInstance().showShoppingCart(new RequestVisitorName(visitorName));
+    }
     protected Response buyShoppingCart(String visitorName, double expectedPrice, CreditCard paymentMethod, Address address) throws Exception {
         BuyShoppingCartRequest request = new BuyShoppingCartRequest(visitorName, expectedPrice, paymentMethod, address);
         Response res = Service.getInstance().buyShoppingCart(request);
         return res;
     }
 
-    protected static ResponseT<ShopFacade> addItemToShop(String shopOwnerName, String name, double price,
-                                                         Item.Category category, String info,
-                                                         List<String> keywords, double amount, String shopName) throws Exception {
-        AddItemToShopRequest request = new AddItemToShopRequest(shopOwnerName, name, price,
-                category, info, keywords, amount, shopName);
+    protected static ResponseT<ShopFacade> addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info, List<String> keywords, double amount, String shopName) throws Exception {
+        AddItemToShopRequest request = new AddItemToShopRequest(shopOwnerName, name, price, category, info, keywords, amount, shopName);
         ResponseT<ShopFacade> result = Service.getInstance().addItemToShop(request);
         return result;
     }
 
-    protected ResponseT<ShopFacade> getShopInfo(String name, String shopName) {
+    protected static ResponseT<ShopFacade> getShopInfo(String name, String shopName) {
         TwoStringRequest request = new TwoStringRequest(name, shopName);
         ResponseT<ShopFacade> result = Service.getInstance().getShopInfo(request);
         return result;
@@ -145,10 +144,8 @@ public class AcceptanceTests {
         return visitor;
     }
 
-    protected Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount,
-                                         String shopName) throws Exception {
-        SetItemCurrentAmountRequest request = new SetItemCurrentAmountRequest(shopOwnerName, item,
-                amount, shopName);
+    protected Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) throws Exception {
+        SetItemCurrentAmountRequest request = new SetItemCurrentAmountRequest(shopOwnerName, item, amount, shopName);
         Response res = Service.getInstance().setItemCurrentAmount(request);
         return res;
     }
@@ -156,7 +153,7 @@ public class AcceptanceTests {
 
     protected static List<ItemFacade> searchProductByName(String productName) throws Exception {
         SearchProductByNameRequest request = new SearchProductByNameRequest(productName);
-        ResponseT<List<ItemFacade>> result  = Service.getInstance().searchProductByName(request);
+        ResponseT<List<ItemFacade>> result = Service.getInstance().searchProductByName(request);
         return result.getValue();
     }
 
@@ -179,7 +176,7 @@ public class AcceptanceTests {
     }
 
     protected static Response initMarket() {
-        InitMarketRequest request = new InitMarketRequest(config.systemManagerName, config.systemManagerPassword);
+        InitMarketRequest request = new InitMarketRequest(systemManagerName, systemManagerPassword);
         Response res = Service.getInstance().firstInitMarket(request);
         return res;
     }
@@ -229,8 +226,7 @@ public class AcceptanceTests {
     }
 
     protected Response changeShopItemInfo(String shopOwnerName, String info, ItemFacade oldItem, String shopName) throws Exception {
-        ChangeShopItemInfoRequest request = new ChangeShopItemInfoRequest(shopOwnerName, info,
-                oldItem, shopName);
+        ChangeShopItemInfoRequest request = new ChangeShopItemInfoRequest(shopOwnerName, info, oldItem, shopName);
         Response result = Service.getInstance().changeShopItemInfo(request);
         return result;
     }
@@ -254,16 +250,57 @@ public class AcceptanceTests {
         return result.getValue();
     }
 
-    protected MemberFacade getMember(String memberName){
+    protected MemberFacade getMember(String memberName) {
         return Service.getInstance().getMember(memberName).getValue();
     }
 
-    protected VisitorFacade getVisitor(String name){
+    protected VisitorFacade getVisitor(String name) {
         return Service.getInstance().getVisitor(name).getValue();
     }
 
-    protected ItemFacade getItemById(int id){
+    protected ItemFacade getItemById(int id) {
         return Service.getInstance().getItemById(id).getValue();
+    }
+
+    protected Response addDiscountToShop(DiscountTypeWrapper discount, String shopName, String visitorName) {
+        AddDiscountToShopRequest request = new AddDiscountToShopRequest(discount, shopName, visitorName);
+        return Service.getInstance().addDiscountToShop(request);
+    }
+
+    protected Response removeDiscountFromShop(DiscountTypeWrapper discount, String shopName, String visitorName) {
+        RemoveDiscountFromShopRequest request = new RemoveDiscountFromShopRequest(discount, shopName, visitorName);
+        return Service.getInstance().removeDiscountFromShop(request);
+    }
+
+    protected Response addPurchasePolicyToShop(PurchasePolicyTypeWrapper purchasePolicyTypeFacade, String shopName, String visitorName) {
+        AddPurchasePolicyToShopRequest request = new AddPurchasePolicyToShopRequest(purchasePolicyTypeFacade, shopName, visitorName);
+        return Service.getInstance().addPurchasePolicyToShop(request);
+    }
+
+    protected Response removePurchasePolicyFromShop(PurchasePolicyTypeWrapper purchasePolicyTypeFacade, String shopName, String visitorName){
+        RemovePurchasePolicyFromShopRequest request = new RemovePurchasePolicyFromShopRequest(purchasePolicyTypeFacade, shopName, visitorName);
+        return Service.getInstance().removePurchasePolicyFromShop(request);
+    }
+
+    protected ResponseT<List<PurchasePolicyTypeWrapper>> getPurchasePoliciesOfShop(String visitorName, String shopName){
+        GetPoliciesRequest request = new GetPoliciesRequest(visitorName,shopName);
+        return Service.getInstance().getPurchasePoliciesOfShop(request);
+    }
+
+    protected  ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(String visitorName, String shopName) {
+        GetPoliciesRequest request = new GetPoliciesRequest(visitorName, shopName);
+        return Service.getInstance().getDiscountTypesOfShop(request);
+    }
+
+
+    public Response removeMember(String manager, String memberToRemove) {
+        RemoveMemberRequest request = new RemoveMemberRequest(manager, memberToRemove);
+        return Service.getInstance().removeMember(request);
+    }
+
+    public Response removeShopOwnerAppointment(String boss, String firedAppointed, String shopName) {
+        RemoveAppointmentRequest request = new RemoveAppointmentRequest(boss, firedAppointed,shopName);
+        return Service.getInstance().removeShopOwnerAppointment(request);
     }
 
 

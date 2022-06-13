@@ -1,15 +1,21 @@
 package com.example.server.serviceLayer;
 
 
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.*;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
-import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.PaymentService;
-import com.example.server.businessLayer.Publisher.NotificationDispatcher;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
+import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Supply.SupplyService;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
@@ -19,6 +25,8 @@ import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.*;
+import org.springframework.boot.ansi.Ansi8BitColor;
 
 
 import java.util.ArrayList;
@@ -32,7 +40,6 @@ public class MarketService {
     private Market market;
 
     private MarketService() {
-        System.out.println("");
 //       market = Market.getInstance();
     }
 
@@ -43,9 +50,33 @@ public class MarketService {
         return marketService;
     }
 
-    public Response firstInitMarket(PaymentServiceProxy paymentService, SupplyServiceProxy supplyService, String userName, String password) {
+    public Response firstInitMarket(String userName, String password) {
         try {
-            market.firstInitMarket(paymentService, supplyService, NotificationDispatcher.getInstance(), userName, password);
+            market.firstInitMarket(userName, password, false);
+            return new Response();
+        } catch (MarketException e) {
+            return new Response(e.getMessage());
+        } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response firstInitMarket(String userName, String password, String services, String data) {
+        try {
+            market.firstInitMarket(userName, password, services, data, false);
+            return new Response();
+        } catch (MarketException e) {
+            return new Response(e.getMessage());
+        } catch (Exception e) {
+            ErrorLog.getInstance().Log(e.getMessage());
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response firstInitMarket(boolean b) {
+        try {
+            market.firstInitMarket(b);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());
@@ -413,10 +444,40 @@ public class MarketService {
         }
     }
 
-    public Response addDiscountToShop(String visitorName, String shopName, DiscountTypeFacade discountTypeFacade) {
+    public Response addDiscountToShop(String visitorName, String shopName, DiscountTypeWrapper discountTypeWrapper) {
         try {
-            DiscountType discountType = discountTypeFacade.toBusinessObject();
+            DiscountType discountType = discountTypeWrapper.toBusinessObject();
             market.addDiscountToShop(visitorName, shopName, discountType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response removeDiscountFromShop(String visitorName, String shopName, DiscountTypeWrapper discountTypeWrapper) {
+        try {
+            DiscountType discountType = discountTypeWrapper.toBusinessObject();
+            market.removeDiscountFromShop(visitorName, shopName, discountType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
+        try {
+            PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();
+            market.addPurchasePolicyToShop(visitorName, shopName, purchasePolicyType);
+            return new Response();
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
+        try {
+            PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();
+            market.removePurchasePolicyFromShop(visitorName, shopName, purchasePolicyType);
             return new Response();
         } catch (Exception e) {
             return new Response(e.getMessage());
@@ -434,4 +495,68 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
+    public Response setPaymentService(PaymentService o, String managerName) {
+        try {
+            if (market.setPaymentService(o, managerName)) {
+                return new Response();
+            } else {
+                return new Response("fAILED TO SET SERVICE");
+            }
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response setSupplyService(SupplyService o, String managerName) {
+        try {
+            if (market.setSupplyService(o, managerName)) {
+                return new Response();
+            } else {
+                return new Response("fAILED TO SET SERVICE");
+            }
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response setPublishService(Publisher o, String managerName) {
+        try {
+            if (market.setPublishService(o, managerName)) {
+                return new Response();
+            } else {
+                return new Response("fAILED TO SET SERVICE");
+            }
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public ResponseT<List<PurchasePolicyTypeWrapper>> getPurchasePoliciesOfShop(String visitorName, String shopName) {
+        try {
+            List<PurchasePolicyType> purchasePolicyTypes = market.getPurchasePoliciesOfShop(visitorName, shopName);
+            List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers = new ArrayList<>();
+            for (PurchasePolicyType purchasePolicyType : purchasePolicyTypes)
+                purchasePolicyTypeWrappers.add(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(purchasePolicyType));
+            return new ResponseT(purchasePolicyTypeWrappers);
+        } catch (Exception e) {
+            return new ResponseT(e.getMessage());
+        }
+    }
+
+
+
+    public ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(String visitorName, String shopName) {
+        try {
+            List<DiscountType> discountTypeList = market.getDiscountTypesOfShop(visitorName, shopName);
+            List<DiscountTypeWrapper> discountTypeWrappers = new ArrayList<>();
+            for (DiscountType discountType : discountTypeList)
+                discountTypeWrappers.add(DiscountTypeWrapper.createDiscountTypeWrapper(discountType));
+            return new ResponseT(discountTypeWrappers);
+        } catch (Exception e) {
+            return new ResponseT(e.getMessage());
+        }
+    }
+
+
 }

@@ -1,13 +1,12 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CompositeDiscountLevelState implements DiscountLevelState {
+public abstract class CompositeDiscountLevelState extends DiscountLevelState {
 
     protected List<DiscountLevelState> discountLevelStates;
 
@@ -15,7 +14,7 @@ public abstract class CompositeDiscountLevelState implements DiscountLevelState 
         this.discountLevelStates = discountLevelStates;
     }
     @Override
-    public double calculateDiscount(ShoppingBasket shoppingBasket, int percentageOfDiscount) throws MarketException {
+    public double calculateDiscount(ShoppingBasket shoppingBasket, double percentageOfDiscount) throws MarketException {
         double price = shoppingBasket.getPrice ();
         List<Double> discounts = new ArrayList<> (  );
         for(DiscountLevelState discountLevelState: discountLevelStates){
@@ -28,4 +27,12 @@ public abstract class CompositeDiscountLevelState implements DiscountLevelState 
     protected abstract Double calculateAllDiscount(double price, List<Double> discounts) throws MarketException;
 
     public abstract boolean equals(Object object);
+
+    public List<DiscountLevelState> getDiscountLevelStates() {
+        return discountLevelStates;
+    }
+
+    public void setDiscountLevelStates(List<DiscountLevelState> discountLevelStates) {
+        this.discountLevelStates = discountLevelStates;
+    }
 }

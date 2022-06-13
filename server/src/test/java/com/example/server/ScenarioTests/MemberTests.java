@@ -24,8 +24,6 @@ public class MemberTests {
     Member testMember;
     String testMemberPassword;
     String testMemberName;
-    PaymentServiceProxy paymentService = new PaymentServiceProxy();
-    PaymentServiceProxy supplyService = new PaymentServiceProxy();
     String userName = "userTest";
     String password = "passTest";
     String shopManagerName = "shakedMember";
@@ -37,14 +35,14 @@ public class MemberTests {
     Address address;
     Item milk;
     Item cookies;
-    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
 
     @BeforeAll
     public void setUpMember() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
-                market.firstInitMarket(new PaymentServiceProxy(), new SupplyServiceProxy(),textDispatcher, userName, password);
+            if (market.getPaymentService() == null) {
+                market.firstInitMarket(userName, password,true);
+            }
 
             // shop manager register
             Visitor visitor = market.guestLogin();

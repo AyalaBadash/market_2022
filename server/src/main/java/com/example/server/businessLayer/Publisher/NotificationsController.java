@@ -25,6 +25,11 @@ public class NotificationsController {
 
         handler.add(name,stompHeaderAccessor.getSessionId());
     }
+    @MessageMapping("/login/{visitor}/{name}")
+    public void start(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable("visitor") String visitor, @DestinationVariable("name") String name) {
+
+        handler.login(name,visitor,stompHeaderAccessor.getSessionId());
+    }
     @MessageMapping("/stop/{name}")
     public void stop(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable("name") String name) {
 

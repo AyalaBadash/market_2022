@@ -16,6 +16,8 @@ import com.example.server.dataLayer.entities.DalShoppingCart;
 import com.example.server.dataLayer.repositories.AcquisitionRep;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import java.util.Map;
+
 import javax.persistence.*;
 
 @Entity
@@ -42,11 +44,11 @@ public class Acquisition {
 
     public Acquisition(){}
 
-    public ShoppingCart buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
+    public ShoppingCart buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler,boolean test) throws MarketException, Exception {
 
         // checks the price is correct
         //todo: check why there is not an exception here.
-        if(!isPriceCorrect(publisher,expectedPrice))
+        if(!isPriceCorrect(publisher,expectedPrice,test))
             return shoppingCartToBuy;
 
         if(address==null){
@@ -80,9 +82,18 @@ public class Acquisition {
         paymentDone = true;
         Visitor visitor = UserController.getInstance().getVisitor(buyerName);
         Member member = visitor.getMember ();
+        double actualPrice = 0;
         if( member != null) {
             //todo - add discount calculation
-            AcquisitionHistory acq = new AcquisitionHistory(shoppingCartToBuy, member.getName(), expectedPrice, expectedPrice);
+            for (Map.Entry<Shop,ShoppingBasket> entry:shoppingCartToBuy.getCart().entrySet())
+            {
+                Shop currShop = entry.getKey();
+                if (!currShop.getPurchasePolicy().isPoliciesHeld(entry.getValue())){
+                    throw new MarketException("One of the baskets does not match its shop policy");
+                }
+                actualPrice = actualPrice + currShop.getDiscountPolicy().calculateDiscount(entry.getValue());
+            }
+            AcquisitionHistory acq = new AcquisitionHistory(shoppingCartToBuy, member.getName(), actualPrice, expectedPrice);
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
@@ -90,10 +101,10 @@ public class Acquisition {
         return shoppingCartToBuy;
     }
 
-    private  boolean isPriceCorrect(NotificationHandler publisher, double expectedPrice) throws MarketException {
+    private  boolean isPriceCorrect(NotificationHandler publisher, double expectedPrice,boolean test) throws MarketException {
         double actualPrice;
         try {
-            actualPrice = shoppingCartToBuy.saveFromShops(publisher,buyerName);
+            actualPrice = shoppingCartToBuy.saveFromShops(publisher,buyerName,test);
         }catch (MarketException e){
             return false;
         }

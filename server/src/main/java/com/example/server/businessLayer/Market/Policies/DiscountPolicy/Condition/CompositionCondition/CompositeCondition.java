@@ -16,4 +16,12 @@ public abstract class CompositeCondition extends Condition {
 
     @Override
     public abstract boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException;
+
+    public List<Condition> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(List<Condition> conditions) {
+        this.conditions = conditions;
+    }
 }

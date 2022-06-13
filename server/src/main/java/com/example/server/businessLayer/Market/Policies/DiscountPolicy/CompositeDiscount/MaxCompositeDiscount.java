@@ -1,10 +1,12 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
-import java.awt.event.MouseAdapter;
 import java.util.List;
 
 public class MaxCompositeDiscount extends CompositeDiscount{
@@ -25,8 +27,7 @@ public class MaxCompositeDiscount extends CompositeDiscount{
 
     @Override
     public boolean equals(Object object) {
-        if(object instanceof MaxCompositeDiscount){
-            MaxCompositeDiscount toCompare = (MaxCompositeDiscount) object;
+        if(object instanceof MaxCompositeDiscount toCompare){
             for(DiscountType discountType: this.discountTypes){
                 if (toCompare.discountTypes.contains ( discountType ))
                     return false;
@@ -38,5 +39,20 @@ public class MaxCompositeDiscount extends CompositeDiscount{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(SimpleDiscountFacade discountFacade) {
+        return null;
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(ConditionalDiscountFacade discountFacade) {
+        return null;
+    }
+
+    @Override
+    public DiscountTypeFacade visitToFacade(MaxCompositeDiscountTypeFacade discountFacade) {
+        return discountFacade.toFacade ( this );
     }
 }

@@ -7,10 +7,8 @@ import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Payment.CreditCard;
-import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
@@ -25,9 +23,6 @@ public class AcquisitionTests {
     Market market;
     String userName = "userTest";
     String password = "passTest";
-    PaymentServiceProxy paymentService = new PaymentServiceProxy();
-    SupplyServiceProxy supplyService = new SupplyServiceProxy();
-    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
     String shopManagerName = "shaked";
     String shopManagerPassword = "shaked1234";
     String shopName = "kolbo";
@@ -41,8 +36,10 @@ public class AcquisitionTests {
     public void setUp() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+            if (market.getPaymentService() == null) {
+                market.firstInitMarket(userName, password,true);
+
+            }
 
             // shop manager register
             Visitor visitor = market.guestLogin();
@@ -112,14 +109,14 @@ public class AcquisitionTests {
             Visitor visitor = market.guestLogin();
             Visitor visitor2 = market.guestLogin ();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
-            List<Item> res = market.getItemByName("milk");
-            Item milk = res.get(0);
-            market.setItemCurrentAmount(shopManagerName,milk,10,shopName);
+            List<Item> res = market.getItemByName("chocolate");
+            Item chocolate = res.get(0);
+            market.setItemCurrentAmount(shopManagerName,chocolate,10,shopName);
             Item toiletPaper = new Item(12345,"toilet paper",10,"some info", Item.Category.general,new ArrayList<>());
-            Double itemAmount = shop.getItemCurrentAmount(milk);
+            Double itemAmount = shop.getItemCurrentAmount(chocolate);
             double buyingAmount = itemAmount;
-            market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
-            market.addItemToShoppingCart(milk, 1, visitor2.getName());
+            market.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
+            market.addItemToShoppingCart(chocolate, 1, visitor2.getName());
             market.addItemToShoppingCart(toiletPaper, 1, visitor2.getName());
             ShoppingCart shoppingCart = market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             Assertions.assertNull ( shoppingCart );
@@ -141,11 +138,11 @@ public class AcquisitionTests {
         try {
             Visitor visitor = market.guestLogin();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
-            List<Item> res = market.getItemByName("milk");
-            Item milk = res.get(0);
-            market.setItemCurrentAmount(shopManagerName,milk,10,shopName);
-            Double itemAmount = shop.getItemCurrentAmount(milk);
-            market.addItemToShoppingCart(milk, itemAmount, visitor.getName());
+            List<Item> res = market.getItemByName("chocolate");
+            Item chocolate = res.get(0);
+            market.setItemCurrentAmount(shopManagerName,chocolate,10,shopName);
+            Double itemAmount = shop.getItemCurrentAmount(chocolate);
+            market.addItemToShoppingCart(chocolate, itemAmount, visitor.getName());
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * itemAmount, null, address);
                 assert false;
@@ -164,11 +161,11 @@ public class AcquisitionTests {
         try {
             Visitor visitor = market.guestLogin();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
-            List<Item> res = market.getItemByName("milk");
-            Item milk = res.get(0);
-            market.setItemCurrentAmount(shopManagerName,milk,10,shopName);
-            Double itemAmount = shop.getItemCurrentAmount(milk);
-            market.addItemToShoppingCart(milk, itemAmount, visitor.getName());
+            List<Item> res = market.getItemByName("chocolate");
+            Item chocolate = res.get(0);
+            market.setItemCurrentAmount(shopManagerName,chocolate,10,shopName);
+            Double itemAmount = shop.getItemCurrentAmount(chocolate);
+            market.addItemToShoppingCart(chocolate, itemAmount, visitor.getName());
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * itemAmount, new CreditCard("","-1","1000","123","no holder","1234567"), address);
                 assert false;
@@ -242,7 +239,7 @@ public class AcquisitionTests {
             Double itemAmount = shop.getItemCurrentAmount(milk);
             double buyingAmount = itemAmount + 1;
             market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
-            market.setPaymentService(null,userName);
+            market.setPaymentServiceProxy(null,userName);
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
                 assert false;
@@ -267,7 +264,7 @@ public class AcquisitionTests {
             Double itemAmount = shop.getItemCurrentAmount(milk);
             double buyingAmount = itemAmount + 1;
             market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
-            market.setSupplyHandler(null,userName);
+            market.setSupplyService(null,userName);
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
                 assert false;

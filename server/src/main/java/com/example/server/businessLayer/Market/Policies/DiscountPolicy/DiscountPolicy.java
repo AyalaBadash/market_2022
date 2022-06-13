@@ -33,13 +33,29 @@ public class DiscountPolicy {
         validDiscounts.add ( discountType );
     }
 
-    private void pureDiscounts(CompositeDiscount discount){
-        for(DiscountType discountType: discount.getDiscountTypes ()){
-            if(validDiscounts.contains ( discountType )){
-                validDiscounts.remove ( discountType );
-            } else if(discountType instanceof CompositeDiscount){
-                pureDiscounts ((CompositeDiscount) discountType);
+    private void pureDiscounts(DiscountType discount){
+        if(discount instanceof CompositeDiscount) {
+            for ( DiscountType discountType : ((CompositeDiscount) discount).getDiscountTypes ( ) ) {
+                if (validDiscounts.contains ( discountType )) {
+                    validDiscounts.remove ( discountType );
+                } else if (discountType instanceof CompositeDiscount) {
+                    pureDiscounts (discountType);
+                }
             }
-        }
+        } else if(validDiscounts.contains ( discount ))
+            validDiscounts.remove ( discount );
+    }
+
+    public void removeDiscount(DiscountType discountType){
+        if(validDiscounts.contains ( discountType ))
+            validDiscounts.remove ( discountType );
+    }
+
+    public List<DiscountType> getValidDiscounts() {
+        return validDiscounts;
+    }
+
+    public void setValidDiscounts(List<DiscountType> validDiscounts) {
+        this.validDiscounts = validDiscounts;
     }
 }

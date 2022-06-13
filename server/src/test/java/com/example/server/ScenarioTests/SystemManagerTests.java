@@ -1,11 +1,10 @@
 package com.example.server.ScenarioTests;
 
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
-import com.example.server.businessLayer.Publisher.TextDispatcher;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -20,19 +19,16 @@ public class SystemManagerTests {
     static Market market;
     static String managerName = "userTest";
     static String managerpassword = "passTest";
-    static PaymentServiceProxy paymentService = new PaymentServiceProxy();
-    static SupplyServiceProxy supplyService = new SupplyServiceProxy();
     static PaymentServiceProxy paymentService2 = new PaymentServiceProxy();
-    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
-    SupplyServiceProxy supplyService2 = new SupplyServiceProxy();
 
 
     @BeforeAll
     public static void setUp() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, textDispatcher,managerName, managerpassword);
+            if (market.getPaymentService() == null) {
+                market.firstInitMarket(managerName, managerpassword,true);
+            }
 
             else
                 market.register(managerName, managerpassword);
@@ -106,7 +102,7 @@ public class SystemManagerTests {
     public void changeServices() {
         try {
             loginManager(managerName,managerpassword);
-            market.setPaymentService(paymentService2, managerName);
+            market.setPaymentServiceProxy(paymentService2, managerName);
             assert  true;
             try {
                 logoutMember(managerName);
@@ -122,7 +118,7 @@ public class SystemManagerTests {
     @DisplayName("system manager change services bad case- not logged in")
     public void changeServicesFail() {
         try {
-            market.setPaymentService(paymentService2, managerName);
+            market.setPaymentServiceProxy(paymentService2, managerName);
             assert false;
         } catch (MarketException e) {
             assert true;
@@ -135,7 +131,7 @@ public class SystemManagerTests {
             String memberName = "bar1";
             String memberPassword = "pass1";
             loginManager(managerName,managerpassword);
-            market.setPaymentService(paymentService2, "ayala" );
+            market.setPaymentServiceProxy(paymentService2, "ayala" );
             assert  false;
             try {
                 logoutMember(managerName);

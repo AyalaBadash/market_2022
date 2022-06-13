@@ -3,24 +3,27 @@ package com.example.server.serviceLayer.Requests;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountLevelStateFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 
 public class AddDiscountToShopRequest {
 
-    private DiscountTypeFacade discount;
+    private DiscountTypeWrapper discount;
     private String shopName;
     private String visitorName;
 
-    public AddDiscountToShopRequest(DiscountTypeFacade discount, String shopName, String visitorName) {
+    public AddDiscountToShopRequest(DiscountTypeWrapper discount, String shopName, String visitorName) {
         this.discount = discount;
         this.shopName = shopName;
         this.visitorName = visitorName;
     }
 
-    public DiscountTypeFacade getDiscount() {
+    AddDiscountToShopRequest(){}
+
+    public DiscountTypeWrapper getDiscount() {
         return discount;
     }
 
-    public void setDiscount(DiscountTypeFacade discount) {
+    public void setDiscount(DiscountTypeWrapper discount) {
         this.discount = discount;
     }
 

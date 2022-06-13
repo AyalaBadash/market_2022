@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Conditio
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CategoryLevelState;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 import java.util.Map;
 
@@ -33,4 +34,44 @@ public class AmountOfItemCondition extends Condition {
         return false;
     }
 
+    @Override
+    public boolean isAmountOfItem(){
+        return true;
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(AmountOfItemConditionFacade conditionFacade) {
+        return conditionFacade.toFacade ( this );
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(PriceConditionFacade conditionFacade) {
+        return null;
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(AndCompositeConditionFacade conditionFacade) {
+        return null;
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(OrCompositeConditionFacade conditionFacade) {
+        return null;
+    }
+
+    public double getAmountNeeded() {
+        return amountNeeded;
+    }
+
+    public void setAmountNeeded(double amountNeeded) {
+        this.amountNeeded = amountNeeded;
+    }
+
+    public Integer getItemNeeded() {
+        return itemNeeded;
+    }
+
+    public void setItemNeeded(Integer itemNeeded) {
+        this.itemNeeded = itemNeeded;
+    }
 }

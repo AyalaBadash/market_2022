@@ -2,7 +2,7 @@ package com.example.server.serviceLayer.Notifications;
 
 public abstract class Notification {
 
-    public String message ;
+    protected String message ;
 
     public Notification(String mess) {
         this.message=mess;

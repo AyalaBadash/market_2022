@@ -14,6 +14,7 @@ import java.util.Objects;
 public class Item implements IHistory {
     public enum Category {
         general,
+        snacks,
         fruit,
         meat,
         cellular,
@@ -50,7 +51,7 @@ public class Item implements IHistory {
         this.keywords = keywords;
         this.info = info;
         this.category = Objects.requireNonNullElse(category, Category.general);
-        rnk = 0;
+        rnk = 1;
         rnkers =0;
         itemRep.save(this);
     }
@@ -122,7 +123,10 @@ public class Item implements IHistory {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return Double.compare(item.price, price) == 0 && rnk == item.rnk && rnkers == item.rnkers && ID.equals(item.ID) && name.equals(item.name) && info.equals(item.info) && category == item.category && keywords.equals(item.keywords);
+//        return Double.compare(item.price, price) == 0 && rnk == item.rnk && rnkers == item.rnkers && ID.equals(item.ID) && name.equals(item.name) && info.equals(item.info) && category == item.category && keywords.equals(item.keywords);
+        //TODO need to check if it is the right way to compare
+        return item.ID.equals(this.ID);
+//        return Double.compare(item.price, price) == 0 && rank == item.rank && rankers == item.rankers && ID.equals(item.ID) && name.equals(item.name) && info.equals(item.info) && category == item.category && keywords.equals(item.keywords);
     }
 
     @Override

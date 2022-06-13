@@ -1,12 +1,16 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
@@ -53,6 +57,8 @@ public class Shop implements IHistory {
     @Transient
     private DiscountPolicy discountPolicy;
 
+    private PurchasePolicy purchasePolicy;
+
     public Shop(){}
 
     public Shop(String name,Member founder) {
@@ -63,12 +69,14 @@ public class Shop implements IHistory {
         itemsCurrentAmount = new ConcurrentHashMap<>( );
         this.closed = false;
         purchaseHistory = new ArrayList<> ( );
-        rnk = 0;
+        rnk = 1;
         rnkers = 0;
         this.shopFounder = founder;
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
         shopOwners.put(founder.getName(), shopOwnerAppointment);
         founder.addAppointmentToMe(shopOwnerAppointment);
+        discountPolicy = new DiscountPolicy ();
+        purchasePolicy = new PurchasePolicy ();
         shopRep.save(this);
     }
 
@@ -184,7 +192,7 @@ public class Shop implements IHistory {
     }
 
     //Bar: adding the parameter buyer name for the notification send.
-    public synchronized double buyBasket(NotificationHandler publisher, ShoppingBasket shoppingBasket, String buyer) throws MarketException {
+    public synchronized double buyBasket(NotificationHandler publisher, ShoppingBasket shoppingBasket, String buyer,boolean test) throws MarketException {
         //the notification to the shop owners publisher.
         ArrayList<String> names = new ArrayList<>(getShopOwners().values().stream().collect(Collectors.toList()).stream()
                 .map(appointment -> appointment.getAppointed().getName()).collect(Collectors.toList()));
@@ -220,9 +228,13 @@ public class Shop implements IHistory {
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
         try{
-            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
+            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices,test);
         }
+        //todo - need to be handled
         catch (Exception e){}
+        if(purchasePolicy.isPoliciesHeld (shoppingBasket ))
+            return discountPolicy.calculateDiscount ( shoppingBasket );
+        throw new MarketException ( "shopping basket does not held the purchase policy" );
         shopRep.save(this);
         return shoppingBasket.getPrice ( );
     }
@@ -341,6 +353,10 @@ public class Shop implements IHistory {
         return basket;
     }
 
+    public double getPriceOfShoppingBasket(ShoppingBasket shoppingBasket) throws MarketException {
+        return discountPolicy.calculateDiscount ( shoppingBasket );
+    }
+
     public void addEmployee(Appointment newAppointment) throws MarketException {
         String employeeName = newAppointment.getAppointed ( ).getName ( );
         Appointment oldAppointment = shopOwners.get ( employeeName );
@@ -394,7 +410,7 @@ public class Shop implements IHistory {
     }
 
     public StringBuilder getPurchaseHistory(String shopManagerName) throws MarketException {
-        if (!hasPermission ( shopManagerName, "get_purchase_history" )) {
+        if (!hasPermission ( shopManagerName, "PurchaseHistoryPermission" )) {
             DebugLog.getInstance ( ).Log ( "Non authorized user tried to access shop's purchase history." );
             throw new MarketException ( shopManagerName + " is not authorized to see shop purchase history" );
         }
@@ -501,7 +517,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         }
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) ))
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
-        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this );
+        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>(){{ add(new PurchaseHistoryPermission());}});
         addEmployee ( appointment );
         shopRep.save(this);
     }
@@ -572,6 +588,40 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         public static void setShopRep(ShopRep shopRepToSet){
             shopRep = shopRepToSet;
         }
+    public void removeDiscountFromShop(String visitorName, DiscountType discountType) throws MarketException {
+        if (!isShopOwner ( visitorName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        discountPolicy.removeDiscount ( discountType );
     }
+
+    public void addPurchasePolicyToShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
+        if (!isShopOwner ( visitorName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add a purchase policy to the shop" );
+        purchasePolicy.addNewPurchasePolicy( purchasePolicyType );
+    }
+
+    public void removePurchasePolicyFromShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
+        if (!isShopOwner ( visitorName ))
+            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        purchasePolicy.removePurchasePolicy ( purchasePolicyType );
+    }
+
+
+    public List<PurchasePolicyType> getPurchasePolicies() {
+        return purchasePolicy.getValidPurchasePolicies ();
+    }
+
+    public List<DiscountType> getDiscountTypes() {
+        return discountPolicy.getValidDiscounts ();
+    }
+
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
+    }
+
+    public PurchasePolicy getPurchasePolicy() {
+        return purchasePolicy;
+    }
+}
 
 

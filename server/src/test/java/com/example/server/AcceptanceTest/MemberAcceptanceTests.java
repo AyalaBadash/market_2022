@@ -123,7 +123,7 @@ public class MemberAcceptanceTests extends AcceptanceTests {
         @DisplayName("logout - check member saved")
         public void checkMemberSaved() {
             try {
-                addItemToCart(yogurt, productAmount - 1, shopName, testMemberNameToSaveTest);
+                addItemToCart(yogurt, productAmount - 1,  testMemberNameToSaveTest);
                 testMemberToSaveTest = getMember(testMemberNameToSaveTest);
                 ShoppingCartFacade prevCart = getMember(testMemberToSaveTest.getName()).getMyCart();
                 VisitorFacade visitor = logout(testMemberToSaveTest.getName());

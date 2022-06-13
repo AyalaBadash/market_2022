@@ -24,9 +24,6 @@ public class VisitorTests {
     Market market;
     String userName = "userTest";
     String password = "passTest";
-    PaymentServiceProxy paymentService = new PaymentServiceProxy();
-    SupplyServiceProxy supplyService = new SupplyServiceProxy();
-    static TextDispatcher textDispatcher= TextDispatcher.getInstance();
     String shopManagerName = "shaked";
     String shopManagerPassword = "shaked1234";
     String shopName = "kolbo";
@@ -40,8 +37,9 @@ public class VisitorTests {
     public void setUp() {
         try {
             market = Market.getInstance();
-            if (market.getPaymentService() == null)
-                market.firstInitMarket(paymentService, supplyService, textDispatcher,userName, password);
+            if (market.getPaymentService() == null) {
+                market.firstInitMarket(userName, password,true);
+            }
 
             // shop manager register
             Visitor visitor = market.guestLogin();
@@ -112,10 +110,8 @@ public class VisitorTests {
     public void shopInfoTest() {
 //        String shopName = "shopTest";
         try {
-            Visitor visitor = market.guestLogin();
-            Shop res = market.getShopInfo(visitor.getName(), shopName);
+            Shop res = market.getShopInfo(shopManagerName, shopName);
             assert res.getShopName().equals(shopName);
-            market.visitorExitSystem(visitor.getName());
             assert true;
         } catch (Exception e) {
             assert false;

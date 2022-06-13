@@ -4,6 +4,7 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Composite
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 import java.util.List;
 
@@ -35,5 +36,30 @@ public class AndCompositeCondition extends CompositeCondition{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isAnd(){
+        return true;
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(AmountOfItemConditionFacade conditionFacade) {
+        return null;
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(PriceConditionFacade conditionFacade) {
+        return null;
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(AndCompositeConditionFacade conditionFacade) {
+        return conditionFacade.toFacade ( this );
+    }
+
+    @Override
+    public ConditionFacade visitToFacade(OrCompositeConditionFacade conditionFacade) {
+        return null;
     }
 }
