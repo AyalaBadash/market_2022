@@ -396,22 +396,24 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     public void deleteCompositeDiscount() {
         ResponseT<List<DiscountTypeWrapper>> discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
         assert !discounts.isErrorOccurred();
+
+        // save current amount
         int currAmount = discounts.getValue().size();
         Response response = this.removeDiscountFromShop(DiscountTypeWrapper.createDiscountTypeWrapper(this.maxCompositeDiscount), shopName
                 , shopOwnerName);
         assert !response.isErrorOccurred();
         discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
         assert !discounts.isErrorOccurred();
-//        assert currAmount - 1 == discounts.getValue().size();
-        assert currAmount  == discounts.getValue().size();
+        // should only delete 1
+        Assertions.assertEquals( currAmount - 1, discounts.getValue().size());
         //return to prev state
         Response returnState = this.addDiscountToShop(DiscountTypeWrapper.createDiscountTypeWrapper(this.maxCompositeDiscount), shopName
                 , shopOwnerName);
         assert !returnState.isErrorOccurred();
         discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
         assert !discounts.isErrorOccurred();
-//        assert discounts.getValue().size() == currAmount;
-        assert discounts.getValue().size() == currAmount + 1;
+        // return to prev status
+        assert discounts.getValue().size() == currAmount;
 
     }
 
@@ -474,15 +476,13 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         assert !response.isErrorOccurred();
         ResponseT<List<PurchasePolicyTypeWrapper>> newPolicies = this.getPurchasePoliciesOfShop(shopOwnerName, shopName);
         assert !newPolicies.isErrorOccurred();
-//        assert curNum - 1 == newPolicies.getValue().size();
-        assert curNum == newPolicies.getValue().size();
+        assert curNum - 1 == newPolicies.getValue().size();
         //return to prev state
         Response returnState = this.addPurchasePolicyToShop(purchasePolicyWrapper, shopName, shopOwnerName);
         assert !returnState.isErrorOccurred();
         policies = this.getPurchasePoliciesOfShop(shopOwnerName, shopName);
         assert !policies.isErrorOccurred();
-//        assert policies.getValue().size() == curNum;
-        assert policies.getValue().size() == curNum + 1;
+        assert policies.getValue().size() == curNum;
     }
 
     @Test
@@ -517,8 +517,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             assert cart.getValue().getCart().size() > 0;
             Response response = buyShoppingCart(visitor.getName(), cart.getValue().getPrice(), creditCard, address);
             // should fail cause no yogurt.category has been added
-            assert response != null;
-//            assert !response.isErrorOccurred();
+            assert !response.isErrorOccurred();
         } catch (Exception e) {
             assert false;
         }
@@ -558,8 +557,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             // add composite policy
             addPurchasePolicyToShop(PurchasePolicyTypeWrapper.createPurchasePolicyWrapper(composite), shopName, memberName);
             purchasePoliciesOfShop = getPurchasePoliciesOfShop(memberName, shopName);
-            assert purchasePoliciesOfShop.getValue().size() == 2;
-//            assert purchasePoliciesOfShop.getValue().size() == 1;
+            assert purchasePoliciesOfShop.getValue().size() == 1;
         } catch (Exception e) {
             assert false;
         }
@@ -579,8 +577,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             assert cart.getPrice() == applePrice;
             addItemToCart(apple, 2, visitor.getName());
             cart = showShoppingCart(visitor.getName()).getValue();
-            assert cart.getPrice() <= applePrice * 3;
-//            assert cart.getPrice() < applePrice * 3;
+            assert cart.getPrice() < applePrice * 3;
             // return to base state
             Response response = addDiscountToShop(DiscountTypeWrapper.createDiscountTypeWrapper(simpleDiscountYogurt), shopName, shopOwnerName);
             assert !response.isErrorOccurred();
@@ -638,8 +635,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             // B and C already appointed
             // A removing B-> should remove B and C as well
             assert !removeShopOwnerAppointment(ownerA.getName(), ownerB.getName(), removingShop.getShopName()).isErrorOccurred();
-            Assertions.assertEquals(2 , getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size());
-//            Assertions.assertEquals(1 , getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size());
+            Assertions.assertEquals(1 , getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size());
         } catch (Exception e) {
             assert false;
         }

@@ -27,8 +27,7 @@ public class MaxCompositeDiscount extends CompositeDiscount{
 
     @Override
     public boolean equals(Object object) {
-        if(object instanceof MaxCompositeDiscount){
-            MaxCompositeDiscount toCompare = (MaxCompositeDiscount) object;
+        if(object instanceof MaxCompositeDiscount toCompare){
             for(DiscountType discountType: this.discountTypes){
                 if (toCompare.discountTypes.contains ( discountType ))
                     return false;

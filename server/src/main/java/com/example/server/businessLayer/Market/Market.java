@@ -24,6 +24,7 @@ import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.NameValuePair;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -45,7 +46,7 @@ public class Market {
     private static Market instance;
     boolean dataInitialized = false;
     boolean servicesInitialized = false;
-    boolean test= false;
+    boolean test = false;
     Map<String, Integer> numOfAcqsPerShop;
 
     private Market() {
@@ -76,10 +77,10 @@ public class Market {
      * @param password the system manager password.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password,boolean test) throws MarketException {
+    public synchronized void firstInitMarket(String userName, String password, boolean test) throws MarketException {
 
         try {
-            this.test=test;
+            this.test = test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
@@ -94,7 +95,7 @@ public class Market {
                 register(userName, password);
                 instance.systemManagerName = userName;
             }
-            checkSysteminit();
+            checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("A market has been initialized successfully");
         } catch (MarketException e) {
@@ -112,10 +113,10 @@ public class Market {
      * @param dataName     the init data's file name.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password, String servicesName, String dataName,boolean test) throws MarketException {
+    public synchronized void firstInitMarket(String userName, String password, String servicesName, String dataName, boolean test) throws MarketException {
 
         try {
-            this.test=test;
+            this.test = test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
@@ -130,7 +131,7 @@ public class Market {
                 register(userName, password);
                 instance.systemManagerName = userName;
             }
-            checkSysteminit();
+            checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("A market has been initialized successfully");
         } catch (Exception e) {
@@ -146,7 +147,7 @@ public class Market {
     public synchronized void firstInitMarket(boolean test) throws MarketException {
 
         try {
-            this.test=test;
+            this.test = test;
             if (!test && (this.paymentServiceProxy != null || this.supplyServiceProxy != null)) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
@@ -157,7 +158,7 @@ public class Market {
             if (test || !dataInitialized) {
                 readInitFile();
             }
-            checkSysteminit();
+            checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("A market has been initialized successfully");
         } catch (Exception e) {
@@ -173,9 +174,9 @@ public class Market {
      * @param fileName the services file name.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password, String fileName,boolean test) throws MarketException {
+    public synchronized void firstInitMarket(String userName, String password, String fileName, boolean test) throws MarketException {
 
-        this.test=test;
+        this.test = test;
         if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
             DebugLog.getInstance().Log("A market initialization failed .already initialized");
             throw new MarketException("market is already initialized");
@@ -194,7 +195,7 @@ public class Market {
         if (!dataInitialized) {
             readInitFile();
         }
-        checkSysteminit();
+        checkSystemInit();
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("A market has been initialized successfully");
 
@@ -218,7 +219,7 @@ public class Market {
             servicesInitialized = true;
 
         } catch (Exception e) {
-            System.out.println (e.getMessage () );
+            System.out.println(e.getMessage());
         }
     }
 
@@ -264,33 +265,30 @@ public class Market {
             String command = vals[0];
             if (command.contains("Register")) {
                 if (vals.length >= 3) {
-                debugLog.Log("Method register from init file has called. Args are: "+vals[1]+" "+vals[2]);
-                register(vals[1], vals[2]);
-                }
-                else{
-                    debugLog.Log("Method register from init file has called. \n Not enough args number. Number: "+vals.length);
+                    debugLog.Log("Method register from init file has called. Args are: " + vals[1] + " " + vals[2]);
+                    register(vals[1], vals[2]);
+                } else {
+                    debugLog.Log("Method register from init file has called. \n Not enough args number. Number: " + vals.length);
                 }
             } else if (command.contains("Login")) {
                 try {
                     if (vals.length >= 3) {
-                        debugLog.Log("Method login from init file has called. Args are: "+vals[1]+" "+vals[2]);
+                        debugLog.Log("Method login from init file has called. Args are: " + vals[1] + " " + vals[2]);
                         Visitor vis = guestLogin();
                         memberLogin(vals[1], vals[2]);
                         validateSecurityQuestions(vals[1], new ArrayList<>(), vis.getName());
-                    }
-                    else{
-                        debugLog.Log("Method login from init file has called. \n Not enough args number. Number: "+vals.length);
+                    } else {
+                        debugLog.Log("Method login from init file has called. \n Not enough args number. Number: " + vals.length);
                     }
                 } catch (Exception e) {
                 }
             } else if (command.contains("Logout")) {
                 try {
                     if (vals.length >= 2) {
-                        debugLog.Log("Method logout from init file has called. Args are: " + vals[1] );
+                        debugLog.Log("Method logout from init file has called. Args are: " + vals[1]);
                         memberLogout(vals[1]);
-                    }
-                    else{
-                        debugLog.Log("Method logout from init file has called. \n Not enough args number. Number: "+vals.length);
+                    } else {
+                        debugLog.Log("Method logout from init file has called. \n Not enough args number. Number: " + vals.length);
                     }
                 } catch (Exception e) {
                 }
@@ -299,31 +297,31 @@ public class Market {
                     if (vals.length >= 3) {
                         debugLog.Log("Method open shop from init file has called. Args are: " + vals[1] + " " + vals[2]);
                         openNewShop(vals[1], vals[2]);
-                    }else{
-                        debugLog.Log("Method open shop from init file has called. \n Not enough args number. Number: "+vals.length);
+                    } else {
+                        debugLog.Log("Method open shop from init file has called. \n Not enough args number. Number: " + vals.length);
                     }
                 } catch (Exception e) {
                 }
             } else if (command.contains("Add_Item")) {
                 if (vals.length >= 8) {
-                    debugLog.Log("Method add item from init file has called. Args are: " + vals[1] + " " + vals[2]+ " "+ vals[3] + " " + vals[4]+ " "+ vals[5] + " " + vals[6]+ " "+ vals[7] );
+                    debugLog.Log("Method add item from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3] + " " + vals[4] + " " + vals[5] + " " + vals[6] + " " + vals[7]);
                     addItemToShop(vals[1], vals[2], Double.parseDouble(vals[3]), Item.Category.valueOf(vals[4]), vals[5], new ArrayList<>(), Integer.parseInt(vals[6]), vals[7]);
-                }else{
-                    debugLog.Log("Method add item from init file has called. \n Not enough args number. Number: "+vals.length);
+                } else {
+                    debugLog.Log("Method add item from init file has called. \n Not enough args number. Number: " + vals.length);
                 }
             } else if (command.contains("Appoint_Manager")) {
                 if (vals.length >= 4) {
-                    debugLog.Log("Method appoint manager from init file has called. Args are: " + vals[1] + " " + vals[2]+ " "+ vals[3] );
+                    debugLog.Log("Method appoint manager from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
                     appointShopManager(vals[1], vals[2], vals[3]);
-                }else{
-                    debugLog.Log("Method appoint manager from init file has called. \n Not enough args number. Number: "+vals.length);
+                } else {
+                    debugLog.Log("Method appoint manager from init file has called. \n Not enough args number. Number: " + vals.length);
                 }
             } else if (command.contains("Appoint_Owner")) {
                 if (vals.length >= 4) {
-                    debugLog.Log("Method appoint owner from init file has called. Args are: " + vals[1] + " " + vals[2]+ " "+ vals[3] );
+                    debugLog.Log("Method appoint owner from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
                     appointShopOwner(vals[1], vals[2], vals[3]);
-                }else{
-                    debugLog.Log("Method appoint owner from init file has called. \n Not enough args number. Number: "+vals.length);
+                } else {
+                    debugLog.Log("Method appoint owner from init file has called. \n Not enough args number. Number: " + vals.length);
                 }
             }
 
@@ -374,9 +372,8 @@ public class Market {
             initSupplyService(val1);
         } else if (val.contains("Publisher") && (systemManagerName == null || systemManagerName.isEmpty())) {
             initNotificationService(val1);
-        }
-        else{
-            initManager ( val,val1 );
+        } else {
+            initManager(val, val1);
         }
     }
 
@@ -388,10 +385,9 @@ public class Market {
 
     private void initNotificationService(String val) throws MarketException {
 
-        if (test){
+        if (test) {
             publisher = TextDispatcher.getInstance();
-        }
-        else if (val.contains("Notifications")) {
+        } else if (val.contains("Notifications")) {
             publisher = NotificationDispatcher.getInstance();
         } else if (val.contains("Text")) {
             publisher = TextDispatcher.getInstance();
@@ -422,11 +418,7 @@ public class Market {
 
 
     public StringBuilder getAllSystemPurchaseHistory(String memberName) throws MarketException {
-        if (!userController.isLoggedIn(memberName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(memberName);
         if (!systemManagerName.equals(memberName)) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("Member who is not the system manager tried to access system purchase history");
@@ -443,11 +435,7 @@ public class Market {
 
 
     public StringBuilder getHistoryByShop(String member, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(member)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(member);
         if (!systemManagerName.equals(member)) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("Member who is not the system manager tried to access system purchase history");
@@ -463,11 +451,7 @@ public class Market {
     }
 
     public StringBuilder getHistoryByMember(String systemManagerName, String memberName) throws MarketException {
-        if (!userController.isLoggedIn(systemManagerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(systemManagerName);
         if (systemManagerName.equals(this.systemManagerName)) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("Member who is not the system manager tried to access system purchase history");
@@ -514,11 +498,7 @@ public class Market {
     }
 
     public ShoppingCart calculateShoppingCart(String visitorName) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         ShoppingCart currentCart = userController.getVisitorsInMarket().get(visitorName).getCart();
         ShoppingCart updatedCart = validateCart(currentCart);
         return updatedCart;
@@ -599,10 +579,7 @@ public class Market {
      * @throws MarketException
      */
     public void setPaymentServiceProxy(PaymentServiceProxy paymentService1, String memberName) throws MarketException {
-        if (!userController.isLoggedIn(memberName)) {
-            DebugLog.getInstance().Log("Member must be logged in for making this action");
-            throw new MarketException("Member must be logged in for making this action");
-        }
+        alertIfNotLoggedIn(memberName);
         if (!memberName.equals(systemManagerName)) {
             DebugLog.getInstance().Log("Only a system manager can change the payment service");
             throw new MarketException("Only a system manager can change the payment service");
@@ -615,10 +592,7 @@ public class Market {
     }
 
     public boolean setPaymentService(PaymentService paymentService1, String memberName) throws MarketException {
-        if (!userController.isLoggedIn(memberName)) {
-            DebugLog.getInstance().Log("Member must be logged in for making this action");
-            throw new MarketException("Member must be logged in for making this action");
-        }
+        alertIfNotLoggedIn(memberName);
         if (!memberName.equals(systemManagerName)) {
             DebugLog.getInstance().Log("Only a system manager can change the payment service");
             throw new MarketException("Only a system manager can change the payment service");
@@ -629,10 +603,7 @@ public class Market {
     }
 
     public boolean setSupplyService(SupplyService supplyService1, String memberName) throws MarketException {
-        if (!userController.isLoggedIn(memberName)) {
-            DebugLog.getInstance().Log("Member must be logged in for making this action");
-            throw new MarketException("Member must be logged in for making this action");
-        }
+        alertIfNotLoggedIn(memberName);
         if (!memberName.equals(systemManagerName)) {
             DebugLog.getInstance().Log("Only a system manager can change the supply service");
             throw new MarketException("Only a system manager can change the supply service");
@@ -655,20 +626,12 @@ public class Market {
 
 
     public void visitorExitSystem(String visitorName) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         userController.exitSystem(visitorName);
     }
 
     public Appointment getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
         for (Map.Entry<String, Shop> shopEntry : this.shops.entrySet()) {
             Shop shop = shopEntry.getValue();
             if (shop.getShopName().equals(relatedShop)) {
@@ -679,11 +642,7 @@ public class Market {
     }
 
     public void editShopManagerPermissions(String shopOwnerName, String managerName, String relatedShop, Appointment updatedAppointment) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
         Shop shop = shops.get(relatedShop);
         if (shop == null) {
             DebugLog.getInstance().Log(String.format("related shop %s does not exist in the market", relatedShop));
@@ -693,11 +652,7 @@ public class Market {
     }
 
     public void closeShop(String shopOwnerName, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
 
         Shop shopToClose = shops.get(shopName);
         if (shopToClose == null) {
@@ -714,7 +669,7 @@ public class Market {
             try {
                 notificationHandler.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
                         .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
-                        .collect(Collectors.toList())), shopName,test);
+                        .collect(Collectors.toList())), shopName, test);
             } catch (Exception e) {
             }
             //
@@ -724,16 +679,7 @@ public class Market {
 
 
     public void removeItemFromShop(String shopOwnerName, int itemID, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to remove item from non existing shop");
@@ -754,11 +700,7 @@ public class Market {
 
     public Shop addItemToShop(String shopOwnerName, String itemName, double price, Item.Category category, String info,
                               List<String> keywords, double amount, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
@@ -785,11 +727,7 @@ public class Market {
     }
 
     public void setItemCurrentAmount(String shopOwnerName, Item item, double amount, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to edit item on a non existing shop.");
@@ -800,31 +738,19 @@ public class Market {
     }
 
     public String memberLogout(String member) throws MarketException {
-        if (!userController.isLoggedIn(member)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(member);
         return userController.memberLogout(member);
     }
 
     public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) throws MarketException {
-        if (!userController.isLoggedIn(member)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(member);
         Security security = Security.getInstance();
         security.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
     }
 
 
     public Map<String, Appointment> getShopEmployeesInfo(String shopManagerName, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopManagerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopManagerName);
         if (!shops.containsKey(shopName)) {
             DebugLog.getInstance().Log("Tried to get employees info in a non existing shop.");
             throw new MarketException("shop does not exist");
@@ -835,11 +761,7 @@ public class Market {
     }
 
     public Shop getShopInfo(String member, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(member)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(member);
         if (!shops.containsKey(shopName)) {
             if (!ClosedShopsHistory.getInstance().isClosed(shopName)) {
                 EventLog.getInstance().Log(String.format("Asked for shop info while shop %s does not exist", shopName));
@@ -860,11 +782,7 @@ public class Market {
 
     //TODO check that shop name is not ""
     public boolean openNewShop(String visitorName, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         Member curMember;
         if (userController.isMember(visitorName)) {
             curMember = userController.getMember(visitorName);
@@ -893,11 +811,7 @@ public class Market {
 
     //TODO -delete shop name
     public void addItemToShoppingCart(Item item, double amount, String visitorName) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         ShoppingCart shoppingCart = userController.getVisitor(visitorName).getCart();
         if (!allItemsInMarketToShop.containsKey(item.getID())) {
             throw new MarketException("Cannot add item that does not exists in the shop.");
@@ -924,11 +838,7 @@ public class Market {
     }
 
     public StringBuilder getShopPurchaseHistory(String shopManagerName, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopManagerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopManagerName);
         Shop shopToHistory = shops.get(shopName);
         if (shopToHistory == null) {
             DebugLog.getInstance().Log("Tried to get history for a non existing shop");
@@ -938,11 +848,7 @@ public class Market {
     }
 
     public void appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
         Member appointed = userController.getMember(appointedShopOwner);
         if (appointed == null)
             throw new MarketException("appointed shop owner is not a member");
@@ -954,17 +860,13 @@ public class Market {
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopOwner(shopOwner, appointed);
         try {
-            notificationHandler.sendNewshopOwner(shopOwner,appointed, shopName,test);
+            notificationHandler.sendNewshopOwner(shopOwner, appointed, shopName, test);
         } catch (Exception e) {
         }
     }
 
     public void appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
         Member appointed = userController.getMember(appointedShopManager);
         if (appointed == null)
             throw new MarketException("appointed shop manager is not a member");
@@ -976,17 +878,13 @@ public class Market {
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopManager(shopOwner, appointed);
         try {
-            notificationHandler.sendNewshopManager(shopOwner,appointed, shopName,test);
+            notificationHandler.sendNewshopManager(shopOwner, appointed, shopName, test);
         } catch (Exception e) {
         }
     }
 
     public boolean editCart(double amount, Item item, String shopName, String visitorName) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         Visitor visitor = userController.getVisitor(visitorName);
         if (visitor == null) {
             DebugLog.getInstance().Log("Non member ");
@@ -997,11 +895,7 @@ public class Market {
 
 
     public void changeShopItemInfo(String shopOwnerName, String info, java.lang.Integer oldItem, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(shopOwnerName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(shopOwnerName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to edit item in a non existing shop");
@@ -1012,11 +906,7 @@ public class Market {
     }
 
     public ShoppingCart showShoppingCart(String visitorName) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         return userController.getVisitor(visitorName).getCart();
     }
 
@@ -1035,11 +925,7 @@ public class Market {
                                         Address address) throws MarketException, JsonProcessingException {
 
         // If visitor exists under that name.
-        if (!userController.isLoggedIn(visitorName)) {
-            ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("you must be a visitor in the market in order to make actions.");
-            throw new MarketException("you must be a visitor in the market in order to make actions.");
-        }
+        alertIfNotLoggedIn(visitorName);
         //Import the visitor and try to get it's cart.
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart;
@@ -1065,7 +951,7 @@ public class Market {
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
-            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy,test);
+            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy, test);
         } catch (Exception e) {
 
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -1085,7 +971,7 @@ public class Market {
         for (Map.Entry<Shop, ShoppingBasket> basketEntry : baskets.entrySet()) {
             ShoppingBasket updatedBasket = basketEntry.getKey().validateBasket(basketEntry.getValue());
             basketEntry.setValue(updatedBasket);
-            cartPrice = cartPrice + basketEntry.getKey ().getPriceOfShoppingBasket (updatedBasket);
+            cartPrice = cartPrice + basketEntry.getKey().getPriceOfShoppingBasket(updatedBasket);
         }
         currentCart.setCurrentPrice(cartPrice);
         return currentCart;
@@ -1134,7 +1020,7 @@ public class Market {
         userController.reset();
         ClosedShopsHistory.getInstance().reset();
         userController.register(systemManagerName);
-        Security.getInstance ().addNewMember ( systemManagerName, systemManagerPass, questions, answers);
+        Security.getInstance().addNewMember(systemManagerName, systemManagerPass, questions, answers);
     }
 
     public String getSystemManagerName() {
@@ -1161,7 +1047,7 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss, firedAppointed);
         try {
-            notificationHandler.sendAppointmentRemovedNotification(firedAppointed, shopName,test);
+            notificationHandler.sendAppointmentRemovedNotification(firedAppointed, shopName, test);
         } catch (Exception e) {
         }
 
@@ -1195,13 +1081,12 @@ public class Market {
         handler.setService(NotificationDispatcher.getInstance());
         RealTimeNotifications not = new RealTimeNotifications();
         not.createMembershipDeniedMessage();
-        handler.sendNotification(memberToRemove, not, true,test);
+        handler.sendNotification(memberToRemove, not, true, test);
         //
     }
 
     public Item getItemById(String name, int itemId) throws MarketException {
-        if (!userController.isLoggedIn(name))
-            throw new MarketException("only visitors in market can get an item's info");
+        alertIfNotLoggedIn(name);
         if (allItemsInMarketToShop.get(itemId) == null)
             throw new MarketException("there is no such an item with this id");
         return shops.get(allItemsInMarketToShop.get(itemId)).getItemMap().get(itemId);
@@ -1236,11 +1121,7 @@ public class Market {
     }
 
     public void addDiscountToShop(String visitorName, String shopName, DiscountType discountType) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
@@ -1250,11 +1131,7 @@ public class Market {
     }
 
     public void removeDiscountFromShop(String visitorName, String shopName, DiscountType discountType) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
@@ -1264,11 +1141,7 @@ public class Market {
     }
 
     public void addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyType purchasePolicyType) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
@@ -1278,11 +1151,7 @@ public class Market {
     }
 
     public void removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyType purchasePolicyType) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to add item to a non existing shop.");
@@ -1296,10 +1165,7 @@ public class Market {
     }
 
     public boolean setPublishService(Publisher o, String memberName) throws MarketException {
-        if (!userController.isLoggedIn(memberName)) {
-            DebugLog.getInstance().Log("Member must be logged in for making this action");
-            throw new MarketException("Member must be logged in for making this action");
-        }
+        alertIfNotLoggedIn(memberName);
         if (!memberName.equals(systemManagerName)) {
             DebugLog.getInstance().Log("Only a system manager can change the supply service");
             throw new MarketException("Only a system manager can change the supply service");
@@ -1310,12 +1176,8 @@ public class Market {
     }
 
 
-
     public List<PurchasePolicyType> getPurchasePoliciesOfShop(String visitorName, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog.getInstance().Log("Member must be logged in for making this action");
-            throw new MarketException("Member must be logged in for making this action");
-        }
+        alertIfNotLoggedIn(visitorName);
         Shop shop = shops.get(shopName);
         if (shop == null)
             throw new MarketException("shop does not exist in market");
@@ -1323,10 +1185,7 @@ public class Market {
     }
 
     public List<DiscountType> getDiscountTypesOfShop(String visitorName, String shopName) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog.getInstance().Log("Member must be logged in for making this action");
-            throw new MarketException("Member must be logged in for making this action");
-        }
+        alertIfNotLoggedIn(visitorName);
         Shop shop = shops.get(shopName);
         if (shop == null)
             throw new MarketException("shop does not exist in market");
@@ -1338,7 +1197,7 @@ public class Market {
      *
      * @throws MarketException
      */
-    private void checkSysteminit() throws MarketException {
+    private void checkSystemInit() throws MarketException {
         int ans = 0;
         if (paymentServiceProxy == null) {
             EventLog eventLog = EventLog.getInstance();
@@ -1427,5 +1286,13 @@ public class Market {
         String dir = System.getProperty("user.dir").split("/market_2022")[0];
         dir += "\\config\\";
         return dir;
+    }
+
+    private void alertIfNotLoggedIn(String visitorName) throws MarketException {
+        if (!userController.isLoggedIn(visitorName)) {
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("you must be a visitor in the market in order to make actions");
+            throw new MarketException("you must be a visitor in the market in order to make actions");
+        }
     }
 }
