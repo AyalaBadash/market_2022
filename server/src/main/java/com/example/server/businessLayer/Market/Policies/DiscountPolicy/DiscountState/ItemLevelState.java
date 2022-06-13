@@ -31,9 +31,8 @@ public class ItemLevelState extends DiscountLevelState{
 
     @Override
     public boolean equals(Object object){
-        if(object instanceof ItemLevelState){
-            ItemLevelState toCompare = (ItemLevelState) object;
-            return this.itemID == toCompare.itemID;
+        if(object instanceof ItemLevelState toCompare){
+            return this.itemID.equals(toCompare.itemID);
         }
         return false;
     }

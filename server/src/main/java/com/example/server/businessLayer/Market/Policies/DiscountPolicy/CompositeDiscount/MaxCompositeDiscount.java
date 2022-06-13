@@ -29,11 +29,11 @@ public class MaxCompositeDiscount extends CompositeDiscount{
     public boolean equals(Object object) {
         if(object instanceof MaxCompositeDiscount toCompare){
             for(DiscountType discountType: this.discountTypes){
-                if (toCompare.discountTypes.contains ( discountType ))
+                if (!toCompare.discountTypes.contains ( discountType ))
                     return false;
             }
             for(DiscountType discountType: toCompare.discountTypes){
-                if (this.discountTypes.contains ( discountType ))
+                if (!this.discountTypes.contains ( discountType ))
                     return false;
             }
             return true;
