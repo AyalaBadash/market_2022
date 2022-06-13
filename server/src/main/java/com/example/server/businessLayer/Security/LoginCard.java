@@ -2,14 +2,20 @@ package com.example.server.businessLayer.Security;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+@Entity
 public class LoginCard {
+    @Id
     private String name;
     private String password;
+    @ElementCollection
+    @CollectionTable(name = "Q_and_A")
+    @Column(name="answer")
+    @MapKeyColumn(name="question")
     private Map<String, String> QandA;
 
     public LoginCard(String name, String password, List<String> questions, List<String> answers) throws MarketException {
@@ -23,6 +29,8 @@ public class LoginCard {
             this.QandA.put(questions.get(i), answers.get(i));
         }
     }
+
+    public LoginCard(){}
 
     public List<String> getQuestions(){
         List<String> questions =  new CopyOnWriteArrayList<>();

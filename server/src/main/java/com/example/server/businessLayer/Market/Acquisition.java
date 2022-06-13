@@ -25,7 +25,7 @@ public class Acquisition {
     private long id;
     private boolean paymentDone;
     private boolean supplyConfirmed;
-    @OneToOne (cascade = CascadeType.ALL)
+    @OneToOne (cascade = CascadeType.MERGE)
     ShoppingCart shoppingCartToBuy;
     String buyerName;
     int supplyID;
