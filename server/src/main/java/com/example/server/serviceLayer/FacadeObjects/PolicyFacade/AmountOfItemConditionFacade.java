@@ -11,9 +11,9 @@ public class AmountOfItemConditionFacade extends ConditionFacade {
     private double amount;
     int itemID;
 
-    public AmountOfItemConditionFacade(double amount, int itenID) {
+    public AmountOfItemConditionFacade(double amount, int itemID) {
         this.amount = amount;
-        this.itemID = itenID;
+        this.itemID = itemID;
     }
 
     public AmountOfItemConditionFacade() {
