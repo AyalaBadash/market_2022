@@ -1,0 +1,4 @@
+PaymentService :: WSEP
+SupplyService :: none
+Publisher ::Notifications
+u1::p1

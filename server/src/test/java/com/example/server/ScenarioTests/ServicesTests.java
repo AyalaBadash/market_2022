@@ -59,7 +59,6 @@ public class ServicesTests {
         creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
         address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
         market = Market.getInstance();
-
         Visitor visitor= market.guestLogin();
         try {
             market.isInit();
@@ -260,6 +259,23 @@ public class ServicesTests {
         }
         catch(Exception e){
             assert true;
+            MarketConfig.SERVICES_FILE_NAME="config.txt";
+        }
+    }
+
+    @Test
+    @DisplayName("System init from file with wrong services")
+    public void initFromWrongServicesFile(){
+        try{
+            MarketConfig.SERVICES_FILE_NAME="missWrittenConfigs.txt";
+            market.isInit();
+            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
+            market.memberLogout(userName);
+            assert false;
+            MarketConfig.SERVICES_FILE_NAME="config.txt";
+        }
+        catch(Exception e){
+            Assertions.assertEquals("Failed to init supply service",e.getMessage());
             MarketConfig.SERVICES_FILE_NAME="config.txt";
         }
     }

@@ -89,7 +89,7 @@ public class MarketUnitTest {
     @DisplayName("First init market - fail test - one service already exist")
     public void initFailTestOneServiceIsNotNull(){
         try {
-            market.setPaymentServiceProxy(new PaymentServiceProxy(), "raz",false);
+            market.setPaymentServiceProxy(new PaymentServiceProxy(), "raz");
         } catch (MarketException e) {}
         PaymentServiceProxy paymentService = new PaymentServiceProxy();
         SupplyServiceProxy supplyService = new SupplyServiceProxy();

@@ -228,7 +228,7 @@ public class Market {
     private void setService(String val, String val1) throws MarketException {
 
         if (val.contains("PaymentService")) {
-            initPaymentService(val1);
+                initPaymentService(val1);
         } else if (val.contains("SupplyService")) {
             initSupplyService(val1);
         } else if (val.contains("Publisher")) {
@@ -266,7 +266,7 @@ public class Market {
         if (val.contains("WSEP")) {
             supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), false);
         } else {
-            throw new MarketException("Failed to init payment service");
+            throw new MarketException("Failed to init supply service");
         }
     }
 
@@ -457,16 +457,20 @@ public class Market {
      * @param memberName the paying member's name.
      * @throws MarketException
      */
-    public void setPaymentServiceProxy(PaymentServiceProxy paymentService1, String memberName,boolean override) throws MarketException {
-        if (!override && !userController.isLoggedIn(memberName)) {
+    public void setPaymentServiceProxy(PaymentServiceProxy paymentService1, String memberName) throws MarketException {
+        if(MarketConfig.IS_TEST_MODE){
+            this.paymentServiceProxy = paymentService1;
+            return;
+        }
+        if (!userController.isLoggedIn(memberName)) {
             DebugLog.getInstance().Log("Member must be logged in for making this action");
             throw new MarketException("Member must be logged in for making this action");
         }
-        if (!override &&!memberName.equals(systemManagerName)) {
+        if (!memberName.equals(systemManagerName)) {
             DebugLog.getInstance().Log("Only a system manager can change the payment service");
             throw new MarketException("Only a system manager can change the payment service");
         }
-        if (!override && paymentService1 == null) {
+        if (paymentService1 == null) {
             DebugLog.getInstance().Log("Try to initiate payment service with null");
             throw new MarketException("Try to initiate payment service with null");
         }
@@ -1007,6 +1011,7 @@ public class Market {
         Item item = itemShop.getItemMap().get(id);
         return item;
     }
+
 
     //TODO delete
     public void reset(String systemManagerPass, List<String> questions, List<String> answers) throws MarketException {

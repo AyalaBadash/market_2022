@@ -1,11 +1,13 @@
 package com.example.server.ScenarioTests;
 
+import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.serviceLayer.AppointmentShopManagerRequest;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -50,14 +52,17 @@ public class ShopManagerTests {
     @Test
     @DisplayName("get shop purchase history")
     public void purchaseHistory() {
+        String testName="testName1";
+        String testPassword="testPassword1";
         try {
             try {
-                market.appointShopManager(shopOwnerName,managerName,shopName);
+                market.appointShopManager(shopOwnerName,testName,shopName);
             }catch (MarketException e){}
-            String visitorName = market.memberLogout(shopOwnerName);
-            market.memberLogin(managerName,managerPassword);
-            market.validateSecurityQuestions(managerName, new ArrayList<>(), visitorName);
-            String  str = new String( market.getShopPurchaseHistory(managerName,shopName));
+            Visitor visitorName = market.guestLogin();
+            market.register(testName,testPassword);
+            market.memberLogin(testName,testPassword);
+            market.validateSecurityQuestions(testName, new ArrayList<>(), visitorName.getName());
+            String  str = new String( market.getShopPurchaseHistory(testName,shopName));
             Assertions.assertNotNull(str);
             assert true;
         } catch (Exception e) {

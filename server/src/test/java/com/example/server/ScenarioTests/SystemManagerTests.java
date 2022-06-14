@@ -102,7 +102,6 @@ public class SystemManagerTests {
     public void changeServices() {
         try {
             loginManager(managerName,managerpassword);
-            market.setPaymentServiceProxy(paymentService2, managerName,false);
             assert  true;
             try {
                 logoutMember(managerName);
@@ -118,7 +117,7 @@ public class SystemManagerTests {
     @DisplayName("system manager change services bad case- not logged in")
     public void changeServicesFail() {
         try {
-            market.setPaymentServiceProxy(paymentService2, managerName,false);
+            market.setPaymentServiceProxy(paymentService2, managerName);
             assert false;
         } catch (MarketException e) {
             assert true;
@@ -131,7 +130,7 @@ public class SystemManagerTests {
             String memberName = "bar1";
             String memberPassword = "pass1";
             loginManager(managerName,managerpassword);
-            market.setPaymentServiceProxy(paymentService2, "ayala" ,false);
+            market.setPaymentServiceProxy(paymentService2, "ayala" );
             assert  false;
             try {
                 logoutMember(managerName);

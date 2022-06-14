@@ -22,8 +22,8 @@ import java.util.List;
 public class MemberTests {
     Market market;
     Member testMember;
-    String testMemberPassword;
-    String testMemberName;
+    String testMemberPassword="memberPasswordTest1";
+    String testMemberName="memberNameTest1";
     String userName = "userTest";
     String password = "passTest";
     String shopManagerName = "shakedMember";
@@ -78,6 +78,9 @@ public class MemberTests {
         try {
             if (!UserController.getInstance().isLoggedIn(testMemberName)) {
                 Visitor visitor = market.guestLogin();
+                try {
+                    market.register(testMemberName, testMemberPassword);
+                }catch (Exception e){}
                 List<String> questions = market.memberLogin(testMemberName, testMemberPassword);
                 market.validateSecurityQuestions(testMemberName, new ArrayList<>(), visitor.getName());
             }
@@ -294,6 +297,11 @@ public class MemberTests {
             market.register(memberName, password);
             market.memberLogin(memberName, password);
             Member member = market.validateSecurityQuestions(memberName, null, visitor.getName());
+            List<String> keywords = new ArrayList<>(){{
+                add("in sale");
+            }};
+            milk = market.addItemToShopItem(shopManagerName, "milk", productPrice, Item.Category.general,
+                    "soy",keywords , productAmount,shopName);
             market.addItemToShoppingCart(milk, 1, memberName);
             String visitorName = market.memberLogout(memberName);
             market.addItemToShoppingCart(cookies, 1, visitorName);
