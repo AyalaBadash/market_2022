@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 
@@ -162,5 +163,32 @@ public class ShoppingCart implements IHistory {
             }
         }
         return false;
+    }
+
+    public void addABid(Bid bid, Shop shop) {
+        ShoppingBasket shoppingBasket = cart.get ( shop );
+        if (shoppingBasket == null){
+            shoppingBasket = new ShoppingBasket ();
+            cart.put ( shop, shoppingBasket );
+        }
+        shoppingBasket.addABid(bid);
+    }
+
+    public void approveBid(Integer itemId, Shop shop) throws MarketException {
+        ShoppingBasket shoppingBasket = cart.get ( shop );
+        if(shoppingBasket == null){
+            DebugLog.getInstance ().Log ( "Visitor does not have a bid in this shop." );
+            throw new MarketException ( "Visitor does not have a bid in this shop." );
+        }
+
+    }
+
+    public void rejectBid(Integer itemId, Shop shop) throws MarketException {
+        ShoppingBasket shoppingBasket = cart.get ( shop );
+        if(shoppingBasket == null || shoppingBasket.getBids ().containsKey ( itemId )){
+            DebugLog.getInstance ().Log ( "this user has no such bid in his basket." );
+            throw new MarketException ( "this user has no such bid in his basket." );
+        }
+        shoppingBasket.removeBid ( itemId );
     }
 }

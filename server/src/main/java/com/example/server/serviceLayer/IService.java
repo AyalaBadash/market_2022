@@ -354,4 +354,18 @@ public interface IService {
      * @return empty response if true, error message if not
      */
     public Response isServerInit();
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    public Response addABid(AddABidRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    public Response approveABid(ApproveABidRequest request);
 }

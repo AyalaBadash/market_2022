@@ -4,7 +4,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
 import java.text.DecimalFormat;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBasket implements IHistory {
@@ -12,15 +12,19 @@ public class ShoppingBasket implements IHistory {
     private Map<java.lang.Integer, Item> itemMap;
     private double price;
 
+    private HashMap<Integer, Bid> bids;
+
     public ShoppingBasket() {
         items = new ConcurrentHashMap<>();
         itemMap = new ConcurrentHashMap<>();
         price = 0;
+        bids = new LinkedHashMap<> (  );
     }
     public ShoppingBasket(Map<java.lang.Integer,Double> items , Map<java.lang.Integer, Item> itemMap , double price){
         this.items = items;
         this.itemMap = itemMap;
         this.price = price;
+        bids = new LinkedHashMap<> (  );
     }
 
 
@@ -51,6 +55,10 @@ public class ShoppingBasket implements IHistory {
         for (Map.Entry<java.lang.Integer,Double> currItem:items.entrySet())
         {
             price = price + currItem.getValue()*itemMap.get(currItem.getKey()).getPrice();
+        }
+        for(Bid bid : bids.values ()){
+            if(bid.isApproved ())
+                price += bid.getPrice ( ) * bid.getAmount ();
         }
         DecimalFormat format = new DecimalFormat("#.###");
         price = Double.parseDouble(format.format(price));
@@ -116,5 +124,22 @@ public class ShoppingBasket implements IHistory {
 
     public double getCurrentPrice(){
         return price;
+    }
+
+    public void addABid(Bid bid) {
+        bids.put ( bid.getItemId (), bid );
+    }
+
+    public HashMap<Integer, Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(HashMap<Integer, Bid> bids) {
+        this.bids = bids;
+    }
+
+    public void removeBid(Integer itemId) {
+        bids.remove ( itemId );
+        calculatePrice ();
     }
 }

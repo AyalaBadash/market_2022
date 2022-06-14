@@ -372,6 +372,27 @@ public class Service implements IService {
     }
 
 
+    @Override
+    @RequestMapping(value = "/isServerInit")
+    @CrossOrigin
+    public Response isServerInit() {
+        return marketService.isServerInit();
+    }
+
+    @Override
+    @RequestMapping(value = "/addABid")
+    @CrossOrigin
+    public Response addABid(@RequestBody AddABidRequest request) {
+        return marketService.addABid(request.getVisitorName (), request.getShopName (), request.getItemId (), request.getPrice (), request.getAmount());
+    }
+
+    @Override
+    @RequestMapping(value = "/approveABid")
+    @CrossOrigin
+    public Response approveABid(@RequestBody ApproveABidRequest request) {
+        return marketService.approveABid(request.getApproves (), request.getShopName (), request.getAskedBy (), request.getItemId ());
+    }
+
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);
     }
@@ -382,13 +403,6 @@ public class Service implements IService {
 
     public ResponseT<ItemFacade> getItemById(int id) {
         return marketService.getItemById(id);
-    }
-
-    @Override
-    @RequestMapping(value = "/isServerInit")
-    @CrossOrigin
-    public Response isServerInit() {
-        return marketService.isServerInit();
     }
 
 }

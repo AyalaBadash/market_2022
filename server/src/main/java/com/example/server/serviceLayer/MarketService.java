@@ -554,4 +554,21 @@ public class MarketService {
     }
 
 
+    public Response addABid(String visitorName, String shopName, Integer itemId, Double price, Double amount) {
+        try {
+            market.addABid(visitorName, shopName, itemId, price, amount);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response approveABid(String approves, String shopName, String askedBy, Integer itemId) {
+        try {
+            market.approveABid(approves, shopName, askedBy, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
 }
