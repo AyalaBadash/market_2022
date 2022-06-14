@@ -99,34 +99,34 @@ public class Market {
         return instance;
     }
 
-    public synchronized void firstInitMarket(PaymentServiceProxy paymentServiceProxy1, SupplyServiceProxy supplyServiceProxy1, Publisher publisher, String userName, String password) throws MarketException {
-        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
-            DebugLog.getInstance().Log("A market initialization failed .already initialized");
-            throw new MarketException("market is already initialized");
-        }
-        if (paymentServiceProxy1 == null || supplyServiceProxy1 == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-            throw new MarketException("market needs payment and supply services for initialize");
-        }
-        if (publisher == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of publisher services ");
-            throw new MarketException("market needs publisher services for initialize");
+//    public synchronized void firstInitMarket(PaymentServiceProxy paymentServiceProxy1, SupplyServiceProxy supplyServiceProxy1, Publisher publisher, String userName, String password) throws MarketException {
+//        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
+//            DebugLog.getInstance().Log("A market initialization failed .already initialized");
+//            throw new MarketException("market is already initialized");
+//        }
+//        if (paymentServiceProxy1 == null || supplyServiceProxy1 == null) {
+//            DebugLog debugLog = DebugLog.getInstance();
+//            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
+//            throw new MarketException("market needs payment and supply services for initialize");
+//        }
+//        if (publisher == null) {
+//            DebugLog debugLog = DebugLog.getInstance();
+//            debugLog.Log("A market initialization failed . Lack of publisher services ");
+//            throw new MarketException("market needs publisher services for initialize");
+//
+//        }
+//        initRepositories();
+//        register(userName, password);
+//        instance.systemManagerName = userName;
+//        instance.paymentServiceProxy = paymentServiceProxy1;
+//        instance.supplyServiceProxy = supplyServiceProxy1;
+//        notificationHandler=NotificationHandler.getInstance();
+////        marketRepository.save(this.toDalObject()); //TODO
+//        EventLog eventLog = EventLog.getInstance();
+//        eventLog.Log("A market has been initialized successfully");
+//    }
 
-        }
-        initRepositories();
-        register(userName, password);
-        instance.systemManagerName = userName;
-        instance.paymentServiceProxy = paymentServiceProxy1;
-        instance.supplyServiceProxy = supplyServiceProxy1;
-        notificationHandler=new NotificationHandler(publisher);
-//        marketRepository.save(this.toDalObject()); //TODO
-        EventLog eventLog = EventLog.getInstance();
-        eventLog.Log("A market has been initialized successfully");
-    }
-
-    private void initRepositories(){
+    private void initRepositories() {
         Item.setItemRep(itemRep);
         Shop.setShopRep(shopRep);
         ShoppingBasket.setShoppingBasketRep(shoppingBasketRep);
@@ -137,6 +137,7 @@ public class Market {
         ClosedShopsHistory.setClosedShopsHistoryRep(closedShopsHistoryRep);
         UserController.setUserControllerRep(userControllerRep);
         Visitor.setVisitorRep(visitorRep);
+    }
     /**
      * init system from default files. With given system manager details.
      *
@@ -147,6 +148,7 @@ public class Market {
     public synchronized void firstInitMarket(String userName, String password, boolean test) throws MarketException {
 
         try {
+            initRepositories();
             this.test = test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
@@ -204,6 +206,7 @@ public class Market {
         } catch (Exception e) {
             throw e;
         }
+    }
     //Loading systems configurations from file.
     public synchronized void firstInitMarket(String userName, String password) throws MarketException {
         if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {

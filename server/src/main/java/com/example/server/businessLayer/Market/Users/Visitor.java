@@ -16,7 +16,7 @@ public class Visitor {
     private String name;
     @OneToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Member member;
-    @OneToOne (cascade = CascadeType.ALL)
+    @OneToOne (cascade = {CascadeType.MERGE, CascadeType.REMOVE} )
     private ShoppingCart cart;
     private static VisitorRep visitorRep;
 
@@ -26,14 +26,14 @@ public class Visitor {
         this.name = name;
         this.member = null;
         this.cart = new ShoppingCart();
-        visitorRep.save(this);
+        ShoppingCart.getShoppingCartRep().save(cart);
     }
 
     public Visitor(String name, Member member, ShoppingCart cart) {
         this.name = name;
         this.member = member;
         this.cart = cart;
-        visitorRep.save(this);
+        ShoppingCart.getShoppingCartRep().save(cart);
     }
     public Visitor(){}
 
@@ -76,5 +76,9 @@ public class Visitor {
 
     public static void setVisitorRep(VisitorRep visitorRep) {
         Visitor.visitorRep = visitorRep;
+    }
+
+    public static VisitorRep getVisitorRep() {
+        return visitorRep;
     }
 }

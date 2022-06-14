@@ -24,7 +24,7 @@ public class UserController {
     private long id;
     @Transient
     private Map<String, Member> members;
-    @OneToMany
+    @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     @JoinTable(name = "visitors_in_market",
             joinColumns = {@JoinColumn(name = "us", referencedColumnName = "id")})
     @MapKeyColumn(name = "visitor") // the key column
@@ -76,8 +76,10 @@ public class UserController {
 
     public void exitSystem(String visitorName) throws MarketException {
         if (this.visitorsInMarket.containsKey(visitorName)) {
+            Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
             this.visitorsInMarket.remove(visitorName);
             userControllerRep.save(this);
+            Visitor.getVisitorRep().delete(visitorToDelete);
             EventLog.getInstance().Log("User left the market.");
         }
         else
@@ -89,7 +91,6 @@ public class UserController {
 
     public boolean register(String userName) throws MarketException {
         Member newMember = new Member(userName);
-//        memberRepository.save(newMember.toDalObject()); //todo
         members.put(userName,newMember);
         EventLog.getInstance().Log("Welcome to our new member: "+userName);
         return true;
@@ -132,11 +133,13 @@ public class UserController {
             DebugLog.getInstance().Log("member who is not visiting tried to logout");
             throw new MarketException("not currently visiting the shop");
         }
+        Visitor visitorToDelete = this.visitorsInMarket.get(member);
         visitorsInMarket.remove(member);
         String newVisitorName = getNextUniqueName();
         Visitor newVisitor = new Visitor(newVisitorName);
         visitorsInMarket.put(newVisitorName, newVisitor);
         userControllerRep.save(this);
+        Visitor.getVisitorRep().delete(visitorToDelete);
         EventLog.getInstance().Log("Our beloved member " + member + " logged out.");
         return newVisitorName;
     }
@@ -145,8 +148,10 @@ public class UserController {
         if(visitorsInMarket.containsKey(userName))
             throw new MarketException("member is already logged in");
         visitorsInMarket.put(userName,newVisitorMember);
+        Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
         visitorsInMarket.remove(visitorName);
         userControllerRep.save(this);
+        Visitor.getVisitorRep().delete(visitorToDelete);
         EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();
     }
@@ -159,8 +164,8 @@ public class UserController {
         }
         for ( Member member: members.values ()){
             member.getMyCart().removeItem( shop, itemToRemove);
-            userControllerRep.save(this);
         }
+        userControllerRep.save(this);
         EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
     }
     public synchronized void setRegisteredAvg(){

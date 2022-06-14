@@ -111,7 +111,7 @@ public class ShoppingCart implements IHistory {
     public void addItem(Shop shop, Item item, double amount) throws MarketException {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
-            shoppingBasket = new ShoppingBasket ();
+            shoppingBasket = new ShoppingBasket();
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addItem ( item, amount );

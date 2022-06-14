@@ -56,7 +56,7 @@ public class Shop implements IHistory {
     //TODO getter,setter,constructor
     @Transient
     private DiscountPolicy discountPolicy;
-
+    @Transient //todo
     private PurchasePolicy purchasePolicy;
 
     public Shop(){}
@@ -226,6 +226,7 @@ public class Shop implements IHistory {
             this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
+        shopRep.save(this);
         //send notifications to shop owners:
         try{
             publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices,test);
@@ -235,8 +236,6 @@ public class Shop implements IHistory {
         if(purchasePolicy.isPoliciesHeld (shoppingBasket ))
             return discountPolicy.calculateDiscount ( shoppingBasket );
         throw new MarketException ( "shopping basket does not held the purchase policy" );
-        shopRep.save(this);
-        return shoppingBasket.getPrice ( );
     }
 
 

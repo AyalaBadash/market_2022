@@ -48,6 +48,12 @@ public class Acquisition {
 
         // checks the price is correct
         //todo: check why there is not an exception here.
+        address.setAddress("address");
+        address.setZip("4336203");
+        address.setCity("beer seva");
+        address.setCountry("israel");
+        address.setName("shaked");
+
         if(!isPriceCorrect(publisher,expectedPrice,test))
             return shoppingCartToBuy;
 

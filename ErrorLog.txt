@@ -633,3 +633,15 @@ Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
 Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
 Level Error : User tried to register with taken name.
 Level Error : Non member visitor tried to log in.
+Level Error : Cannot invoke "com.example.server.dataLayer.repositories.ShoppingCartRep.save(Object)" because the return value of "com.example.server.businessLayer.Market.ShoppingCart.getShoppingCartRep()" is null
+Level Error : Cannot invoke "com.example.server.dataLayer.repositories.ShoppingCartRep.save(Object)" because the return value of "com.example.server.businessLayer.Market.ShoppingCart.getShoppingCartRep()" is null
+Level Error : Cannot invoke "com.example.server.dataLayer.repositories.ShoppingCartRep.save(Object)" because the return value of "com.example.server.businessLayer.Market.ShoppingCart.getShoppingCartRep()" is null
+Level Error : Cannot invoke "com.example.server.dataLayer.repositories.ShoppingCartRep.save(Object)" because the return value of "com.example.server.businessLayer.Market.ShoppingCart.getShoppingCartRep()" is null
+Level Error : Address details are illegal.
+Level Error : Error1
+Level Error : Error1
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : could not execute statement; SQL [n/a]; constraint [baskets_in_cart.PRIMARY]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : could not execute statement; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: could not execute statement
+Level Error : error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
+Level Error : Non member visitor tried to log in.
