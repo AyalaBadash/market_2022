@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Payment;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -14,10 +15,18 @@ import java.util.List;
 
 public class WSEPPaymentServiceAdapter implements PaymentService {
 
-    private final String url;
+    private static WSEPPaymentServiceAdapter instance= null;
+    private String url;
 
 
-    public WSEPPaymentServiceAdapter() {
+    public static WSEPPaymentServiceAdapter getinstance(){
+        if(instance==null){
+            instance=new WSEPPaymentServiceAdapter();
+        }
+        return instance;
+    }
+    private WSEPPaymentServiceAdapter() {
+
         url = "https://cs-bgu-wsep.herokuapp.com/";
     }
 
@@ -52,14 +61,19 @@ public class WSEPPaymentServiceAdapter implements PaymentService {
      * @return "OK" if success. empty if not.
      */
     @Override
-    public String handShake(List<NameValuePair> requestBody) {
+    public String handShake(List<NameValuePair> requestBody) throws Exception {
         try {
             String result = "";
             result = sendRequestHandshake(requestBody);
             return result;
         } catch (Exception e) {
-            return "";
+            throw e;
         }
+    }
+
+    @Override
+    public void setAddress(String address) {
+        this.url=address;
     }
 
     /**
@@ -94,7 +108,7 @@ public class WSEPPaymentServiceAdapter implements PaymentService {
             // String of the response
             return EntityUtils.toString(entity);
         } catch (Exception e) {
-            throw new MarketException("Error3");
+            throw new MarketException("Error2");
         }
 
     }
@@ -133,7 +147,8 @@ public class WSEPPaymentServiceAdapter implements PaymentService {
             String responseString = EntityUtils.toString(entity);
             res = Integer.parseInt(responseString);
             return res;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new MarketException("Error3");
         }
 

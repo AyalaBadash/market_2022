@@ -62,7 +62,6 @@ public class AcceptanceTests {
             addItemToShop(shopOwnerName, "yogurt", productPrice, Item.Category.general, "soy", new ArrayList<>(), productAmount, shopName);
             List<ItemFacade> res = searchProductByName("yogurt");
             yogurt = res.get(0);
-
             appleAmount = 4.0;
             appleName = "apple";
             appleCategory = Item.Category.fruit;

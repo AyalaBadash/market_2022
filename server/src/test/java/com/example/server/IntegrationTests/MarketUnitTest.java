@@ -37,7 +37,7 @@ public class MarketUnitTest {
         PaymentServiceProxy paymentService = new PaymentServiceProxy();
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            Market.getInstance().firstInitMarket("Ido","password",true);
+            Market.getInstance().firstInitMarket("Ido","password");
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -77,7 +77,7 @@ public class MarketUnitTest {
     public void initFailTest(){
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            market.firstInitMarket("raz","password",true);
+            market.firstInitMarket("raz","password");
             assert false;
         }
         catch (Exception e){
@@ -89,12 +89,12 @@ public class MarketUnitTest {
     @DisplayName("First init market - fail test - one service already exist")
     public void initFailTestOneServiceIsNotNull(){
         try {
-            market.setPaymentServiceProxy(new PaymentServiceProxy(), "raz");
+            market.setPaymentServiceProxy(new PaymentServiceProxy(), "raz",false);
         } catch (MarketException e) {}
         PaymentServiceProxy paymentService = new PaymentServiceProxy();
         SupplyServiceProxy supplyService = new SupplyServiceProxy();
         try{
-            market.firstInitMarket("raz","password",true);
+            market.firstInitMarket("raz","password");
             assert false;
         }
         catch (Exception e){
