@@ -17,6 +17,14 @@ public class AtMostPurchasePolicyType extends PurchasePolicyType {
     }
 
     @Override
+    public boolean equals(Object object) {
+        if(object instanceof AtMostPurchasePolicyType){
+            AtMostPurchasePolicyType atMostPurchasePolicyType = (AtMostPurchasePolicyType) object;
+            return atMostPurchasePolicyType.amount == this.amount;
+        }
+        return false;
+    }
+    @Override
     public boolean isPolicyHeld(ShoppingBasket shoppingBasket) {
         return false;
     }

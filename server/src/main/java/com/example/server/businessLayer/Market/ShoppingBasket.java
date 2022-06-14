@@ -42,12 +42,9 @@ public class ShoppingBasket implements IHistory {
         this.price = price;
     }
 
-    //TODO - needs to stay without checking the discount
     public double getPrice() {
         return calculatePrice();
     }
-
-    //TODO - add calculationOfDiscount
 
     private double calculatePrice() {
         double price = 0;
@@ -111,5 +108,13 @@ public class ShoppingBasket implements IHistory {
 
     public void setItemMap(Map<java.lang.Integer, Item> itemMap) {
         this.itemMap = itemMap;
+    }
+
+    public void updatePrice(Shop shop) throws MarketException {
+        setPrice (shop.calculateDiscount ( this ));
+    }
+
+    public double getCurrentPrice(){
+        return price;
     }
 }

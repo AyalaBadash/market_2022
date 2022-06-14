@@ -584,4 +584,8 @@ public class Shop implements IHistory {
     public PurchasePolicy getPurchasePolicy() {
         return purchasePolicy;
     }
+
+    public double calculateDiscount(ShoppingBasket shoppingBasket) throws MarketException {
+        return discountPolicy.calculateDiscount ( shoppingBasket );
+    }
 }
