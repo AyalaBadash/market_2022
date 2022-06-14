@@ -23,7 +23,7 @@ public class ItemLevelState extends DiscountLevelState{
         if (items.containsKey(item.getID()))
         {
             Double amount = items.get(item.getID());
-            itemDiscount = amount * (percentageOfDiscount/100);
+            itemDiscount = amount * item.getPrice() * (percentageOfDiscount/100);
 
         }
         return price - itemDiscount;
@@ -31,9 +31,8 @@ public class ItemLevelState extends DiscountLevelState{
 
     @Override
     public boolean equals(Object object){
-        if(object instanceof ItemLevelState){
-            ItemLevelState toCompare = (ItemLevelState) object;
-            return this.itemID == toCompare.itemID;
+        if(object instanceof ItemLevelState toCompare){
+            return this.itemID.equals(toCompare.itemID);
         }
         return false;
     }
