@@ -99,6 +99,7 @@ public class ShoppingCart implements IHistory {
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addItem ( item, amount );
+        shoppingBasket.updatePrice(shop);
     }
 
     public void removeItem(Shop shop, Item item) throws MarketException {
@@ -106,20 +107,23 @@ public class ShoppingCart implements IHistory {
         if(shoppingBasket == null)
             return;
         shoppingBasket.removeItem ( item);
+        shoppingBasket.updatePrice(shop);
     }
 
     public void calculate() {
         double price = 0;
         for(ShoppingBasket shoppingBasket : cart.values ())
-            price += shoppingBasket.getPrice ();
+            price += shoppingBasket.getCurrentPrice ();
         currentPrice = price;
     }
 
     public void editQuantity(double amount, Item item, String shopName) throws MarketException {
         ShoppingBasket basket=null;
+        Shop shop = null;
         for (Map.Entry<Shop, ShoppingBasket> bask: cart.entrySet()){
             if(bask.getKey().getShopName().equals(shopName)){
                 basket=bask.getValue();
+                shop = bask.getKey ();
                 break;
             }
         }
@@ -127,6 +131,7 @@ public class ShoppingCart implements IHistory {
             throw new MarketException("The basket does not exist in the cart.");
         }
         basket.updateQuantity(amount, item);
+        basket.updatePrice(shop);
     }
 
 

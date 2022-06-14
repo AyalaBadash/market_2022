@@ -42,16 +42,17 @@ public class PurchasePolicy {
         if(validPurchasePolicies.contains ( purchasePolicyType ))
             throw new MarketException ( "policy is already exist in the shop" );
         if(purchasePolicyType instanceof CompositePurchasePolicyType){
-            purePolicies ((CompositePurchasePolicyType) purchasePolicyType);
+            purePolicies ( purchasePolicyType);
         }
         validPurchasePolicies.add ( purchasePolicyType );
     }
 
     private void purePolicies(PurchasePolicyType purchasePolicyType) {
         if(purchasePolicyType instanceof CompositePurchasePolicyType) {
-            for ( PurchasePolicyType purchasePolicyType1 : ((CompositePurchasePolicyType) purchasePolicyType).getPolicies ( ) ) {
+            CompositePurchasePolicyType compositePurchasePolicyType = (CompositePurchasePolicyType) purchasePolicyType;
+            for ( PurchasePolicyType purchasePolicyType1 : compositePurchasePolicyType.getPolicies ( ) ) {
                 if (validPurchasePolicies.contains ( purchasePolicyType1 )) {
-                    validPurchasePolicies.remove ( purchasePolicyType );
+                    validPurchasePolicies.remove ( purchasePolicyType1 );
                 } else if (purchasePolicyType1 instanceof CompositePurchasePolicyType) {
                     purePolicies (purchasePolicyType1);
                 }

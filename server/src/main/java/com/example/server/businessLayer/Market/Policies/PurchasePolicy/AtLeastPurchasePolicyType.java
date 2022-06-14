@@ -16,6 +16,16 @@ public class AtLeastPurchasePolicyType extends PurchasePolicyType {
         super ( purchasePolicyLevelState );
         this.amount = amount;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object instanceof AtLeastPurchasePolicyType){
+            AtLeastPurchasePolicyType atLeastPurchasePolicyType = (AtLeastPurchasePolicyType) object;
+            return atLeastPurchasePolicyType.amount == this.amount;
+        }
+        return false;
+    }
+
     @Override
     public boolean isPolicyHeld(ShoppingBasket shoppingBasket) throws MarketException {
         return purchasePolicyLevelState.isPolicyHeld ( shoppingBasket, amount, true);
