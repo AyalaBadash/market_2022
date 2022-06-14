@@ -209,7 +209,7 @@ public class AcquisitionTests {
 
     @Test
     @DisplayName("buy with illegal address")
-    public void buyWithIllegalAddress() {
+    public void buyWithIllegalAddress() throws MarketException {
         try {
             Visitor visitor = market.guestLogin();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
@@ -225,6 +225,7 @@ public class AcquisitionTests {
             }
         } catch (Exception e) {
             assert true;
+            market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance()),userName);
         }
     }
 
@@ -241,20 +242,20 @@ public class AcquisitionTests {
             Double itemAmount = shop.getItemCurrentAmount(milk);
             double buyingAmount = itemAmount + 1;
             market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
-            market.setPaymentServiceProxy(null,userName,true);
+            market.setPaymentServiceProxy(null,userName);
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
-                market.setPaymentServiceProxy(null,userName,true);
+                market.setPaymentServiceProxy(null,userName);
                 assert false;
-                market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),userName,true);
+                market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance()),userName);
 
             }catch (MarketException e){
                 Assertions.assertEquals("The payment service is not available right now.",e.getMessage());
-                market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),userName,true);
+                market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance()),userName);
             }
         } catch (Exception e) {
             assert true;
-            market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),userName,true);
+            market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance()),userName);
         }
     }
 
@@ -274,6 +275,7 @@ public class AcquisitionTests {
             market.setSupplyService(null,userName);
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+                market.setPaymentServiceProxy(null,userName);
                 assert false;
             }catch (MarketException e){
                 Assertions.assertEquals("The supply service is not available right now.",e.getMessage());

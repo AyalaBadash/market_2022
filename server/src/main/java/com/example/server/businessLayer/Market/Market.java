@@ -264,7 +264,7 @@ public class Market {
     private void initSupplyService(String val) throws MarketException {
 
         if (val.contains("WSEP")) {
-            supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), false);
+            supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance());
         } else {
             throw new MarketException("Failed to init supply service");
         }
@@ -273,7 +273,7 @@ public class Market {
     private void initPaymentService(String val) throws MarketException {
 
         if (val.contains("WSEP")) {
-            paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), false);
+            paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance());
         } else {
             throw new MarketException("Failed to init payment service");
         }

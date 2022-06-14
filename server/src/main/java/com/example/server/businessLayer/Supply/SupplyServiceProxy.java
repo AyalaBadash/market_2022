@@ -11,18 +11,15 @@ import java.util.List;
 
 public class SupplyServiceProxy implements SupplyService {
 
-    private final boolean testRequest;
     private SupplyService supplyService;
 
-    public SupplyServiceProxy(SupplyService supplyService1, boolean test) {
+    public SupplyServiceProxy(SupplyService supplyService1) {
         super();
-        testRequest = test;
         this.supplyService = supplyService1;
     }
 
     public SupplyServiceProxy() {
         super();
-        testRequest = true;
     }
 
     /**

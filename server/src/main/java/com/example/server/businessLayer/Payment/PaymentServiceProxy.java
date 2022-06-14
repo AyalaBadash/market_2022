@@ -11,7 +11,6 @@ import java.util.List;
 
 public class PaymentServiceProxy implements PaymentService{
 
-    private final boolean testRequest;
     private final String okayMessage="OK";
     private final String TypeHandshake="handshake";
     private final String TypePay="pay";
@@ -19,17 +18,15 @@ public class PaymentServiceProxy implements PaymentService{
 
     private PaymentService paymentService;
 
-    public PaymentServiceProxy(PaymentService paymentService1, boolean test) {
+    public PaymentServiceProxy(PaymentService paymentService1) {
 
         super();
-        this.testRequest=test;
         this.paymentService = paymentService1;
     }
 
     public PaymentServiceProxy() {
 
         super();
-        this.testRequest=true;
     }
 
 

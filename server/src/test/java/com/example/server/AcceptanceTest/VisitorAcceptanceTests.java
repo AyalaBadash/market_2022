@@ -310,7 +310,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void buyItemValid() {
         try {
             Market market= Market.getInstance();
-            market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),market.getSystemManagerName());
+            market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance()),market.getSystemManagerName());
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("bamba");

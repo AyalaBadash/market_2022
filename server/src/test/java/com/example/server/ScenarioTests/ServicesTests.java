@@ -54,8 +54,8 @@ public class ServicesTests {
 
     @BeforeEach
     public void init() {
-        paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
-        supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
+        paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance());
+        supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance());
         creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
         address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
         market = Market.getInstance();
@@ -69,7 +69,7 @@ public class ServicesTests {
 
 
     @Test
-    @DisplayName("Payment service- pay")
+    @DisplayName("Payment service- pay action")
     public void PaymentHandler() {
         try {
             int result = paymentServiceProxy.pay(creditCard);
@@ -80,7 +80,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("Supply service-supply")
+    @DisplayName("Supply service-supply action")
     public void SupplyHandler() {
         try {
             int result = supplyServiceProxy.supply(address);
@@ -92,7 +92,7 @@ public class ServicesTests {
 
 
     @Test
-    @DisplayName("Payment service- cancel pay")
+    @DisplayName("Payment service- cancel pay action")
     public void PaymentHandlerCancel() {
         try {
             int result = paymentServiceProxy.pay(creditCard);
@@ -108,7 +108,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("Supply service- cancel supply")
+    @DisplayName("Supply service- cancel supply action")
     public void SupplyHandlerCancel() {
         try {
             int result = supplyServiceProxy.supply(address);
@@ -126,7 +126,7 @@ public class ServicesTests {
 
     //TODO:BAR CHECK USE NOT EXIST PUBLISHER.
     @Test
-    @DisplayName("Payment service- service falls")
+    @DisplayName("check system handle error case of payment service falls.")
     public void PaymentServiceFalls() throws MarketException {
         try {
             try {
@@ -148,7 +148,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("Supply service- service falls")
+    @DisplayName("check system handle error case of supply service falls.")
     public void SupplyServiceFalls() throws MarketException {
         try {
             market.setSupplyServiceAddress("", userName);
@@ -162,7 +162,7 @@ public class ServicesTests {
         }
     }
     @Test
-    @DisplayName("text dispatcher service- add")
+    @DisplayName("check that the publisher don't add user to sessions list")
     public void textDispatcherAdd() {
         textDispatcher.clean();
         String name = "Bar";
@@ -174,7 +174,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("text dispatcher service- add twice to user")
+    @DisplayName("check that the publisher don't add twice the same user to sessions list")
     public void textDispatcherAdd2() {
         textDispatcher.clean();
         String name = "Bar";
@@ -193,7 +193,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("text dispatcher service- remove")
+    @DisplayName("remove logged out user from publisher sessions list.")
     public void textDispatcherRemove(){
         textDispatcher.clean();
         String name = "Bar";
@@ -205,7 +205,7 @@ public class ServicesTests {
         Assertions.assertEquals(0, textDispatcher.getSessionNum());
     }
     @Test
-    @DisplayName("text dispatcher service- remove user without add")
+    @DisplayName("publisher service handling removing user that not exists in open sessions.")
     public void textDispatcherRemove2(){
         textDispatcher.clean();
         String name = "Bar";
@@ -216,7 +216,7 @@ public class ServicesTests {
         Assertions.assertEquals(0, notifs.size());
     }
     @Test
-    @DisplayName("text dispatcher service- add new message")
+    @DisplayName("tadd new message for a user in the notification service")
     public void textDispatcherAddMessage(){
         textDispatcher.clean();
         String name = "Bar";
@@ -229,7 +229,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("System init from file")
+    @DisplayName("System init from file load successfully.")
     public void initFromFile(){
         try{
             MarketService marketService= MarketService.getInstance();
@@ -247,7 +247,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("System init from no file")
+    @DisplayName("System init from file when the file is not exists")
     public void initFromNoFile(){
         try{
             MarketConfig.SERVICES_FILE_NAME="noName.txt";
@@ -282,7 +282,7 @@ public class ServicesTests {
 
 
    @Test
-    @DisplayName("notification test- close shop")
+    @DisplayName("check notification was able to be sent on shop closed action")
     public void closeShop() {
        try {
            // shop manager register
@@ -305,7 +305,7 @@ public class ServicesTests {
 
 
     @Test
-    @DisplayName("notification test- appoint owner with delayed notification")
+    @DisplayName("check delayed notification saved in appointment of owner action")
     public void AppointOwnerNotificationTest() {
         try {
 
@@ -327,7 +327,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("notification test- close shop with delayed notification")
+    @DisplayName("check delayed notification saved in close shop action")
     public void closeShopDelayed() {
         try {
 
@@ -350,7 +350,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("notification test- close shop with real time notification")
+    @DisplayName("check real time notification was sent in close shop action to logged user.")
     public void closeShopRealTime() {
         try {
 
