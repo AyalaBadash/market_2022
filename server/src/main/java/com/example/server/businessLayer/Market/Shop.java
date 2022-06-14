@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.Appointment.PendingAppointments;
 import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
@@ -29,6 +30,7 @@ public class Shop implements IHistory {
     private Map<String, Appointment> shopOwners;     //<name, appointment>
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
+    private PendingAppointments pendingAppointments;
 
     Member shopFounder;//todo
     private int rank;
@@ -55,6 +57,7 @@ public class Shop implements IHistory {
         founder.addAppointmentToMe(shopOwnerAppointment);
         discountPolicy = new DiscountPolicy ();
         purchasePolicy = new PurchasePolicy ();
+        this.pendingAppointments = new PendingAppointments();
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
