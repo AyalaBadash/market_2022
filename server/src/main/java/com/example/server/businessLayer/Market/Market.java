@@ -1347,4 +1347,10 @@ public class Market {
         }
         shop.cancelABid (buyer, itemId);
     }
+
+    public void updateBidInLoggingOut(String visitorName) {
+        for(Shop shop: shops.values ()){
+            shop.updateBidInLoggingOut(visitorName);
+        }
+    }
 }

@@ -2,13 +2,10 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Market.Users.UserController;
-import com.example.server.businessLayer.Publisher.NotificationHandler;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Handler;
 
 public class Bid {
 
@@ -47,6 +44,14 @@ public class Bid {
     public Bid() {
     }
 
+    public boolean equals(Object object){
+        if(object instanceof Bid){
+            Bid bid = (Bid) object;
+            return (bid.buyerName.equals ( this.buyerName ) && bid.itemId == this.itemId);
+        }
+        return false;
+    }
+
     public void addApproves(String name) {
         shopOwnersStatus.put ( name, false );
         if (approved)
@@ -68,7 +73,6 @@ public class Bid {
                 if(sideNeedToApprove.equals ( Side.buyer )){
                     return false;
                 }
-                //todo - notify visitor name he got the bid - if not exist cancel bid
                 approved = true;
                 return true;
             }

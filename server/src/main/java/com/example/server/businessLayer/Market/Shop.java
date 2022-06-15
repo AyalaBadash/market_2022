@@ -729,4 +729,15 @@ public class Shop implements IHistory {
     public void setBids(List<Bid> bids) {
         this.bids = bids;
     }
+
+    public void updateBidInLoggingOut(String visitorName) {
+        List<Bid> bidsToRemove = new ArrayList<> (  );
+        for(Bid bid : bids){
+            if(bid.getBuyerName ().equals ( visitorName ))
+                bidsToRemove.add ( bid );
+        }
+        for(Bid bid : bidsToRemove){
+            bids.remove ( bid );
+        }
+    }
 }
