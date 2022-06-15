@@ -79,6 +79,11 @@ public class Shop implements IHistory {
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
         this.shopManagers.put ( managerName, appointment );
+        if(appointment.hasPermission ( "ApproveBidPermission" )){
+            for(Bid bid : bids){
+                bid.addApproves(appointment.getAppointed ().getName ());
+            }
+        }
     }
 
 
@@ -368,6 +373,10 @@ public class Shop implements IHistory {
             else
                 shopManagers.put ( employeeName, newAppointment );
         }
+        if(newAppointment.hasPermission ( "ApproveBidPermission" ))
+            for(Bid bid : bids){
+                bid.addApproves(newAppointment.getAppointed ().getName ());
+            }
     }
 
     public List<Item> getItemsByCategory(Item.Category category) {
@@ -554,6 +563,9 @@ public class Shop implements IHistory {
             if (toCheck.getSuperVisor().getName().equals(firedAppointed))
                 shopManagers.remove(entry.getKey());
         }
+        for(Bid bid : bids){
+            bid.removeApproves(firedAppointed);
+        }
         shopOwners.remove(firedAppointed);
 
 
@@ -615,22 +627,35 @@ public class Shop implements IHistory {
     }
 
     public boolean approveABid(String approves, String askedBy, Integer itemId) throws MarketException {
-        Bid bitToApprove = null;
+        Bid bidToApprove = null;
         for(Bid bid : bids){
             if (bid.getBuyerName ().equals ( askedBy ) && bid.getItemId ().equals ( itemId ))
-                bitToApprove = bid;
+                bidToApprove = bid;
         }
-        if(bitToApprove == null){
+        if(bidToApprove == null){
             DebugLog.getInstance ().Log ( "Bid does not exist in the shop." );
             throw new MarketException ( "Bid does not exist in the shop." );
         }
-        if(bitToApprove.approveBid ( approves )){
+        if(bidToApprove.approveBid ( approves )){
             if(itemsCurrentAmount.get ( itemId ) < 1){
                 //todo notify buyer
             }
             return true;
         }
         return false;
+    }
+
+    public void suggestNewOfferToBid(String suggester, String askedBy, int itemId, double newPrice) throws MarketException {
+        Bid bidToApprove = null;
+        for(Bid bid : bids){
+            if (bid.getBuyerName ().equals ( askedBy ) && bid.getItemId ().equals ( itemId ))
+                bidToApprove = bid;
+        }
+        if(bidToApprove == null){
+            DebugLog.getInstance ().Log ( "Bid does not exist in the shop." );
+            throw new MarketException ( "Bid does not exist in the shop." );
+        }
+        bidToApprove.suggestNewOffer ( suggester, newPrice );
     }
 
     public List<PurchasePolicyType> getPurchasePolicies() {

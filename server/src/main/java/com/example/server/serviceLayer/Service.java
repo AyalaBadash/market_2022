@@ -393,6 +393,13 @@ public class Service implements IService {
         return marketService.approveABid(request.getApproves (), request.getShopName (), request.getAskedBy (), request.getItemId ());
     }
 
+    @Override
+    @RequestMapping(value = "/suggestNewOfferToBid")
+    @CrossOrigin
+    public Response suggestNewOfferToBid(@RequestBody SuggestNewOfferToBidRequest request) {
+        return marketService.suggestNewOfferToBid(request.getSuggester (), request.getShopName (), request.getAskedBy (), request.getItemId (), request.getNewPrice ());
+    }
+
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);
     }

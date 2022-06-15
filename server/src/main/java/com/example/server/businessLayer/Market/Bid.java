@@ -8,10 +8,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Bid {
+
+
     public enum Side{
         buyer,
         seller,
-        both
+        both;
+
     }
     private String buyerName;
     private Integer itemId;
@@ -20,9 +23,7 @@ public class Bid {
     private Side sideNeedToApprove;
     private Side suggester;
     private boolean approved;
-
     private HashMap<String, Boolean> shopOwnersStatus;
-
     public Bid(String buyerName, Integer itemId, double price, double amount, List<String> shopOwners) {
         this.buyerName = buyerName;
         this.itemId = itemId;
@@ -41,7 +42,19 @@ public class Bid {
     public Bid() {
     }
 
-    public boolean approveBid(String name){
+    public void addApproves(String name) {
+        shopOwnersStatus.put ( name, false );
+        if (approved)
+            approved = false;
+    }
+
+    public void removeApproves(String firedAppointed) {
+        shopOwnersStatus.remove ( firedAppointed );
+        if(isApproved () && sideNeedToApprove != Side.buyer)
+            approved = true;
+    }
+
+    public synchronized boolean approveBid(String name){
         if(name.equals ( buyerName ) && sideNeedToApprove.equals ( Side.buyer ))
             return true;
         if(sideNeedToApprove.equals ( Side.seller ) || sideNeedToApprove.equals ( Side.both )) {
@@ -68,7 +81,7 @@ public class Bid {
         }
     }
 
-    public void suggestNewOffer(String name, Double newPrice) throws MarketException {
+    public synchronized void suggestNewOffer(String name, Double newPrice) throws MarketException {
         if(!name.equals ( buyerName ) && sideNeedToApprove.equals ( Side.buyer ) || name.equals ( buyerName ) && (sideNeedToApprove.equals ( Side.seller ) || sideNeedToApprove.equals ( Side.both ))){
             DebugLog.getInstance ().Log ( "This bid is not for you to approve." );
             throw new MarketException ( "This bid is not for you to approve." );
@@ -90,7 +103,7 @@ public class Bid {
         }
     }
 
-    public void setNewPrice(double newPrice) {
+    public synchronized void setNewPrice(double newPrice) {
         for(String shopOwnerName : shopOwnersStatus.keySet ()){
             shopOwnersStatus.replace ( shopOwnerName, false );
         }

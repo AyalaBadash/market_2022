@@ -56,9 +56,11 @@ public class ShoppingBasket implements IHistory {
         {
             price = price + currItem.getValue()*itemMap.get(currItem.getKey()).getPrice();
         }
-        for(Bid bid : bids.values ()){
-            if(bid.isApproved ())
-                price += bid.getPrice ( ) * bid.getAmount ();
+        if(bids != null && bids.size () > 0) {
+            for ( Bid bid : bids.values ( ) ) {
+                if (bid.isApproved ( ))
+                    price += bid.getPrice ( ) * bid.getAmount ( );
+            }
         }
         DecimalFormat format = new DecimalFormat("#.###");
         price = Double.parseDouble(format.format(price));

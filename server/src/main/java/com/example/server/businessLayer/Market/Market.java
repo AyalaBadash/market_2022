@@ -1292,11 +1292,7 @@ public class Market {
     }
 
     public void addABid(String visitorName, String shopName, Integer itemId, Double price, Double amount) throws MarketException {
-        if (!userController.isLoggedIn(visitorName)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(visitorName);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
@@ -1307,11 +1303,7 @@ public class Market {
     }
 
     public void approveABid(String approves, String shopName, String askedBy, Integer itemId) throws MarketException {
-        if (!userController.isLoggedIn(approves)) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("you must be a visitor in the market in order to make actions");
-            throw new MarketException("you must be a visitor in the market in order to make actions");
-        }
+        alertIfNotLoggedIn(approves);
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
@@ -1322,6 +1314,17 @@ public class Market {
             ShoppingCart shoppingCart = userController.getVisitor ( askedBy ).getCart ();
             shoppingCart.approveBid (itemId, shop);
         }
+
+    }
+
+    public void suggestNewOfferToBid(String suggester, String shopName, String askedBy, int itemId, double newPrice) throws MarketException {
+        alertIfNotLoggedIn ( suggester );
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+        }
+        shop.suggestNewOfferToBid(suggester, askedBy, itemId, newPrice);
 
     }
 }

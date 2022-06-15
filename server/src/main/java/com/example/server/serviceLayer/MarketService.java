@@ -571,4 +571,13 @@ public class MarketService {
             return new Response ( e.getMessage () );
         }
     }
+
+    public Response suggestNewOfferToBid(String suggester, String shopName, String askedBy, int itemId, double newPrice) {
+        try {
+            market.suggestNewOfferToBid(suggester, shopName, askedBy, itemId, newPrice);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
 }

@@ -368,4 +368,12 @@ public interface IService {
      * @return
      */
     public Response approveABid(ApproveABidRequest request);
+
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    Response suggestNewOfferToBid(SuggestNewOfferToBidRequest request);
 }
