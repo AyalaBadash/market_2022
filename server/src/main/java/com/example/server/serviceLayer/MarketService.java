@@ -580,4 +580,22 @@ public class MarketService {
             return new Response ( e.getMessage () );
         }
     }
+
+    public Response rejectABid(String opposed, String shopName, String buyer, int itemId) {
+        try {
+            market.rejectABid(opposed, shopName,buyer, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response cancelABid(String shopName, String buyer, int itemId) {
+        try {
+            market.cancelABid (shopName, buyer, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
 }

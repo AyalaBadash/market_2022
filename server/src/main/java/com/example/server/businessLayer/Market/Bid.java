@@ -2,10 +2,13 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Users.UserController;
+import com.example.server.businessLayer.Publisher.NotificationHandler;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Handler;
 
 public class Bid {
 
@@ -17,6 +20,7 @@ public class Bid {
 
     }
     private String buyerName;
+    private boolean isMember;
     private Integer itemId;
     private double amount;
     private double price;
@@ -24,8 +28,9 @@ public class Bid {
     private Side suggester;
     private boolean approved;
     private HashMap<String, Boolean> shopOwnersStatus;
-    public Bid(String buyerName, Integer itemId, double price, double amount, List<String> shopOwners) {
+    public Bid(String buyerName, boolean isMember, Integer itemId, double price, double amount, List<String> shopOwners) {
         this.buyerName = buyerName;
+        this.isMember = isMember;
         this.itemId = itemId;
         this.price = price;
         this.amount = amount;
@@ -61,7 +66,6 @@ public class Bid {
             shopOwnersStatus.replace ( name, true );
             if (isApproved ( )) {
                 if(sideNeedToApprove.equals ( Side.buyer )){
-                    //todo - notify visitor name in the new offer
                     return false;
                 }
                 //todo - notify visitor name he got the bid - if not exist cancel bid
@@ -73,11 +77,13 @@ public class Bid {
         return false;
     }
 
-    public void rejectBid(String name){
-        if( !name.equals ( buyerName ) && sideNeedToApprove.equals ( Side.seller )){
-            //todo - notify visitor
-        } else {
-            //todo - cancel bid. delete from db? need to send notification to sellers?
+    public void rejectBid(String name) throws MarketException {
+        if( !name.equals ( buyerName ) && sideNeedToApprove.equals ( Side.buyer )){
+            DebugLog.getInstance ().Log ( "bid has already been approved." );
+            throw new MarketException ( "bid has already been approved." );
+        } else if(name.equals ( buyerName ) && ! sideNeedToApprove.equals ( Side.buyer )) {
+            DebugLog.getInstance ().Log ( "buyer tried to reject its own bid." );
+            throw new MarketException ( "You cannot reject your own bid, if you want you can cancel it." );
         }
     }
 
@@ -107,7 +113,6 @@ public class Bid {
         for(String shopOwnerName : shopOwnersStatus.keySet ()){
             shopOwnersStatus.replace ( shopOwnerName, false );
         }
-        //todo - notify all shop owners on the new bid
         this.price = newPrice;
     }
 
@@ -170,5 +175,13 @@ public class Bid {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public boolean isMember() {
+        return isMember;
+    }
+
+    public void setMember(boolean member) {
+        isMember = member;
     }
 }

@@ -376,4 +376,18 @@ public interface IService {
      * @return
      */
     Response suggestNewOfferToBid(SuggestNewOfferToBidRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    Response rejectABid(RejectABidRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    Response cancelABid(CancelABidRequest request);
 }

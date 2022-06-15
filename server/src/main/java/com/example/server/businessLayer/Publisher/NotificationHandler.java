@@ -194,11 +194,61 @@ public class NotificationHandler {
         }
     }
 
+
     public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName,boolean test) {
         RealTimeNotifications not=new RealTimeNotifications();
         not.createShopClosedMessage(shopName);
         for(String name: strings){
             sendNotification(name,not,true, test);
+        }
+    }
+
+    public void sendNewOfferOfBidNotification(String buyer, boolean isMember, double newPrice, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewOfferOfBidMessage(buyer, itemName, newPrice, shopName);
+        sendNotification(buyer, not, isMember, true);
+    }
+
+    public void sendBidApprovedNotification(String buyer, boolean isMember, double price, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createBidApprovedMessage(buyer, itemName, price, shopName);
+        sendNotification(buyer, not, isMember, true);
+    }
+
+    public void sendBidRejectedNotification(String buyer, boolean isMember, double price, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createBidRejectedMessage(buyer, itemName, price, shopName);
+        sendNotification(buyer, not, isMember, true);
+    }
+
+    public void sendBidRejectedToApprovesNotificationBatch(List<String> approves, String buyer, double price, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createBidRejectedToApprovesMessage(buyer, price, itemName, shopName);
+        for(String employee : approves){
+            sendNotification(employee,not,true, true);
+        }
+    }
+
+    public void sendNewOfferOfBidToApprovalOfApprovesNotificationBatch(List<String> approves, String buyer, double newPrice, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewOfferOfBidToApprovalOfApprovesMessage(buyer, newPrice, itemName, shopName);
+        for(String employee : approves){
+            sendNotification(employee,not,true, true);
+        }
+    }
+
+    public void sendNewBidToApprovalOfApprovesNotificationBatch(List<String> approves, String buyer, double newPrice, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewBidToApprovalOfApprovesMessage(buyer, newPrice, itemName, shopName);
+        for(String employee : approves){
+            sendNotification(employee,not,true, true);
+        }
+    }
+    public void sendBidCanceledToApprovesNotificationBatch(List<String> approves, String buyer, double price, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewBidCanceledToApprovesMessage(buyer, price, itemName, shopName);
+        for(String employee : approves){
+            sendNotification(employee,not,true, true);
         }
     }
 
@@ -220,7 +270,6 @@ public class NotificationHandler {
         sessions.put(name,sessionId);
         sendAllDelayedNotifications(nots,name);
     }
-
     private boolean writeToText(String message, String name){
         try {
             final File parentDir = new File(getConfigDir());
@@ -256,6 +305,7 @@ public class NotificationHandler {
         }
 
     }
+
     private String getConfigDir() {
         String dir = System.getProperty("user.dir").split("/market_2022")[0];
         dir += "/market_2022/server/notifications/delayed/";

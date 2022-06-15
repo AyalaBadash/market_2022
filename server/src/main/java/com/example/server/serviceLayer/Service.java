@@ -400,6 +400,20 @@ public class Service implements IService {
         return marketService.suggestNewOfferToBid(request.getSuggester (), request.getShopName (), request.getAskedBy (), request.getItemId (), request.getNewPrice ());
     }
 
+    @Override
+    @RequestMapping(value = "/rejectABid")
+    @CrossOrigin
+    public Response rejectABid(@RequestBody RejectABidRequest request) {
+        return marketService.rejectABid(request.getOpposed (), request.getShopName (), request.getBuyer (), request.getItemId ());
+    }
+
+    @Override
+    @RequestMapping(value = "/cancelABid")
+    @CrossOrigin
+    public Response cancelABid(@RequestBody CancelABidRequest request) {
+        return marketService.cancelABid(request.getShopName (), request.getBuyer (), request.getItemId ());
+    }
+
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);
     }

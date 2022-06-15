@@ -1327,4 +1327,24 @@ public class Market {
         shop.suggestNewOfferToBid(suggester, askedBy, itemId, newPrice);
 
     }
+
+    public void rejectABid(String opposed, String shopName, String buyer, int itemId) throws MarketException {
+        alertIfNotLoggedIn ( opposed);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Rejecting the bid failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Rejecting the bid failed.");
+        }
+        shop.rejectABid(opposed, buyer, itemId);
+    }
+
+    public void cancelABid(String shopName, String buyer, int itemId) throws MarketException {
+        alertIfNotLoggedIn ( buyer);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Cancelling the bid failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Cancelling the bid failed.");
+        }
+        shop.cancelABid (buyer, itemId);
+    }
 }

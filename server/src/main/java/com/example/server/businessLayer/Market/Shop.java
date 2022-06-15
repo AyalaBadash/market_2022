@@ -621,41 +621,85 @@ public class Shop implements IHistory {
             if (appointment.getValue ().hasPermission ( "ApproveBidPermission" ))
                 approvingAppointments.add ( appointment.getKey () );
         }
-        Bid bid = new Bid (visitorName, itemId, price, amount, approvingAppointments);
+        Bid bid = new Bid (visitorName,UserController.getInstance ().isMember ( visitorName ), itemId, price, amount, approvingAppointments);
         bids.add ( bid );
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        String itemName = item.getName ();
+        handler.sendNewBidToApprovalOfApprovesNotificationBatch ( approvingAppointments, visitorName, price, itemName, shopName);
         return bid;
     }
 
     public boolean approveABid(String approves, String askedBy, Integer itemId) throws MarketException {
-        Bid bidToApprove = null;
-        for(Bid bid : bids){
-            if (bid.getBuyerName ().equals ( askedBy ) && bid.getItemId ().equals ( itemId ))
-                bidToApprove = bid;
+        if((shopManagers.get ( approves ) == null || shopManagers.get ( approves ).hasPermission ( "ApproveBidPermission" )) && (shopOwners.get ( approves ) == null)){
+            DebugLog.getInstance ().Log ( "visitor does not has the authority to approve a bid." );
+            throw new MarketException ( "visitor does not has the authority to approve a bid." );
         }
-        if(bidToApprove == null){
-            DebugLog.getInstance ().Log ( "Bid does not exist in the shop." );
-            throw new MarketException ( "Bid does not exist in the shop." );
-        }
+        Bid bidToApprove = findBid ( askedBy, itemId );
         if(bidToApprove.approveBid ( approves )){
+            NotificationHandler handler = NotificationHandler.getInstance ();
+            String itemName = itemMap.get ( bidToApprove.getItemId () ).getName ();
             if(itemsCurrentAmount.get ( itemId ) < 1){
-                //todo notify buyer
+                handler.sendBidRejectedNotification ( bidToApprove.getBuyerName (), bidToApprove.isMember (), bidToApprove.getPrice (), itemName, shopName);
+                return false;
             }
+            handler.sendBidApprovedNotification ( bidToApprove.getBuyerName (), bidToApprove.isMember (), bidToApprove.getPrice (), itemName, shopName );
             return true;
+        }
+        if(bidToApprove.getSideNeedToApprove ().equals ( Bid.Side.buyer )) {
+            NotificationHandler handler = NotificationHandler.getInstance ();
+            String itemName = itemMap.get ( bidToApprove.getItemId () ).getName ();
+            handler.sendNewOfferOfBidNotification ( askedBy, bidToApprove.isMember ( ), bidToApprove.getPrice (), itemName, shopName );
         }
         return false;
     }
 
     public void suggestNewOfferToBid(String suggester, String askedBy, int itemId, double newPrice) throws MarketException {
+        if((shopManagers.get ( suggester ) == null || shopManagers.get ( suggester ).hasPermission ( "ApproveBidPermission" )) && (shopOwners.get ( suggester ) == null)){
+            DebugLog.getInstance ().Log ( "visitor does not has the authority to suggest a counter-bid." );
+            throw new MarketException ( "visitor does not has the authority to suggest a counter-bid." );
+        }
+        Bid bidToApprove = findBid ( askedBy, itemId );
+        bidToApprove.suggestNewOffer ( suggester, newPrice );
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        String itemName = itemMap.get ( itemId ).getName ();
+        handler.sendNewOfferOfBidToApprovalOfApprovesNotificationBatch ( bidToApprove.getShopOwnersStatus ().keySet ().stream( ).toList (), bidToApprove.getBuyerName (), newPrice, itemName, shopName );
+    }
+
+    public void rejectABid(String opposed, String buyer, int itemId) throws MarketException {
+        Bid bidToReject = findBid ( buyer, itemId );
+        bidToReject.rejectBid ( buyer );
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        String itemName = itemMap.get ( itemId ).getName ();
+        if(opposed.equals ( buyer )){
+            handler.sendBidRejectedToApprovesNotificationBatch ( bidToReject.getShopOwnersStatus ().keySet ().stream( ).toList (), buyer, bidToReject.getPrice (), itemName, shopName );
+        }
+        if((shopManagers.get ( opposed ) == null || shopManagers.get ( opposed ).hasPermission ( "ApproveBidPermission" )) && (shopOwners.get ( opposed ) == null)){
+            DebugLog.getInstance ().Log ( "visitor does not has the authority to reject a bid." );
+            throw new MarketException ( "visitor does not has the authority to reject a bid." );
+        }
+        handler.sendBidRejectedNotification ( buyer, bidToReject.isMember (), bidToReject.getPrice (), itemName, shopName );
+    }
+
+    public void cancelABid(String buyer, int itemId) throws MarketException {
+        Bid bidToCancel = findBid ( buyer, itemId );
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        String itemName = itemMap.get ( itemId ).getName ();
+        handler.sendBidCanceledToApprovesNotificationBatch ( bidToCancel.getShopOwnersStatus ().keySet ().stream( ).toList (), buyer, bidToCancel.getPrice (), itemName, shopName );
+    }
+
+
+
+    private Bid findBid(String buyer, int itemId) throws MarketException {
         Bid bidToApprove = null;
         for(Bid bid : bids){
-            if (bid.getBuyerName ().equals ( askedBy ) && bid.getItemId ().equals ( itemId ))
+            if (bid.getBuyerName ().equals ( buyer ) && bid.getItemId ().equals ( itemId ))
                 bidToApprove = bid;
         }
         if(bidToApprove == null){
             DebugLog.getInstance ().Log ( "Bid does not exist in the shop." );
             throw new MarketException ( "Bid does not exist in the shop." );
         }
-        bidToApprove.suggestNewOffer ( suggester, newPrice );
+        return bidToApprove;
     }
 
     public List<PurchasePolicyType> getPurchasePolicies() {
