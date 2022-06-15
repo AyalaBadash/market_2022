@@ -685,14 +685,9 @@ public class Market {
             DebugLog.getInstance().Log("Tried to remove item from non existing shop");
             throw new MarketException("shop does not exist in the market");
         }
-        //Check if user indeed is the shop owner
-        if (!shop.isShopOwner(shopOwnerName)) {
-            DebugLog.getInstance().Log(shopOwnerName + " tried to remove item from the shop " + shopName + " but he is not a owner.");
-            throw new MarketException(shopOwnerName + " is not " + shopName + " owner . Removing item from shop has failed.");
-        }
         Item itemToDelete = shop.getItemMap().get(itemID);
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
-        shop.deleteItem(itemToDelete);
+        shop.deleteItem(itemToDelete, shopOwnerName);
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
@@ -1293,6 +1288,69 @@ public class Market {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
+        }
+    }
+
+    public void addABid(String visitorName, String shopName, Integer itemId, Double price, Double amount) throws MarketException {
+        alertIfNotLoggedIn(visitorName);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+        }
+        Bid bid = shop.addABid(visitorName, itemId, price, amount);
+        userController.getVisitor ( visitorName ).getCart ().addABid(bid, shop);
+    }
+
+    public void approveABid(String approves, String shopName, String askedBy, Integer itemId) throws MarketException {
+        alertIfNotLoggedIn(approves);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+        }
+        boolean approved = shop.approveABid(approves, askedBy, itemId);
+        if(approved){
+            ShoppingCart shoppingCart = userController.getVisitor ( askedBy ).getCart ();
+            shoppingCart.approveBid (itemId, shop);
+        }
+
+    }
+
+    public void suggestNewOfferToBid(String suggester, String shopName, String askedBy, int itemId, double newPrice) throws MarketException {
+        alertIfNotLoggedIn ( suggester );
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+        }
+        shop.suggestNewOfferToBid(suggester, askedBy, itemId, newPrice);
+
+    }
+
+    public void rejectABid(String opposed, String shopName, String buyer, int itemId) throws MarketException {
+        alertIfNotLoggedIn ( opposed);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Rejecting the bid failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Rejecting the bid failed.");
+        }
+        shop.rejectABid(opposed, buyer, itemId);
+    }
+
+    public void cancelABid(String shopName, String buyer, int itemId) throws MarketException {
+        alertIfNotLoggedIn ( buyer);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Cancelling the bid failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Cancelling the bid failed.");
+        }
+        shop.cancelABid (buyer, itemId);
+    }
+
+    public void updateBidInLoggingOut(String visitorName) {
+        for(Shop shop: shops.values ()){
+            shop.updateBidInLoggingOut(visitorName);
         }
     }
 }

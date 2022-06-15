@@ -554,4 +554,48 @@ public class MarketService {
     }
 
 
+    public Response addABid(String visitorName, String shopName, Integer itemId, Double price, Double amount) {
+        try {
+            market.addABid(visitorName, shopName, itemId, price, amount);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response approveABid(String approves, String shopName, String askedBy, Integer itemId) {
+        try {
+            market.approveABid(approves, shopName, askedBy, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response suggestNewOfferToBid(String suggester, String shopName, String askedBy, int itemId, double newPrice) {
+        try {
+            market.suggestNewOfferToBid(suggester, shopName, askedBy, itemId, newPrice);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response rejectABid(String opposed, String shopName, String buyer, int itemId) {
+        try {
+            market.rejectABid(opposed, shopName,buyer, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response cancelABid(String shopName, String buyer, int itemId) {
+        try {
+            market.cancelABid (shopName, buyer, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
 }
