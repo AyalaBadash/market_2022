@@ -32,8 +32,8 @@ import java.util.Scanner;
 public class ServicesTests {
     PaymentServiceProxy paymentServiceProxy;
     SupplyServiceProxy supplyServiceProxy;
-    String userName = "u1";
-    String password = "p1";
+    String userName = "userTest";
+    String password = "password";
     String ItemName= "item1";
     Item itemAdded;
     int productAmount=20;
@@ -142,7 +142,7 @@ public class ServicesTests {
             assert false;
             market.setPaymentServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
         } catch (Exception e) {
-            Assertions.assertEquals(e.getMessage(),"Error2");
+            Assertions.assertEquals("Error2",e.getMessage());
             market.setPaymentServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
 
         }

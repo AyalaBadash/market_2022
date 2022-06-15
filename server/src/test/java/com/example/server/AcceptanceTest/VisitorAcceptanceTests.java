@@ -50,7 +50,11 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     @BeforeAll
     public static void setup() {
         try {
-            initMarket();
+            try {
+                initMarket();
+                Market market = Market.getInstance();
+                market.isInit();
+            }catch (Exception e){}
             // shop manager register
             VisitorFacade visitor = guestLogin();
             register(shopOwnerName, shopOwnerPassword);

@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Supply;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpEntity;
@@ -29,7 +30,7 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
     }
     private WSEPSupplyServiceAdapter()
     {
-        url = "https://cs-bgu-wsep.herokuapp.com/";
+        url = MarketConfig.WSEP_ADDRESS;
     }
 
     @Override

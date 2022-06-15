@@ -227,14 +227,15 @@ public class Market {
      */
     private void setService(String val, String val1) throws MarketException {
 
-        if (val.contains("PaymentService")) {
+        if (val.contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
             initPaymentService(val1);
-        } else if (val.contains("SupplyService")) {
+        } else if (val.contains(MarketConfig.SUPPLY_SERVICE_NAME)) {
             initSupplyService(val1);
-        } else if (val.contains("Publisher")) {
+        } else if (val.contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
             initNotificationService(val1);
         }
         else{
+            if(systemManagerName==null || systemManagerName.isEmpty())
             initManager ( val,val1 );
         }
     }
@@ -250,9 +251,9 @@ public class Market {
         if (MarketConfig.IS_TEST_MODE){
             publisher = TextDispatcher.getInstance();
         }
-        else if (val.contains("Notifications")) {
+        else if (val.contains(MarketConfig.NOTIFICATIONS_PUBLISHER)) {
             publisher = NotificationDispatcher.getInstance();
-        } else if (val.contains("Text")) {
+        } else if (val.contains(MarketConfig.TEXT_PUBLISHER)) {
             publisher = TextDispatcher.getInstance();
         } else {
             throw new MarketException("Failed to init notification service");
@@ -263,7 +264,7 @@ public class Market {
 
     private void initSupplyService(String val) throws MarketException {
 
-        if (val.contains("WSEP")) {
+        if (val.contains(MarketConfig.WSEP_SERVICE)) {
             supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), false);
         } else {
             throw new MarketException("Failed to init payment service");
@@ -272,7 +273,7 @@ public class Market {
 
     private void initPaymentService(String val) throws MarketException {
 
-        if (val.contains("WSEP")) {
+        if (val.contains(MarketConfig.WSEP_SERVICE)) {
             paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), false);
         } else {
             throw new MarketException("Failed to init payment service");

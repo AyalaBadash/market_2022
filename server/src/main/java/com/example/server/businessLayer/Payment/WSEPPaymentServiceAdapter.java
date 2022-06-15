@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Payment;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import org.apache.http.HttpEntity;
@@ -27,7 +28,7 @@ public class WSEPPaymentServiceAdapter implements PaymentService {
     }
     private WSEPPaymentServiceAdapter() {
 
-        url = "https://cs-bgu-wsep.herokuapp.com/";
+        url = MarketConfig.WSEP_ADDRESS;
     }
 
     @Override
