@@ -15,6 +15,7 @@ import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
 
+import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,8 @@ public class Shop implements IHistory {
 
     private PurchasePolicy purchasePolicy;
 
+    List<Bid> bids;
+
     public Shop(String name,Member founder) {
         this.shopName = name;
         itemMap = new HashMap<> ( );
@@ -55,6 +58,7 @@ public class Shop implements IHistory {
         founder.addAppointmentToMe(shopOwnerAppointment);
         discountPolicy = new DiscountPolicy ();
         purchasePolicy = new PurchasePolicy ();
+        bids = new ArrayList<> (  );
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
@@ -75,6 +79,11 @@ public class Shop implements IHistory {
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
         this.shopManagers.put ( managerName, appointment );
+        if(appointment.hasPermission ( "ApproveBidPermission" )){
+            for(Bid bid : bids){
+                bid.addApproves(appointment.getAppointed ().getName ());
+            }
+        }
     }
 
 
@@ -88,8 +97,20 @@ public class Shop implements IHistory {
     }
 
 
-    public void deleteItem(Item item) {
+    public void deleteItem(Item item, String shopOwnerName) throws MarketException {
+        //Check if user indeed is the shop owner
+        if (!isShopOwner(shopOwnerName)) {
+            DebugLog.getInstance().Log(shopOwnerName + " tried to remove item from the shop " + shopName + " but he is not a owner.");
+            throw new MarketException(shopOwnerName + " is not " + shopName + " owner . Removing item from shop has failed.");
+        }
         itemMap.remove ( item.getID() );
+        itemsCurrentAmount.remove ( item.getID () );
+        for(Bid bid : bids){
+            if(bid.getItemId () == item.getID ()) {
+                bid.rejectBid ( shopOwnerName );
+                UserController.getInstance ().getVisitor ( bid.getBuyerName () ).getCart ().rejectBid(bid.getItemId (), this);
+            }
+        }
     }
     /*
     private void addItem(Item item) throws MarketException {
@@ -172,12 +193,12 @@ public class Shop implements IHistory {
         ArrayList<String> itemsNames =new ArrayList<>();
         ArrayList<Double> prices =new ArrayList<>();
         //
-        Map<java.lang.Integer, Double> items = shoppingBasket.getItems ( );
+        Map<Integer, Double> items = shoppingBasket.getItems ( );
         StringBuilder missingMessage = new StringBuilder ( );
         boolean failed = false;
         missingMessage.append ( String.format ( "%s: cannot complete your purchase because some items are missing:\n", this.shopName ) );
-        for ( Map.Entry<java.lang.Integer, Double> itemAmount : items.entrySet ( ) ) {
-            java.lang.Integer id = itemAmount.getKey();
+        for ( Map.Entry<Integer, Double> itemAmount : items.entrySet ( ) ) {
+            Integer id = itemAmount.getKey();
             Item currItem = shoppingBasket.getItemMap().get(id);
             //for notifications:
             itemsNames.add(currItem.getName());
@@ -196,6 +217,13 @@ public class Shop implements IHistory {
             Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());
             double newAmount = this.itemsCurrentAmount.get ( currItem.getID() ) - itemAmount.getValue ( );
             this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
+        }
+        for(Bid bid : shoppingBasket.getBids ().values ()) {
+            double bidAmount = bid.getAmount ();
+            int bidItemID = bid.getItemId ();
+            if (bid.isApproved ( ) && (itemsCurrentAmount.get (bidItemID) != null && itemsCurrentAmount.get (bidItemID) > bidAmount)) {
+                itemsCurrentAmount.put (bidItemID, itemsCurrentAmount.get ( bidItemID ) - bidAmount  );
+            }
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
         //send notifications to shop owners:
@@ -326,7 +354,7 @@ public class Shop implements IHistory {
         return discountPolicy.calculateDiscount ( shoppingBasket );
     }
 
-    public void addEmployee(Appointment newAppointment) throws MarketException {
+    public synchronized void addEmployee(Appointment newAppointment) throws MarketException {
         String employeeName = newAppointment.getAppointed ( ).getName ( );
         Appointment oldAppointment = shopOwners.get ( employeeName );
         if (oldAppointment != null) {
@@ -345,6 +373,10 @@ public class Shop implements IHistory {
             else
                 shopManagers.put ( employeeName, newAppointment );
         }
+        if(newAppointment.hasPermission ( "ApproveBidPermission" ))
+            for(Bid bid : bids){
+                bid.addApproves(newAppointment.getAppointed ().getName ());
+            }
     }
 
     public List<Item> getItemsByCategory(Item.Category category) {
@@ -399,7 +431,7 @@ public class Shop implements IHistory {
     }
 
     //TODO why do we need this.
-    public Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
+    public synchronized Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
         if (!isShopOwner ( shopOwnerName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
         if (amount < 0)
@@ -531,30 +563,33 @@ public class Shop implements IHistory {
             if (toCheck.getSuperVisor().getName().equals(firedAppointed))
                 shopManagers.remove(entry.getKey());
         }
+        for(Bid bid : bids){
+            bid.removeApproves(firedAppointed);
+        }
         shopOwners.remove(firedAppointed);
 
 
     }
 
-    public void addDiscountToShop(String visitorName, DiscountType discountType) throws MarketException {
+    public synchronized void addDiscountToShop(String visitorName, DiscountType discountType) throws MarketException {
         if (!isShopOwner ( visitorName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
         discountPolicy.addNewDiscount ( discountType );
     }
 
-    public void removeDiscountFromShop(String visitorName, DiscountType discountType) throws MarketException {
+    public synchronized void removeDiscountFromShop(String visitorName, DiscountType discountType) throws MarketException {
         if (!isShopOwner ( visitorName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
         discountPolicy.removeDiscount ( discountType );
     }
 
-    public void addPurchasePolicyToShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
+    public synchronized void addPurchasePolicyToShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
         if (!isShopOwner ( visitorName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add a purchase policy to the shop" );
         purchasePolicy.addNewPurchasePolicy( purchasePolicyType );
     }
 
-    public void removePurchasePolicyFromShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
+    public synchronized void removePurchasePolicyFromShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
         if (!isShopOwner ( visitorName ))
             throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
         purchasePolicy.removePurchasePolicy ( purchasePolicyType );
@@ -567,6 +602,104 @@ public class Shop implements IHistory {
             }
         }
         return false;
+    }
+
+    public Bid addABid(String visitorName, Integer itemId, Double price, double amount) throws MarketException {
+        Item item = itemMap.get(itemId);
+        if (item == null) {
+            DebugLog.getInstance().Log("tried to add a bid to an item which does not exist in shop");
+            throw new MarketException ( "item does not exist in shop" );
+        }
+        if(price <= 0){
+            DebugLog.getInstance().Log("price for bid cannot be negative");
+            throw new MarketException ( "price for bid cannot be negative" );
+        }
+        List<String> approvingAppointments = new ArrayList<> (  );
+        for(String name : shopOwners.keySet ())
+            approvingAppointments.add ( name );
+        for ( Map.Entry<String, Appointment> appointment: shopManagers.entrySet () ){
+            if (appointment.getValue ().hasPermission ( "ApproveBidPermission" ))
+                approvingAppointments.add ( appointment.getKey () );
+        }
+        Bid bid = new Bid (visitorName,UserController.getInstance ().isMember ( visitorName ), itemId, price, amount, approvingAppointments);
+        bids.add ( bid );
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        String itemName = item.getName ();
+        handler.sendNewBidToApprovalOfApprovesNotificationBatch ( approvingAppointments, visitorName, price, itemName, shopName);
+        return bid;
+    }
+
+    public boolean approveABid(String approves, String askedBy, Integer itemId) throws MarketException {
+        if((shopManagers.get ( approves ) == null || shopManagers.get ( approves ).hasPermission ( "ApproveBidPermission" )) && (shopOwners.get ( approves ) == null)){
+            DebugLog.getInstance ().Log ( "visitor does not has the authority to approve a bid." );
+            throw new MarketException ( "visitor does not has the authority to approve a bid." );
+        }
+        Bid bidToApprove = findBid ( askedBy, itemId );
+        if(bidToApprove.approveBid ( approves )){
+            NotificationHandler handler = NotificationHandler.getInstance ();
+            String itemName = itemMap.get ( bidToApprove.getItemId () ).getName ();
+            if(itemsCurrentAmount.get ( itemId ) < 1){
+                handler.sendBidRejectedNotification ( bidToApprove.getBuyerName (), bidToApprove.isMember (), bidToApprove.getPrice (), itemName, shopName);
+                return false;
+            }
+            handler.sendBidApprovedNotification ( bidToApprove.getBuyerName (), bidToApprove.isMember (), bidToApprove.getPrice (), itemName, shopName );
+            return true;
+        }
+        if(bidToApprove.getSideNeedToApprove ().equals ( Bid.Side.buyer )) {
+            NotificationHandler handler = NotificationHandler.getInstance ();
+            String itemName = itemMap.get ( bidToApprove.getItemId () ).getName ();
+            handler.sendNewOfferOfBidNotification ( askedBy, bidToApprove.isMember ( ), bidToApprove.getPrice (), itemName, shopName );
+        }
+        return false;
+    }
+
+    public void suggestNewOfferToBid(String suggester, String askedBy, int itemId, double newPrice) throws MarketException {
+        if((shopManagers.get ( suggester ) == null || shopManagers.get ( suggester ).hasPermission ( "ApproveBidPermission" )) && (shopOwners.get ( suggester ) == null)){
+            DebugLog.getInstance ().Log ( "visitor does not has the authority to suggest a counter-bid." );
+            throw new MarketException ( "visitor does not has the authority to suggest a counter-bid." );
+        }
+        Bid bidToApprove = findBid ( askedBy, itemId );
+        bidToApprove.suggestNewOffer ( suggester, newPrice );
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        String itemName = itemMap.get ( itemId ).getName ();
+        handler.sendNewOfferOfBidToApprovalOfApprovesNotificationBatch ( bidToApprove.getShopOwnersStatus ().keySet ().stream( ).toList (), bidToApprove.getBuyerName (), newPrice, itemName, shopName );
+    }
+
+    public void rejectABid(String opposed, String buyer, int itemId) throws MarketException {
+        Bid bidToReject = findBid ( buyer, itemId );
+        bidToReject.rejectBid ( buyer );
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        String itemName = itemMap.get ( itemId ).getName ();
+        if(opposed.equals ( buyer )){
+            handler.sendBidRejectedToApprovesNotificationBatch ( bidToReject.getShopOwnersStatus ().keySet ().stream( ).toList (), buyer, bidToReject.getPrice (), itemName, shopName );
+        }
+        if((shopManagers.get ( opposed ) == null || shopManagers.get ( opposed ).hasPermission ( "ApproveBidPermission" )) && (shopOwners.get ( opposed ) == null)){
+            DebugLog.getInstance ().Log ( "visitor does not has the authority to reject a bid." );
+            throw new MarketException ( "visitor does not has the authority to reject a bid." );
+        }
+        handler.sendBidRejectedNotification ( buyer, bidToReject.isMember (), bidToReject.getPrice (), itemName, shopName );
+    }
+
+    public void cancelABid(String buyer, int itemId) throws MarketException {
+        Bid bidToCancel = findBid ( buyer, itemId );
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        String itemName = itemMap.get ( itemId ).getName ();
+        handler.sendBidCanceledToApprovesNotificationBatch ( bidToCancel.getShopOwnersStatus ().keySet ().stream( ).toList (), buyer, bidToCancel.getPrice (), itemName, shopName );
+    }
+
+
+
+    private Bid findBid(String buyer, int itemId) throws MarketException {
+        Bid bidToApprove = null;
+        for(Bid bid : bids){
+            if (bid.getBuyerName ().equals ( buyer ) && bid.getItemId ().equals ( itemId ))
+                bidToApprove = bid;
+        }
+        if(bidToApprove == null){
+            DebugLog.getInstance ().Log ( "Bid does not exist in the shop." );
+            throw new MarketException ( "Bid does not exist in the shop." );
+        }
+        return bidToApprove;
     }
 
     public List<PurchasePolicyType> getPurchasePolicies() {
@@ -583,5 +716,28 @@ public class Shop implements IHistory {
 
     public PurchasePolicy getPurchasePolicy() {
         return purchasePolicy;
+    }
+
+    public double calculateDiscount(ShoppingBasket shoppingBasket) throws MarketException {
+        return discountPolicy.calculateDiscount ( shoppingBasket );
+    }
+
+    public List<Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(List<Bid> bids) {
+        this.bids = bids;
+    }
+
+    public void updateBidInLoggingOut(String visitorName) {
+        List<Bid> bidsToRemove = new ArrayList<> (  );
+        for(Bid bid : bids){
+            if(bid.getBuyerName ().equals ( visitorName ))
+                bidsToRemove.add ( bid );
+        }
+        for(Bid bid : bidsToRemove){
+            bids.remove ( bid );
+        }
     }
 }

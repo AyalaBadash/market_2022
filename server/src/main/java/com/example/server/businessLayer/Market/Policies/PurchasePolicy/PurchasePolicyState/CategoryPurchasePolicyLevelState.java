@@ -19,7 +19,7 @@ public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
     @Override
     public boolean isPolicyHeld(ShoppingBasket shoppingBasket, double amount, boolean greater) throws MarketException {
         double curAmount = getAmount ( shoppingBasket ).get ( 0 );
-        return curAmount == 0 || ((greater && curAmount > amount) || curAmount <= amount);
+        return curAmount == 0 || ((greater && curAmount >= amount) || (!greater && curAmount <= amount));
     }
 
     @Override
