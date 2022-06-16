@@ -15,11 +15,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Member implements IHistory {
     @Id
     private String name;
-    @OneToOne (cascade = CascadeType.ALL)
+    @OneToOne (cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private ShoppingCart myCart;
     @Transient //todo
     private List<Appointment> appointedByMe;
-    @Transient //todo
+    @ManyToMany (cascade = {CascadeType.MERGE})
     private List<Appointment> myAppointments;
     @OneToMany(targetEntity =  AcquisitionHistory.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_name", referencedColumnName = "name")
@@ -86,7 +86,9 @@ public class Member implements IHistory {
 
     public void addAppointmentByMe(Appointment app){ this.appointedByMe.add(app);}
 
-    public void addAppointmentToMe(Appointment app){ this.myAppointments.add(app);}
+    public void addAppointmentToMe(Appointment app){
+        this.myAppointments.add(app);
+    }
 
     public StringBuilder getPurchaseHistoryString() {
         StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
@@ -122,7 +124,13 @@ public class Member implements IHistory {
         return history;
     }
 
+
+
     public static void setMemberRep(MemberRep memberRep) {
         Member.memberRep = memberRep;
+    }
+
+    public static MemberRep getMemberRep() {
+        return memberRep;
     }
 }

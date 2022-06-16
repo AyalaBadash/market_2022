@@ -33,7 +33,11 @@ public class Shop implements IHistory {
     private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     @Transient //TODO
     private Map<String, Appointment> shopManagers;     //<name, appointment>
-    @Transient //TODO
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable (name = "shopOwners",
+        joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
+        inverseJoinColumns = {@JoinColumn(name = "appointment", referencedColumnName = "id")})
+    @MapKeyColumn (name = "member_name")
     private Map<String, Appointment> shopOwners;     //<name, appointment>
     @ElementCollection
     @CollectionTable(name = "items_in_shop")
@@ -45,7 +49,7 @@ public class Shop implements IHistory {
 
     @Transient
     private static ShopRep shopRep;
-    @Transient
+    @OneToOne
     Member shopFounder;//todo
     private int rnk;
     private int rnkers;
@@ -63,6 +67,7 @@ public class Shop implements IHistory {
 
     public Shop(String name,Member founder) {
         this.shopName = name;
+        shopRep.save(this);
         itemMap = new HashMap<> ( );
         shopManagers = new ConcurrentHashMap<> ( );
         shopOwners = new ConcurrentHashMap<> ( );
@@ -180,7 +185,7 @@ public class Shop implements IHistory {
 
 
     public void releaseItems(ShoppingBasket shoppingBasket) throws MarketException {
-        Map<java.lang.Integer, Double> items = shoppingBasket.getItems ( );
+        Map<java.lang.Integer, Double> items = shoppingBasket.getItems( );
         for ( Map.Entry<java.lang.Integer, Double> itemAmount : items.entrySet ( ) ) {
 //            Item currItem = itemAmount.getKey ( );
             if(itemsCurrentAmount.get(itemAmount.getKey()) == null)

@@ -2,6 +2,8 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 
+import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
+import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Payment.PaymentService;
@@ -9,6 +11,7 @@ import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
+import com.example.server.businessLayer.Security.LoginCard;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.SupplyService;
@@ -76,6 +79,11 @@ public class Market {
     private UserControllerRep userControllerRep;
     @Autowired
     private VisitorRep visitorRep;
+    @Autowired
+    private LoginCardRep loginCardRep;
+    @Autowired
+    private ShopManagerAppointmentRep shopManagerAppointmentRep;
+    @Autowired ShopOwnerAppointmentRep shopOwnerAppointmentRep;
     //constructor
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -137,6 +145,9 @@ public class Market {
         ClosedShopsHistory.setClosedShopsHistoryRep(closedShopsHistoryRep);
         UserController.setUserControllerRep(userControllerRep);
         Visitor.setVisitorRep(visitorRep);
+        LoginCard.setLoginCardRep(loginCardRep);
+        ShopManagerAppointment.setShopManagerAppointmentRep(shopManagerAppointmentRep);
+        ShopOwnerAppointment.setShopOwnerAppointmentRep(shopOwnerAppointmentRep);
     }
     /**
      * init system from default files. With given system manager details.
@@ -747,7 +758,7 @@ public class Market {
         }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
             shops.remove(shopName);
-//            shopRepository.delete(shops.get(shopName).getDalObject()); //TODO check
+            shopRep.delete(shopToClose); //todo shaked check
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
@@ -881,9 +892,8 @@ public class Market {
                     if (shopName == null || shopName.length() == 0)
                         throw new MarketException("shop name length has to be positive");
                     Shop shop = new Shop(shopName, curMember);
-//                    shopRepository.save(shop.getDalObject()); //todo
-//                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
-//                shop.addEmployee(shopFounder);
+//                    ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
+//                    shop.addEmployee(shopFounder);
                     shops.put(shopName, shop);
 
                 } else {
@@ -1380,7 +1390,6 @@ public class Market {
         dir += "\\config\\";
         return dir;
     }
-
     private void alertIfNotLoggedIn(String visitorName) throws MarketException {
         if (!userController.isLoggedIn(visitorName)) {
             DebugLog debugLog = DebugLog.getInstance();

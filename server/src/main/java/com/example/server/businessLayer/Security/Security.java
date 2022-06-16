@@ -64,7 +64,7 @@ public class Security {
             debugLog.Log("Non member visitor tried to log in.");
             throw new MarketException("No such user name in the system");
         }
-        if (!namesToLoginInfo.get(userName).getPassword().equals(userPassword)) {
+        if (namesToLoginInfo.get(userName).getPassword()!=(userPassword.hashCode())) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("Member " + userName + " tried to log in but has password mismatch.");
             throw new MarketException("Password mismatch");

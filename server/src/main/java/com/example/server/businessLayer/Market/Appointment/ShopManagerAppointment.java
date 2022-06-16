@@ -6,20 +6,27 @@ import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.dataLayer.entities.DalAppointment;
 import com.example.server.dataLayer.entities.DalManagerApp;
+import com.example.server.dataLayer.repositories.ShopManagerAppointmentRep;
 import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
+import javax.persistence.*;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "ShopManagerAppointment")
 public class ShopManagerAppointment extends Appointment {
+    private static ShopManagerAppointmentRep shopManagerAppointmentRep;
     public ShopManagerAppointment(Member appointed, Member appoint, Shop relatedShop) {
         super(appointed, appoint, relatedShop );
+        shopManagerAppointmentRep.save(this);
     }
 
     public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
         super(appointed, superVisor, relatedShop, permissions);
+        shopManagerAppointmentRep.save(this);
     }
+    public ShopManagerAppointment(){}
 
     @Override
     public boolean isManager() {
@@ -29,35 +36,6 @@ public class ShopManagerAppointment extends Appointment {
     @Override
     public boolean isOwner() {
         return false;
-    }
-    @Override
-    public DalManagerApp toDalObject(){
-        boolean employeesPerm;
-        boolean purchaseHistoryPerm;
-        if (permissions.size()==0)
-        {
-            employeesPerm = false;
-            purchaseHistoryPerm = false;
-        }
-        else if (permissions.size()==2)
-        {
-            employeesPerm = true;
-            purchaseHistoryPerm = true;
-        }
-        else {
-            IPermission permission = permissions.get(0);
-            if (permission.getName().equals("get_employees_info"))
-            {
-                employeesPerm = true;
-                purchaseHistoryPerm = false;
-            }
-            else {
-                employeesPerm = false;
-                purchaseHistoryPerm = true;
-            }
-
-        }
-        return new DalManagerApp(getSuperVisor().getName(),getAppointed().getName(),getRelatedShop().getShopName(),employeesPerm,purchaseHistoryPerm);
     }
 
     @Override
@@ -80,7 +58,7 @@ public class ShopManagerAppointment extends Appointment {
         permissions.add ( permission );
     }
 
-
-
-
+    public static void setShopManagerAppointmentRep(ShopManagerAppointmentRep shopManagerAppointmentRep) {
+        ShopManagerAppointment.shopManagerAppointmentRep = shopManagerAppointmentRep;
+    }
 }

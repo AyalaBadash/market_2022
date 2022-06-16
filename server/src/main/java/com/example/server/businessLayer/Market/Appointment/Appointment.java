@@ -11,16 +11,29 @@ import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "appointment_type",
+        discriminatorType = DiscriminatorType.STRING
+)
 public abstract class
 Appointment {
+    @Id
+    @GeneratedValue
+    private Long id;
+    @OneToOne (cascade = CascadeType.MERGE)
     private Member appointed;       //  the actual appointed member
+    @OneToOne (cascade = CascadeType.MERGE)
     private Member superVisor;      //  member appointedMe
+    @OneToOne (cascade = CascadeType.MERGE)
     private Shop relatedShop;
     //TODO - needs to be not an object? :O
+    @Transient //todo dal
     List<IPermission> permissions;
 
     public Appointment(Member appointed, Member appoint, Shop relatedShop) {
@@ -75,8 +88,6 @@ Appointment {
 
     public abstract boolean isManager();
     public abstract boolean isOwner();
-
-    public abstract DalAppointment toDalObject();
 
 
 
