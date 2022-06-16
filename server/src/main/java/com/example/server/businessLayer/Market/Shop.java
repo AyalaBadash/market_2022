@@ -6,6 +6,7 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountT
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
@@ -350,6 +351,42 @@ public class Shop implements IHistory {
         }
     }
 
+
+    public void newAddEmployee(Appointment newAppointment) throws MarketException {
+        String employeeName = newAppointment.getAppointed ( ).getName ( );
+        Appointment oldAppointment = shopOwners.get ( employeeName );
+        if (oldAppointment != null) {
+            if (newAppointment.isOwner ( ))
+                throw new MarketException ( "this member is already a shop owner" );
+            shopManagers.put ( employeeName, newAppointment );
+        } else {
+            oldAppointment = shopManagers.get ( employeeName );
+            if (oldAppointment != null) {
+                if (newAppointment.isManager ( ))
+                    throw new MarketException ( "this member is already a shop manager" );
+                ShopOwnerAppointment app = (ShopOwnerAppointment) newAppointment;
+                List<String> owners = new ArrayList<>();
+                for (Map.Entry<String, Appointment> entry: this.shopOwners.entrySet())
+                {
+                    owners.add(entry.getKey());
+                }
+                pendingAppointments.addAppointment(employeeName,app,owners);
+                //TODO send notification to all shop owners.
+            } else if (newAppointment.isOwner ( )) {
+                ShopOwnerAppointment app = (ShopOwnerAppointment) newAppointment;
+                List<String> owners = new ArrayList<>();
+                for (Map.Entry<String, Appointment> entry: this.shopOwners.entrySet())
+                {
+                    owners.add(entry.getKey());
+                }
+                pendingAppointments.addAppointment(employeeName,app,owners);
+                //TODO send notification to all shop owners.
+            }
+            else
+                shopManagers.put ( employeeName, newAppointment );
+        }
+    }
+
     public List<Item> getItemsByCategory(Item.Category category) {
         List<Item> toReturn = new ArrayList<> ( );
         for ( Item item : itemMap.values ( ) ) {
@@ -586,5 +623,25 @@ public class Shop implements IHistory {
 
     public PurchasePolicy getPurchasePolicy() {
         return purchasePolicy;
+    }
+
+    //TODO review
+    public boolean approveAppointment(String appointedName, String ownerName) throws MarketException {
+        if (!shopOwners.containsKey(ownerName)){
+            DebugLog.getInstance().Log(ownerName+" is not an owner in this shop. Therefore he cannot approve any appointment.");
+            throw new MarketException(ownerName+" is not an owner in this shop. Therefore he cannot approve any appointment.");
+        }
+        if (!pendingAppointments.getAppointments().containsKey(appointedName)){
+            DebugLog.getInstance().Log("There is no pending appointment for "+ appointedName);
+            throw new MarketException("There is no pending appointment for "+ appointedName);
+        }
+        if (pendingAppointments.getAgreements().get(appointedName).isAgreed()){
+            shopOwners.put(appointedName,pendingAppointments.getAppointments().get(appointedName));
+            pendingAppointments.removeAppointment(appointedName);
+            ErrorLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
+            //TODO send notification the the appointed.
+            return true;
+        }
+        else return false;
     }
 }

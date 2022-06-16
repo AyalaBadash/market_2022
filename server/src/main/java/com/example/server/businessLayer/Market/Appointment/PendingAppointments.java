@@ -1,42 +1,46 @@
 package com.example.server.businessLayer.Market.Appointment;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PendingAppointments {
-    private Agreement agreement;
-    private Map<String,Appointment> appointments; // <AppointedName , appointment>
+    private Map<String ,Agreement> agreements;
+    private Map<String,ShopOwnerAppointment> appointments; // <AppointedName , appointment>
 
-    public PendingAppointments(Agreement agreement, Map<String, Appointment> appointments) {
-        this.agreement = agreement;
+    public PendingAppointments(Map<String ,Agreement> agreements, Map<String, ShopOwnerAppointment> appointments) {
+        this.agreements = agreements;
         this.appointments = appointments;
     }
     public PendingAppointments(){
         this.appointments = new HashMap<>();
-        this.agreement = new Agreement();
+        this.agreements = new HashMap<>();
     }
 
-    public boolean isApproved(){
-        return agreement.isAgreed();
-    }
     public void removeAppointment(String appointedName){
         appointments.remove(appointedName);
+        agreements.remove(appointedName);
     }
 
-    public Agreement getAgreement() {
-        return agreement;
+    public void addAppointment(String appointedName, ShopOwnerAppointment appointment, List<String> owners){
+        this.appointments.put(appointedName,appointment);
+        Agreement agreement = new Agreement(owners);
+        this.agreements.put(appointedName,agreement);
     }
 
-    public void setAgreement(Agreement agreement) {
-        this.agreement = agreement;
+    public Map<String, Agreement> getAgreements() {
+        return agreements;
     }
 
-    public Map<String, Appointment> getAppointments() {
+    public void setAgreements(Map<String, Agreement> agreements) {
+        this.agreements = agreements;
+    }
+
+    public Map<String, ShopOwnerAppointment> getAppointments() {
         return appointments;
     }
 
-    public void setAppointments(Map<String, Appointment> appointments) {
+    public void setAppointments(Map<String, ShopOwnerAppointment> appointments) {
         this.appointments = appointments;
     }
-
 }

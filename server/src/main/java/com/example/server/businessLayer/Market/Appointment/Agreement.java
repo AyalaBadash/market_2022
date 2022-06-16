@@ -1,5 +1,7 @@
 package com.example.server.businessLayer.Market.Appointment;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Agreement {
@@ -11,7 +13,11 @@ public class Agreement {
         this.ownersAppointmentApproval = ownersAgreementStatus;
     }
 
-    public Agreement(){
+    public Agreement(List<String> owners){
+        this.ownersAppointmentApproval = new HashMap<>();
+        for (String owner: owners){
+            ownersAppointmentApproval.put(owner,false);
+        }
         this.agreed = false;
     }
 

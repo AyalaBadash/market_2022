@@ -1192,6 +1192,16 @@ public class Market {
         return shop.getDiscountTypes();
     }
 
+    public boolean approveAppointment(String shopName,String appointedName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        return shop.approveAppointment(appointedName,ownerName);
+    }
+
     /**
      * check that all services are initialized from the config file.
      *
