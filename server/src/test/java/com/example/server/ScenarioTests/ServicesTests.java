@@ -22,10 +22,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
@@ -70,7 +68,7 @@ public class ServicesTests {
 
 
     @Test
-    @DisplayName("Payment service- pay")
+    @DisplayName("Payment service- successful payment action")
     public void PaymentHandler() {
         try {
             int result = paymentServiceProxy.pay(creditCard);
@@ -81,7 +79,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("Supply service-supply")
+    @DisplayName("Supply service- successful supply action")
     public void SupplyHandler() {
         try {
             int result = supplyServiceProxy.supply(address);
@@ -93,7 +91,7 @@ public class ServicesTests {
 
 
     @Test
-    @DisplayName("Payment service- cancel pay")
+    @DisplayName("Payment service- successful cancel pay action")
     public void PaymentHandlerCancel() {
         try {
             int result = paymentServiceProxy.pay(creditCard);
@@ -109,7 +107,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("Supply service- cancel supply")
+    @DisplayName("Supply service- successful cancel supply action")
     public void SupplyHandlerCancel() {
         try {
             int result = supplyServiceProxy.supply(address);
@@ -127,7 +125,7 @@ public class ServicesTests {
 
     //TODO:BAR CHECK USE NOT EXIST PUBLISHER.
     @Test
-    @DisplayName("Payment service- service falls")
+    @DisplayName("Payment service- check error message without crash when service falls")
     public void PaymentServiceFalls() throws MarketException {
         try {
             try {
@@ -149,7 +147,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("Supply service- service falls")
+    @DisplayName("Supply service- check error message without crash when service falls")
     public void SupplyServiceFalls() throws MarketException {
         try {
             market.setSupplyServiceAddress("", userName);
@@ -163,7 +161,7 @@ public class ServicesTests {
         }
     }
     @Test
-    @DisplayName("text dispatcher service- add")
+    @DisplayName("Dispatcher service- successful add action")
     public void textDispatcherAdd() {
         textDispatcher.clean();
         String name = "Bar";
@@ -175,7 +173,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("text dispatcher service- add twice to user")
+    @DisplayName("Dispatcher service- try add twice a user should not allow.")
     public void textDispatcherAdd2() {
         textDispatcher.clean();
         String name = "Bar";
@@ -194,7 +192,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("text dispatcher service- remove")
+    @DisplayName("Dispatcher service- successful remove action")
     public void textDispatcherRemove(){
         textDispatcher.clean();
         String name = "Bar";
@@ -206,7 +204,7 @@ public class ServicesTests {
         Assertions.assertEquals(0, textDispatcher.getSessionNum());
     }
     @Test
-    @DisplayName("text dispatcher service- remove user without add")
+    @DisplayName("Dispatcher service- try to remove user without adding him before should not allow.")
     public void textDispatcherRemove2(){
         textDispatcher.clean();
         String name = "Bar";
@@ -217,7 +215,7 @@ public class ServicesTests {
         Assertions.assertEquals(0, notifs.size());
     }
     @Test
-    @DisplayName("text dispatcher service- add new message")
+    @DisplayName("Dispatcher service- successful send new message action")
     public void textDispatcherAddMessage(){
         textDispatcher.clean();
         String name = "Bar";
@@ -230,11 +228,9 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("System init from file")
+    @DisplayName("System init from file, check the file is loaded to the system.")
     public void initFromFile(){
         try{
-            MarketService marketService= MarketService.getInstance();
-            PurchaseService purchaseService= PurchaseService.getInstance();
             UserController userController= UserController.getInstance();
             List<String> list= new ArrayList<>();
             list.add("u2");
@@ -248,7 +244,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("System init from no file")
+    @DisplayName("System init from no existing file. should not continue the market init.")
     public void initFromNoFile(){
         try{
             MarketConfig.SERVICES_FILE_NAME="noName.txt";
@@ -266,7 +262,7 @@ public class ServicesTests {
 
 
    @Test
-    @DisplayName("notification test- close shop")
+    @DisplayName("Notification test- successful close shop action")
     public void closeShop() {
        try {
            // shop manager register
@@ -289,7 +285,7 @@ public class ServicesTests {
 
 
     @Test
-    @DisplayName("notification test- appoint owner with delayed notification")
+    @DisplayName("Notification test- appoint owner with delayed notification, check message exists.")
     public void AppointOwnerNotificationTest() {
         try {
 
@@ -311,7 +307,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("notification test- close shop with delayed notification")
+    @DisplayName("Notification test- close shop with delayed notification, check message exists.")
     public void closeShopDelayed() {
         try {
 
@@ -334,7 +330,7 @@ public class ServicesTests {
     }
 
     @Test
-    @DisplayName("notification test- close shop with real time notification")
+    @DisplayName("Notification test- close shop with real time notification, check message exists.")
     public void closeShopRealTime() {
         try {
 
