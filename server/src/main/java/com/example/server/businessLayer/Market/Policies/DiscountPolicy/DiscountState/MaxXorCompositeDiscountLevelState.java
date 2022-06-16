@@ -24,11 +24,11 @@ public class MaxXorCompositeDiscountLevelState extends CompositeDiscountLevelSta
         if(object instanceof MaxXorCompositeDiscountLevelState){
             MaxXorCompositeDiscountLevelState toCompare = (MaxXorCompositeDiscountLevelState) object;
             for( DiscountLevelState discountLevelState: this.discountLevelStates){
-                if (toCompare.discountLevelStates.contains ( discountLevelState ))
+                if (!toCompare.discountLevelStates.contains ( discountLevelState ))
                     return false;
             }
             for(DiscountLevelState discountLevelState: toCompare.discountLevelStates){
-                if (this.discountLevelStates.contains ( discountLevelState ))
+                if (!this.discountLevelStates.contains ( discountLevelState ))
                     return false;
             }
             return true;

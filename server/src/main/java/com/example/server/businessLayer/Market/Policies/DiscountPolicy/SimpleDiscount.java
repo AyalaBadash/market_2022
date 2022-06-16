@@ -24,7 +24,8 @@ public class SimpleDiscount extends DiscountType{
     public boolean equals(Object object){
         if(object instanceof SimpleDiscount){
             SimpleDiscount toCompare = (SimpleDiscount) object;
-            return this.discountLevelState.equals(toCompare.discountLevelState) && this.percentageOfDiscount == toCompare.percentageOfDiscount;
+            boolean out =  this.discountLevelState.equals(toCompare.discountLevelState) && this.percentageOfDiscount == toCompare.percentageOfDiscount;
+            return out;
         }
         return false;
     }

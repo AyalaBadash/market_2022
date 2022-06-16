@@ -83,7 +83,7 @@ public class AcceptanceTests {
             onePlusInfo = "9-5g";
             addItemToShop(shopOwnerName, onePlusName, onePlusPrice, onePlusCategory, onePlusInfo, onePlusKeywords, onePlusAmount, shopName);
             onePlus = searchProductByName(onePlusName).get(0);
-            creditCard = new CreditCard("1234567890", "5", "24", "555", "Ido livne", "204534839");
+            creditCard = new CreditCard("1234567890", "5", "2024", "555", "Ido livne", "204534839");
             address = new Address("Bar Damri", "Ben Gurion 3", "Tel Aviv", "Israel", "1234");
         } catch (Exception e) {
             String msg = e.getMessage();

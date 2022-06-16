@@ -209,7 +209,7 @@ public class MarketConcurrencyTest {
                     Item item = items.get(0);
                     try {
                         market.addItemToShoppingCart(item, 1, names[index]);
-                        market.buyShoppingCart(names[index], 10, new CreditCard("1234567890111111", "5", "2024", "555", "Ido livne", "204534839"), new Address());
+                        market.buyShoppingCart(names[index], 10, new CreditCard("1234567890111111", "5", "2024", "555", "Ido livne", "204534839"), new Address("Ido livne", "harimon 7", "ramat-gan", "israel", "123456"));
                     }catch(Exception e){}
                 }
             } );
