@@ -11,6 +11,7 @@ import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
+import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.MarketService;
 import com.example.server.serviceLayer.PurchaseService;
@@ -58,9 +59,8 @@ public class RobustnessTests {
 
     private void loadAdminName() {
         try {
-
-            //TODO:BAR edit
-            File myObj = new File(System.getProperty("user.dir") + "/config/" + "config.txt");
+            String dir=MarketConfig.IS_MAC ? "/config/" : "\\config\\";
+            File myObj = new File(System.getProperty("user.dir") + dir + "config.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -143,6 +143,25 @@ public class RobustnessTests {
         } catch (Exception e) {
             assert false;
             marketService.setSupplyService(WSEPSupplyServiceAdapter.getInstance(),userName);
+        }
+    }
+
+    @Test
+    @DisplayName("Check cart waved when acquisition is canceled.")
+    public void CheckCartAfterBuyingCanceling() {
+        try {
+            ResponseT<VisitorFacade> visitor = userService.guestLogin();
+            ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
+            ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
+            ItemFacade chocolate = res.getValue().get(0);
+            Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
+            double buyingAmount = itemAmount;
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount+1, visitor.getValue().getName());
+            purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            ResponseT<ShoppingCartFacade> response= purchaseService.showShoppingCart(visitor.getValue().getName());
+            assert !(response.getValue().getCart().isEmpty());
+        } catch (Exception e) {
+            assert false;
         }
     }
     @Test
