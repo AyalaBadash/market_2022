@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -200,11 +199,60 @@ public class NotificationHandler {
         }
     }
 
-    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName,boolean test) {
+    public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName) {
         RealTimeNotifications not=new RealTimeNotifications();
         not.createShopClosedMessage(shopName);
         for(String name: strings){
             sendNotification(name,not,true);
+        }
+    }
+
+    public void sendNewOfferOfBidNotification(String buyer, boolean isMember, double newPrice, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewOfferOfBidMessage(buyer, itemName, newPrice, shopName);
+        sendNotification(buyer, not, isMember);
+    }
+
+    public void sendBidApprovedNotification(String buyer, boolean isMember, double price, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createBidApprovedMessage(buyer, itemName, price, shopName);
+        sendNotification(buyer, not, isMember);
+    }
+
+    public void sendBidRejectedNotification(String buyer, boolean isMember, double price, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createBidRejectedMessage(buyer, itemName, price, shopName);
+        sendNotification(buyer, not, isMember);
+    }
+
+    public void sendBidRejectedToApprovesNotificationBatch(List<String> approves, String buyer, double price, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createBidRejectedToApprovesMessage(buyer, price, itemName, shopName);
+        for(String employee : approves){
+            sendNotification(employee,not,true);
+        }
+    }
+
+    public void sendNewOfferOfBidToApprovalOfApprovesNotificationBatch(List<String> approves, String buyer, double newPrice, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewOfferOfBidToApprovalOfApprovesMessage(buyer, newPrice, itemName, shopName);
+        for(String employee : approves){
+            sendNotification(employee,not,true);
+        }
+    }
+
+    public void sendNewBidToApprovalOfApprovesNotificationBatch(List<String> approves, String buyer, double newPrice, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewBidToApprovalOfApprovesMessage(buyer, newPrice, itemName, shopName);
+        for(String employee : approves){
+            sendNotification(employee,not,true);
+        }
+    }
+    public void sendBidCanceledToApprovesNotificationBatch(List<String> approves, String buyer, double price, String itemName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewBidCanceledToApprovesMessage(buyer, price, itemName, shopName);
+        for(String employee : approves){
+            sendNotification(employee,not,true);
         }
     }
 
@@ -280,13 +328,13 @@ public class NotificationHandler {
         return dir;
     }
 
-    public void sendNewshopManager(Member shopOwner, Member appointed, String shopName) {
+    public void sendNewShopManager(Member shopOwner, Member appointed, String shopName) {
         RealTimeNotifications not= new RealTimeNotifications();
         not.createNewManagerMessage(shopOwner.getName(),appointed.getName(),shopName);
         sendNotification(appointed.getName(),not,true);
     }
 
-    public void sendNewshopOwner(Member shopOwner, Member appointed, String shopName) {
+    public void sendNewShopOwner(Member shopOwner, Member appointed, String shopName) {
 
         RealTimeNotifications not= new RealTimeNotifications();
         not.createNewOwnerMessage(shopOwner.getName(),appointed.getName(),shopName);
