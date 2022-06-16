@@ -1188,6 +1188,7 @@ public class Market {
             readInitFile(MarketConfig.DATA_FILE_NAME);
             return true;
         }
+        checkSysteminit();
         return this.systemManagerName != null && !this.systemManagerName.equals("");
     }
 
