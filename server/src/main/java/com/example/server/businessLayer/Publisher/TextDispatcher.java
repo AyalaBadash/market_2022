@@ -1,5 +1,7 @@
 package com.example.server.businessLayer.Publisher;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
+import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.Notification;
 
 import java.io.*;
@@ -59,7 +61,10 @@ public class TextDispatcher extends Publisher{
     public boolean addMessgae(String sessionId, Notification notification) {
 
 
-        if( writeToText(notification.getMessage()+"\n\n", sessionId+".txt")){
+        if( writeToText(notification.getMessage(), sessionId+".txt")){
+            if(!messages.containsKey(sessionId)){
+                messages.put(sessionId,1);
+            }
             int ret=messages.get(sessionId);
             messages.remove(sessionId);
             messages.put(sessionId,ret+1);
@@ -73,6 +78,7 @@ public class TextDispatcher extends Publisher{
 
     private boolean writeToText(String message, String name){
         try {
+            message="Real Time message: \n"+message+"\n\n";
             final File parentDir = new File(getConfigDir());
             parentDir.mkdir();
             final File file = new File(parentDir, name);
@@ -85,6 +91,7 @@ public class TextDispatcher extends Publisher{
         }
         return true;
     }
+
     public int getSessionNum(){
         return messages.size();
     }
@@ -92,9 +99,14 @@ public class TextDispatcher extends Publisher{
         messages.clear();
     }
 
+
     private String getConfigDir() {
-        String dir = System.getProperty("user.dir").split("/market_2022")[0];
-        dir += "\\notifications";
+        String dir = System.getProperty("user.dir");
+        String additional_dir="\\notifications\\Real_Time\\";
+        if(MarketConfig.IS_MAC){
+            additional_dir="/notifications/Real_Time/";
+        }
+        dir += additional_dir;
         return dir;
     }
 }

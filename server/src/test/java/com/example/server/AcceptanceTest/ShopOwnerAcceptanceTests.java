@@ -194,6 +194,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     }
 
     @Test
+    @Order(4)
     @DisplayName("set item amount 0")
     public void setValidItemAmountZero() {
         try {
@@ -216,6 +217,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     }
 
     @Test
+    @Order(5)
     @DisplayName("remove item from shop")
     public void removeItemFromShopTest() {
         try {
@@ -364,7 +366,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("add simple discount")
-    @Order(4)
+    @Order(6)
     public void addSimpleDiscount() {
         ResponseT<List<DiscountTypeWrapper>> discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
         assert !discounts.isErrorOccurred();
@@ -378,7 +380,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("add composite discount")
-    @Order(5)
+    @Order(7)
     public void addCompositeDiscount() {
         DiscountTypeWrapper discountTypeWrapper = DiscountTypeWrapper.createDiscountTypeWrapper(maxCompositeDiscount);
         ResponseT<List<DiscountTypeWrapper>> discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
@@ -393,7 +395,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("delete composite discount")
-    @Order(6)
+    @Order(8)
     public void deleteCompositeDiscount() {
         ResponseT<List<DiscountTypeWrapper>> discounts = this.getDiscountTypesOfShop(shopOwnerName, shopName);
         assert !discounts.isErrorOccurred();
@@ -422,7 +424,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("check decrease price by discount")
-    @Order(7)
+    @Order(9)
     public void discountPriceValid() {
         // price is already 50% on yogurt by discount
         try {
@@ -438,7 +440,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("add policy - simple")
-    @Order(8)
+    @Order(10)
     public void addPolicyTest() {
         ResponseT<List<PurchasePolicyTypeWrapper>> policies = this.getPurchasePoliciesOfShop(shopOwnerName, shopName);
         assert !policies.isErrorOccurred();
@@ -453,7 +455,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("add policy - composite")
-    @Order(9)
+    @Order(11)
     public void addPolicyCompositeTest() {
         ResponseT<List<PurchasePolicyTypeWrapper>> policies = this.getPurchasePoliciesOfShop(shopOwnerName, shopName);
         assert !policies.isErrorOccurred();
@@ -468,7 +470,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("remove composite policy ")
-    @Order(10)
+    @Order(12)
     public void removePolicyCompositeTest() {
         ResponseT<List<PurchasePolicyTypeWrapper>> policies = this.getPurchasePoliciesOfShop(shopOwnerName, shopName);
         assert !policies.isErrorOccurred();
@@ -489,7 +491,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("check policy prevents")
-    @Order(11)
+    @Order(13)
     public void policyPreventTest() {
         // already set as demanding for atleast one
         try {
@@ -508,7 +510,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("check policy allows")
-    @Order(12)
+    @Order(14)
     public void policyAllowsTest() {
         // already set as demanding for atleast one
         try {
@@ -527,7 +529,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("check override works")
-    @Order(13)
+    @Order(15)
     public void overridePolicy() {
         try {
             // setting new shop
@@ -567,7 +569,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("check discount condition works")
-    @Order(14)
+    @Order(16)
     public void conditionalDiscountTest() {
         // remove the simple discount, stays only with the composite discount
         try {
@@ -591,7 +593,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("remove appointment base")
-    @Order(15)
+    @Order(17)
     public void removeAppointmentBase() {
         try {
             assert !setupFailed;
@@ -609,7 +611,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("remove not self appointment")
-    @Order(16)
+    @Order(18)
     public void removeOtherAppointed() {
         try {
             assert !setupFailed;
@@ -631,7 +633,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
     @Test
     @DisplayName("remove recursive appointment")
-    @Order(17)
+    @Order(19)
     public void removeRecAppointment() {
         try {
             assert !setupFailed;

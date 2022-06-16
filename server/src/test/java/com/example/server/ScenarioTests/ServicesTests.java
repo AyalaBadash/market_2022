@@ -2,6 +2,7 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
@@ -13,6 +14,7 @@ import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.MarketService;
+import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.example.server.serviceLayer.PurchaseService;
@@ -21,14 +23,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 
 public class ServicesTests {
     PaymentServiceProxy paymentServiceProxy;
     SupplyServiceProxy supplyServiceProxy;
     String userName = "userTest";
-    String password = "passTest";
+    String password = "password";
     String ItemName= "item1";
     Item itemAdded;
     int productAmount=20;
@@ -49,11 +54,18 @@ public class ServicesTests {
 
     @BeforeEach
     public void init() {
-        paymentServiceProxy = new PaymentServiceProxy(new WSEPPaymentServiceAdapter(), true);
-        supplyServiceProxy = new SupplyServiceProxy(new WSEPSupplyServiceAdapter(), true);
+        paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
+        supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
         creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
         address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
         market = Market.getInstance();
+
+        Visitor visitor= market.guestLogin();
+        try {
+            market.isInit();
+            market.memberLogin(userName, password);
+            market.validateSecurityQuestions(userName,new ArrayList<>(), visitor.getName());
+        }catch (Exception e){}
     }
 
 
@@ -78,6 +90,7 @@ public class ServicesTests {
             assert false;
         }
     }
+
 
     @Test
     @DisplayName("Payment service- cancel pay")
@@ -111,6 +124,44 @@ public class ServicesTests {
         }
     }
 
+
+    //TODO:BAR CHECK USE NOT EXIST PUBLISHER.
+    @Test
+    @DisplayName("Payment service- service falls")
+    public void PaymentServiceFalls() throws MarketException {
+        try {
+            try {
+                Visitor visitor = market.guestLogin();
+                market.memberLogin(userName, password);
+                market.validateSecurityQuestions(userName, new ArrayList<>(), visitor.getName());
+            }catch (Exception e){
+                String str= e.getMessage();
+            }
+            market.setPaymentServiceAddress("", userName);
+            paymentServiceProxy.pay(creditCard);
+            assert false;
+            market.setPaymentServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
+        } catch (Exception e) {
+            Assertions.assertEquals("Error2",e.getMessage());
+            market.setPaymentServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
+
+        }
+    }
+
+    @Test
+    @DisplayName("Supply service- service falls")
+    public void SupplyServiceFalls() throws MarketException {
+        try {
+            market.setSupplyServiceAddress("", userName);
+            supplyServiceProxy.supply(address);
+            assert false;
+            market.setSupplyServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getMessage(),"Error1");
+            market.setSupplyServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
+
+        }
+    }
     @Test
     @DisplayName("text dispatcher service- add")
     public void textDispatcherAdd() {
@@ -183,11 +234,6 @@ public class ServicesTests {
     public void initFromFile(){
         try{
             MarketService marketService= MarketService.getInstance();
-            try {
-                marketService.firstInitMarket ( true );
-            }catch (Exception e){
-                System.out.println (e.getMessage () );
-            }
             PurchaseService purchaseService= PurchaseService.getInstance();
             UserController userController= UserController.getInstance();
             List<String> list= new ArrayList<>();
@@ -205,17 +251,16 @@ public class ServicesTests {
     @DisplayName("System init from no file")
     public void initFromNoFile(){
         try{
-
-            market.firstInitMarket("AdminName","AdminPassword","noName.txt",true);
+            MarketConfig.SERVICES_FILE_NAME="noName.txt";
+            market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout("AdminName");
+            market.memberLogout(userName);
             assert false;
-        }
-        catch(MarketException ex){
-            assert true;
+            MarketConfig.SERVICES_FILE_NAME="config.txt";
         }
         catch(Exception e){
-            assert false;
+            assert true;
+            MarketConfig.SERVICES_FILE_NAME="config.txt";
         }
     }
 
@@ -224,10 +269,6 @@ public class ServicesTests {
     @DisplayName("notification test- close shop")
     public void closeShop() {
        try {
-           try {
-               market.firstInitMarket(true);
-           } catch (Exception e) {
-           }
            // shop manager register
            registerVisitor("notificationTestUser", shopOwnerPassword);
            loginMember("notificationTestUser", shopOwnerPassword);
@@ -246,6 +287,102 @@ public class ServicesTests {
        }
    }
 
+
+    @Test
+    @DisplayName("notification test- appoint owner with delayed notification")
+    public void AppointOwnerNotificationTest() {
+        try {
+
+            String appointedName = "appointedNameTest1";
+            List<String> nots= new ArrayList<>();
+            RealTimeNotifications not= new RealTimeNotifications();
+            setUpAppointOwner(appointedName,not);
+            nots.addAll(readDelayedMessages(appointedName));
+            boolean found = false;
+            for(String message : nots){
+                if(message.equals(not.getMessage().split("\n")[0])){
+                    found=true;
+                }
+            }
+            Assertions.assertTrue(found);
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("notification test- close shop with delayed notification")
+    public void closeShopDelayed() {
+        try {
+
+            String appointedName = "appointedNameTest2";
+            String owner = "ownerNameTest2";
+            List<String> nots= new ArrayList<>();
+            RealTimeNotifications not= new RealTimeNotifications();
+            setUpCloseShop(owner,appointedName,not);
+            nots.addAll(readDelayedMessages(appointedName));
+            boolean found = false;
+            for(String message : nots){
+                if(message.equals(not.getMessage().split("\n")[0])){
+                    found=true;
+                }
+            }
+            Assertions.assertTrue(found);
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("notification test- close shop with real time notification")
+    public void closeShopRealTime() {
+        try {
+
+            String appointedName = "appointedNameTest3";
+            String owner = "ownerNameTest3";
+            List<String> nots= new ArrayList<>();
+            RealTimeNotifications not= new RealTimeNotifications();
+            setUpCloseShop(owner,appointedName,not);
+            nots.addAll(readRealTimeMessages(owner));
+            boolean found = false;
+            for(String message : nots){
+                if(message.equals(not.getMessage().split("\n")[0])){
+                    found=true;
+                }
+            }
+            Assertions.assertTrue(found);
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    public void setUpCloseShop(String owner,String appointedName, RealTimeNotifications not) throws MarketException {
+
+        String testShopName = "ShopName2";
+        List<String> nots = new ArrayList<>();
+        not.createShopClosedMessage(testShopName);
+        // shop manager register
+        registerVisitor(owner, shopOwnerPassword);
+        registerVisitor(appointedName, shopOwnerPassword);
+        loginMember(owner, shopOwnerPassword);
+        market.openNewShop(owner, testShopName);
+        market.appointShopOwner(owner,appointedName,testShopName);
+        market.closeShop(owner,testShopName);
+        market.memberLogout(owner);
+    }
+
+
+    public void setUpAppointOwner(String appointedName, RealTimeNotifications not) throws MarketException {
+        String owner="notificationTestUser3";
+        String testShopName="testShopName3";
+        not.createNewOwnerMessage(owner,appointedName,testShopName);
+        registerVisitor(owner, shopOwnerPassword);
+        registerVisitor(appointedName, shopOwnerPassword);
+        loginMember(owner, shopOwnerPassword);
+        market.openNewShop(owner, testShopName);
+        market.appointShopOwner(owner,appointedName,testShopName);
+        market.memberLogout(owner);
+    }
     public void loginMember(String name, String password) throws MarketException {
         if(UserController.getInstance().isLoggedIn(name))
             return;
@@ -262,9 +399,52 @@ public class ServicesTests {
         market.register(name, pass);
     }
 
-    private void openShop() throws MarketException {
-        market.openNewShop(shopOwnerName, shopName);
-        itemAdded = market.addItemToShopItem(shopOwnerName, ItemName, productPrice, Item.Category.electricity, "", new ArrayList<>(), productAmount, shopName);
+    private List<String> readDelayedMessages(String name) {
 
+        try {
+            List<String> nots= new ArrayList<>();
+            File myObj = new File(getConfigDir() + name+".txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                if(data.isEmpty())
+                    continue;
+                nots.add(data);
+            }
+            return nots;
+
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+
+    }
+    private List<String> readRealTimeMessages(String name) {
+
+        try {
+            List<String> nots= new ArrayList<>();
+            File myObj = new File(getConfigRealTimeDir() + name+".txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                if(data.isEmpty())
+                    continue;
+                nots.add(data);
+            }
+            return nots;
+
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+
+    }
+    private String getConfigDir() {
+        String dir = System.getProperty("user.dir");
+        dir += "/notifications/Delayed/";
+        return dir;
+    }
+    private String getConfigRealTimeDir() {
+        String dir = System.getProperty("user.dir");
+        dir += "/notifications/Real_Time/";
+        return dir;
     }
 }

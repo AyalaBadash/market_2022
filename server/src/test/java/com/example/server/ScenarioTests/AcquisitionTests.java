@@ -7,6 +7,8 @@ import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import org.junit.jupiter.api.*;
@@ -22,7 +24,7 @@ public class AcquisitionTests {
 
     Market market;
     String userName = "userTest";
-    String password = "passTest";
+    String password = "password";
     String shopManagerName = "shaked";
     String shopManagerPassword = "shaked1234";
     String shopName = "kolbo";
@@ -37,7 +39,7 @@ public class AcquisitionTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null) {
-                market.firstInitMarket(userName, password,true);
+                market.firstInitMarket(userName, password);
 
             }
 
@@ -229,7 +231,7 @@ public class AcquisitionTests {
     //payment services not exists.
     @Test
     @DisplayName("buy when payment service is not connected")
-    public void buyWhenPaymentServiceIsNotConnected() {
+    public void buyWhenPaymentServiceIsNotConnected() throws MarketException {
         try {
             Visitor visitor = market.guestLogin();
             Mockito.when ( market.getPaymentService() ).then ( null );
@@ -239,15 +241,20 @@ public class AcquisitionTests {
             Double itemAmount = shop.getItemCurrentAmount(milk);
             double buyingAmount = itemAmount + 1;
             market.addItemToShoppingCart(milk, buyingAmount, visitor.getName());
-            market.setPaymentServiceProxy(null,userName);
+            market.setPaymentServiceProxy(null,userName,true);
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+                market.setPaymentServiceProxy(null,userName,true);
                 assert false;
+                market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),userName,true);
+
             }catch (MarketException e){
                 Assertions.assertEquals("The payment service is not available right now.",e.getMessage());
+                market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),userName,true);
             }
         } catch (Exception e) {
             assert true;
+            market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),userName,true);
         }
     }
 
