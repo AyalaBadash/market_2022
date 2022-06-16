@@ -102,6 +102,9 @@ public class Market {
         try {
 
             File myObj = new File(getConfigDir() + fileName);
+            if(!myObj.exists()){
+                throw new MarketException("Data file does not exists.");
+            }
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -194,6 +197,9 @@ public class Market {
         try {
 
             File myObj = new File(getConfigDir() + name);
+            if(!myObj.exists()){
+                throw new MarketException("Services configurations file does not exists.");
+            }
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
