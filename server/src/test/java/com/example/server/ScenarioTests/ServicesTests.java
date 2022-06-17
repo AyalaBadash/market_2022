@@ -137,11 +137,11 @@ public class ServicesTests {
             }
             market.setPaymentServiceAddress("", userName);
             paymentServiceProxy.pay(creditCard);
+            market.setPaymentServiceAddress(MarketConfig.WSEP_ADDRESS, market.getSystemManagerName());
             assert false;
-            market.setPaymentServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
         } catch (Exception e) {
+            market.setPaymentServiceAddress(MarketConfig.WSEP_ADDRESS, market.getSystemManagerName());
             Assertions.assertEquals("Error2",e.getMessage());
-            market.setPaymentServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
 
         }
     }
@@ -152,11 +152,11 @@ public class ServicesTests {
         try {
             market.setSupplyServiceAddress("", userName);
             supplyServiceProxy.supply(address);
+            market.setSupplyServiceAddress(MarketConfig.WSEP_ADDRESS, market.getSystemManagerName());
             assert false;
-            market.setSupplyServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
-        } catch (Exception e) {
+         } catch (Exception e) {
             Assertions.assertEquals(e.getMessage(),"Error1");
-            market.setSupplyServiceAddress("https://cs-bgu-wsep.herokuapp.com/", market.getSystemManagerName());
+            market.setSupplyServiceAddress(MarketConfig.WSEP_ADDRESS, market.getSystemManagerName());
 
         }
     }
@@ -251,12 +251,12 @@ public class ServicesTests {
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
             market.memberLogout(userName);
-            assert false;
             MarketConfig.SERVICES_FILE_NAME="config.txt";
+            assert false;
         }
         catch(Exception e){
-            assert true;
             MarketConfig.SERVICES_FILE_NAME="config.txt";
+            assert true;
         }
     }
 

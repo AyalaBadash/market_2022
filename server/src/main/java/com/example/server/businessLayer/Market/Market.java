@@ -43,8 +43,6 @@ public class Market {
     private SupplyServiceProxy supplyServiceProxy;
     private Publisher publisher;
     private static Market instance;
-    boolean dataInitialized = false;
-    boolean servicesInitialized = false;
     Map<String, Integer> numOfAcqsPerShop;
 
     private Market() {
@@ -75,7 +73,7 @@ public class Market {
      * @param password the system manager password.
      * @throws MarketException
      */
-    public synchronized void firstInitMarket(String userName, String password) throws MarketException, FileNotFoundException {
+    public synchronized void firstInitMarket(String userName, String password) throws MarketException {
 
         try {
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
@@ -96,95 +94,88 @@ public class Market {
     }
 
 
-    private void readInitFile(String fileName) throws MarketException, FileNotFoundException {
+    private void readInitFile(String fileName) throws MarketException {
 
-        try {
 
             File myObj = new File(getConfigDir() + fileName);
             if (!myObj.exists()) {
                 throw new MarketException("Data file does not exists.");
             }
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
+        Scanner myReader ;
+        try {
+            myReader = new Scanner(myObj);
+        } catch (FileNotFoundException e) {
+            throw new MarketException("Init data file not found.");
+        }
+        while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] vals = data.split("::");
                 setData(vals);
 
             }
-            dataInitialized = true;
-        } catch (Exception e) {
-            throw e;
-        }
+
     }
 
-    private void setData(String[] vals) {
+    private void setData(String[] vals) throws MarketException {
 
-        try {
-            DebugLog debugLog = DebugLog.getInstance();
-            String command = vals[0];
-            if (command.contains("Register")) {
-                if (vals.length >= 3) {
-                    debugLog.Log("Method register from init file has called. Args are: " + vals[1] + " " + vals[2]);
-                    register(vals[1], vals[2]);
-                } else {
-                    debugLog.Log("Method register from init file has called. \n Not enough args number. Number: " + vals.length);
-                }
-            } else if (command.contains("Login")) {
-                try {
-                    if (vals.length >= 3) {
-                        debugLog.Log("Method login from init file has called. Args are: " + vals[1] + " " + vals[2]);
-                        Visitor vis = guestLogin();
-                        memberLogin(vals[1], vals[2]);
-                        validateSecurityQuestions(vals[1], new ArrayList<>(), vis.getName());
-                    } else {
-                        debugLog.Log("Method login from init file has called. \n Not enough args number. Number: " + vals.length);
-                    }
-                } catch (Exception e) {
-                }
-            } else if (command.contains("Logout")) {
-                try {
-                    if (vals.length >= 2) {
-                        debugLog.Log("Method logout from init file has called. Args are: " + vals[1]);
-                        memberLogout(vals[1]);
-                    } else {
-                        debugLog.Log("Method logout from init file has called. \n Not enough args number. Number: " + vals.length);
-                    }
-                } catch (Exception e) {
-                }
-            } else if (command.contains("Open_Shop")) {
-                try {
-                    if (vals.length >= 3) {
-                        debugLog.Log("Method open shop from init file has called. Args are: " + vals[1] + " " + vals[2]);
-                        openNewShop(vals[1], vals[2]);
-                    } else {
-                        debugLog.Log("Method open shop from init file has called. \n Not enough args number. Number: " + vals.length);
-                    }
-                } catch (Exception e) {
-                }
-            } else if (command.contains("Add_Item")) {
-                if (vals.length >= 8) {
-                    debugLog.Log("Method add item from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3] + " " + vals[4] + " " + vals[5] + " " + vals[6] + " " + vals[7]);
-                    addItemToShop(vals[1], vals[2], Double.parseDouble(vals[3]), Item.Category.valueOf(vals[4]), vals[5], new ArrayList<>(), Integer.parseInt(vals[6]), vals[7]);
-                } else {
-                    debugLog.Log("Method add item from init file has called. \n Not enough args number. Number: " + vals.length);
-                }
-            } else if (command.contains("Appoint_Manager")) {
-                if (vals.length >= 4) {
-                    debugLog.Log("Method appoint manager from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
-                    appointShopManager(vals[1], vals[2], vals[3]);
-                } else {
-                    debugLog.Log("Method appoint manager from init file has called. \n Not enough args number. Number: " + vals.length);
-                }
-            } else if (command.contains("Appoint_Owner")) {
-                if (vals.length >= 4) {
-                    debugLog.Log("Method appoint owner from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
-                    appointShopOwner(vals[1], vals[2], vals[3]);
-                } else {
-                    debugLog.Log("Method appoint owner from init file has called. \n Not enough args number. Number: " + vals.length);
-                }
+        DebugLog debugLog = DebugLog.getInstance();
+        String command = vals[0];
+        if (command.contains("Register")) {
+            if (vals.length >= 3) {
+                debugLog.Log("Method register from init file has called. Args are: " + vals[1] + " " + vals[2]);
+                register(vals[1], vals[2]);
+            } else {
+                debugLog.Log("Method register from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+        } else if (command.contains("Login")) {
+            if (vals.length >= 3) {
+                debugLog.Log("Method login from init file has called. Args are: " + vals[1] + " " + vals[2]);
+                Visitor vis = guestLogin();
+                memberLogin(vals[1], vals[2]);
+                validateSecurityQuestions(vals[1], new ArrayList<>(), vis.getName());
+            } else {
+                debugLog.Log("Method login from init file has called. \n Not enough args number. Number: " + vals.length);
             }
 
-        } catch (Exception e) {
+        } else if (command.contains("Logout")) {
+
+            if (vals.length >= 2) {
+                debugLog.Log("Method logout from init file has called. Args are: " + vals[1]);
+                memberLogout(vals[1]);
+            } else {
+                debugLog.Log("Method logout from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+
+        } else if (command.contains("Open_Shop")) {
+
+            if (vals.length >= 3) {
+                debugLog.Log("Method open shop from init file has called. Args are: " + vals[1] + " " + vals[2]);
+                openNewShop(vals[1], vals[2]);
+            } else {
+                debugLog.Log("Method open shop from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+
+        } else if (command.contains("Add_Item")) {
+            if (vals.length >= 8) {
+                debugLog.Log("Method add item from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3] + " " + vals[4] + " " + vals[5] + " " + vals[6] + " " + vals[7]);
+                addItemToShop(vals[1], vals[2], Double.parseDouble(vals[3]), Item.Category.valueOf(vals[4]), vals[5], new ArrayList<>(), Integer.parseInt(vals[6]), vals[7]);
+            } else {
+                debugLog.Log("Method add item from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+        } else if (command.contains("Appoint_Manager")) {
+            if (vals.length >= 4) {
+                debugLog.Log("Method appoint manager from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
+                appointShopManager(vals[1], vals[2], vals[3]);
+            } else {
+                debugLog.Log("Method appoint manager from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+        } else if (command.contains("Appoint_Owner")) {
+            if (vals.length >= 4) {
+                debugLog.Log("Method appoint owner from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
+                appointShopOwner(vals[1], vals[2], vals[3]);
+            } else {
+                debugLog.Log("Method appoint owner from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
         }
     }
 
@@ -216,8 +207,6 @@ public class Market {
             throw new MarketException("market needs publisher services for initialize");
 
         }
-
-        servicesInitialized = true;
 
     }
 
