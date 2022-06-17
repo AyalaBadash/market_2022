@@ -173,9 +173,11 @@ public class Market {
     }
 
     public void notifyManager(RealTimeNotifications notification){
-        NotificationHandler handler= NotificationHandler.getInstance();
-        //The is member is false because the manager received only real time notifications.
-        handler.sendNotification(systemManagerName,notification,false);
+        if(systemManagerName!=null&& ( !systemManagerName.isEmpty()& userController.isLoggedIn(systemManagerName))) {
+            NotificationHandler handler = NotificationHandler.getInstance();
+            //The is member is false because the manager received only real time notifications.
+            handler.sendNotification(systemManagerName, notification, false);
+        }
     }
 
     public Shop getShopByName(String shopName) {
@@ -888,10 +890,10 @@ public class Market {
         shop.removePurchasePolicyFromShop(visitorName, purchasePolicyType);
     }
 
-    public boolean isInit() throws MarketException, FileNotFoundException {
+    public boolean isInit() throws MarketException {
+        readDataSourceConfig();
         if (MarketConfig.USING_DATA) {
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
-            readDataSourceConfig();
             readInitFile(MarketConfig.DATA_FILE_NAME);
             return true;
         }
@@ -901,7 +903,7 @@ public class Market {
 
     private void readDataSourceConfig() throws MarketException {
 
-        String path = getConfigDir() + MarketConfig.DataSourceFileName;
+        String path = getConfigDir() + MarketConfig.DATA_SOURCE_FILE_NAME;
         DataSourceConfigReader.getInstance(path);
     }
 

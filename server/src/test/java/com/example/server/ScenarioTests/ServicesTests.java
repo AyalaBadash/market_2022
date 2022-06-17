@@ -2,6 +2,7 @@ package com.example.server.ScenarioTests;
 
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ResourcesObjects.DataSourceConfigReader;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.UserController;
@@ -13,16 +14,13 @@ import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
-import com.example.server.serviceLayer.MarketService;
-import com.example.server.serviceLayer.Notifications.DelayedNotifications;
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
-import com.example.server.serviceLayer.PurchaseService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.jupiter.api.*;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -30,8 +28,8 @@ import java.util.Scanner;
 public class ServicesTests {
     PaymentServiceProxy paymentServiceProxy;
     SupplyServiceProxy supplyServiceProxy;
-    String userName = "userTest";
-    String password = "password";
+    String userName = "u1";
+    String password = "p1";
     String ItemName= "item1";
     Item itemAdded;
     int productAmount=20;
@@ -49,6 +47,7 @@ public class ServicesTests {
     Address address;
     Market market ;
     Visitor visitor;
+
 
     @BeforeEach
     public void init() {
@@ -259,7 +258,41 @@ public class ServicesTests {
             assert true;
         }
     }
+    @Test
+    @DisplayName("System init from no existing data source file. should not continue the market init.")
+    public void initFromDataSourceNoFile() throws MarketException, FileNotFoundException {
+        String name=MarketConfig.DATA_SOURCE_FILE_NAME;
+        try{
 
+            MarketConfig.DATA_SOURCE_FILE_NAME ="noName.txt";
+            DataSourceConfigReader.resetInstance();
+            market.isInit();
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            Assertions.assertEquals("Data source config file not found.",e.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("System init from data source file with bad arguments. should not continue the market init.")
+    public void initFromDataSourceBadArgs() throws MarketException, FileNotFoundException {
+        String name=MarketConfig.DATA_SOURCE_FILE_NAME;
+        try{
+
+            MarketConfig.DATA_SOURCE_FILE_NAME =MarketConfig.MISS_DATA_SOURCE_FILE_NAME;
+            DataSourceConfigReader.resetInstance();
+            market.isInit();
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            Assertions.assertEquals("Missing username in data source config file.",e.getMessage());
+        }
+    }
 
    @Test
     @DisplayName("Notification test- successful close shop action")
