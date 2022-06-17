@@ -58,7 +58,7 @@ public class ShoppingBasket implements IHistory {
         }
         if(bids != null && bids.size () > 0) {
             for ( Bid bid : bids.values ( ) ) {
-                if (bid.isApproved ( ))
+                if (bid.getApproved ( ))
                     price += bid.getPrice ( ) * bid.getAmount ( );
             }
         }
