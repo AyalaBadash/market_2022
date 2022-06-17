@@ -625,7 +625,7 @@ public class Shop implements IHistory {
         return purchasePolicy;
     }
 
-    //TODO review
+
     public boolean approveAppointment(String appointedName, String ownerName) throws MarketException {
         if (!shopOwners.containsKey(ownerName)){
             DebugLog.getInstance().Log(ownerName+" is not an owner in this shop. Therefore he cannot approve any appointment.");
@@ -635,6 +635,7 @@ public class Shop implements IHistory {
             DebugLog.getInstance().Log("There is no pending appointment for "+ appointedName);
             throw new MarketException("There is no pending appointment for "+ appointedName);
         }
+        pendingAppointments.approve(appointedName,ownerName);
         if (pendingAppointments.getAgreements().get(appointedName).isAgreed()){
             shopOwners.put(appointedName,pendingAppointments.getAppointments().get(appointedName));
             pendingAppointments.removeAppointment(appointedName);
@@ -643,5 +644,33 @@ public class Shop implements IHistory {
             return true;
         }
         else return false;
+    }
+
+    public void rejectAppointment(String appointedName,String ownerName) throws MarketException {
+        if (!shopOwners.containsKey(ownerName)){
+            DebugLog.getInstance().Log(ownerName+" is not an owner in this shop. Therefore he cannot approve any appointment.");
+            throw new MarketException(ownerName+" is not an owner in this shop. Therefore he cannot approve any appointment.");
+        }
+        if (!pendingAppointments.getAppointments().containsKey(appointedName)){
+            DebugLog.getInstance().Log("There is no pending appointment for "+ appointedName);
+            throw new MarketException("There is no pending appointment for "+ appointedName);
+        }
+        if(pendingAppointments.getAgreements().get(appointedName).getOwnersAppointmentApproval().containsKey(ownerName)) {
+            pendingAppointments.removeAppointment(appointedName);
+        }
+        else {
+            DebugLog.getInstance().Log(ownerName+ " tried to reject appointment which he does not take part in.");
+            throw new MarketException("You dont have the authority to reject this appointment.");
+        }
+        //TODO send notification
+
+    }
+    public List<String> getAllPendingForOwner(String ownerName) throws MarketException {
+        if (!shopOwners.containsKey(ownerName)){
+            DebugLog.getInstance().Log("You are not a shop owner");
+            throw new MarketException("You are not a shop owner");
+        }
+        return pendingAppointments.getMyPendingAppointments(ownerName);
+
     }
 }
