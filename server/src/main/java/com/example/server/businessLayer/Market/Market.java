@@ -339,7 +339,19 @@ public class Market {
 
 
     public Visitor guestLogin() {
-        return userController.guestLogin();
+
+
+        Visitor visitor= userController.guestLogin();
+        RealTimeNotifications notifications= new RealTimeNotifications();
+        notifications.createUserLoggedIn(visitor.getName(),userController.getVisitorsInMarket().size());
+        notifyManager(notifications);
+        return visitor;
+    }
+
+    public void notifyManager(RealTimeNotifications notification){
+        NotificationHandler handler= NotificationHandler.getInstance();
+        //The is member is false because the manager received only real time notifications.
+        handler.sendNotification(systemManagerName,notification,false);
     }
 
     public Shop getShopByName(String shopName) {
@@ -507,13 +519,20 @@ public class Market {
         List<Appointment> appointmentByMe = member.getAppointedByMe();
         List<Appointment> myAppointments = member.getMyAppointments();
         userController.finishLogin(userName, visitorName);
-        return new Member(member.getName(), member.getMyCart(), appointmentByMe, myAppointments, member.getPurchaseHistory());//,member.getPurchaseHistory()
+        Member ret=  new Member(member.getName(), member.getMyCart(), appointmentByMe, myAppointments, member.getPurchaseHistory());//,member.getPurchaseHistory()
+        RealTimeNotifications notifications= new RealTimeNotifications();
+        notifications.createMemberLoggedIn(member.getName(),visitorName);
+        notifyManager(notifications);
+        return ret;
     }
 
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         alertIfNotLoggedIn(visitorName);
         userController.exitSystem(visitorName);
+        RealTimeNotifications notifications= new RealTimeNotifications();
+        notifications.createUserLoggedout(visitorName,userController.getVisitorsInMarket().size());
+        notifyManager(notifications);
     }
 
     public Appointment getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) throws MarketException {
@@ -620,7 +639,11 @@ public class Market {
 
     public String memberLogout(String member) throws MarketException {
         alertIfNotLoggedIn(member);
-        return userController.memberLogout(member);
+        String ret= userController.memberLogout(member);
+        RealTimeNotifications notifications= new RealTimeNotifications();
+        notifications.createMemberLoggedOut(member,ret);
+        notifyManager(notifications);
+        return ret;
     }
 
     public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) throws MarketException {

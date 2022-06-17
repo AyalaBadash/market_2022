@@ -72,4 +72,17 @@ public class RealTimeNotifications extends Notification{
     public void createNewBidCanceledToApprovesMessage(String buyer, double price, String itemName, String shopName) {
         message = String.format ("Hello,\n The bid for %s in shop %s from %s at a price of %f has been cancelled by the buyer.", itemName, shopName, buyer, price);
     }
+
+    public void createUserLoggedIn(String name, int size) {
+        message= String.format("The visitor %s entered the market.\nCurrently, there are %d visitors in the market.",name,size);
+    }
+    public void createUserLoggedout(String name, int size) {
+        message= String.format("The visitor %s leaved the market.\nCurrently, there are %d visitors in the market.",name,size);
+    }
+    public void createMemberLoggedIn(String memberName,String visitorName) {
+        message= String.format("The user %s identified as member %s in the market .",visitorName, memberName);
+    }
+    public void createMemberLoggedOut(String memberName,String visitorName) {
+        message= String.format("The member %s logged out and and now identify as user %s.",memberName, visitorName);
+    }
 }
