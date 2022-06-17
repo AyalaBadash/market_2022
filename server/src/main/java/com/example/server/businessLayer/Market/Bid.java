@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Bid {
 
-
     public enum Side{
         buyer,
         seller,
@@ -187,5 +186,9 @@ public class Bid {
 
     public void setMember(boolean member) {
         isMember = member;
+    }
+
+    public boolean getApproved() {
+        return approved;
     }
 }
