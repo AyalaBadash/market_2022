@@ -13,5 +13,5 @@ public class MarketConfig {
     public static String SERVICES_FILE_NAME="config.txt";
     public static String DATA_FILE_NAME="Data.txt";
     public static boolean IS_MAC=false;
-
+    public static String DataSourceFileName="DataSourceConfig.txt";
 }
