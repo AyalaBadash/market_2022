@@ -103,14 +103,15 @@ public class BidTest {
         Assertions.assertTrue(bid.approveBid("raz"));
     }
     @Test
-    @DisplayName("Reject bid test - good test ")
-    public void rejectBidTest(){
-        //TODO review - where is the actual reject in the method? - in shop!
+    @DisplayName("Reject bid test -fail test -buyer  ")
+    public void rejectBidBuyerTest(){
+        Assertions.assertThrows(MarketException.class,()->bid.rejectBid("raz"));
     }
     @Test
-    @DisplayName("Suggest new offer - good test - buyer offers")
-    public void buyerSuggestNewOfferGoodTest(){
-        assert false;
+    @DisplayName("Reject bid test - fail test -seller  ")
+    public void rejectBidSellerTest(){
+        bid.setSideNeedToApprove(Bid.Side.buyer);
+        Assertions.assertThrows(MarketException.class,()->bid.rejectBid("ido"));
     }
 
     @Test
@@ -129,45 +130,33 @@ public class BidTest {
     @Test
     @DisplayName("Suggest new offer - fail test")
     public void suggestNewOfferFailTest(){
-        assert false;
+        bid.setSideNeedToApprove(Bid.Side.buyer);
+        Assertions.assertThrows(MarketException.class,()->bid.suggestNewOffer("raz",3.0));
     }
 
     @Test
     @DisplayName("Suggest new offer - fail test")
     public void suggestNewOfferFailTest2(){
-        assert false;
+        Assertions.assertThrows(MarketException.class,()->bid.suggestNewOffer("raz",3.0));
     }
 
     @Test
     @DisplayName("Suggest new offer - fail test")
     public void suggestNewOfferFailTest3(){
-        assert false;
+        Assertions.assertThrows(MarketException.class,()->bid.suggestNewOffer("ido",-3.0));
     }
 
     @Test
     @DisplayName("Suggest new offer - fail test")
     public void suggestNewOfferFailTest4(){
-        assert false;
+        Assertions.assertThrows(MarketException.class,()->bid.suggestNewOffer("ido",5.0));
     }
 
     @Test
     @DisplayName("Suggest new offer - fail test")
     public void suggestNewOfferFailTest5(){
-        assert false;
+        Assertions.assertThrows(MarketException.class,()->bid.suggestNewOffer("raz",3.0));
     }
-
-    @Test
-    @DisplayName("Suggest new offer - fail test")
-    public void suggestNewOfferFailTest6(){
-        assert false;
-    }
-
-    @Test
-    @DisplayName("Suggest new offer - fail test")
-    public void suggestNewOfferFailTest7(){
-        assert false;
-    }
-
     @Test
     @DisplayName("Is approved test - good test")
     public void isApprovedTest(){
