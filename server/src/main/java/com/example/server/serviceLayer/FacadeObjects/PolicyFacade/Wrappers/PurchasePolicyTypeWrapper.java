@@ -35,6 +35,8 @@ public class PurchasePolicyTypeWrapper implements FacadeObject<PurchasePolicyTyp
     public PurchasePolicyTypeWrapper() {
     }
 
+
+
     @Override
     public PurchasePolicyType toBusinessObject() throws MarketException {
         switch (purchasePolicyTypeWrapperType){

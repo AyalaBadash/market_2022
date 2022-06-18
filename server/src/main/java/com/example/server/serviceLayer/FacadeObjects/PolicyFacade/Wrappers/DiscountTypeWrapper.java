@@ -35,6 +35,14 @@ public class DiscountTypeWrapper implements FacadeObject<DiscountType> {
     public DiscountTypeWrapper() {
     }
 
+    public DiscountTypeWrapperType getDiscountTypeWrapperType() {
+        return discountTypeWrapperType;
+    }
+
+    public void setDiscountTypeWrapperType(DiscountTypeWrapperType discountTypeWrapperType) {
+        this.discountTypeWrapperType = discountTypeWrapperType;
+    }
+
     @Override
     public DiscountType toBusinessObject() throws MarketException {
         switch (discountTypeWrapperType){

@@ -89,6 +89,14 @@ public class PurchasePolicyLevelStateWrapper implements FacadeObject<PurchasePol
         this.category = category;
     }
 
+    public PurchasePolicyLevelStateWrapperType getPurchasePolicyLevelStateWrapperType() {
+        return purchasePolicyLevelStateWrapperType;
+    }
+
+    public void setPurchasePolicyLevelStateWrapperType(PurchasePolicyLevelStateWrapperType purchasePolicyLevelStateWrapperType) {
+        this.purchasePolicyLevelStateWrapperType = purchasePolicyLevelStateWrapperType;
+    }
+
     public List<PurchasePolicyLevelStateWrapper> getPurchasePolicyLevelStateWrappers() {
         return purchasePolicyLevelStateWrappers;
     }

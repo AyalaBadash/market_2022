@@ -96,6 +96,13 @@ public class DiscountLevelStateWrapper implements FacadeObject<DiscountLevelStat
         this.discountLevelStateWrapperType = discountLevelStateWrapperType;
     }
 
+    public DiscountLevelStateWrapperType getDiscountLevelStateWrapperType() {
+        return discountLevelStateWrapperType;
+    }
+
+    public void setDiscountLevelStateWrapperType(DiscountLevelStateWrapperType discountLevelStateWrapperType) {
+        this.discountLevelStateWrapperType = discountLevelStateWrapperType;
+    }
 
     public static DiscountLevelStateWrapper createDiscountLevelStateWrapper(DiscountLevelState discountLevelState) {
         DiscountLevelStateWrapper discountLevelStateWrapper = new DiscountLevelStateWrapper (  );
