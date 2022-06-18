@@ -12,11 +12,9 @@ public interface SupplyService {
     String TypeSupply = "supply";
     String TypeCancel_supply = "cancel_supply";
     RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(30 * 1000).build();
-    int supply(Address address) throws MarketException, IOException;
+    int supply(List<NameValuePair> request) throws MarketException, IOException;
 
-    int cancelSupply(int supplyID) throws Exception;
+    int cancelSupply(List<NameValuePair> request) throws Exception;
 
-    List<NameValuePair> addressToString(Address address);
-
-    List<NameValuePair> transactionToString(int transactionId);
+    void setAddress(String address);
 }

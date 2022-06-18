@@ -1,6 +1,10 @@
 package com.example.server.AcceptanceTest;
 
+import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
@@ -46,7 +50,11 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     @BeforeAll
     public static void setup() {
         try {
-            initMarket();
+            try {
+                initMarket();
+                Market market = Market.getInstance();
+                market.isInit();
+            }catch (Exception e){}
             // shop manager register
             VisitorFacade visitor = guestLogin();
             register(shopOwnerName, shopOwnerPassword);
@@ -305,6 +313,8 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     @DisplayName("buy item, valid amount")
     public void buyItemValid() {
         try {
+            Market market= Market.getInstance();
+            market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),market.getSystemManagerName(),true);
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("bamba");

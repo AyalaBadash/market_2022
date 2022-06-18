@@ -11,13 +11,13 @@ public class DelayedNotifications extends Notification{
         super(mess);
     }
     public void createOfferAcceptedMessage( String shopName ,String product, int price){
-        message= "Your offer to buy "+product+" from "+ shopName+ " for the amount of "+price+ " accepted!";
+        message= "Your offer to buy "+product+" from "+ shopName+ " for the amount of "+price+ " accepted!"+"\n";
     }
     public void createMessage(String mess){
-        message=mess;
+        message=mess+"\n";
     }
     public void createOfferDeclinedMessage( String shopName ,String product, int price){
-        message= "Your offer to buy "+product+" from "+ shopName+ " for the amount of "+price+ " declined!";
+        message= "Your offer to buy "+product+" from "+ shopName+ " for the amount of "+price+ " declined!"+"\n";
     }
 
 }

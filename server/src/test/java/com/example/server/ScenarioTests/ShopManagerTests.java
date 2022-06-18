@@ -35,7 +35,7 @@ public class ShopManagerTests {
             productPrice = 1.2;
             newAmount=10;
             if (market.getPaymentService() == null) {
-                market.firstInitMarket(userName, password,true);
+                market.firstInitMarket(userName, password);
             }
 
             // shop manager register

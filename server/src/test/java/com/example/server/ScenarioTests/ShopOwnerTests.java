@@ -47,7 +47,7 @@ public class ShopOwnerTests {
             productPrice = 1.2;
             newAmount=10;
            if (market.getPaymentService() == null) {
-               market.firstInitMarket(userName, password,true);
+               market.firstInitMarket(userName, password);
            }
 
             // shop manager register
@@ -315,7 +315,6 @@ public class ShopOwnerTests {
     @DisplayName("appoint new shop owner bad case - appoint for not a real shop")
     public void appointNewOwnerFail() {
         try {
-            loginMember(shopOwnerName,shopOwnerPassword);
             market.appointShopOwner(shopOwnerName,"not real member",shopName);
             assert false;
             try {
