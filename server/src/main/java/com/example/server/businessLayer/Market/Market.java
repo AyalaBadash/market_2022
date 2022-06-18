@@ -75,8 +75,8 @@ public class Market {
     private AcquisitionHistoryRep acquisitionHistoryRep;
     @Autowired
     private ClosedShopsHistoryRep closedShopsHistoryRep;
-    @Autowired
-    private UserControllerRep userControllerRep;
+//    @Autowired
+//    private UserControllerRep userControllerRep;
     @Autowired
     private VisitorRep visitorRep;
     @Autowired
@@ -143,7 +143,7 @@ public class Market {
         Acquisition.setAcquisitionRep(acquisitionRep);
         AcquisitionHistory.setAcquisitionHistoryRep(acquisitionHistoryRep);
         ClosedShopsHistory.setClosedShopsHistoryRep(closedShopsHistoryRep);
-        UserController.setUserControllerRep(userControllerRep);
+//        UserController.setUserControllerRep(userControllerRep);
         Visitor.setVisitorRep(visitorRep);
         LoginCard.setLoginCardRep(loginCardRep);
         ShopManagerAppointment.setShopManagerAppointmentRep(shopManagerAppointmentRep);

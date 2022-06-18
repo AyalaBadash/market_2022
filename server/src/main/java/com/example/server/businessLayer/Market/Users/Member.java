@@ -88,6 +88,7 @@ public class Member implements IHistory {
 
     public void addAppointmentToMe(Appointment app){
         this.myAppointments.add(app);
+        memberRep.save(this);
     }
 
     public StringBuilder getPurchaseHistoryString() {

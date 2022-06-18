@@ -33,11 +33,12 @@ public class Shop implements IHistory {
     private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     @Transient //TODO
     private Map<String, Appointment> shopManagers;     //<name, appointment>
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable (name = "shopOwners",
-        joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
-        inverseJoinColumns = {@JoinColumn(name = "appointment", referencedColumnName = "id")})
-    @MapKeyColumn (name = "member_name")
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable (name = "shopOwners",
+//        joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
+//        inverseJoinColumns = {@JoinColumn(name = "appointment", referencedColumnName = "id")})
+//    @MapKeyColumn (name = "member_name")
+    @Transient
     private Map<String, Appointment> shopOwners;     //<name, appointment>
     @ElementCollection
     @CollectionTable(name = "items_in_shop")

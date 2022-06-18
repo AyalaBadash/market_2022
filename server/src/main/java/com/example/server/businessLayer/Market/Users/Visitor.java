@@ -14,9 +14,9 @@ import javax.persistence.OneToOne;
 public class Visitor {
     @Id
     private String name;
-    @OneToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne (cascade = {CascadeType.PERSIST})
     private Member member;
-    @OneToOne (cascade = {CascadeType.MERGE, CascadeType.REMOVE} )
+    @OneToOne (cascade = {CascadeType.MERGE})
     private ShoppingCart cart;
     private static VisitorRep visitorRep;
 
@@ -27,6 +27,7 @@ public class Visitor {
         this.member = null;
         this.cart = new ShoppingCart();
         ShoppingCart.getShoppingCartRep().save(cart);
+        visitorRep.save(this);
     }
 
     public Visitor(String name, Member member, ShoppingCart cart) {
@@ -34,6 +35,7 @@ public class Visitor {
         this.member = member;
         this.cart = cart;
         ShoppingCart.getShoppingCartRep().save(cart);
+        visitorRep.save(this);
     }
     public Visitor(){}
 
