@@ -33,12 +33,11 @@ public class Shop implements IHistory {
     private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     @Transient //TODO
     private Map<String, Appointment> shopManagers;     //<name, appointment>
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable (name = "shopOwners",
-//        joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
-//        inverseJoinColumns = {@JoinColumn(name = "appointment", referencedColumnName = "id")})
-//    @MapKeyColumn (name = "member_name")
-    @Transient
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable (name = "shopOwners",
+        joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
+        inverseJoinColumns = {@JoinColumn(name = "appointment", referencedColumnName = "id")})
+    @MapKeyColumn (name = "member_name")
     private Map<String, Appointment> shopOwners;     //<name, appointment>
     @ElementCollection
     @CollectionTable(name = "items_in_shop")
@@ -46,8 +45,6 @@ public class Shop implements IHistory {
     @Column(name="amount")
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
-
-
     @Transient
     private static ShopRep shopRep;
     @OneToOne
@@ -68,7 +65,6 @@ public class Shop implements IHistory {
 
     public Shop(String name,Member founder) {
         this.shopName = name;
-//        shopRep.save(this);
         itemMap = new HashMap<> ( );
         shopManagers = new ConcurrentHashMap<> ( );
         shopOwners = new ConcurrentHashMap<> ( );
@@ -78,12 +74,13 @@ public class Shop implements IHistory {
         rnk = 1;
         rnkers = 0;
         this.shopFounder = founder;
+        discountPolicy = new DiscountPolicy ();
+        purchasePolicy = new PurchasePolicy ();
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
         shopOwners.put(founder.getName(), shopOwnerAppointment);
         founder.addAppointmentToMe(shopOwnerAppointment);
-        discountPolicy = new DiscountPolicy ();
-        purchasePolicy = new PurchasePolicy ();
         shopRep.save(this);
+        shopOwnerAppointment.setRelatedShop(this);
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
@@ -511,6 +508,7 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         }
         ShopOwnerAppointment appointment = new ShopOwnerAppointment ( appointedShopOwner, shopOwner, this, false );
+        appointment.setRelatedShop(this);
         addEmployee ( appointment );
         shopRep.save(this);
     }

@@ -31,7 +31,8 @@ Appointment {
     private Member appointed;       //  the actual appointed member
     @OneToOne (cascade = CascadeType.MERGE)
     private Member superVisor;      //  member appointedMe
-    @OneToOne (cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    @OneToOne (cascade = {CascadeType.MERGE})
+    @Transient
     private Shop relatedShop;
     //TODO - needs to be not an object? :O
     @Transient //todo dal
