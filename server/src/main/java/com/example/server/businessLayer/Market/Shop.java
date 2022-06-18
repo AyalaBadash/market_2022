@@ -31,7 +31,11 @@ public class Shop implements IHistory {
     private String shopName;
     @Transient
     private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
-    @Transient //TODO
+    @ManyToMany(cascade = {CascadeType.REMOVE})
+    @JoinTable (name = "shopManagers",
+            joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
+            inverseJoinColumns = {@JoinColumn(name = "appointment", referencedColumnName = "id")})
+    @MapKeyColumn (name = "member_name")
     private Map<String, Appointment> shopManagers;     //<name, appointment>
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable (name = "shopOwners",
@@ -98,7 +102,8 @@ public class Shop implements IHistory {
             DebugLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
-        this.shopManagers.put ( managerName, appointment );
+//        this.shopManagers.put ( managerName, appointment );
+        shopManagers.get(managerName).setPermissions(appointment.getPermissions());
         shopRep.save(this);
     }
 
@@ -520,7 +525,9 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
         }
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) ))
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
-        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>(){{ add(new PurchaseHistoryPermission());}});
+        ShopManagerAppointment appointment = new ShopManagerAppointment
+                ( appointed, shopOwner, this ,
+                        new ArrayList<>(){{ add(new PurchaseHistoryPermission());}}, false);
         addEmployee ( appointment );
         shopRep.save(this);
     }

@@ -17,10 +17,9 @@ public class Member implements IHistory {
     private String name;
     @OneToOne (cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private ShoppingCart myCart;
-    @Transient //todo
+    @ManyToMany (cascade = {CascadeType.MERGE})
     private List<Appointment> appointedByMe;
-//    @ManyToMany (cascade = {CascadeType.MERGE})
-    @Transient
+    @ManyToMany (cascade = {CascadeType.MERGE})
     private List<Appointment> myAppointments;
     @OneToMany(targetEntity =  AcquisitionHistory.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_name", referencedColumnName = "name")

@@ -22,11 +22,14 @@ public class ShopManagerAppointment extends Appointment {
         shopManagerAppointmentRep.save(this);
     }
 
-    public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
+    public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop
+            , List<IPermission> permissions, boolean fromBusiness) {
         super(appointed, superVisor, relatedShop, permissions);
-        shopManagerAppointmentRep.save(this);
+        if (!fromBusiness)
+            shopManagerAppointmentRep.save(this);
     }
-    public ShopManagerAppointment(){}
+    public ShopManagerAppointment(){
+    }
 
     @Override
     public boolean isManager() {
