@@ -194,5 +194,4 @@ public class Bid {
     public void setMember(boolean member) {
         isMember = member;
     }
-
 }

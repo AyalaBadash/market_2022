@@ -118,11 +118,11 @@ public class RobustnessTests {
             double buyingAmount = itemAmount;
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            marketService.setPaymentService(WSEPPaymentServiceAdapter.getinstance(),userName);
             assert true;
-            marketService.setPaymentService(WSEPPaymentServiceAdapter.getinstance(),userName);
         } catch (Exception e) {
-            assert false;
             marketService.setPaymentService(WSEPPaymentServiceAdapter.getinstance(),userName);
+            assert false;
         }
     }
     @Test
@@ -138,11 +138,11 @@ public class RobustnessTests {
             double buyingAmount = itemAmount;
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            marketService.setSupplyService(WSEPSupplyServiceAdapter.getInstance(),userName);
             assert true;
-            marketService.setSupplyService(WSEPSupplyServiceAdapter.getInstance(),userName);
         } catch (Exception e) {
-            assert false;
             marketService.setSupplyService(WSEPSupplyServiceAdapter.getInstance(),userName);
+            assert false;
         }
     }
 
@@ -178,11 +178,11 @@ public class RobustnessTests {
             double buyingAmount = itemAmount;
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            marketService.setPublishService(TextDispatcher.getInstance(),userName);
             assert true;
-            marketService.setPublishService(TextDispatcher.getInstance(),userName);
         } catch (Exception e) {
-            assert false;
             marketService.setPublishService(TextDispatcher.getInstance(),userName);
+            assert false;
         }
     }
     @Test
@@ -190,8 +190,11 @@ public class RobustnessTests {
     public void initTest() {
         try {
             MarketConfig.DATA_FILE_NAME="noFile.txt";
-            assert marketService.isServerInit().isErrorOccurred();
+            boolean res=marketService.isServerInit().isErrorOccurred();
+            MarketConfig.DATA_FILE_NAME="Data.txt";
+            assert res;
         } catch (Exception e) {
+            MarketConfig.DATA_FILE_NAME="Data.txt";
             assert false;
         }
     }

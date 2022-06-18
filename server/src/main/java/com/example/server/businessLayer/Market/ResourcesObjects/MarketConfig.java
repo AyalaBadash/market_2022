@@ -10,8 +10,9 @@ public class MarketConfig {
     public static String WSEP_ADDRESS="https://cs-bgu-wsep.herokuapp.com/";
     public static String TEXT_PUBLISHER="Text";
     public static String NOTIFICATIONS_PUBLISHER="Notifications";
-    public static String SERVICES_FILE_NAME="config.txt";
+    public static String SERVICES_FILE_NAME="Config.txt";
     public static String DATA_FILE_NAME="Data.txt";
-    public static boolean IS_MAC=false;
-
+    public static boolean IS_MAC=true;
+    public static String DATA_SOURCE_FILE_NAME ="DataSourceConfig.txt";
+    public static String MISS_DATA_SOURCE_FILE_NAME ="missDataSourceConfig.txt";
 }
