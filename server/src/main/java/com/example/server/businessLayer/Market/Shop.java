@@ -67,7 +67,7 @@ public class Shop implements IHistory {
 
     public Shop(String name,Member founder) {
         this.shopName = name;
-        shopRep.save(this);
+//        shopRep.save(this);
         itemMap = new HashMap<> ( );
         shopManagers = new ConcurrentHashMap<> ( );
         shopOwners = new ConcurrentHashMap<> ( );

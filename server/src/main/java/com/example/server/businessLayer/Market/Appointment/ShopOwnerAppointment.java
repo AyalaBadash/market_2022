@@ -55,4 +55,8 @@ public class ShopOwnerAppointment extends Appointment {
     public static void setShopOwnerAppointmentRep(ShopOwnerAppointmentRep shopOwnerAppointmentRep) {
         ShopOwnerAppointment.shopOwnerAppointmentRep = shopOwnerAppointmentRep;
     }
+
+    public static ShopOwnerAppointmentRep getShopOwnerAppointmentRep() {
+        return shopOwnerAppointmentRep;
+    }
 }

@@ -21,16 +21,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
         name = "appointment_type",
         discriminatorType = DiscriminatorType.STRING
 )
+@SequenceGenerator(name="seq", initialValue=1, allocationSize=100)
 public abstract class
 Appointment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
     private Long id;
     @OneToOne (cascade = CascadeType.MERGE)
     private Member appointed;       //  the actual appointed member
     @OneToOne (cascade = CascadeType.MERGE)
     private Member superVisor;      //  member appointedMe
-    @OneToOne (cascade = CascadeType.MERGE)
+    @OneToOne (cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Shop relatedShop;
     //TODO - needs to be not an object? :O
     @Transient //todo dal
