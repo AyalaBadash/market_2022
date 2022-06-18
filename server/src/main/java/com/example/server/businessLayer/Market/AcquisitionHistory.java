@@ -10,65 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Entity
-class ItemAcquisitionHistory {
-    @Id
-    @GeneratedValue
-    private long id;
-    String shopName;
-    String itemName;
-    double amount;
-    double totalPriceForItem;
-
-    public ItemAcquisitionHistory(String shopName, String itemName, double amount, double totalPriceForItem) {
-        this.shopName = shopName;
-        this.itemName = itemName;
-        this.amount = amount;
-        this.totalPriceForItem = totalPriceForItem;
-    }
-
-    public ItemAcquisitionHistory(){}
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public void setTotalPriceForItem(double totalPriceForItem) {
-        this.totalPriceForItem = totalPriceForItem;
-    }
-
-    public String getShopName() {
-        return shopName;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public double getTotalPriceForItem() {
-        return totalPriceForItem;
-    }
-
-    @Override
-    public String toString() {
-        return "You bought : "+amount + " "+ itemName+" in the shop : "+ shopName+". Total price for this item:"+totalPriceForItem+"\n";
-    }
-    public DalItemAcquisitionHistory ToDalObject (){
-        return new DalItemAcquisitionHistory(this.shopName,this.itemName,this.amount,this.totalPriceForItem);
-    }
-}
 //--------------------------------------------------------------------------------------------------------------------
 @Entity
 public class AcquisitionHistory {
@@ -79,7 +20,7 @@ public class AcquisitionHistory {
     private double totalPriceBeforeDiscount;
     private double discount;
     private double totalPriceAfterDiscount;
-    @OneToMany(targetEntity =  ItemAcquisitionHistory.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity =  ItemAcquisitionHistory.class, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "AcquisitionHistory_id", referencedColumnName = "id")
     private List<ItemAcquisitionHistory> itemAcquisitionHistories;
     private static AcquisitionHistoryRep acquisitionHistoryRep;

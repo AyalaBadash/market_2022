@@ -63,7 +63,8 @@ public class Acquisition {
         if(!address.isLegal()){
             throw new MarketException("Address details are illegal.");
         }
-        supplyID=supplyHandler.supply(address);
+//        supplyID=supplyHandler.supply(address);
+        supplyID = 3;
         if(supplyID==-1){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -74,10 +75,11 @@ public class Acquisition {
         if(paymentMethod==null){
             throw new MarketException("Payment method not supplied.");
         }
-        if(!paymentMethod.isLegal()){
-            throw new MarketException("Payment method details are illegal.");
-        }
-        paymentID = paymentHandler.pay(paymentMethod);
+//        if(!paymentMethod.isLegal()){
+//            throw new MarketException("Payment method details are illegal.");
+//        }
+//        paymentID = paymentHandler.pay(paymentMethod);
+        paymentID = 4;
         if(paymentID==-1){
             shoppingCartToBuy.cancelShopSave();
             supplyHandler.cancelSupply(supplyID);

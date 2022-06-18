@@ -7,6 +7,7 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.text.DecimalFormat;
@@ -15,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 public class UserController {
     private Map<String, Member> members;
 //    @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})

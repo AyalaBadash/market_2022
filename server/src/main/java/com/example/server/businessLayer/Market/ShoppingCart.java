@@ -1,15 +1,16 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-//import com.example.server.dataLayer.entities.DalShop;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.entities.DalShoppingCart;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.dataLayer.repositories.ShoppingBasketRep;
 import com.example.server.dataLayer.repositories.ShoppingCartRep;
+import org.hibernate.action.internal.OrphanRemovalAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ShoppingCart implements IHistory {
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
     @ManyToMany (cascade = CascadeType.ALL)
     @JoinTable (name = "baskets_in_cart", joinColumns = {@JoinColumn(name = "shopping_cart_id",
         referencedColumnName = "id")},
@@ -104,8 +105,15 @@ public class ShoppingCart implements IHistory {
     }
 
     public void clear() {
-        this.cart.clear();
+//        this.cart.clear();
+        Collection<ShoppingBasket> baskets = new ArrayList<>();
+        for (Map.Entry <Shop, ShoppingBasket> entry: cart.entrySet()){
+            ShoppingBasket basket = entry.getValue();
+            baskets.add(basket);
+        }
+        cart.clear();
         shoppingCartRep.save(this);
+        ShoppingBasket.getShoppingBasketRep().deleteAll(baskets);
     }
 
     public void addItem(Shop shop, Item item, double amount) throws MarketException {
@@ -182,7 +190,7 @@ public class ShoppingCart implements IHistory {
         shoppingCartRep = scRepository;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

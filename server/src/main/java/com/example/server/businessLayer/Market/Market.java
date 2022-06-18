@@ -84,6 +84,8 @@ public class Market {
     @Autowired
     private ShopManagerAppointmentRep shopManagerAppointmentRep;
     @Autowired ShopOwnerAppointmentRep shopOwnerAppointmentRep;
+    @Autowired private ItemAckHistRep itemAckHistRep;
+    @Autowired private AckHisRep ackHisRep;
     //constructor
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -148,6 +150,8 @@ public class Market {
         LoginCard.setLoginCardRep(loginCardRep);
         ShopManagerAppointment.setShopManagerAppointmentRep(shopManagerAppointmentRep);
         ShopOwnerAppointment.setShopOwnerAppointmentRep(shopOwnerAppointmentRep);
+        ItemAcquisitionHistory.setItemAckHistRep(itemAckHistRep);
+
     }
     /**
      * init system from default files. With given system manager details.

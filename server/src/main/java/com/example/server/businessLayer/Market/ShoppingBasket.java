@@ -144,4 +144,8 @@ public class ShoppingBasket implements IHistory , Serializable {
     public void setBasket_id(long id) {
         this.basket_id = id;
     }
+
+    public static ShoppingBasketRep getShoppingBasketRep() {
+        return shoppingBasketRep;
+    }
 }

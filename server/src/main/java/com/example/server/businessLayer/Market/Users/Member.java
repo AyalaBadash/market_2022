@@ -21,8 +21,10 @@ public class Member implements IHistory {
     private List<Appointment> appointedByMe;
     @ManyToMany (cascade = {CascadeType.MERGE})
     private List<Appointment> myAppointments;
-    @OneToMany(targetEntity =  AcquisitionHistory.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity =  AcquisitionHistory.class, cascade =
+            {CascadeType.REMOVE})
     @JoinColumn(name = "member_name", referencedColumnName = "name")
+    @Transient
     private List<AcquisitionHistory> purchaseHistory;
     private static MemberRep memberRep;
 
@@ -109,7 +111,7 @@ public class Member implements IHistory {
 
     public void savePurchase(AcquisitionHistory acquisitionHistory) {
         purchaseHistory.add (acquisitionHistory);
-        memberRep.save(this);
+//        memberRep.save(this);
     }
 
     @Override
