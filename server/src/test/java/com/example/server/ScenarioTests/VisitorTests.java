@@ -38,7 +38,7 @@ public class VisitorTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null) {
-                market.firstInitMarket(userName, password,true);
+                market.firstInitMarket(userName, password);
             }
 
             // shop manager register

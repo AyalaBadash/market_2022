@@ -2,13 +2,13 @@ package com.example.server.businessLayer.Market.Appointment.Permissions;
 
 import com.example.server.businessLayer.Market.Shop;
 
-public class PurchaseHistoryPermission extends IPermission<String> {
+public class PurchaseHistoryPermission extends IPermission<StringBuilder> {
 
     public PurchaseHistoryPermission() { this.name = "PurchaseHistoryPermission"; }
 
     @Override
-    public String apply(Shop relatedShop) {
-        return null;
+    public StringBuilder apply(Shop relatedShop) {
+        return relatedShop.getReview ();
     }
 
     @Override

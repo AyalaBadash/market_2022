@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentServiceProxy {
+public class PaymentServiceProxy implements PaymentService{
 
     private final boolean testRequest;
     private final String okayMessage="OK";
@@ -39,9 +39,7 @@ public class PaymentServiceProxy {
      * @return the transaction id.
      */
     public int pay(PaymentMethod method) throws  Exception {
-        if(testRequest){
-            return 10000;
-        }
+
         try {
             int ret=0;
         if(handshake().equals(okayMessage)){
@@ -72,17 +70,15 @@ public class PaymentServiceProxy {
      * @return 1 if succeed and -1 if not.
      */
     public int cancelPay(int transactionId) throws Exception {
-        if(testRequest){
-            return 10000;
-        }
+
         try{
             if(transactionId==-1){
                 return -1;
             }
             List<NameValuePair> request= transactionToString(transactionId);
-            int ret=  paymentService.cancelPayment(request);
-            if (ret>100000 | ret<10000){
-                throw new MarketException("Error1");
+            int ret=  this.cancelPayment(request);
+            if (ret==-1){
+                throw new MarketException("Error2");
             }
             return ret;
         }
@@ -99,7 +95,7 @@ public class PaymentServiceProxy {
     private String handshake() throws Exception {
 
         try {
-            String ret= paymentService.handShake(handshakeString());
+            String ret= this.handShake(handshakeString());
             if (!ret.equals("OK")){
                 throw new MarketException("Error0");
             }
@@ -125,7 +121,7 @@ public class PaymentServiceProxy {
             throw new MarketException("Credit card details are illegal.");
         }
         List<NameValuePair> request= CreditCardToString(card );
-        return paymentService.pay(request);
+        return this.pay(request);
     }
 
     /**
@@ -194,5 +190,25 @@ public class PaymentServiceProxy {
      */
     public void setService(PaymentService paymentService1) {
         this.paymentService=paymentService1;
+    }
+
+    @Override
+    public int pay(List<NameValuePair> request) throws MarketException, IOException {
+        return paymentService.pay(request);
+    }
+
+    @Override
+    public int cancelPayment(List<NameValuePair> request) throws MarketException, IOException {
+        return paymentService.cancelPayment(request);
+    }
+
+    @Override
+    public String handShake(List<NameValuePair> request) throws Exception {
+        return paymentService.handShake(request);
+    }
+
+    @Override
+    public void setAddress(String address) {
+        this.paymentService.setAddress(address);
     }
 }

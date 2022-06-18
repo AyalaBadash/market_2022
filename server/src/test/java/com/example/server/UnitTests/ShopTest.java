@@ -147,7 +147,7 @@ public class ShopTest {
     public void deleteItemTest(){
         try {
             Assertions.assertEquals(1,shop.getItemMap().size());
-            shop.deleteItem(item);
+            shop.deleteItem(item, shop.getShopOwners ().values ().stream ().toList ().get ( 0 ).getAppointed ().getName ());
             Assertions.assertEquals(0,shop.getItemMap().size());
 
         } catch (Exception e) {
@@ -329,7 +329,7 @@ public class ShopTest {
         try {
             NotificationHandler nh= NotificationHandler.getInstance();
             nh.setService(textDispatcher);
-            Assertions.assertEquals(35.0,shop.buyBasket(nh,basket, memberFounder.getName(),true));
+            Assertions.assertEquals(35.0,shop.buyBasket(nh,basket, memberFounder.getName()));
         } catch (MarketException e) {
             System.out.println(e.getMessage());
             assert false;

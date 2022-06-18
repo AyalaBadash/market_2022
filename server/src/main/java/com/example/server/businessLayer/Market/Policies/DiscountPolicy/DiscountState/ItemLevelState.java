@@ -23,7 +23,7 @@ public class ItemLevelState extends DiscountLevelState{
         if (items.containsKey(item.getID()))
         {
             Double amount = items.get(item.getID());
-            itemDiscount = amount * (percentageOfDiscount/100);
+            itemDiscount = amount * item.getPrice() * (percentageOfDiscount/100);
 
         }
         return price - itemDiscount;

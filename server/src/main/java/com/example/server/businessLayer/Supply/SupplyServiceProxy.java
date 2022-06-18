@@ -38,10 +38,8 @@ public class SupplyServiceProxy implements SupplyService {
         if(!address.isLegal()){
             throw new MarketException("Address details are illegal");
         }
-        if (testRequest) {
-            return 10000;
-        }
-        int ret= supplyService.supply(address);
+
+        int ret= this.supply(addressToString(address));
         if (ret>100000 | ret<10000){
             throw new MarketException("Error1");
         }
@@ -56,14 +54,12 @@ public class SupplyServiceProxy implements SupplyService {
      * @return
      */
     public int cancelSupply(int transactionId) throws Exception {
-        if (testRequest) {
-            return 10000;
-        }
+
         if (transactionId == -1) {
             return -1;
         }
-        int ret= supplyService.cancelSupply(transactionId);
-        if (ret>100000 | ret<10000){
+        int ret= this.cancelSupply(transactionToString(transactionId));
+        if (ret==-1){
             throw new MarketException("Error1");
         }
         return ret;
@@ -86,6 +82,21 @@ public class SupplyServiceProxy implements SupplyService {
         };
 
         return params;
+    }
+
+    @Override
+    public int supply(List<NameValuePair> request) throws MarketException, IOException {
+        return supplyService.supply(request);
+    }
+
+    @Override
+    public int cancelSupply(List<NameValuePair> request) throws Exception {
+        return supplyService.cancelSupply(request);
+    }
+
+    @Override
+    public void setAddress(String address) {
+        this.supplyService.setAddress(address);
     }
 
     /**

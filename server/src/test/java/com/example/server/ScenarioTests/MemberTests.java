@@ -1,5 +1,6 @@
 package com.example.server.ScenarioTests;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
@@ -41,7 +42,7 @@ public class MemberTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null) {
-                market.firstInitMarket(userName, password,true);
+                market.firstInitMarket(userName, password);
             }
 
             // shop manager register

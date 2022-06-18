@@ -47,31 +47,7 @@ public class MarketService {
 
     public Response firstInitMarket(String userName, String password) {
         try {
-            market.firstInitMarket(userName, password, false);
-            return new Response();
-        } catch (MarketException e) {
-            return new Response(e.getMessage());
-        } catch (Exception e) {
-            ErrorLog.getInstance().Log(e.getMessage());
-            return new Response(e.getMessage());
-        }
-    }
-
-    public Response firstInitMarket(String userName, String password, String services, String data) {
-        try {
-            market.firstInitMarket(userName, password, services, data, false);
-            return new Response();
-        } catch (MarketException e) {
-            return new Response(e.getMessage());
-        } catch (Exception e) {
-            ErrorLog.getInstance().Log(e.getMessage());
-            return new Response(e.getMessage());
-        }
-    }
-
-    public Response firstInitMarket(boolean b) {
-        try {
-            market.firstInitMarket(b);
+            market.firstInitMarket(userName, password);
             return new Response();
         } catch (MarketException e) {
             return new Response(e.getMessage());
@@ -496,19 +472,29 @@ public class MarketService {
             if (market.setPaymentService(o, managerName)) {
                 return new Response();
             } else {
-                return new Response("fAILED TO SET SERVICE");
+                return new Response("Failed to set service");
             }
         } catch (Exception e) {
             return new Response(e.getMessage());
         }
     }
-
+    public Response setPaymentServiceAddress(String o, String managerName) {
+        try {
+            if (market.setPaymentServiceAddress(o, managerName)) {
+                return new Response();
+            } else {
+                return new Response("Failed to set service");
+            }
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+    }
     public Response setSupplyService(SupplyService o, String managerName) {
         try {
             if (market.setSupplyService(o, managerName)) {
                 return new Response();
             } else {
-                return new Response("fAILED TO SET SERVICE");
+                return new Response("Failed to set service");
             }
         } catch (Exception e) {
             return new Response(e.getMessage());
@@ -520,7 +506,7 @@ public class MarketService {
             if (market.setPublishService(o, managerName)) {
                 return new Response();
             } else {
-                return new Response("fAILED TO SET SERVICE");
+                return new Response("Failed to set service");
             }
         } catch (Exception e) {
             return new Response(e.getMessage());
@@ -554,4 +540,48 @@ public class MarketService {
     }
 
 
+    public Response addABid(String visitorName, String shopName, Integer itemId, Double price, Double amount) {
+        try {
+            market.addABid(visitorName, shopName, itemId, price, amount);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response approveABid(String approves, String shopName, String askedBy, Integer itemId) {
+        try {
+            market.approveABid(approves, shopName, askedBy, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response suggestNewOfferToBid(String suggester, String shopName, String askedBy, int itemId, double newPrice) {
+        try {
+            market.suggestNewOfferToBid(suggester, shopName, askedBy, itemId, newPrice);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response rejectABid(String opposed, String shopName, String buyer, int itemId) {
+        try {
+            market.rejectABid(opposed, shopName,buyer, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
+
+    public Response cancelABid(String shopName, String buyer, int itemId) {
+        try {
+            market.cancelABid (shopName, buyer, itemId);
+            return new Response ();
+        }catch (Exception e){
+            return new Response ( e.getMessage () );
+        }
+    }
 }
