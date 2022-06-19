@@ -83,7 +83,8 @@ public class Market {
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
-                instance.systemManagerName = userName;
+                if(instance.systemManagerName == null)
+                    instance.systemManagerName = userName;
             }
             checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
@@ -173,7 +174,7 @@ public class Market {
     }
 
     public void notifyManager(RealTimeNotifications notification){
-        if(systemManagerName!=null&& ( !systemManagerName.isEmpty()& userController.isLoggedIn(systemManagerName))) {
+        if(systemManagerName != null && ( !systemManagerName.isEmpty() & userController.isLoggedIn(systemManagerName))) {
             NotificationHandler handler = NotificationHandler.getInstance();
             //The is member is false because the manager received only real time notifications.
             handler.sendNotification(systemManagerName, notification, false);
@@ -741,7 +742,7 @@ public class Market {
     }
 
     //TODO delete
-    public void reset(String systemManagerPass, List<String> questions, List<String> answers) throws MarketException {
+    public void reset(String systemManagerPass, List<String> questions, List<String> answers, boolean includeServices) throws MarketException {
         instance.shops = new HashMap<>();
         instance.allItemsInMarketToShop = new HashMap<>();
         instance.itemByName = new HashMap<>();
@@ -749,16 +750,16 @@ public class Market {
         Security.getInstance().reset();
         userController.reset();
         ClosedShopsHistory.getInstance().reset();
+        if(includeServices){
+            paymentServiceProxy = null;
+            supplyServiceProxy = null;
+        }
         userController.register(systemManagerName);
         Security.getInstance().addNewMember(systemManagerName, systemManagerPass, questions, answers);
     }
 
     public String getSystemManagerName() {
         return systemManagerName;
-    }
-
-    public void setSystemManagerName(String systemManagerName) {
-        this.systemManagerName = systemManagerName;
     }
 
     public void setShops(Map<String, Shop> shops) {
@@ -924,7 +925,6 @@ public class Market {
             String data = myReader.nextLine();
             String[] vals = data.split("::");
             setData(vals);
-
         }
 
     }
@@ -1000,7 +1000,8 @@ public class Market {
     }
 
     private void initManager(String val, String val1) throws MarketException {
-
+        if(instance.systemManagerName != null)
+            throw new MarketException ( "manager already exists" );
         register(val, val1);
         instance.systemManagerName = val;
     }

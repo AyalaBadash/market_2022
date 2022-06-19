@@ -11,6 +11,7 @@ import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
+import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
@@ -22,25 +23,24 @@ import java.util.List;
 public class AcquisitionTests {
 
 
-    Market market;
-    String userName = "userTest";
-    String password = "password";
-    String shopManagerName = "shaked";
-    String shopManagerPassword = "shaked1234";
-    String shopName = "kolbo";
-    Double productAmount;
-    Double productPrice;
-    CreditCard creditCard;
-    Address address;
+    static Market market;
+    static String userName = "userTest";
+    static String password = "password";
+    static String shopManagerName = "shakedAcquisitionTests";
+    static String shopManagerPassword = "password";
+    static String shopName = "kolboAcquisitionTests";
+    static Double productAmount;
+    static Double productPrice;
+    static CreditCard creditCard;
+    static Address address;
 
 
     @BeforeAll
-    public void setUp() {
+    public static void setUp() {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null) {
                 market.firstInitMarket(userName, password);
-
             }
 
             // shop manager register
@@ -56,11 +56,12 @@ public class AcquisitionTests {
             keywords.add("in sale");
             market.addItemToShop(shopManagerName, "milk", productPrice, Item.Category.general,
                     "soy",keywords , productAmount,shopName);
-            market.addItemToShop(shopManagerName, "chocolate", productPrice, Item.Category.general,
+            market.addItemToShop(shopManagerName, "milk chocolate", productPrice, Item.Category.general,
                     "soy",keywords , productAmount,shopName);
             creditCard = new CreditCard("1234567890", "5","2024", "555","Ido livne","204534839");            address = new Address("Bar Damri","Ben Gurion 3","Tel Aviv", "Israel", "1234");
 
-        } catch (Exception Ignored) {
+        } catch (Exception e) {
+            System.out.println (e.getMessage () );
         }
     }
 
@@ -71,7 +72,7 @@ public class AcquisitionTests {
         try {
             Visitor visitor = market.guestLogin();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
-            List<Item> res = market.getItemByName("chocolate");
+            List<Item> res = market.getItemByName("milk chocolate");
             Item chocolate = res.get(0);
             Double itemAmount = shop.getItemCurrentAmount(chocolate);
             double buyingAmount = itemAmount;
@@ -111,7 +112,7 @@ public class AcquisitionTests {
             Visitor visitor = market.guestLogin();
             Visitor visitor2 = market.guestLogin ();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
-            List<Item> res = market.getItemByName("chocolate");
+            List<Item> res = market.getItemByName("milk chocolate");
             Item chocolate = res.get(0);
             market.setItemCurrentAmount(shopManagerName,chocolate,10,shopName);
             Item toiletPaper = new Item(12345,"toilet paper",10,"some info", Item.Category.general,new ArrayList<>());
@@ -140,7 +141,7 @@ public class AcquisitionTests {
         try {
             Visitor visitor = market.guestLogin();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
-            List<Item> res = market.getItemByName("chocolate");
+            List<Item> res = market.getItemByName("milk chocolate");
             Item chocolate = res.get(0);
             market.setItemCurrentAmount(shopManagerName,chocolate,10,shopName);
             Double itemAmount = shop.getItemCurrentAmount(chocolate);
@@ -163,7 +164,7 @@ public class AcquisitionTests {
         try {
             Visitor visitor = market.guestLogin();
             Shop shop = market.getShopInfo(shopManagerName, shopName);
-            List<Item> res = market.getItemByName("chocolate");
+            List<Item> res = market.getItemByName("milk chocolate");
             Item chocolate = res.get(0);
             market.setItemCurrentAmount(shopManagerName,chocolate,10,shopName);
             Double itemAmount = shop.getItemCurrentAmount(chocolate);
@@ -274,9 +275,11 @@ public class AcquisitionTests {
             market.setSupplyService(null,userName);
             try {
                 market.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+                market.setSupplyService( WSEPSupplyServiceAdapter.getInstance(),userName);
                 assert false;
             }catch (MarketException e){
                 Assertions.assertEquals("The supply service is not available right now.",e.getMessage());
+                market.setSupplyService( WSEPSupplyServiceAdapter.getInstance(),userName);
             }
         } catch (Exception e) {
             assert true;

@@ -344,7 +344,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
     public void closeShopTest() {
         try {
             VisitorFacade visitor = guestLogin();
-            String password = "9may";
+            String password = "password";
             String name = "razBam";
             register(name, password);
             List<String> questions = memberLogin(name, password).getValue();
@@ -535,7 +535,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             // setting new shop
             VisitorFacade visitor = guestLogin();
             String memberName = "idoPolicyTest";
-            String password = "1";
+            String password = "password";
             register(memberName, password);
             ResponseT<List<String>> questions = memberLogin(memberName, password);
             MemberFacade member = validateSecurityQuestions(memberName, new ArrayList<>(), visitor.getName()).getValue();

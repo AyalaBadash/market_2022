@@ -47,7 +47,7 @@ public class MarketUnitTest {
     @BeforeEach
     public void marketUnitTestInit(){
         try {
-            Market.getInstance().reset("password", null, null);
+            Market.getInstance().reset("password", null, null, false);
         } catch (MarketException e){}
         List<String> keywords = new ArrayList<>();
         keywords.add("dairy");
@@ -184,7 +184,7 @@ public class MarketUnitTest {
         List<String> keywords = new ArrayList<>();
         keywords.add("fruit");
         try {
-            Item item1 = new Item(2,"apple",2.5,"red", Item.Category.fruit,
+            Item item1 = new Item(2,"strawberry",2.5,"red", Item.Category.fruit,
             keywords);
 //            market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),"",
 //                    item.getKeywords(),5.0,"razShop");
@@ -214,7 +214,7 @@ public class MarketUnitTest {
         keywords.add("fruit");
         Item item1 = null;
         try {
-            item1 = market.addItemToShopItem("raz","apple",2.5, Item.Category.fruit, "red apple",
+            item1 = market.addItemToShopItem("raz","strawberry",2.5, Item.Category.fruit, "red strawberry",
                     keywords,5.0,"razShop");
             market.openNewShop("raz","razShop2");
             Item item2 = market.addItemToShopItem("raz",item.getName(),item.getPrice(),item.getCategory(),"On shop 2 we have info",item.getKeywords(),3.0,"razShop2");
@@ -225,7 +225,7 @@ public class MarketUnitTest {
         }
         List<Item> res = market.getItemByCategory(item1.getCategory());
         Assertions.assertEquals(1,res.size());
-        Assertions.assertEquals("red apple",res.get(0).getInfo());
+        Assertions.assertEquals("red strawberry",res.get(0).getInfo());
         System.out.println("End of test");
         System.out.println("-------------------------------------------------------------");
     }

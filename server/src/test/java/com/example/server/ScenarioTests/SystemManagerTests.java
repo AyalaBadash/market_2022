@@ -17,8 +17,8 @@ public class SystemManagerTests {
 
 
     static Market market;
-    static String managerName = "userTest";
-    static String managerpassword = "passTest";
+    static String managerName = "u1";
+    static String managerpassword = "password";
     static PaymentServiceProxy paymentService2 = new PaymentServiceProxy();
 
 
@@ -42,7 +42,11 @@ public class SystemManagerTests {
     @DisplayName("system manager get purchases history")
     public void PurchaseHistory() {
         try {
-            loginManager(managerName,managerpassword);
+            try {
+                loginManager(managerName,managerpassword);
+            }catch (Exception e){
+                System.out.println (e.getMessage () );
+            }
             String str= new String(market.getAllSystemPurchaseHistory(managerName));
             Assertions.assertNotNull(str);
             try{
@@ -74,7 +78,7 @@ public class SystemManagerTests {
     @DisplayName("system manager get purchases history bad case- not system manager")
     public void PurchaseHistoryFail2() {
         String memberName = "bar1";
-        String memberPassword = "pass1";
+        String memberPassword = "password";
         try {
             registerVisitor(memberName,memberPassword);
             loginManager(managerName,managerpassword);
@@ -129,7 +133,7 @@ public class SystemManagerTests {
     public void changeServicesFail2() {
         try {
             String memberName = "bar1";
-            String memberPassword = "pass1";
+            String memberPassword = "password";
             loginManager(managerName,managerpassword);
             market.setPaymentServiceProxy(paymentService2, "ayala" ,false);
             assert  false;

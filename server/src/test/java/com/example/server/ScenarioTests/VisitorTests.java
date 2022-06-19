@@ -23,9 +23,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class VisitorTests {
     Market market;
     String userName = "userTest";
-    String password = "passTest";
+    String password = "password";
     String shopManagerName = "shaked";
-    String shopManagerPassword = "shaked1234";
+    String shopManagerPassword = "password";
     String shopName = "kolbo";
     Double productAmount;
     Double productPrice;

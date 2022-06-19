@@ -20,9 +20,9 @@ import java.util.List;
 public class AcceptanceTests {
 
     static String systemManagerName = "ido";
-    static String systemManagerPassword = "1234Ido";
+    static String systemManagerPassword = "password";
     static String shopOwnerName = "shaked";
-    static String shopOwnerPassword = "shaked1234";
+    static String shopOwnerPassword = "password";
     static String shopName = "Shufersal";
     static Double productAmount;
     static Double productPrice;
