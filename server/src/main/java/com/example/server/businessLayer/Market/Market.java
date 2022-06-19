@@ -23,6 +23,7 @@ import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.http.NameValuePair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1149,6 +1150,35 @@ public class Market {
         return shop.getDiscountTypes();
     }
 
+    public boolean approveAppointment(String shopName,String appointedName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        return shop.approveAppointment(appointedName,ownerName);
+    }
+    public void rejectAppointment(String shopName,String appointedName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        shop.rejectAppointment(appointedName,ownerName);
+    }
+    public List<String> getMyPendingAppointmentsToApprove(String shopName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        return shop.getAllPendingForOwner(ownerName);
+    }
+
+
     /**
      * check that all services are initialized from the config file.
      *
@@ -1274,4 +1304,5 @@ public class Market {
             shop.updateBidInLoggingOut(visitorName);
         }
     }
+
 }
