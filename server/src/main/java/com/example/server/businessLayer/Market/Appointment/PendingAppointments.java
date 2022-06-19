@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market.Appointment;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
 import java.util.ArrayList;
@@ -59,7 +60,12 @@ public class PendingAppointments {
         return res;
     }
 
-    public void approve(String appointedName, String ownerName) throws MarketException {
+    public boolean approve(String appointedName, String ownerName) throws MarketException {
+        if (!getAppointments().containsKey(appointedName)){
+            DebugLog.getInstance().Log("There is no pending appointment for "+ appointedName);
+            throw new MarketException("There is no pending appointment for "+ appointedName);
+        }
         agreements.get(appointedName).setOwnerApproval(ownerName,true);
+        return (agreements.get(appointedName).isAgreed ());
     }
 }

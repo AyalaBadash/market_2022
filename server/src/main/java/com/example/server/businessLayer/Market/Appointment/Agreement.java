@@ -26,7 +26,6 @@ public class Agreement {
     public void setOwnerApproval(String ownerName , boolean approve) throws MarketException {
         if (!ownersAppointmentApproval.containsKey(ownerName))
             throw new MarketException("You dont have the authority to approve or reject this appointment.");
-
         ownersAppointmentApproval.replace(ownerName,approve);
         updateStatus();
     }
