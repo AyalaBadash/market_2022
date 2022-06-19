@@ -413,6 +413,24 @@ public class Service implements IService {
     public Response cancelABid(@RequestBody CancelABidRequest request) {
         return marketService.cancelABid(request.getShopName (), request.getBuyer (), request.getItemId ());
     }
+    @Override
+    @RequestMapping(value = "/approveAppointment")
+    @CrossOrigin
+    public Response approveAppointment(@RequestBody ApproveAppointmentRequest request) {
+        return marketService.approveAppointment(request.getOwnerName(), request.getAppointedName(), request.getShopName());
+    }
+    @Override
+    @RequestMapping(value = "/rejectAppointment")
+    @CrossOrigin
+    public Response rejectAppointment(@RequestBody ApproveAppointmentRequest request) {
+        return marketService.rejectAppointment(request.getOwnerName(), request.getAppointedName(), request.getShopName());
+    }
+    @Override
+    @RequestMapping(value = "/rejectAppointment")
+    @CrossOrigin
+    public ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request) {
+        return marketService.getMyPendingApps(request.getOwnerName(), request.getShopName());
+    }
 
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);

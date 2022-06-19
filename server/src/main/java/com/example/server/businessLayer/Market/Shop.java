@@ -383,7 +383,7 @@ public class Shop implements IHistory {
             }
     }
 
-
+    //todo mix those two methods.
     public void newAddEmployee(Appointment newAppointment) throws MarketException {
         String employeeName = newAppointment.getAppointed ( ).getName ( );
         Appointment oldAppointment = shopOwners.get ( employeeName );
@@ -403,6 +403,7 @@ public class Shop implements IHistory {
                     owners.add(entry.getKey());
                 }
                 pendingAppointments.addAppointment(employeeName,app,owners);
+                approveAppointment(app.getAppointed().getName(),app.getSuperVisor().getName());
                 //TODO send notification to all shop owners.
             } else if (newAppointment.isOwner ( )) {
                 ShopOwnerAppointment app = (ShopOwnerAppointment) newAppointment;
@@ -412,6 +413,7 @@ public class Shop implements IHistory {
                     owners.add(entry.getKey());
                 }
                 pendingAppointments.addAppointment(employeeName,app,owners);
+                approveAppointment(app.getAppointed().getName(),app.getSuperVisor().getName());
                 //TODO send notification to all shop owners.
             }
             else
