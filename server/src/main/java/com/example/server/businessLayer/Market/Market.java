@@ -393,7 +393,7 @@ public class Market {
             throw new MarketException("Tried to close non existing shop");
         }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
-            shops.remove(shopName);
+            //shops.remove(shopName);
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
@@ -405,6 +405,7 @@ public class Market {
                         .collect(Collectors.toList())), shopName);
             } catch (Exception e) {
             }
+            shopToClose.setClosed(true);
             //
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
         }
@@ -635,6 +636,48 @@ public class Market {
         }
         EventLog.getInstance().Log("Edited the item with id " + oldItem + " in the shop " + shopName);
         shop.changeShopItemInfo(shopOwnerName, info, oldItem);
+    }
+    public void reopenClosedShop(String shopName,String name) throws MarketException {
+        Shop shopToOpen = shops.get(shopName);
+        if (shopToOpen==null)
+        {
+            DebugLog.getInstance().Log("You tried to reopen a shop with invalid name.");
+            throw new MarketException("You tried to reopen a shop with invalid name.");
+        }
+        if (!shopToOpen.isClosed()){
+            DebugLog.getInstance().Log("The shop "+shopName+" is not closed.");
+            throw new MarketException("The shop "+shopName+" is not closed.");
+        }
+        if (!shopToOpen.getShopFounder().getName().equals(name)){
+            DebugLog.getInstance().Log("You are not the shop founder . Only the founder can reopen the shop");
+            throw new MarketException("You are not the shop founder . Only the founder can reopen the shop");
+        }
+        ClosedShopsHistory.getInstance().reopenShop(shopName);
+        shopToOpen.setClosed(false);
+        validateAllEmployees(shopToOpen);
+        //TODO - send notifications for managers and owners.
+    }
+
+    private void validateAllEmployees(Shop shopToOpen) {
+        Map<String,Appointment> employees =  shopToOpen.getShopOwners();
+        for (Map.Entry<String ,Appointment> emp: employees.entrySet())
+        {
+            if (!userController.isMember(emp.getKey()))
+            {
+                employees.remove(emp.getKey());
+            }
+        }
+        shopToOpen.setShopOwners(employees);
+        employees = shopToOpen.getShopManagers();
+        for (Map.Entry<String ,Appointment> emp: employees.entrySet())
+        {
+            if (!userController.isMember(emp.getKey()))
+            {
+                employees.remove(emp.getKey());
+            }
+        }
+        shopToOpen.setShopManagers(employees);
+
     }
 
     public ShoppingCart showShoppingCart(String visitorName) throws MarketException {
