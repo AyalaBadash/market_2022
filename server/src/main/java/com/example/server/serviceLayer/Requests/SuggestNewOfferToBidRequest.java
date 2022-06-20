@@ -1,4 +1,4 @@
-package com.example.server.serviceLayer;
+package com.example.server.serviceLayer.Requests;
 
 public class SuggestNewOfferToBidRequest {
     private String shopName;

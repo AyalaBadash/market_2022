@@ -524,7 +524,14 @@ public class MarketService {
             return new ResponseT(e.getMessage());
         }
     }
-
+    public ResponseT<List<String>> getMyPendingApps(String ownerName, String shopName) {
+        try {
+            List<String> res = market.getMyPendingAppointmentsToApprove(shopName,ownerName);
+            return new ResponseT<>(res);
+        } catch (MarketException e) {
+            return new ResponseT<>(e.getMessage());
+        }
+    }
 
 
     public ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(String visitorName, String shopName) {
@@ -538,6 +545,7 @@ public class MarketService {
             return new ResponseT(e.getMessage());
         }
     }
+
 
 
     public Response addABid(String visitorName, String shopName, Integer itemId, Double price, Double amount) {
@@ -583,5 +591,30 @@ public class MarketService {
         }catch (Exception e){
             return new Response ( e.getMessage () );
         }
+    }
+
+    public Response approveAppointment(String ownerName, String appointedName, String shopName) {
+        try {
+            market.approveAppointment(shopName,appointedName,ownerName);
+            return new Response();
+        } catch (MarketException e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+    public Response rejectAppointment(String ownerName, String appointedName, String shopName) {
+        try {
+            market.rejectAppointment(shopName,appointedName,ownerName);
+            return new Response();
+        } catch (MarketException e) {
+            return new Response(e.getMessage());
+        }
+    }
+
+
+    public ResponseT<Boolean> isSystemManager(String name) {
+        if (market.isSystemManager(name))
+            return new ResponseT<>(true);
+        else return new ResponseT<>(false);
     }
 }

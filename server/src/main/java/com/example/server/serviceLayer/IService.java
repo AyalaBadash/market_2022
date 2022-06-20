@@ -390,4 +390,16 @@ public interface IService {
      * @return
      */
     Response cancelABid(CancelABidRequest request);
+
+
+    Response approveAppointment(@RequestBody ApproveAppointmentRequest request);
+
+
+    Response rejectAppointment(@RequestBody ApproveAppointmentRequest request);
+
+
+
+    ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request);
+
+    ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request);
 }

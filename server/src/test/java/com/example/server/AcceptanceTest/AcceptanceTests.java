@@ -3,7 +3,7 @@ package com.example.server.AcceptanceTest;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.serviceLayer.AppointmentShopManagerRequest;
+import com.example.server.serviceLayer.Requests.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
