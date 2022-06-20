@@ -426,7 +426,7 @@ public class Service implements IService {
         return marketService.rejectAppointment(request.getOwnerName(), request.getAppointedName(), request.getShopName());
     }
     @Override
-    @RequestMapping(value = "/rejectAppointment")
+    @RequestMapping(value = "/getMyPendingApps")
     @CrossOrigin
     public ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request) {
         return marketService.getMyPendingApps(request.getOwnerName(), request.getShopName());

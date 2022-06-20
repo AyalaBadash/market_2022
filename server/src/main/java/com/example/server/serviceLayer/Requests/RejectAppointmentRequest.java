@@ -1,13 +1,13 @@
 package com.example.server.serviceLayer.Requests;
 
-public class rejectAppointmentRequest {
+public class RejectAppointmentRequest {
     private String shopOwnerName;
     private String appointedShopManager;
     private String shopName;
-    public rejectAppointmentRequest() {
+    public RejectAppointmentRequest() {
     }
 
-    public rejectAppointmentRequest(String shopOwnerName, String appointedShopManager, String shopName) {
+    public RejectAppointmentRequest(String shopOwnerName, String appointedShopManager, String shopName) {
         this.shopOwnerName = shopOwnerName;
         this.appointedShopManager = appointedShopManager;
         this.shopName = shopName;
