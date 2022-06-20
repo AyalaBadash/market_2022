@@ -21,7 +21,12 @@ public class PendingAppointments {
         this.agreements = new HashMap<>();
     }
 
-    public void removeAppointment(String appointedName){
+    public void removeAppointment(String appointedName) throws MarketException {
+        if (!appointments.containsKey(appointedName))
+        {
+            DebugLog.getInstance().Log("There is no appointment for "+appointedName+" to remove.");
+            throw new MarketException("There is no appointment for "+appointedName+" to remove.");
+        }
         appointments.remove(appointedName);
         agreements.remove(appointedName);
     }
