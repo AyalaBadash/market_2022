@@ -431,6 +431,12 @@ public class Service implements IService {
     public ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request) {
         return marketService.getMyPendingApps(request.getOwnerName(), request.getShopName());
     }
+    @Override
+    @RequestMapping(value = "/isSystemManager")
+    @CrossOrigin
+    public ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request) {
+        return marketService.isSystemManager(request.getName());
+    }
 
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);

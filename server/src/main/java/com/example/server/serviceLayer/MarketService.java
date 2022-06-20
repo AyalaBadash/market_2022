@@ -612,4 +612,9 @@ public class MarketService {
     }
 
 
+    public ResponseT<Boolean> isSystemManager(String name) {
+        if (market.isSystemManager(name))
+            return new ResponseT<>(true);
+        else return new ResponseT<>(false);
+    }
 }

@@ -1305,4 +1305,7 @@ public class Market {
         }
     }
 
+    public boolean isSystemManager(String name) {
+        return name.equals(this.systemManagerName);
+    }
 }
