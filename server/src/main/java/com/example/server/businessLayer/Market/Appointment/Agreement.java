@@ -40,6 +40,7 @@ public class Agreement {
         }
         this.agreed =true;
 
+
     }
 
     public boolean isAgreed() {
@@ -60,5 +61,11 @@ public class Agreement {
 
     public boolean getOwnerStatus(String ownerName) {
         return ownersAppointmentApproval.get(ownerName);
+    }
+
+    public void removeOwner(String firedAppointed) {
+        if (this.ownersAppointmentApproval.containsKey(firedAppointed))
+            ownersAppointmentApproval.remove(firedAppointed);
+        updateStatus();
     }
 }

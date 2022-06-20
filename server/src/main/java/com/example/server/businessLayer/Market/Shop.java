@@ -609,8 +609,17 @@ public class Shop implements IHistory {
             bid.removeApproves(firedAppointed);
         }
         shopOwners.remove(firedAppointed);
+        removeFiredOwnerFromPending(firedAppointed);
 
 
+    }
+
+    private void removeFiredOwnerFromPending(String firedAppointed) throws MarketException {
+        List<String> completed= pendingAppointments.removeOwner(firedAppointed);
+        for (String name:completed){
+            shopOwners.put(name,pendingAppointments.getAppointments().get(name));
+            pendingAppointments.removeAppointment(name);
+        }
     }
 
     public synchronized void addDiscountToShop(String visitorName, DiscountType discountType) throws MarketException {
