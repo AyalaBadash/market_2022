@@ -164,4 +164,51 @@ public class PendingAppointmentsTest {
             assert false;
         }
     }
+    @Test
+    @DisplayName("Remove owner test - isnt a supervisor")
+    public void removeNotSupervisorOwner () {
+        List<String> owners = new ArrayList<>();
+        owners.add("ido");
+        owners.add("ayala");
+        owners.add("bar");
+        try {
+            pendingAppointments.addAppointment(appointed1.getName(),appointment1,owners);
+        } catch (MarketException e) {
+            assert false;
+        }
+        List<String> completed = pendingAppointments.removeOwner("bar");
+        Assertions.assertTrue(completed.isEmpty());
+    }
+    @Test
+    @DisplayName("Remove owner test - is a supervisor")
+    public void removeSupervisorOwner () {
+        List<String> owners = new ArrayList<>();
+        owners.add("ido");
+        owners.add("ayala");
+        try {
+            pendingAppointments.addAppointment(appointed1.getName(), appointment1,owners);
+        } catch (MarketException e) {
+            assert false;
+        }
+        List<String> completed = pendingAppointments.removeOwner("ayala");
+        Assertions.assertEquals(1,completed.size());
+        Assertions.assertTrue(completed.contains("raz"));
+    }
+    @Test
+    @DisplayName("Remove owner test - is a supervisor")
+    public void removeSupervisorOwnerToComplete() {
+        List<String> owners = new ArrayList<>();
+        owners.add("ido");owners.add("bar");
+        owners.add("ayala");
+        try {
+            pendingAppointments.addAppointment(appointed1.getName(), appointment1,owners);
+            pendingAppointments.approve(appointed1.getName(),"bar");
+        } catch (MarketException e) {
+            assert false;
+        }
+        List<String> completed = pendingAppointments.removeOwner("ayala");
+        Assertions.assertEquals(1,completed.size());
+        Assertions.assertTrue(completed.contains("raz"));
+    }
+
 }

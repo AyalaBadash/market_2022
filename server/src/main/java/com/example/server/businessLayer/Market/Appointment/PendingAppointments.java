@@ -73,4 +73,22 @@ public class PendingAppointments {
         agreements.get(appointedName).setOwnerApproval(ownerName,true);
         return (agreements.get(appointedName).isAgreed ());
     }
+
+    public List<String> removeOwner(String firedAppointed) { // returns list of appointed Names whos appointment completed because removal of owner
+        for (Map.Entry<String,ShopOwnerAppointment> app: this.appointments.entrySet())
+        {
+            if (app.getValue().getSuperVisor().getName().equals(firedAppointed))
+            {
+                appointments.remove(app.getKey());
+            }
+        }
+        List<String> completed = new ArrayList<>();
+        for (Map.Entry<String,Agreement> entry: this.agreements.entrySet()){
+            entry.getValue().removeOwner(firedAppointed);
+            if (entry.getValue().isAgreed()){
+                completed.add(entry.getKey());
+            }
+        }
+        return completed;
+    }
 }

@@ -75,4 +75,16 @@ public class AgreementTest {
             assert false;
         }
     }
+    @Test
+    @DisplayName("Remove owner test")
+    public void removeOwnerTest(){
+        try {
+            agreement.setOwnerApproval("ido",true);
+        } catch (MarketException e) {
+            assert false;
+        }
+        Assertions.assertFalse(agreement.isAgreed());
+        agreement.removeOwner("ayala");
+        Assertions.assertTrue(agreement.isAgreed());
+    }
 }
