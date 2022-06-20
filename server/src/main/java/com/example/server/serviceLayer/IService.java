@@ -391,15 +391,13 @@ public interface IService {
      */
     Response cancelABid(CancelABidRequest request);
 
-    @RequestMapping(value = "/approveAppointment")
-    @CrossOrigin
+
     Response approveAppointment(@RequestBody ApproveAppointmentRequest request);
 
-    @RequestMapping(value = "/rejectAppointment")
-    @CrossOrigin
+
     Response rejectAppointment(@RequestBody ApproveAppointmentRequest request);
 
-    @RequestMapping(value = "/rejectAppointment")
-    @CrossOrigin
+
+
     ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request);
 }
