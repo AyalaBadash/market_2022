@@ -3,12 +3,16 @@ package com.example.server.UnitTests;
 import com.example.server.businessLayer.Market.Appointment.Agreement;
 import com.example.server.businessLayer.Market.Appointment.PendingAppointments;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PendingAppointmentsTest {
     PendingAppointments pendingAppointments;
@@ -56,5 +60,14 @@ public class PendingAppointmentsTest {
         Mockito.when(appointment2.getSuperVisor()).thenReturn(supervisor2);
     }
     @Test
-    @DisplayName("Add appointment - ")
+    @DisplayName("Add appointment test")
+    public void addAppointmentTest(){
+        List<String> owners = new ArrayList<>();
+        owners.add("ido");owners.add("ayala");
+        try {
+            pendingAppointments.addAppointment(appointed1.getName(),appointment1,owners);
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
 }
