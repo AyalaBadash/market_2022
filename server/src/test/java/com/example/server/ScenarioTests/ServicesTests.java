@@ -26,31 +26,31 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ServicesTests {
-    PaymentServiceProxy paymentServiceProxy;
-    SupplyServiceProxy supplyServiceProxy;
+    static PaymentServiceProxy paymentServiceProxy;
+    static SupplyServiceProxy supplyServiceProxy;
     String userName = "u1";
-    String password = "p1";
+    String password = "password";
     String ItemName= "item1";
     Item itemAdded;
     int productAmount=20;
     Double productPrice=30.0;
     String shopOwnerName = "bar";
-    String shopOwnerPassword = "pass";
+    String shopOwnerPassword = "password";
     String memberName = "bar1";
-    String memberPassword = "pass1";
+    String memberPassword = "password";
     String loggedInmemberName = "bar2";
 
-    String loggedInmemberPassword = "pass2";
+    String loggedInmemberPassword = "password";
     String shopName = "store";
     TextDispatcher textDispatcher = TextDispatcher.getInstance();
-    CreditCard creditCard;
-    Address address;
-    Market market ;
+    static CreditCard creditCard;
+    static Address address;
+    static Market market ;
     Visitor visitor;
 
 
-    @BeforeEach
-    public void init() {
+    @BeforeAll
+    public static void initBefore(){
         paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
         supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
         creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
@@ -59,7 +59,24 @@ public class ServicesTests {
 
         Visitor visitor= market.guestLogin();
         try {
-            market.isInit();
+            market.isInit ( );
+        }catch(MarketException e){
+            System.out.println (e.getMessage () );
+        }
+    }
+    @BeforeEach
+    public void init() {
+//        paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
+//        supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
+//        creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
+//        address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
+//        market = Market.getInstance();
+//
+//        Visitor visitor= market.guestLogin();
+//        try {
+//            market.isInit ( );
+//        }catch(MarketException e){}
+        try{
             market.memberLogin(userName, password);
             market.validateSecurityQuestions(userName,new ArrayList<>(), visitor.getName());
         }catch (Exception e){}

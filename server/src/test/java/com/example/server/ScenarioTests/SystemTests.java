@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 public class SystemTests {
     Market market;
-    String userName = "userTest";
-    String password = "passTest";
+    String userName = "u1";
+    String password = "password";
     @BeforeEach
     public void setUp(){
         try {

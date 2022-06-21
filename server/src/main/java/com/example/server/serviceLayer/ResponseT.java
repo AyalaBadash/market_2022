@@ -17,6 +17,10 @@ public class ResponseT<T> extends Response {
         this.value = value;
     }
 
+    public void setValue(T value) {
+        this.value = value;
+    }
+
     public T getValue() {
         return value;
     }

@@ -20,10 +20,14 @@ public class PurchasePolicyLevelStateWrapper implements FacadeObject<PurchasePol
         ItemPurchasePolicyLevelStateFacade,
         ShopPurchasePolicyLevelStateFacade;
     }
+
     private PurchasePolicyLevelStateWrapperType purchasePolicyLevelStateWrapperType;
     private int itemID;
+
+
     private Item.Category category;
     private List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers;
+
     public PurchasePolicyLevelStateWrapper(PurchasePolicyLevelStateWrapperType purchasePolicyLevelStateWrapperType, int itemID, Item.Category category, List<PurchasePolicyLevelStateWrapper> purchasePolicyLevelStateWrappers) {
         this.purchasePolicyLevelStateWrapperType = purchasePolicyLevelStateWrapperType;
         this.itemID = itemID;
@@ -31,46 +35,55 @@ public class PurchasePolicyLevelStateWrapper implements FacadeObject<PurchasePol
         this.purchasePolicyLevelStateWrappers = purchasePolicyLevelStateWrappers;
     }
 
+    public PurchasePolicyLevelStateWrapperType getPurchasePolicyLevelStateWrapperType() {
+        return purchasePolicyLevelStateWrapperType;
+    }
+
+
     public PurchasePolicyLevelStateWrapper() {
     }
 
     @Override
     public PurchasePolicyLevelState toBusinessObject() throws MarketException {
-        switch (purchasePolicyLevelStateWrapperType){
+        switch (purchasePolicyLevelStateWrapperType) {
             case ItemPurchasePolicyLevelStateFacade -> {
-                return new ItemPurchasePolicyLevelState ( itemID );
+                return new ItemPurchasePolicyLevelState(itemID);
             }
             case CategoryPurchasePolicyLevelStateFacade -> {
-                return new CategoryPurchasePolicyLevelState ( category );
+                return new CategoryPurchasePolicyLevelState(category);
             }
             case ShopPurchasePolicyLevelStateFacade -> {
-                return new ShopPurchasePolicyLevelState ();
+                return new ShopPurchasePolicyLevelState();
             }
             case OrCompositePurchasePolicyLevelStateFacade -> {
-                List<PurchasePolicyLevelState> purchasePolicyLevelStates = new ArrayList<> (  );
-                for(PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper : purchasePolicyLevelStateWrappers){
-                    purchasePolicyLevelStates.add ( purchasePolicyLevelStateWrapper.toBusinessObject () );
+                List<PurchasePolicyLevelState> purchasePolicyLevelStates = new ArrayList<>();
+                for (PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper : purchasePolicyLevelStateWrappers) {
+                    purchasePolicyLevelStates.add(purchasePolicyLevelStateWrapper.toBusinessObject());
                 }
-                return new OrCompositePurchasePolicyLevelState ( purchasePolicyLevelStates );
+                return new OrCompositePurchasePolicyLevelState(purchasePolicyLevelStates);
             }
             case XorCompositePurchasePolicyLevelStateFacade -> {
-                List<PurchasePolicyLevelState> purchasePolicyLevelStates = new ArrayList<> (  );
-                for(PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper : purchasePolicyLevelStateWrappers){
-                    purchasePolicyLevelStates.add ( purchasePolicyLevelStateWrapper.toBusinessObject () );
+                List<PurchasePolicyLevelState> purchasePolicyLevelStates = new ArrayList<>();
+                for (PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper : purchasePolicyLevelStateWrappers) {
+                    purchasePolicyLevelStates.add(purchasePolicyLevelStateWrapper.toBusinessObject());
                 }
-                return new XorCompositePurchasePolicyLevelState ( purchasePolicyLevelStates );
+                return new XorCompositePurchasePolicyLevelState(purchasePolicyLevelStates);
             }
             case AndCompositePurchasePolicyLevelStateFacade -> {
-                List<PurchasePolicyLevelState> purchasePolicyLevelStates = new ArrayList<> (  );
-                for(PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper : purchasePolicyLevelStateWrappers){
-                    purchasePolicyLevelStates.add ( purchasePolicyLevelStateWrapper.toBusinessObject () );
+                List<PurchasePolicyLevelState> purchasePolicyLevelStates = new ArrayList<>();
+                for (PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper : purchasePolicyLevelStateWrappers) {
+                    purchasePolicyLevelStates.add(purchasePolicyLevelStateWrapper.toBusinessObject());
                 }
-                return new AndCompositePurchasePolicyLevelState ( purchasePolicyLevelStates );
+                return new AndCompositePurchasePolicyLevelState(purchasePolicyLevelStates);
             }
             default -> {
                 return null;
             }
         }
+    }
+
+    public void setPurchasePolicyLevelStateWrapperType(PurchasePolicyLevelStateWrapperType purchasePolicyLevelStateWrapperType) {
+        this.purchasePolicyLevelStateWrapperType = purchasePolicyLevelStateWrapperType;
     }
 
     public int getItemID() {
@@ -88,6 +101,7 @@ public class PurchasePolicyLevelStateWrapper implements FacadeObject<PurchasePol
     public void setCategory(Item.Category category) {
         this.category = category;
     }
+
 
     public List<PurchasePolicyLevelStateWrapper> getPurchasePolicyLevelStateWrappers() {
         return purchasePolicyLevelStateWrappers;

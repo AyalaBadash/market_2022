@@ -3,7 +3,7 @@ package com.example.server.AcceptanceTest;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.serviceLayer.AppointmentShopManagerRequest;
+import com.example.server.serviceLayer.Requests.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
@@ -20,9 +20,9 @@ import java.util.List;
 public class AcceptanceTests {
 
     static String systemManagerName = "ido";
-    static String systemManagerPassword = "1234Ido";
+    static String systemManagerPassword = "password";
     static String shopOwnerName = "shaked";
-    static String shopOwnerPassword = "shaked1234";
+    static String shopOwnerPassword = "password";
     static String shopName = "Shufersal";
     static Double productAmount;
     static Double productPrice;

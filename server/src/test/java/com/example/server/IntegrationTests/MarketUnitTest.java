@@ -47,7 +47,7 @@ public class MarketUnitTest {
     @BeforeEach
     public void marketUnitTestInit(){
         try {
-            Market.getInstance().reset("password", null, null);
+            Market.getInstance().reset("password", null, null, false);
         } catch (MarketException e){}
         List<String> keywords = new ArrayList<>();
         keywords.add("dairy");
@@ -184,7 +184,7 @@ public class MarketUnitTest {
         List<String> keywords = new ArrayList<>();
         keywords.add("fruit");
         try {
-            Item item1 = new Item(2,"apple",2.5,"red", Item.Category.fruit,
+            Item item1 = new Item(2,"strawberry",2.5,"red", Item.Category.fruit,
             keywords);
 //            market.addItemToShop("raz",item.getName(),item.getPrice(),item.getCategory(),"",
 //                    item.getKeywords(),5.0,"razShop");
@@ -214,7 +214,7 @@ public class MarketUnitTest {
         keywords.add("fruit");
         Item item1 = null;
         try {
-            item1 = market.addItemToShopItem("raz","apple",2.5, Item.Category.fruit, "red apple",
+            item1 = market.addItemToShopItem("raz","strawberry",2.5, Item.Category.fruit, "red strawberry",
                     keywords,5.0,"razShop");
             market.openNewShop("raz","razShop2");
             Item item2 = market.addItemToShopItem("raz",item.getName(),item.getPrice(),item.getCategory(),"On shop 2 we have info",item.getKeywords(),3.0,"razShop2");
@@ -225,7 +225,7 @@ public class MarketUnitTest {
         }
         List<Item> res = market.getItemByCategory(item1.getCategory());
         Assertions.assertEquals(1,res.size());
-        Assertions.assertEquals("red apple",res.get(0).getInfo());
+        Assertions.assertEquals("red strawberry",res.get(0).getInfo());
         System.out.println("End of test");
         System.out.println("-------------------------------------------------------------");
     }
@@ -898,7 +898,63 @@ public class MarketUnitTest {
             assert false;
         }
     }
+    @Test
+    @DisplayName("Reopen closed shop - valid case")
+    public void reopenShop(){ // TODO review - problem is : shops.remove in closeShop ()
+        try {
+            market.closeShop("raz","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.reopenClosedShop("razShop","raz");
+            Assertions.assertFalse(shop.isClosed());
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Reopen shop - Invalid case - shop is not closed.")
+    public void reopenOpenShop(){
+        try {
+            market.reopenClosedShop("razShop","raz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
 
+    @Test
+    @DisplayName("Reopen shop - Invalid case - non existing shop.")
+    public void reopenNonExistingShop(){
+        try {
+            market.closeShop("raz","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.reopenClosedShop("razrazShop","raz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+
+    @Test
+    @DisplayName("Reopen shop - Invalid case - member is not founder.")
+    public void reopenShopNotFounder(){
+        try {
+            market.closeShop("raz","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.reopenClosedShop("razShop","notRaz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
 
 
 }

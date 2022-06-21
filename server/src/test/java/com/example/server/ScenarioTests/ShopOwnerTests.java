@@ -22,15 +22,15 @@ public class ShopOwnerTests {
 
     Market market;
     String userName = "userTest";
-    String password = "passTest";
+    String password = "password";
     String shopOwnerName = "bar";
-    String shopOwnerPassword = "pass";
+    String shopOwnerPassword = "password";
     String memberName = "bar1";
-    String memberPassword = "pass1";
+    String memberPassword = "password";
 
     String loggedInmemberName = "bar2";
 
-    String loggedInmemberPassword = "pass2";
+    String loggedInmemberPassword = "password";
     String shopName = "store";
     String ItemName= "item1";
     Item itemAdded;

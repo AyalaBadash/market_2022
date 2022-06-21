@@ -23,6 +23,7 @@ import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.http.NameValuePair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -83,7 +84,8 @@ public class Market {
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
-                instance.systemManagerName = userName;
+                if(instance.systemManagerName == null)
+                    instance.systemManagerName = userName;
             }
             checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
@@ -173,7 +175,7 @@ public class Market {
     }
 
     public void notifyManager(RealTimeNotifications notification){
-        if(systemManagerName!=null&& ( !systemManagerName.isEmpty()& userController.isLoggedIn(systemManagerName))) {
+        if(systemManagerName != null && ( !systemManagerName.isEmpty() & userController.isLoggedIn(systemManagerName))) {
             NotificationHandler handler = NotificationHandler.getInstance();
             //The is member is false because the manager received only real time notifications.
             handler.sendNotification(systemManagerName, notification, false);
@@ -391,7 +393,7 @@ public class Market {
             throw new MarketException("Tried to close non existing shop");
         }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
-            shops.remove(shopName);
+            //shops.remove(shopName);
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
@@ -403,6 +405,7 @@ public class Market {
                         .collect(Collectors.toList())), shopName);
             } catch (Exception e) {
             }
+            shopToClose.setClosed(true);
             //
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
         }
@@ -503,6 +506,10 @@ public class Market {
             throw new MarketException("only a system manager can get information about a closed shop");
         }
         Shop shop = shops.get(shopName);
+        if (shop.isClosed()){
+            DebugLog.getInstance().Log("user tried to reach a closed shop");
+            throw new MarketException("the shop has been closed! there for cannot enter it any more");
+        }
         //TODO - need to be an employee or not??
 //        if (!shop.isEmployee(member)) {
 //            throw new MarketException("You are not employee in this shop");
@@ -634,6 +641,48 @@ public class Market {
         EventLog.getInstance().Log("Edited the item with id " + oldItem + " in the shop " + shopName);
         shop.changeShopItemInfo(shopOwnerName, info, oldItem);
     }
+    public void reopenClosedShop(String shopName,String name) throws MarketException {
+        Shop shopToOpen = shops.get(shopName);
+        if (shopToOpen==null)
+        {
+            DebugLog.getInstance().Log("You tried to reopen a shop with invalid name.");
+            throw new MarketException("You tried to reopen a shop with invalid name.");
+        }
+        if (!shopToOpen.isClosed()){
+            DebugLog.getInstance().Log("The shop "+shopName+" is not closed.");
+            throw new MarketException("The shop "+shopName+" is not closed.");
+        }
+        if (!shopToOpen.getShopFounder().getName().equals(name)){
+            DebugLog.getInstance().Log("You are not the shop founder . Only the founder can reopen the shop");
+            throw new MarketException("You are not the shop founder . Only the founder can reopen the shop");
+        }
+        ClosedShopsHistory.getInstance().reopenShop(shopName);
+        shopToOpen.setClosed(false);
+        validateAllEmployees(shopToOpen);
+        //TODO - send notifications for managers and owners.
+    }
+
+    private void validateAllEmployees(Shop shopToOpen) {
+        Map<String,Appointment> employees =  shopToOpen.getShopOwners();
+        for (Map.Entry<String ,Appointment> emp: employees.entrySet())
+        {
+            if (!userController.isMember(emp.getKey()))
+            {
+                employees.remove(emp.getKey());
+            }
+        }
+        shopToOpen.setShopOwners(employees);
+        employees = shopToOpen.getShopManagers();
+        for (Map.Entry<String ,Appointment> emp: employees.entrySet())
+        {
+            if (!userController.isMember(emp.getKey()))
+            {
+                employees.remove(emp.getKey());
+            }
+        }
+        shopToOpen.setShopManagers(employees);
+
+    }
 
     public ShoppingCart showShoppingCart(String visitorName) throws MarketException {
         alertIfNotLoggedIn(visitorName);
@@ -741,7 +790,7 @@ public class Market {
     }
 
     //TODO delete
-    public void reset(String systemManagerPass, List<String> questions, List<String> answers) throws MarketException {
+    public void reset(String systemManagerPass, List<String> questions, List<String> answers, boolean includeServices) throws MarketException {
         instance.shops = new HashMap<>();
         instance.allItemsInMarketToShop = new HashMap<>();
         instance.itemByName = new HashMap<>();
@@ -749,16 +798,16 @@ public class Market {
         Security.getInstance().reset();
         userController.reset();
         ClosedShopsHistory.getInstance().reset();
+        if(includeServices){
+            paymentServiceProxy = null;
+            supplyServiceProxy = null;
+        }
         userController.register(systemManagerName);
         Security.getInstance().addNewMember(systemManagerName, systemManagerPass, questions, answers);
     }
 
     public String getSystemManagerName() {
         return systemManagerName;
-    }
-
-    public void setSystemManagerName(String systemManagerName) {
-        this.systemManagerName = systemManagerName;
     }
 
     public void setShops(Map<String, Shop> shops) {
@@ -903,7 +952,7 @@ public class Market {
 
     private void readDataSourceConfig() throws MarketException {
 
-        String path = getConfigDir() + MarketConfig.DATA_SOURCE_FILE_NAME;
+        String path = getConfigDir() +MarketConfig.DATA_SOURCE_FILE_NAME;
         DataSourceConfigReader.getInstance(path);
     }
 
@@ -924,7 +973,6 @@ public class Market {
             String data = myReader.nextLine();
             String[] vals = data.split("::");
             setData(vals);
-
         }
 
     }
@@ -1000,7 +1048,8 @@ public class Market {
     }
 
     private void initManager(String val, String val1) throws MarketException {
-
+        if(instance.systemManagerName != null)
+            throw new MarketException ( "manager already exists" );
         register(val, val1);
         instance.systemManagerName = val;
     }
@@ -1148,6 +1197,35 @@ public class Market {
         return shop.getDiscountTypes();
     }
 
+    public boolean approveAppointment(String shopName,String appointedName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        return shop.approveAppointment(appointedName,ownerName);
+    }
+    public void rejectAppointment(String shopName,String appointedName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        shop.rejectAppointment(appointedName,ownerName);
+    }
+    public List<String> getMyPendingAppointmentsToApprove(String shopName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        return shop.getAllPendingForOwner(ownerName);
+    }
+
+
     /**
      * check that all services are initialized from the config file.
      *
@@ -1272,5 +1350,9 @@ public class Market {
         for (Shop shop : shops.values()) {
             shop.updateBidInLoggingOut(visitorName);
         }
+    }
+
+    public boolean isSystemManager(String name) {
+        return name.equals(this.systemManagerName);
     }
 }
