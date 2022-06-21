@@ -676,3 +676,18 @@ Level Error : Multiple representations of the same entity [com.example.server.bu
 Level Error : could not extract ResultSet; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: could not extract ResultSet
 Level Error : No class com.example.server.businessLayer.Market.ShoppingBasket entity with id 1 exists!
 Level Error : error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work
+Level Error : Multiple representations of the same entity [com.example.server.businessLayer.Market.Users.Member#s] are being merged. Detached: [com.example.server.businessLayer.Market.Users.Member@75b0369f]; Detached: [com.example.server.businessLayer.Market.Users.Member@72f4e65d]; nested exception is java.lang.IllegalStateException: Multiple representations of the same entity [com.example.server.businessLayer.Market.Users.Member#s] are being merged. Detached: [com.example.server.businessLayer.Market.Users.Member@75b0369f]; Detached: [com.example.server.businessLayer.Market.Users.Member@72f4e65d]
+Level Error : Multiple representations of the same entity [com.example.server.businessLayer.Market.Users.Member#s] are being merged. Detached: [com.example.server.businessLayer.Market.Users.Member@75b0369f]; Detached: [com.example.server.businessLayer.Market.Users.Member@72f4e65d]; nested exception is java.lang.IllegalStateException: Multiple representations of the same entity [com.example.server.businessLayer.Market.Users.Member#s] are being merged. Detached: [com.example.server.businessLayer.Market.Users.Member@75b0369f]; Detached: [com.example.server.businessLayer.Market.Users.Member@72f4e65d]
+Level Error : Multiple representations of the same entity [com.example.server.businessLayer.Market.Users.Member#s] are being merged. Detached: [com.example.server.businessLayer.Market.Users.Member@75b0369f]; Detached: [com.example.server.businessLayer.Market.Users.Member@72f4e65d]; nested exception is java.lang.IllegalStateException: Multiple representations of the same entity [com.example.server.businessLayer.Market.Users.Member#s] are being merged. Detached: [com.example.server.businessLayer.Market.Users.Member@75b0369f]; Detached: [com.example.server.businessLayer.Market.Users.Member@72f4e65d]
+Level Error : Illegal attempt to associate a collection with two open sessions. Collection : [com.example.server.businessLayer.Market.ShoppingBasket.items#9]; nested exception is org.hibernate.HibernateException: Illegal attempt to associate a collection with two open sessions. Collection : [com.example.server.businessLayer.Market.ShoppingBasket.items#9]
+Level Error : Shopping cart is not exists for the user.
+Level Error : could not execute statement; SQL [n/a]; constraint [items_in_basket.PRIMARY]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : toDelete
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.UserController.register(String)" because "this.userController" is null
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Users.UserController.register(String)" because "this.userController" is null
+Level Error : toDelete
+Level Error : Cannot invoke "com.example.server.dataLayer.repositories.VisitorRep.save(Object)" because "this.visitorRep" is null
+Level Error : toDelete
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : null
+Level Error : null

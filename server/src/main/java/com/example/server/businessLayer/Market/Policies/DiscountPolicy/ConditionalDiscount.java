@@ -9,13 +9,23 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFa
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+@Entity
+@DiscriminatorValue(value = "ConditionalDiscount")
 public class ConditionalDiscount extends DiscountType{
+    @Transient
     private Condition condition;
 
     public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Condition condition) {
         super ( percentageOfDiscount, discountLevelState );
         this.condition = condition;
     }
+
+    public ConditionalDiscount(){}
 
     public Condition getCondition() {
         return condition;

@@ -84,6 +84,8 @@ public class UserController {
     public boolean register(String userName) throws MarketException {
         Member newMember = new Member(userName);
         members.put(userName,newMember);
+        if (true)
+            throw new MarketException("m");
         EventLog.getInstance().Log("Welcome to our new member: "+userName);
         return true;
     }

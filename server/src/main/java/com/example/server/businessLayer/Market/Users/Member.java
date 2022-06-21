@@ -19,7 +19,7 @@ public class Member implements IHistory {
     private ShoppingCart myCart;
     @ManyToMany (cascade = {CascadeType.MERGE})
     private List<Appointment> appointedByMe;
-    @ManyToMany (cascade = {CascadeType.MERGE})
+    @ManyToMany
     private List<Appointment> myAppointments;
     @OneToMany(targetEntity =  AcquisitionHistory.class, cascade =
             {CascadeType.REMOVE})

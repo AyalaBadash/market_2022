@@ -6,12 +6,17 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.List;
-
+//@Entity
+@DiscriminatorValue(value = "AndCompositeCondition")
 public class AndCompositeCondition extends CompositeCondition{
     public AndCompositeCondition(List<Condition> conditions) {
         super ( conditions );
     }
+
+    public AndCompositeCondition(){}
 
     @Override
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException {

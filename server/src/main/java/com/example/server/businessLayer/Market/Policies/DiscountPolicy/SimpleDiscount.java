@@ -7,6 +7,11 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFa
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue(value = "SimpleDiscount")
 public class SimpleDiscount extends DiscountType{
 
     public SimpleDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState) {

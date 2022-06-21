@@ -3,11 +3,18 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Discount
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.List;
-
+//@Entity
+@DiscriminatorValue(value = "AndCompositeDiscountLevelState")
 public class AndCompositeDiscountLevelState extends CompositeDiscountLevelState{
     public AndCompositeDiscountLevelState(List<DiscountLevelState> discountLevelStates) {
         super ( discountLevelStates );
+    }
+
+    public AndCompositeDiscountLevelState(){
+        super();
     }
 
     @Override

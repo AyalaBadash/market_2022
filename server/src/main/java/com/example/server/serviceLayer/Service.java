@@ -1,6 +1,7 @@
 package com.example.server.serviceLayer;
 
 import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +73,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/register")
     @CrossOrigin
-    public ResponseT<Boolean> register(@RequestBody NamePasswordRequest request) {
+    public ResponseT<Boolean> register(@RequestBody NamePasswordRequest request) throws Exception {
         return userService.register(request.getName(), request.getPassword());
     }
 
@@ -151,8 +153,13 @@ public class Service implements IService {
     @RequestMapping(value = "/buyShoppingCart")
     @CrossOrigin
     public ResponseT<ShoppingCartFacade> buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
-        return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
+        try{
+            return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
                 request.getPaymentMethod(), request.getAddress());
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
     @Override
@@ -180,6 +187,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/openNewShop")
     @CrossOrigin
+//    @Transactional(rollbackOn = Exception.class)
     public Response openNewShop(@RequestBody OpenNewShopRequest request) {
         return marketService.openNewShop(request.getMemberName(), request.getShopName());
     }

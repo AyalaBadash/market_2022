@@ -32,8 +32,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.yaml.snakeyaml.error.Mark;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -41,51 +47,78 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Component
+//@Entity
 public class Market {
+//    @Id
+//    @GeneratedValue
+//    private long id;
+    @Transient
     private UserController userController;
     private String systemManagerName;
+    @Transient
     private Map<String, Shop> shops;                                 // <shopName, shop>
-
+    @Transient
     private NotificationHandler notificationHandler;
+    @Transient
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
+    @Transient
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
+    @Transient
     private SynchronizedCounter nextItemID;
+    @Transient
     private PaymentServiceProxy paymentServiceProxy;
+    @Transient
     private SupplyServiceProxy supplyServiceProxy;
+    @Transient
     private Publisher publisher;
     private static Market instance;
     boolean dataInitialized = false;
     boolean servicesInitialized = false;
     boolean test = false;
+    @Transient
     Map<String, Integer> numOfAcqsPerShop;
 
     @Autowired
+    @Transient
     private ItemRep itemRep;
     @Autowired
+    @Transient
     private ShopRep shopRep;
     @Autowired
+    @Transient
     private ShoppingCartRep shoppingCartRep;
     @Autowired
+    @Transient
     private ShoppingBasketRep shoppingBasketRep;
     @Autowired
+    @Transient
     private MemberRep memberRep;
     @Autowired
+    @Transient
     private AcquisitionRep acquisitionRep;
     @Autowired
+    @Transient
     private AcquisitionHistoryRep acquisitionHistoryRep;
     @Autowired
+    @Transient
     private ClosedShopsHistoryRep closedShopsHistoryRep;
 //    @Autowired
 //    private UserControllerRep userControllerRep;
     @Autowired
+    @Transient
     private VisitorRep visitorRep;
     @Autowired
+    @Transient
     private LoginCardRep loginCardRep;
     @Autowired
+    @Transient
     private ShopManagerAppointmentRep shopManagerAppointmentRep;
-    @Autowired ShopOwnerAppointmentRep shopOwnerAppointmentRep;
-    @Autowired private ItemAckHistRep itemAckHistRep;
-    @Autowired private AckHisRep ackHisRep;
+    @Autowired
+    @Transient ShopOwnerAppointmentRep shopOwnerAppointmentRep;
+    @Autowired
+    @Transient private ItemAckHistRep itemAckHistRep;
+    @Autowired
+    @Transient private AckHisRep ackHisRep;
     //constructor
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -108,6 +141,8 @@ public class Market {
         }
         return instance;
     }
+
+
 
 //    public synchronized void firstInitMarket(PaymentServiceProxy paymentServiceProxy1, SupplyServiceProxy supplyServiceProxy1, Publisher publisher, String userName, String password) throws MarketException {
 //        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
@@ -164,6 +199,7 @@ public class Market {
 
         try {
             initRepositories();
+            loadData();
             this.test = test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
@@ -568,7 +604,6 @@ public class Market {
         StringBuilder history = member.getPurchaseHistoryString();
         return history;
     }
-
 
     public void register(String name, String password) throws MarketException {
         Security security = Security.getInstance();
@@ -1057,7 +1092,8 @@ public class Market {
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
-            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy, test);
+            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler,
+                    expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy, test);
         } catch (Exception e) {
 
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -1400,5 +1436,11 @@ public class Market {
             debugLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
         }
+    }
+
+    public void loadData(){
+        for (Shop shop : shopRep.findAll())
+            this.shops.put(shop.getShopName(), shop);
+
     }
 }

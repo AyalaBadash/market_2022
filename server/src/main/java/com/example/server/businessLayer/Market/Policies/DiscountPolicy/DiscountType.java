@@ -9,8 +9,20 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFa
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
-public abstract class  DiscountType {
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "discount_type",
+        discriminatorType = DiscriminatorType.STRING
+)
+public abstract class DiscountType {
+    @Id
+    @GeneratedValue
+    private long id;
     protected double percentageOfDiscount;
+    @OneToOne
     protected DiscountLevelState discountLevelState;
 
     public DiscountType(double percentageOfDiscount, DiscountLevelState discountLevelState) {

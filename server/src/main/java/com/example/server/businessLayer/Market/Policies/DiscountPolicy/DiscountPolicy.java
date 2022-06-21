@@ -4,10 +4,18 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Composite
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
 public class DiscountPolicy {
+    @Id
+    @GeneratedValue
+    private long id;
+    @ManyToMany
     private List<DiscountType> validDiscounts;
     public DiscountPolicy() {
         this.validDiscounts = new ArrayList<> (  );

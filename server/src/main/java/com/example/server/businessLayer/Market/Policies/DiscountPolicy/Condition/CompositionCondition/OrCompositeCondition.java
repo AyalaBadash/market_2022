@@ -5,13 +5,17 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.List;
-
+//@Entity
+@DiscriminatorValue(value = "OrCompositeCondition")
 public class OrCompositeCondition extends CompositeCondition{
 
     public OrCompositeCondition(List<Condition> conditions) {
         super ( conditions );
     }
+    public OrCompositeCondition(){}
 
     @Override
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException {

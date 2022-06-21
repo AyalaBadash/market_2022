@@ -43,7 +43,7 @@ public class RobustnessTests {
 
 
     @BeforeEach
-    public void init() throws MarketException {
+    public void init() throws Exception {
         productAmount = 3.0;
         productPrice = 1.2;
         creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
@@ -52,7 +52,7 @@ public class RobustnessTests {
 
     }
 
-    private void loadAdminName() {
+    private void loadAdminName() throws Exception {
         try {
 
             File myObj = new File(System.getProperty("user.dir") + "/config/" + "config.txt");

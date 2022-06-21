@@ -4,8 +4,11 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountS
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.Map;
-
+//@Entity
+@DiscriminatorValue(value = "AmountOfItemCondition")
 public class AmountOfItemCondition extends Condition {
     private double amountNeeded;
     private Integer itemNeeded;
@@ -14,6 +17,8 @@ public class AmountOfItemCondition extends Condition {
         this.amountNeeded = amountNeeded;
         this.itemNeeded = itemNeeded;
     }
+
+    public AmountOfItemCondition(){}
 
     /**
      *

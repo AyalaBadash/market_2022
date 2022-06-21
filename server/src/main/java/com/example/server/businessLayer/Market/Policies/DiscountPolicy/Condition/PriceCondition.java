@@ -4,12 +4,19 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+//@Entity
+@DiscriminatorValue(value = "PriceCondition")
 public class PriceCondition extends Condition {
     private double priceNeeded;
 
     public PriceCondition(double priceNeeded) {
         this.priceNeeded = priceNeeded;
     }
+
+    public PriceCondition(){}
 
     /**
      *

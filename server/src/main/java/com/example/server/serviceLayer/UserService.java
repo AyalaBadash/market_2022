@@ -1,6 +1,5 @@
 package com.example.server.serviceLayer;
 
-
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
@@ -12,17 +11,16 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.*;
 
-
+import javax.transaction.Transactional;
 import java.util.List;
 
 public class UserService {
     private static UserService instance = null;
     private Market market;
 
-    private UserService() {
+    public UserService() {
         market = Market.getInstance();
     }
-
 
     public synchronized static UserService getInstance() {
         if (instance == null)
@@ -30,6 +28,7 @@ public class UserService {
         return instance;
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public ResponseT<VisitorFacade> guestLogin() {
         try{
             Visitor guest = this.market.guestLogin();
@@ -40,6 +39,7 @@ public class UserService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response exitSystem(String visitorName) {
         try {
             this.market.visitorExitSystem(visitorName);
@@ -49,6 +49,7 @@ public class UserService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public ResponseT<Boolean> register(String userName, String userPassword) {
         ResponseT<Boolean> responseT;
         try {
@@ -62,6 +63,7 @@ public class UserService {
         return responseT;
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) {
         try {
             market.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
@@ -71,6 +73,7 @@ public class UserService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public ResponseT<List<String>> memberLogin(String userName, String userPassword) {
         try {
             List<String> securityQs = market.memberLogin(userName,userPassword);
@@ -83,6 +86,7 @@ public class UserService {
     */
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public ResponseT<VisitorFacade> logout(String visitorName) {
         ResponseT<VisitorFacade> toReturn;
         try {
@@ -96,6 +100,7 @@ public class UserService {
     }
 
 
+    @Transactional(rollbackOn = Exception.class)
     public Response appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) {
         try {
             market.appointShopOwner(shopOwnerName,appointedShopOwner,shopName);
@@ -105,6 +110,7 @@ public class UserService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) {
         Response toReturn;
         try {
@@ -116,6 +122,7 @@ public class UserService {
         return toReturn;
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response editShopManagerPermissions(String shopOwnerName, String managerName,
                                                String relatedShop, ShopManagerAppointmentFacade updatedAppointment) {
         try{
@@ -139,6 +146,7 @@ public class UserService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public ResponseT<MemberFacade> validateSecurityQuestions(String userName, List<String> answers, String visitorName)  {
         try{
             Member member = market.validateSecurityQuestions(userName,answers, visitorName);
