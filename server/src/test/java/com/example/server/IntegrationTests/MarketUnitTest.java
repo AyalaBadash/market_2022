@@ -898,7 +898,63 @@ public class MarketUnitTest {
             assert false;
         }
     }
+    @Test
+    @DisplayName("Reopen closed shop - valid case")
+    public void reopenShop(){ // TODO review - problem is : shops.remove in closeShop ()
+        try {
+            market.closeShop("raz","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.reopenClosedShop("razShop","raz");
+            Assertions.assertFalse(shop.isClosed());
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Reopen shop - Invalid case - shop is not closed.")
+    public void reopenOpenShop(){
+        try {
+            market.reopenClosedShop("razShop","raz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
 
+    @Test
+    @DisplayName("Reopen shop - Invalid case - non existing shop.")
+    public void reopenNonExistingShop(){
+        try {
+            market.closeShop("raz","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.reopenClosedShop("razrazShop","raz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+
+    @Test
+    @DisplayName("Reopen shop - Invalid case - member is not founder.")
+    public void reopenShopNotFounder(){
+        try {
+            market.closeShop("raz","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.reopenClosedShop("razShop","notRaz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
 
 
 }

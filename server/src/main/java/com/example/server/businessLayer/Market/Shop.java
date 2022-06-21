@@ -836,4 +836,16 @@ public class Shop implements IHistory {
         return pendingAppointments.getMyPendingAppointments(ownerName);
 
     }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public void setShopManagers(Map<String, Appointment> shopManagers) {
+        this.shopManagers = shopManagers;
+    }
+
+    public void setShopOwners(Map<String, Appointment> shopOwners) {
+        this.shopOwners = shopOwners;
+    }
 }

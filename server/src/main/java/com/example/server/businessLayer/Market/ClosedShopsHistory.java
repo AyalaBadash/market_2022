@@ -70,4 +70,8 @@ public class ClosedShopsHistory {
         closedShops = new HashMap<>();
         overallHistory = new StringBuilder();
     }
+
+    public void reopenShop(String shopName) {
+        this.closedShops.remove(shopName);
+    }
 }
