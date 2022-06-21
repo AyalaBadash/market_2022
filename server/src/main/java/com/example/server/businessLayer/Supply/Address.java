@@ -70,6 +70,8 @@ public class Address {
                 '}';
     }
 
+
+
     public boolean isLegal() {
         try{
             Integer.parseInt(zip);

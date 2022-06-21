@@ -296,7 +296,10 @@ public class MarketService {
     public ResponseT<String> getShopPurchaseHistory(String shopManagerName, String shopName) {
         try {
             String history = market.getShopPurchaseHistory(shopManagerName, shopName).toString();
-            return new ResponseT<>(history);
+            ResponseT<String> res = new ResponseT<>(null);
+            res.setValue(history);
+            return res;
+
         } catch (Exception e) {
             ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
@@ -313,7 +316,9 @@ public class MarketService {
     public ResponseT<String> getAllSystemPurchaseHistory(String systemManagerName) {
         try {
             String history = market.getAllSystemPurchaseHistory(systemManagerName).toString();
-            return new ResponseT<>(history);
+            ResponseT<String> res = new ResponseT<>(null);
+            res.setValue(history);
+            return res;
         } catch (Exception e) {
             ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
