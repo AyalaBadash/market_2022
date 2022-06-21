@@ -160,6 +160,14 @@ public interface IService {
     public Response openNewShop(OpenNewShopRequest request);
 
     /**
+     * an owner can reopen his own closed. employees and items return to what ever had before.
+     * member that had been removed from market will be removed from shop too
+     * @param request first string- owner, 2nd string - shopName
+     * @return valid response if approved, error if not
+     */
+    public Response reOpenClosedShop(TwoStringRequest request);
+
+    /**
      *
      * @param request
      * @return

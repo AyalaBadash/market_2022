@@ -1285,7 +1285,7 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir");
-        String additional_dir = "\\config\\";
+        String additional_dir = "\\server\\config\\";
         if (MarketConfig.IS_MAC) {
             additional_dir = "/config/";
         }

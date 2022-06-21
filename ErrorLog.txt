@@ -721,3 +721,26 @@ Level Error : User tried to register with taken name.
 Level Error : Address details are illegal.
 Level Error : Payment method details are illegal.
 Level Error : shop does not exist in the market
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : Method register from init file has called. Args are: u3 p3
+Level Error : Method register from init file has called. Args are: u4 p4
+Level Error : Method register from init file has called. Args are: u5 p5
+Level Error : Method register from init file has called. Args are: u6 p6
+Level Error : Method login from init file has called. Args are: u1 p1
+Level Error : Method login from init file has called. Args are: u2 p2
+Level Error : Method login from init file has called. Args are: u3 p3
+Level Error : Method login from init file has called. Args are: u4 p4
+Level Error : Method login from init file has called. Args are: u5 p5
+Level Error : Method login from init file has called. Args are: u6 p6
+Level Error : Method open shop from init file has called. Args are: u2 s1
+Level Error : Method add item from init file has called. Args are: u2 Bamba 30 snacks  20 s1
+Level Error : Method appoint manager from init file has called. Args are: u2 u3 s1
+Level Error : Method logout from init file has called. Args are: u5
+Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
+Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : User tried to register with taken name.
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : User tried to register with taken name.
+Level Error : Method register from init file has called. Args are: u2 p2
+Level Error : User tried to register with taken name.
