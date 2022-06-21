@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market;
 
 
+import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Supply.Address;
@@ -37,10 +38,20 @@ public class Acquisition {
             return shoppingCartToBuy;
 
         if(address==null){
+            DebugLog.getInstance().Log("Address not supplied.");
             throw new MarketException("Address not supplied.");
         }
         if(!address.isLegal()){
+            DebugLog.getInstance().Log("Address details are illegal.");
             throw new MarketException("Address details are illegal.");
+        }
+        if(paymentMethod==null){
+            DebugLog.getInstance().Log("Payment method not supplied.");
+            throw new MarketException("Payment method not supplied.");
+        }
+        if(!paymentMethod.isLegal()){
+            DebugLog.getInstance().Log("Payment method details are illegal.");
+            throw new MarketException("Payment method details are illegal.");
         }
         supplyID=supplyHandler.supply(address);
         if(supplyID==-1){
@@ -50,12 +61,7 @@ public class Acquisition {
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
         supplyConfirmed = true;
-        if(paymentMethod==null){
-            throw new MarketException("Payment method not supplied.");
-        }
-        if(!paymentMethod.isLegal()){
-            throw new MarketException("Payment method details are illegal.");
-        }
+
         paymentID = paymentHandler.pay(paymentMethod);
         if(paymentID==-1){
             shoppingCartToBuy.cancelShopSave();
