@@ -623,27 +623,39 @@ public class Shop implements IHistory {
     }
 
     public synchronized void addDiscountToShop(String visitorName, DiscountType discountType) throws MarketException {
-        if (!isShopOwner ( visitorName ))
-            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        if (!isShopOwner ( visitorName )) {
+            DebugLog.getInstance().Log("member is not the shop owner so not authorized to add a discount to the shop");
+            throw new MarketException("member is not the shop owner so not authorized to add a discount to the shop");
+        }
         discountPolicy.addNewDiscount ( discountType );
+        EventLog.getInstance().Log("Added a new discount to the shop:"+shopName);
     }
 
     public synchronized void removeDiscountFromShop(String visitorName, DiscountType discountType) throws MarketException {
-        if (!isShopOwner ( visitorName ))
-            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        if (!isShopOwner ( visitorName )) {
+            DebugLog.getInstance().Log("member is not the shop owner so not authorized to add a discount to the shop");
+            throw new MarketException("member is not the shop owner so not authorized to add a discount to the shop");
+        }
         discountPolicy.removeDiscount ( discountType );
+        EventLog.getInstance().Log("Removed a discount from the shop:"+shopName);
     }
 
     public synchronized void addPurchasePolicyToShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
-        if (!isShopOwner ( visitorName ))
-            throw new MarketException ( "member is not the shop owner so not authorized to add a purchase policy to the shop" );
+        if (!isShopOwner ( visitorName )) {
+            DebugLog.getInstance().Log("member is not the shop owner so not authorized to add a purchase policy to the shop");
+            throw new MarketException("member is not the shop owner so not authorized to add a purchase policy to the shop");
+        }
         purchasePolicy.addNewPurchasePolicy( purchasePolicyType );
+        EventLog.getInstance().Log("Added new purchase policy to the shop:"+shopName);
     }
 
     public synchronized void removePurchasePolicyFromShop(String visitorName, PurchasePolicyType purchasePolicyType) throws MarketException {
-        if (!isShopOwner ( visitorName ))
-            throw new MarketException ( "member is not the shop owner so not authorized to add a discount to the shop" );
+        if (!isShopOwner ( visitorName )) {
+            DebugLog.getInstance().Log("member is not the shop owner so not authorized to add a purchase policy to the shop");
+            throw new MarketException("member is not the shop owner so not authorized to add a discount to the shop");
+        }
         purchasePolicy.removePurchasePolicy ( purchasePolicyType );
+        EventLog.getInstance().Log("Removed a purchase policy from the shop:"+shopName);
     }
 
     public boolean hasItem(Item itemToCheck) {
@@ -677,6 +689,7 @@ public class Shop implements IHistory {
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = item.getName ();
         handler.sendNewBidToApprovalOfApprovesNotificationBatch ( approvingAppointments, visitorName, price, itemName, shopName);
+        EventLog.getInstance().Log("New bid added to the shop:" + shopName+". The buyer name is:"+visitorName);
         return bid;
     }
 
@@ -714,6 +727,7 @@ public class Shop implements IHistory {
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = itemMap.get ( itemId ).getName ();
         handler.sendNewOfferOfBidToApprovalOfApprovesNotificationBatch ( bidToApprove.getShopOwnersStatus ().keySet ().stream( ).toList (), bidToApprove.getBuyerName (), newPrice, itemName, shopName );
+        EventLog.getInstance().Log("The owner: "+suggester+" offered a counter - bid for the buyer:"+askedBy);
     }
 
     public void rejectABid(String opposed, String buyer, int itemId) throws MarketException {
@@ -729,6 +743,7 @@ public class Shop implements IHistory {
             throw new MarketException ( "visitor does not has the authority to reject a bid." );
         }
         handler.sendBidRejectedNotification ( buyer, bidToReject.isMember (), bidToReject.getPrice (), itemName, shopName );
+        EventLog.getInstance().Log("The bid for the buyer:"+buyer+" in the shop:"+shopName+" has been rejected");
     }
 
     public void cancelABid(String buyer, int itemId) throws MarketException {
@@ -736,6 +751,7 @@ public class Shop implements IHistory {
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = itemMap.get ( itemId ).getName ();
         handler.sendBidCanceledToApprovesNotificationBatch ( bidToCancel.getShopOwnersStatus ().keySet ().stream( ).toList (), buyer, bidToCancel.getPrice (), itemName, shopName );
+        EventLog.getInstance().Log(buyer+" has canceled his bid in the shop:"+shopName);
     }
 
 
@@ -802,11 +818,14 @@ public class Shop implements IHistory {
         if (approved){
             shopOwners.put(appointedName,pendingAppointments.getAppointments().get(appointedName));
             pendingAppointments.removeAppointment(appointedName);
-            ErrorLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
+            EventLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
             //TODO send notification the the appointed.
             return true;
         }
-        else return false;
+        else {
+            EventLog.getInstance().Log(ownerName +"approved "+appointedName+"appointment. Waiting for other owners approval.");
+            return false;
+        }
     }
 
     public void rejectAppointment(String appointedName,String ownerName) throws MarketException {
@@ -826,6 +845,7 @@ public class Shop implements IHistory {
             throw new MarketException("You dont have the authority to reject this appointment.");
         }
         //TODO send notification
+        EventLog.getInstance().Log("The appointment for:"+appointedName+" has been rejected.");
 
     }
     public List<String> getAllPendingForOwner(String ownerName) throws MarketException {

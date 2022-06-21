@@ -165,8 +165,6 @@ public class Market {
 
 
     public Visitor guestLogin() {
-
-
         Visitor visitor= userController.guestLogin();
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedIn(visitor.getName(),userController.getVisitorsInMarket().size());
@@ -219,6 +217,7 @@ public class Market {
             Shop shop = shops.get(shopStr);
             toReturn.add(shop.getItemMap().get(item));
         }
+        EventLog.getInstance().Log("Filtered items by item name.");
         return toReturn;
     }
 
@@ -227,6 +226,7 @@ public class Market {
         for (Shop shop : shops.values()) {
             toReturn.addAll(shop.getItemsByCategory(category));
         }
+        EventLog.getInstance().Log("Filtered items by item category.");
         return toReturn;
     }
 
@@ -235,6 +235,7 @@ public class Market {
         for (Shop shop : shops.values()) {
             toReturn.addAll(shop.getItemsByKeyword(keyword));
         }
+        EventLog.getInstance().Log("Filtered items by keywords.");
         return toReturn;
     }
 
@@ -244,6 +245,7 @@ public class Market {
             if (item.getPrice() >= minPrice && item.getPrice() <= maxPrice)
                 toReturn.add(item);
         }
+        EventLog.getInstance().Log("Filtered items by price.");
         return toReturn;
     }
 
@@ -361,6 +363,7 @@ public class Market {
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedout(visitorName,userController.getVisitorsInMarket().size());
         notifyManager(notifications);
+        EventLog.getInstance().Log("A visitor exited the market.");
     }
 
     public Appointment getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) throws MarketException {
@@ -382,6 +385,7 @@ public class Market {
             throw new MarketException(String.format("related shop %s does not exist in the market"), relatedShop);
         }
         shop.editManagerPermission(shopOwnerName, managerName, updatedAppointment);
+        EventLog.getInstance().Log("Permissions for"+managerName+"in the shop:"+relatedShop+" has been edited by:"+shopOwnerName);
     }
 
     public void closeShop(String shopOwnerName, String shopName) throws MarketException {
@@ -472,6 +476,7 @@ public class Market {
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createMemberLoggedOut(member,ret);
         notifyManager(notifications);
+        EventLog.getInstance().Log("A member logged out from the system");
         return ret;
     }
 
@@ -479,6 +484,7 @@ public class Market {
         alertIfNotLoggedIn(member);
         Security security = Security.getInstance();
         security.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
+        EventLog.getInstance().Log("New personal query has been added to :"+member);
     }
 
 
@@ -583,8 +589,10 @@ public class Market {
     public void appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
         alertIfNotLoggedIn(shopOwnerName);
         Member appointed = userController.getMember(appointedShopOwner);
-        if (appointed == null)
+        if (appointed == null) {
+            DebugLog.getInstance().Log("Tried to appoint non member.");
             throw new MarketException("appointed shop owner is not a member");
+        }
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to appoint shop owner for non existing shop.");
@@ -601,8 +609,10 @@ public class Market {
     public void appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) throws MarketException {
         alertIfNotLoggedIn(shopOwnerName);
         Member appointed = userController.getMember(appointedShopManager);
-        if (appointed == null)
+        if (appointed == null) {
+            DebugLog.getInstance().Log("Tried to appoint non member.");
             throw new MarketException("appointed shop manager is not a member");
+        }
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to appoint shop manager for non existing shop.");
@@ -656,6 +666,7 @@ public class Market {
         shopToOpen.setClosed(false);
         validateAllEmployees(shopToOpen);
         //TODO - send notifications for managers and owners.
+        EventLog.getInstance().Log(shopName+" has been re-opened.");
     }
 
     private void validateAllEmployees(Shop shopToOpen) {
@@ -1218,6 +1229,7 @@ public class Market {
             DebugLog.getInstance().Log("No such shop exist in the market.");
             throw new MarketException("No such shop exist in the market.");
         }
+        EventLog.getInstance().Log(ownerName+" received his pending appointment.");
         return shop.getAllPendingForOwner(ownerName);
     }
 

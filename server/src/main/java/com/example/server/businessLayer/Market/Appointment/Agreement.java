@@ -1,5 +1,7 @@
 package com.example.server.businessLayer.Market.Appointment;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
 import java.util.HashMap;
@@ -24,8 +26,10 @@ public class Agreement {
     }
 
     public void setOwnerApproval(String ownerName , boolean approve) throws MarketException {
-        if (!ownersAppointmentApproval.containsKey(ownerName))
+        if (!ownersAppointmentApproval.containsKey(ownerName)) {
+            DebugLog.getInstance().Log("You dont have the authority to approve or reject this appointment.");
             throw new MarketException("You dont have the authority to approve or reject this appointment.");
+        }
         ownersAppointmentApproval.replace(ownerName,approve);
         updateStatus();
     }
