@@ -701,3 +701,23 @@ Level Error : Method appoint manager from init file has called. Args are: u2 u3 
 Level Error : Method logout from init file has called. Args are: u5
 Level Error : Method appoint owner from init file has called. Args are: u2 u4 s1
 Level Error : Method appoint owner from init file has called. Args are: u2 u5 s1
+Level Error : Non member visitor tried to log in.
+Level Error : shop does not exist in the market
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : shop does not exist in the market
+Level Error : Tried to get information on someone who doesnt work in the shop.
+Level Error : Tried to get information on someone who doesnt work in the shop.
+Level Error : 2 is not a shop owner in the shop:shop1 so there no need to remove his appointment.
+Level Error : 2 is not a shop owner in the shop:shop1 so there no need to remove his appointment.
+Level Error : 2 is not a shop owner in the shop:shop1 so there no need to remove his appointment.
+Level Error : 2 is not a shop owner in the shop:shop1 so there no need to remove his appointment.
+Level Error : Non shop owner tried to access employees info. 
+Level Error : Non shop owner tried to access employees info. 
+Level Error : User tried to register with taken name.
+Level Error : Address details are illegal.
+Level Error : Payment method details are illegal.
+Level Error : shop does not exist in the market

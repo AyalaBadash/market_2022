@@ -19,8 +19,10 @@ public class PurchasePolicyTypeWrapper implements FacadeObject<PurchasePolicyTyp
         AtLeastPurchasePolicyTypeFacade,
         AtMostPurchasePolicyTypeFacade;
     }
+
     private PurchasePolicyTypeWrapperType purchasePolicyTypeWrapperType;
     private double amount;
+
 
     private PurchasePolicyLevelStateWrapper purchasePolicyLevelStateWrapper;
     private List<PurchasePolicyTypeWrapper> purchasePolicyTypeWrappers;
@@ -36,22 +38,21 @@ public class PurchasePolicyTypeWrapper implements FacadeObject<PurchasePolicyTyp
     }
 
 
-
     @Override
     public PurchasePolicyType toBusinessObject() throws MarketException {
-        switch (purchasePolicyTypeWrapperType){
+        switch (purchasePolicyTypeWrapperType) {
             case AtMostPurchasePolicyTypeFacade -> {
-                return new AtMostPurchasePolicyType ( purchasePolicyLevelStateWrapper.toBusinessObject (), amount );
+                return new AtMostPurchasePolicyType(purchasePolicyLevelStateWrapper.toBusinessObject(), amount);
             }
             case AtLeastPurchasePolicyTypeFacade -> {
-                return new AtLeastPurchasePolicyType ( purchasePolicyLevelStateWrapper.toBusinessObject (), amount );
+                return new AtLeastPurchasePolicyType(purchasePolicyLevelStateWrapper.toBusinessObject(), amount);
             }
             case OrCompositePurchasePolicyTypeFacade -> {
-                List<PurchasePolicyType> purchasePolicyTypes = new ArrayList<> (  );
-                for(PurchasePolicyTypeWrapper purchasePolicyTypeWrapper : purchasePolicyTypeWrappers){
-                    purchasePolicyTypes.add ( purchasePolicyTypeWrapper.toBusinessObject () );
+                List<PurchasePolicyType> purchasePolicyTypes = new ArrayList<>();
+                for (PurchasePolicyTypeWrapper purchasePolicyTypeWrapper : purchasePolicyTypeWrappers) {
+                    purchasePolicyTypes.add(purchasePolicyTypeWrapper.toBusinessObject());
                 }
-                return new OrCompositePurchasePolicyType ( purchasePolicyTypes );
+                return new OrCompositePurchasePolicyType(purchasePolicyTypes);
             }
             default -> {
                 return null;

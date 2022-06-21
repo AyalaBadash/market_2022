@@ -356,7 +356,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             Response response = closeShop(name, shopName);
             assert !response.isErrorOccurred();
             ResponseT<ShopFacade> responseShop = getShopInfo(name, shopName);
-            assert responseShop.isErrorOccurred();
+            Assertions.assertTrue(responseShop.isErrorOccurred());
         } catch (Exception e) {
             assert false;
         }

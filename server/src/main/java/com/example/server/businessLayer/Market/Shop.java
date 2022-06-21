@@ -225,7 +225,7 @@ public class Shop implements IHistory {
         for(Bid bid : shoppingBasket.getBids ().values ()) {
             double bidAmount = bid.getAmount ();
             int bidItemID = bid.getItemId ();
-            if (bid.isApproved ( ) && (itemsCurrentAmount.get (bidItemID) != null && itemsCurrentAmount.get (bidItemID) > bidAmount)) {
+            if (bid.getApproved() && (itemsCurrentAmount.get (bidItemID) != null && itemsCurrentAmount.get (bidItemID) > bidAmount)) {
                 itemsCurrentAmount.put (bidItemID, itemsCurrentAmount.get ( bidItemID ) - bidAmount  );
             }
         }
@@ -465,6 +465,7 @@ public class Shop implements IHistory {
         int i = 1;
         for ( StringBuilder acquisition : purchaseHistory ) {
             review.append ( String.format ( "acquisition %d:\n %s", i, acquisition.toString ( ) ) );
+            review.append("\n");
             i++;
         }
         EventLog eventLog = EventLog.getInstance ( );

@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Bid {
 
+
     public enum Side{
         buyer,
         seller,
@@ -64,8 +65,11 @@ public class Bid {
     }
 
     public synchronized boolean approveBid(String name){
-        if(name.equals ( buyerName ) && sideNeedToApprove.equals ( Side.buyer ))
-            return true;
+        if(name.equals ( buyerName )) {
+            if (sideNeedToApprove.equals(Side.buyer))
+                return true;
+            return false;
+        }
         if(sideNeedToApprove.equals ( Side.seller ) || sideNeedToApprove.equals ( Side.both )) {
             shopOwnersStatus.replace ( name, true );
             if (isApproved ( )) {
@@ -91,7 +95,7 @@ public class Bid {
     }
 
     public synchronized void suggestNewOffer(String name, Double newPrice) throws MarketException {
-        if(!name.equals ( buyerName ) && sideNeedToApprove.equals ( Side.buyer ) || name.equals ( buyerName ) && (sideNeedToApprove.equals ( Side.seller ) || sideNeedToApprove.equals ( Side.both ))){
+        if(sideNeedToApprove.equals ( Side.buyer ) || name.equals ( buyerName )){
             DebugLog.getInstance ().Log ( "This bid is not for you to approve." );
             throw new MarketException ( "This bid is not for you to approve." );
         }
@@ -151,6 +155,9 @@ public class Bid {
     public Side getSideNeedToApprove() {
         return sideNeedToApprove;
     }
+    public boolean getApproved(){
+        return this.approved;
+    }
 
     public void setSideNeedToApprove(Side sideNeedToApprove) {
         this.sideNeedToApprove = sideNeedToApprove;
@@ -186,9 +193,5 @@ public class Bid {
 
     public void setMember(boolean member) {
         isMember = member;
-    }
-
-    public boolean getApproved() {
-        return approved;
     }
 }
