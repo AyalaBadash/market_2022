@@ -32,6 +32,14 @@ public class DiscountLevelStateWrapper implements FacadeObject<DiscountLevelStat
     public DiscountLevelStateWrapper() {
     }
 
+    public DiscountLevelStateWrapperType getDiscountLevelStateWrapperType() {
+        return discountLevelStateWrapperType;
+    }
+
+    public void setDiscountLevelStateWrapperType(DiscountLevelStateWrapperType discountLevelStateWrapperType) {
+        this.discountLevelStateWrapperType = discountLevelStateWrapperType;
+    }
+
     @Override
     public DiscountLevelState toBusinessObject() throws MarketException {
         switch (discountLevelStateWrapperType){
@@ -93,14 +101,6 @@ public class DiscountLevelStateWrapper implements FacadeObject<DiscountLevelStat
     }
 
     public void setCompositeDiscountLevelStateWrapperType(DiscountLevelStateWrapperType discountLevelStateWrapperType) {
-        this.discountLevelStateWrapperType = discountLevelStateWrapperType;
-    }
-
-    public DiscountLevelStateWrapperType getDiscountLevelStateWrapperType() {
-        return discountLevelStateWrapperType;
-    }
-
-    public void setDiscountLevelStateWrapperType(DiscountLevelStateWrapperType discountLevelStateWrapperType) {
         this.discountLevelStateWrapperType = discountLevelStateWrapperType;
     }
 

@@ -465,6 +465,7 @@ public class Shop implements IHistory {
         int i = 1;
         for ( StringBuilder acquisition : purchaseHistory ) {
             review.append ( String.format ( "acquisition %d:\n %s", i, acquisition.toString ( ) ) );
+            review.append("\n");
             i++;
         }
         EventLog eventLog = EventLog.getInstance ( );

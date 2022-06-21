@@ -32,15 +32,15 @@ public class DiscountTypeWrapper implements FacadeObject<DiscountType> {
         this.discountTypeWrappers = discountTypeWrappers;
     }
 
-    public DiscountTypeWrapper() {
-    }
-
     public DiscountTypeWrapperType getDiscountTypeWrapperType() {
         return discountTypeWrapperType;
     }
 
     public void setDiscountTypeWrapperType(DiscountTypeWrapperType discountTypeWrapperType) {
         this.discountTypeWrapperType = discountTypeWrapperType;
+    }
+
+    public DiscountTypeWrapper() {
     }
 
     @Override

@@ -506,6 +506,10 @@ public class Market {
             throw new MarketException("only a system manager can get information about a closed shop");
         }
         Shop shop = shops.get(shopName);
+        if (shop.isClosed()){
+            DebugLog.getInstance().Log("user tried to reach a closed shop");
+            throw new MarketException("the shop has been closed! there for cannot enter it any more");
+        }
         //TODO - need to be an employee or not??
 //        if (!shop.isEmployee(member)) {
 //            throw new MarketException("You are not employee in this shop");
@@ -948,7 +952,7 @@ public class Market {
 
     private void readDataSourceConfig() throws MarketException {
 
-        String path = getConfigDir() + MarketConfig.DATA_SOURCE_FILE_NAME;
+        String path = getConfigDir() +MarketConfig.DATA_SOURCE_FILE_NAME;
         DataSourceConfigReader.getInstance(path);
     }
 

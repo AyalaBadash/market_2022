@@ -6,7 +6,7 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.OrComposi
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
-public class AtMostPurchasePolicyTypeFacade extends PurchasePolicyTypeFacade {
+    public class AtMostPurchasePolicyTypeFacade extends PurchasePolicyTypeFacade {
 
     protected double amount;
 
