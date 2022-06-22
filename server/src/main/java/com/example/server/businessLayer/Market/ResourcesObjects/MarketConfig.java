@@ -1,8 +1,8 @@
 package com.example.server.businessLayer.Market.ResourcesObjects;
 
 public class MarketConfig {
-    public static boolean IS_TEST_MODE=false;
-    public static boolean USING_DATA=false;
+    public static boolean IS_TEST_MODE=true;
+    public static boolean USING_DATA=true;
     public static String PAYMENT_SERVICE_NAME="PaymentService";
     public static String SUPPLY_SERVICE_NAME="SupplyService";
     public static String PUBLISHER_SERVICE_NAME="Publisher";
