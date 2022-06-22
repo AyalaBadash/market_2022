@@ -951,8 +951,9 @@ public class Market {
     }
 
     public boolean isInit() throws MarketException {
-        readDataSourceConfig();
+
         if (MarketConfig.USING_DATA) {
+            readDataSourceConfig();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             readInitFile(MarketConfig.DATA_FILE_NAME);
             return true;
@@ -1035,7 +1036,7 @@ public class Market {
         } else if (val.contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
             initNotificationService(val1);
         } else {
-            if (systemManagerName == null || systemManagerName.isEmpty())
+            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty()))
                 initManager(val, val1);
         }
     }
@@ -1059,8 +1060,6 @@ public class Market {
     }
 
     private void initManager(String val, String val1) throws MarketException {
-        if(instance.systemManagerName != null)
-            throw new MarketException ( "manager already exists" );
         register(val, val1);
         instance.systemManagerName = val;
     }
@@ -1366,5 +1365,15 @@ public class Market {
 
     public boolean isSystemManager(String name) {
         return name.equals(this.systemManagerName);
+    }
+
+    public String resetSystemManager() {
+        String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
+        systemManagerName="";
+        return ret;
+    }
+    public void restoreSytemManager(String uName, String password){
+        systemManagerName=uName;
+
     }
 }
