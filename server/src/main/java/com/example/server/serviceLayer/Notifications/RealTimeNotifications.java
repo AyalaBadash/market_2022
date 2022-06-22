@@ -74,10 +74,10 @@ public class RealTimeNotifications extends Notification{
     }
 
     public void createUserLoggedIn(String name, int size) {
-        message= String.format("The visitor %s entered the market.\nCurrently, there are %d visitors in the market.",name,size);
+        message= String.format("The visitor %s entered the market.\nCurrently, there are:: %d visitors in the market.",name,size);
     }
     public void createUserLoggedout(String name, int size) {
-        message= String.format("The visitor %s leaved the market.\nCurrently, there are %d visitors in the market.",name,size);
+        message= String.format("The visitor %s leaved the market.\nCurrently, there are:: %d visitors in the market.",name,size);
     }
     public void createMemberLoggedIn(String memberName,String visitorName) {
         message= String.format("The user %s identified as member %s in the market .",visitorName, memberName);
