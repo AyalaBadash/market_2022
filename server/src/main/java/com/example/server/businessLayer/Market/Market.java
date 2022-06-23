@@ -23,7 +23,6 @@ import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.NameValuePair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -669,8 +668,25 @@ public class Market {
         ClosedShopsHistory.getInstance().reopenShop(shopName);
         shopToOpen.setClosed(false);
         validateAllEmployees(shopToOpen);
+        addItemsFromReopenedShop(shopToOpen);
         //TODO - send notifications for managers and owners.
         EventLog.getInstance().Log(shopName+" has been re-opened.");
+    }
+
+    private void addItemsFromReopenedShop(Shop shopToOpen) {
+        Map<Integer, Item> shopItems = shopToOpen.getItemMap();
+        for (Map.Entry<Integer,Item> entry:shopItems.entrySet())
+        {
+            this.allItemsInMarketToShop.put(entry.getKey(),shopToOpen.getShopName());
+            if (itemByName.containsKey(entry.getValue().getName())){
+                itemByName.get(entry.getValue().getName()).add(entry.getKey());
+            }
+            else {
+                List<Integer> lst = new ArrayList<>();
+                lst.add(entry.getKey());
+                itemByName.put(entry.getValue().getName(),lst);
+            }
+        }
     }
 
     private void validateAllEmployees(Shop shopToOpen) {
@@ -1284,7 +1300,7 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir");
-        String additional_dir = "\\server\\config\\";
+        String additional_dir = "\\config\\";
         if (MarketConfig.IS_MAC) {
             additional_dir = "/config/";
         }

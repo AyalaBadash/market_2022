@@ -955,6 +955,21 @@ public class MarketUnitTest {
             assert true;
         }
     }
+    @Test
+    @DisplayName("Reopen shop and look for item")
+    public void reopenShopAndLookForItemTest(){
+        try{
+            market.closeShop("raz","razShop");
+            List<Item> items = market.getItemByName("milk");
+            Assertions.assertEquals(0,items.size());
+            market.reopenClosedShop("razShop","raz");
+            items = market.getItemByName("milk");
+            Assertions.assertEquals(1,items.size());
+        }
+        catch (MarketException e){
+            assert false;
+        }
+    }
 
 
 }
