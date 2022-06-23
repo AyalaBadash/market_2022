@@ -35,7 +35,6 @@ public class Market {
     private UserController userController;
     private String systemManagerName;
     private Map<String, Shop> shops;                                 // <shopName, shop>
-
     private NotificationHandler notificationHandler;
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
@@ -45,6 +44,8 @@ public class Market {
     private Publisher publisher;
     private static Market instance;
     Map<String, Integer> numOfAcqsPerShop;
+
+    private Statistics statistics;
 
     private Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -57,6 +58,7 @@ public class Market {
         supplyServiceProxy = null;
         publisher = null;
         notificationHandler = null;
+        statistics=Statistics.getInstance();
     }
 
 
@@ -86,6 +88,7 @@ public class Market {
                 register(userName, password);
                 if(instance.systemManagerName == null)
                     instance.systemManagerName = userName;
+                statistics.setSystemManager(userName);
             }
             checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
@@ -168,17 +171,10 @@ public class Market {
         Visitor visitor= userController.guestLogin();
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedIn(visitor.getName(),userController.getVisitorsInMarket().size());
-        notifyManager(notifications);
+        statistics.incNumOfVisitors();
         return visitor;
     }
 
-    public void notifyManager(RealTimeNotifications notification){
-        if(systemManagerName != null && ( !systemManagerName.isEmpty() & userController.isLoggedIn(systemManagerName))) {
-            NotificationHandler handler = NotificationHandler.getInstance();
-            //The is member is false because the manager received only real time notifications.
-            handler.sendNotification(systemManagerName, notification, false);
-        }
-    }
 
     public Shop getShopByName(String shopName) {
         return shops.get(shopName);
@@ -352,7 +348,7 @@ public class Market {
         Member ret=  new Member(member.getName(), member.getMyCart(), appointmentByMe, myAppointments, member.getPurchaseHistory());//,member.getPurchaseHistory()
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createMemberLoggedIn(member.getName(),visitorName);
-        notifyManager(notifications);
+        statistics.incNumOfMembers();
         return ret;
     }
 
@@ -362,7 +358,7 @@ public class Market {
         userController.exitSystem(visitorName);
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedout(visitorName,userController.getVisitorsInMarket().size());
-        notifyManager(notifications);
+        statistics.decNumOfVisitors();
         EventLog.getInstance().Log("A visitor exited the market.");
     }
 
@@ -410,7 +406,8 @@ public class Market {
             } catch (Exception e) {
             }
             shopToClose.setClosed(true);
-            //
+            statistics.incShopClosed();
+            statistics.decNumOfShops();
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
         }
     }
@@ -475,7 +472,7 @@ public class Market {
         String ret= userController.memberLogout(member);
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createMemberLoggedOut(member,ret);
-        notifyManager(notifications);
+        statistics.decNumOfMembers();
         EventLog.getInstance().Log("A member logged out from the system");
         return ret;
     }
@@ -547,6 +544,7 @@ public class Market {
             DebugLog.getInstance().Log("Non member tried to open a shop.");
             throw new MarketException("You are not a member. Only members can open a new shop in the market");
         }
+        statistics.incNumOfShops();
         EventLog.getInstance().Log(visitorName + " opened a new shop named:" + shopName);
         return true;
     }
@@ -669,6 +667,8 @@ public class Market {
         ClosedShopsHistory.getInstance().reopenShop(shopName);
         shopToOpen.setClosed(false);
         validateAllEmployees(shopToOpen);
+        statistics.incNumOfShops();
+        statistics.decShopClosed();
         //TODO - send notifications for managers and owners.
         EventLog.getInstance().Log(shopName+" has been re-opened.");
     }
@@ -750,6 +750,9 @@ public class Market {
         }
         if (shoppingCartToReturn == null) {
             throw new MarketException("Could not make the purchase right now for the shopping cart. Please try again later. ");
+        }
+        if(!shoppingCartToReturn.isEmpty()){
+            statistics.incNumOfAcquisitions();
         }
         return shoppingCartToReturn;
     }
@@ -1036,8 +1039,10 @@ public class Market {
         } else if (val.contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
             initNotificationService(val1);
         } else {
-            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty()))
+            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty())) {
                 initManager(val, val1);
+                statistics.setSystemManager(val);
+            }
         }
     }
 

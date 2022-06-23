@@ -236,8 +236,9 @@ public class Shop implements IHistory {
         }
         //todo - need to be handled
         catch (Exception e){}
-        if(purchasePolicy.isPoliciesHeld (shoppingBasket ))
-            return discountPolicy.calculateDiscount ( shoppingBasket );
+        if(purchasePolicy.isPoliciesHeld (shoppingBasket )) {
+            return discountPolicy.calculateDiscount(shoppingBasket);
+        }
         throw new MarketException ( "shopping basket does not held the purchase policy" );
     }
 

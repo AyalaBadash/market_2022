@@ -1,0 +1,4 @@
+Real Time message: 
+you got appointed as owner to shop removingShop by removerB
+
+

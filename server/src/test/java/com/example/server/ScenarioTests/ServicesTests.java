@@ -436,6 +436,55 @@ public class ServicesTests {
         }
     }
 
+    @Test
+    @Order(19)
+    @DisplayName("Notification test- close shop with real time notification, check message exists.")
+    public void shopManagerStatistics() {
+        try {
+
+            String appointedName = "appointedNameTest4";
+            String testShopName = "ShopName4";
+            String owner = "ownerNameTest4";
+            List<String> nots= new ArrayList<>();
+            RealTimeNotifications not= new RealTimeNotifications();
+            setUpCloseShop(owner,appointedName,not,testShopName);
+            nots.addAll(readRealTimeMessages(userName));
+            boolean found = false;
+            for(String message : nots){
+                if(message.contains("Statistics")){
+                    found=true;
+                }
+            }
+            Assertions.assertTrue(found);
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+    @Test
+    @Order(20)
+    @DisplayName("Notification test- close shop with real time notification, not system manager")
+    public void shopManagerStatisticsNoManager() {
+        try {
+
+            String appointedName = "appointedNameTest5";
+            String testShopName = "ShopName5";
+            String owner = "ownerNameTest5";
+            List<String> nots= new ArrayList<>();
+            RealTimeNotifications not= new RealTimeNotifications();
+            setUpCloseShop(owner,appointedName,not,testShopName);
+            nots.addAll(readRealTimeMessages(userName));
+            boolean found = false;
+            for(String message : nots){
+                if(message.contains("Statistics")){
+                    found=true;
+                }
+            }
+            Assertions.assertFalse(found);
+        } catch (Exception e) {
+            assert true;
+        }
+    }
+
     public void setUpCloseShop(String owner,String appointedName, RealTimeNotifications not,String testShopName) throws MarketException {
 
         List<String> nots = new ArrayList<>();
