@@ -1,6 +1,8 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Publisher.NotificationHandler;
+import com.google.gson.Gson;
+import org.eclipse.jetty.util.ajax.JSON;
 
 public class Statistics {
 
@@ -71,15 +73,19 @@ public class Statistics {
 
     public void incNumOfAcquisitions() {
         this.numOfAcquisitions++;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
-        }
+        try {
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
+        }catch (Exception e){}
     }
     public void decNumOfAcquisitions() {
         this.numOfAcquisitions--;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
-        }
+        try {
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
+        }catch (Exception e){}
     }
     public int getNumOfShops() {
         return numOfShops;
@@ -87,15 +93,19 @@ public class Statistics {
 
     public void incNumOfShops() {
         this.numOfShops++;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
-        }
+        try {
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
+        }catch (Exception e){}
     }
     public void decNumOfShops() {
         this.numOfShops--;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
-        }
+        try {
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
+        }catch (Exception e){}
     }
     public int getShopClosed() {
         return shopClosed;
@@ -103,15 +113,19 @@ public class Statistics {
 
     public void incShopClosed() {
         this.shopClosed ++;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
-        }
+        try {
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
+        }catch (Exception e){}
     }
     public void decShopClosed() {
         this.shopClosed --;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
-        }
+        try {
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
+        }catch (Exception e){}
     }
 
     private boolean hasManager(){
@@ -124,5 +138,12 @@ public class Statistics {
         if(manager!=null && !manager.isEmpty()){
             systemManager=manager;
         }
+    }
+
+    @Override
+    public String toString() {
+
+        Gson gson =new Gson();
+        return gson.toJson(this);
     }
 }

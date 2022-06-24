@@ -86,9 +86,10 @@ public class Market {
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
-                if(instance.systemManagerName == null)
+                if(instance.systemManagerName == null) {
                     instance.systemManagerName = userName;
-                statistics.setSystemManager(userName);
+                    statistics.setSystemManager(userName);
+                }
             }
             checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
@@ -171,7 +172,7 @@ public class Market {
         Visitor visitor= userController.guestLogin();
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedIn(visitor.getName(),userController.getVisitorsInMarket().size());
-        statistics.incNumOfVisitors();
+        //statistics.incNumOfVisitors();
         return visitor;
     }
 
@@ -348,7 +349,7 @@ public class Market {
         Member ret=  new Member(member.getName(), member.getMyCart(), appointmentByMe, myAppointments, member.getPurchaseHistory());//,member.getPurchaseHistory()
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createMemberLoggedIn(member.getName(),visitorName);
-        statistics.incNumOfMembers();
+        //statistics.incNumOfMembers();
         return ret;
     }
 
@@ -358,7 +359,7 @@ public class Market {
         userController.exitSystem(visitorName);
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedout(visitorName,userController.getVisitorsInMarket().size());
-        statistics.decNumOfVisitors();
+        //statistics.decNumOfVisitors();
         EventLog.getInstance().Log("A visitor exited the market.");
     }
 
@@ -406,8 +407,8 @@ public class Market {
             } catch (Exception e) {
             }
             shopToClose.setClosed(true);
-            statistics.incShopClosed();
-            statistics.decNumOfShops();
+            //statistics.incShopClosed();
+            //statistics.decNumOfShops();
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
         }
     }
@@ -472,7 +473,7 @@ public class Market {
         String ret= userController.memberLogout(member);
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createMemberLoggedOut(member,ret);
-        statistics.decNumOfMembers();
+        //statistics.decNumOfMembers();
         EventLog.getInstance().Log("A member logged out from the system");
         return ret;
     }
@@ -544,7 +545,7 @@ public class Market {
             DebugLog.getInstance().Log("Non member tried to open a shop.");
             throw new MarketException("You are not a member. Only members can open a new shop in the market");
         }
-        statistics.incNumOfShops();
+        //statistics.incNumOfShops();
         EventLog.getInstance().Log(visitorName + " opened a new shop named:" + shopName);
         return true;
     }
@@ -667,8 +668,8 @@ public class Market {
         ClosedShopsHistory.getInstance().reopenShop(shopName);
         shopToOpen.setClosed(false);
         validateAllEmployees(shopToOpen);
-        statistics.incNumOfShops();
-        statistics.decShopClosed();
+        //statistics.incNumOfShops();
+        //statistics.decShopClosed();
         //TODO - send notifications for managers and owners.
         EventLog.getInstance().Log(shopName+" has been re-opened.");
     }
@@ -751,9 +752,9 @@ public class Market {
         if (shoppingCartToReturn == null) {
             throw new MarketException("Could not make the purchase right now for the shopping cart. Please try again later. ");
         }
-        if(!shoppingCartToReturn.isEmpty()){
+       /* if(!shoppingCartToReturn.isEmpty()){
             statistics.incNumOfAcquisitions();
-        }
+        } */
         return shoppingCartToReturn;
     }
 
@@ -959,6 +960,7 @@ public class Market {
             readDataSourceConfig();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             readInitFile(MarketConfig.DATA_FILE_NAME);
+            //MarketConfig.USING_DATA=false;
             return true;
         }
         checkSystemInit();
@@ -971,6 +973,17 @@ public class Market {
         DataSourceConfigReader.getInstance(path);
     }
 
+    public void loadDataFromFile(){
+
+        if (MarketConfig.USING_DATA) {
+            try {
+                readInitFile(MarketConfig.DATA_FILE_NAME);
+            } catch (MarketException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
     private void readInitFile(String fileName) throws MarketException {
 
 
@@ -1041,7 +1054,7 @@ public class Market {
         } else {
             if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty())) {
                 initManager(val, val1);
-                statistics.setSystemManager(val);
+                //statistics.setSystemManager(val);
             }
         }
     }

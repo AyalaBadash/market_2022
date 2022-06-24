@@ -124,10 +124,10 @@ public class RobustnessTests {
             double buyingAmount = itemAmount;
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
-            marketService.setPaymentService(WSEPPaymentServiceAdapter.getinstance(),userName);
+            marketService.setPaymentService(WSEPPaymentServiceAdapter.getinstance(),managerName);
             assert true;
         } catch (Exception e) {
-            marketService.setPaymentService(WSEPPaymentServiceAdapter.getinstance(),userName);
+            marketService.setPaymentService(WSEPPaymentServiceAdapter.getinstance(),managerName);
             assert false;
         }
     }
@@ -144,10 +144,10 @@ public class RobustnessTests {
             double buyingAmount = itemAmount;
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
-            marketService.setSupplyService(WSEPSupplyServiceAdapter.getInstance(),userName);
+            marketService.setSupplyService(WSEPSupplyServiceAdapter.getInstance(),managerName);
             assert true;
         } catch (Exception e) {
-            marketService.setSupplyService(WSEPSupplyServiceAdapter.getInstance(),userName);
+            marketService.setSupplyService(WSEPSupplyServiceAdapter.getInstance(),managerName);
             assert false;
         }
     }
@@ -184,10 +184,10 @@ public class RobustnessTests {
             double buyingAmount = itemAmount;
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
-            marketService.setPublishService(TextDispatcher.getInstance(),userName);
+            marketService.setPublishService(TextDispatcher.getInstance(),managerName);
             assert true;
         } catch (Exception e) {
-            marketService.setPublishService(TextDispatcher.getInstance(),userName);
+            marketService.setPublishService(TextDispatcher.getInstance(),managerName);
             assert false;
         }
     }

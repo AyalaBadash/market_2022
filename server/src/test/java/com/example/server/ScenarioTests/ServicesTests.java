@@ -28,7 +28,7 @@ public class ServicesTests {
     static PaymentServiceProxy paymentServiceProxy;
     static SupplyServiceProxy supplyServiceProxy;
     String userName = "u1";
-    String password = "password";
+    String password = "p1";
     String ItemName= "item1";
     Item itemAdded;
     int productAmount=20;
@@ -63,9 +63,11 @@ public class ServicesTests {
         MarketConfig.IS_TEST_MODE=true;
         Visitor visitor= market.guestLogin();
         try {
-            String[] dets= market.resetSystemManager().split(":");
-            ManName=dets[0];
-            ManPass=dets[1];
+            String[] dets = market.resetSystemManager().split(":");
+            ManName = dets[0];
+            ManPass = dets[1];
+        }catch(Exception e){}
+        try{
             market.isInit ( );
         }catch(MarketException e){
             System.out.println (e.getMessage () );
@@ -163,8 +165,10 @@ public class ServicesTests {
     public void PaymentServiceFalls() throws MarketException {
         try {
             try {
+
                 Visitor visitor = market.guestLogin();
                 market.memberLogin(userName, password);
+                market.restoreSytemManager(userName,password);
                 market.validateSecurityQuestions(userName, new ArrayList<>(), visitor.getName());
             }catch (Exception e){
                 String str= e.getMessage();
@@ -274,6 +278,12 @@ public class ServicesTests {
         try{
             UserController userController= UserController.getInstance();
             List<String> list= new ArrayList<>();
+            try {
+                market.loadDataFromFile();
+            }
+            catch(Exception e){
+
+            }
             list.add("u2");
             list.add("u3");
             list.add("u4");
@@ -323,7 +333,7 @@ public class ServicesTests {
     @Test
     @Order(14)
     @DisplayName("System init from data source file with bad arguments. should not continue the market init.")
-    public void initFromDataSourceBadArgs() throws MarketException, FileNotFoundException {
+    public void initFromDataSourceBadArgs() {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
         try{
 
