@@ -960,7 +960,7 @@ public class Market {
             readDataSourceConfig();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             readInitFile(MarketConfig.DATA_FILE_NAME);
-            //MarketConfig.USING_DATA=false;
+            MarketConfig.USING_DATA=false;
             return true;
         }
         checkSystemInit();

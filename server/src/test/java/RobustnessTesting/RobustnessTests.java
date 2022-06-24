@@ -248,13 +248,16 @@ public class RobustnessTests {
     @Test
     @DisplayName("Market init from wrong file name file")
     public void initTest() {
+        String name=MarketConfig.DATA_FILE_NAME;
         try {
+
             MarketConfig.DATA_FILE_NAME = "noFile.txt";
+            MarketConfig.USING_DATA=true;
             boolean res = marketService.isServerInit().isErrorOccurred();
-            MarketConfig.DATA_FILE_NAME = "Data.txt";
+            MarketConfig.DATA_FILE_NAME =name;
             assert res;
         } catch (Exception e) {
-            MarketConfig.DATA_FILE_NAME = "Data.txt";
+            MarketConfig.DATA_FILE_NAME = name;
             assert false;
         }
     }
@@ -272,7 +275,6 @@ public class RobustnessTests {
         }
     }
     @Test
-    @Order(13)
     @DisplayName("System init from no existing data source file. should not continue the market init.")
     public void initFromDataSourceNoFile() throws MarketException, FileNotFoundException {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
@@ -282,16 +284,15 @@ public class RobustnessTests {
             MarketConfig.DATA_SOURCE_FILE_NAME ="noName.txt";
             DataSourceConfigReader.resetInstance();
             market.isInit();
-            MarketConfig.SERVICES_FILE_NAME=name;
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
             assert false;
         }
         catch(Exception e){
-            MarketConfig.SERVICES_FILE_NAME=name;
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
             Assertions.assertEquals("Data source config file not found.",e.getMessage());
         }
     }
     @Test
-    @Order(14)
     @DisplayName("System init from data source file with no password. should not continue the market init.")
     public void initFromDataSourceBadArgsPass() {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
@@ -309,7 +310,6 @@ public class RobustnessTests {
         }
     }
     @Test
-    @Order(14)
     @DisplayName("System init from data source good scenario.")
     public void initFromDataSource() {
         try{
