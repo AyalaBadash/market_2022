@@ -342,13 +342,14 @@ public class Shop implements IHistory {
 
     public ShoppingBasket validateBasket(ShoppingBasket basket) {
         Map<java.lang.Integer, Double> items = basket.getItems ( );
-        for ( Map.Entry<java.lang.Integer, Double> currentItem : items.entrySet ( ) ) {
-            Item curItem = basket.getItemMap().get(currentItem.getKey());;
-            Double curAmount = itemsCurrentAmount.get(currentItem.getKey());
-            if (currentItem.getValue ( ) > curAmount) {
+        for ( Map.Entry<java.lang.Integer, Double> entry : items.entrySet ( ) ) {
+            Item curItem = basket.getItemMap().get(entry.getKey());;
+            Double curAmount = itemsCurrentAmount.get(entry.getKey());
+            if (entry.getValue ( ) > curAmount) {
                 if(curAmount == 0)
                     basket.removeItem ( curItem );
-                currentItem.setValue ( itemsCurrentAmount.get ( currentItem.getKey ( ) ) );
+                else
+                    items.replace(entry.getKey(),curAmount);
             }
         }
         return basket;
