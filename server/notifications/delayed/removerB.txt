@@ -1,0 +1,4 @@
+you got appointed as owner to shop removingShop by removerA
+Unfortunately, your appointment as removerB in shop removingShop has been canceled.
+you got appointed as owner to shop removingShop by removerA
+Unfortunately, your appointment as removerB in shop removingShop has been canceled.
