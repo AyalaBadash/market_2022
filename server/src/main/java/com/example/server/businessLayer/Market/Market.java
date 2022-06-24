@@ -533,8 +533,7 @@ public class Market {
                     if (shopName == null || shopName.length() == 0)
                         throw new MarketException("shop name length has to be positive");
                     Shop shop = new Shop(shopName, curMember);
-//                ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
-//                shop.addEmployee(shopFounder);
+
                     shops.put(shopName, shop);
 
                 } else {
