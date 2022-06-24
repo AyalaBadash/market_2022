@@ -968,7 +968,6 @@ public class Market {
     }
 
     private void readDataSourceConfig() throws MarketException {
-
         String path = getConfigDir() +MarketConfig.DATA_SOURCE_FILE_NAME;
         DataSourceConfigReader.getInstance(path);
     }
@@ -1017,7 +1016,7 @@ public class Market {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] vals = data.split("::");
-                setService(vals[0], vals[1]);
+                setService(vals);
             }
         } catch (FileNotFoundException e){
             throw new MarketException("file not found while reading configuration file");
@@ -1036,24 +1035,23 @@ public class Market {
 
     }
 
-    /**
-     * init service by the line from config file.
-     *
-     * @param val  the service name to initial.
-     * @param val1 the instance type of the service.
-     * @throws MarketException
-     */
-    private void setService(String val, String val1) throws MarketException {
+    private void setService(String[] vals) throws MarketException {
 
-        if (val.contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
-            initPaymentService(val1);
-        } else if (val.contains(MarketConfig.SUPPLY_SERVICE_NAME)) {
-            initSupplyService(val1);
-        } else if (val.contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
-            initNotificationService(val1);
-        } else {
+        if(vals.length==0){
+            return;
+        }
+        if(vals.length<2 || (vals[0].equals(MarketConfig.SYSTEM_MANAGER_NAME) && vals.length<3)){
+            throw new MarketException(String.format("Missing init values for %s. Could not init the services.",vals[0]));
+        }
+        if (vals[0].contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
+            initPaymentService(vals[1]);
+        } else if (vals[0].contains(MarketConfig.SUPPLY_SERVICE_NAME)) {
+            initSupplyService(vals[1]);
+        } else if (vals[0].contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
+            initNotificationService(vals[1]);
+        } else if (vals[0].contains(MarketConfig.SYSTEM_MANAGER_NAME)){
             if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty())) {
-                initManager(val, val1);
+                initManager(vals[1], vals[2]);
                 //statistics.setSystemManager(val);
             }
         }

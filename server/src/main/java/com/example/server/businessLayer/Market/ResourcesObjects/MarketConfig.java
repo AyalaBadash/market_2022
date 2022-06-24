@@ -6,6 +6,7 @@ public class MarketConfig {
     public static String PAYMENT_SERVICE_NAME="PaymentService";
     public static String SUPPLY_SERVICE_NAME="SupplyService";
     public static String PUBLISHER_SERVICE_NAME="Publisher";
+    public static String SYSTEM_MANAGER_NAME="SystemManager";
     public static String WSEP_SERVICE="WSEP";
     public static String WSEP_ADDRESS="https://cs-bgu-wsep.herokuapp.com/";
     public static String TEXT_PUBLISHER="Text";

@@ -33,14 +33,7 @@ public class ServicesTests {
     Item itemAdded;
     int productAmount=20;
     Double productPrice=30.0;
-    String shopOwnerName = "bar";
     String shopOwnerPassword = "password";
-    String memberName = "bar1";
-    String memberPassword = "password";
-    String loggedInmemberName = "bar2";
-
-    String loggedInmemberPassword = "password";
-    String shopName = "store";
     TextDispatcher textDispatcher = TextDispatcher.getInstance();
     static CreditCard creditCard;
     static Address address;
@@ -314,24 +307,41 @@ public class ServicesTests {
     @Test
     @Order(13)
     @DisplayName("System init from no existing data source file. should not continue the market init.")
-    public void initFromDataSourceNoFile() throws MarketException, FileNotFoundException {
+    public void initFromDataSourceNoFile() {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
         try{
 
             MarketConfig.DATA_SOURCE_FILE_NAME ="noName.txt";
             DataSourceConfigReader.resetInstance();
             market.isInit();
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
+            Assertions.assertEquals("Data source config file not found.",e.getMessage());
+        }
+    }
+    @Test
+    @Order(14)
+    @DisplayName("System init from bad config file without supply service. should not continue the market init.")
+    public void initFromBadConfig() {
+        String name=MarketConfig.SERVICES_FILE_NAME;
+        try{
+
+            MarketConfig.SERVICES_FILE_NAME ="BadConfig.txt";
+            market.isInit();
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
         catch(Exception e){
             MarketConfig.SERVICES_FILE_NAME=name;
-            Assertions.assertEquals("Data source config file not found.",e.getMessage());
+            Assertions.assertEquals("Missing init values for SupplyService . Could not init the services.",e.getMessage());
         }
     }
 
     @Test
-    @Order(14)
+    @Order(15)
     @DisplayName("System init from data source file with bad arguments. should not continue the market init.")
     public void initFromDataSourceBadArgs() {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
@@ -340,17 +350,17 @@ public class ServicesTests {
             MarketConfig.DATA_SOURCE_FILE_NAME =MarketConfig.MISS_DATA_SOURCE_FILE_NAME;
             DataSourceConfigReader.resetInstance();
             market.isInit();
-            MarketConfig.SERVICES_FILE_NAME=name;
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
             assert false;
         }
         catch(Exception e){
-            MarketConfig.SERVICES_FILE_NAME=name;
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
             Assertions.assertEquals("Missing username in data source config file.",e.getMessage());
         }
     }
 
    @Test
-   @Order(15)
+   @Order(16)
     @DisplayName("Notification test- successful close shop action")
     public void closeShop() {
        try {
@@ -374,7 +384,7 @@ public class ServicesTests {
 
 
     @Test
-    @Order(16)
+    @Order(17)
     @DisplayName("Notification test- appoint owner with delayed notification, check message exists.")
     public void AppointOwnerNotificationTest() {
         try {
@@ -397,7 +407,7 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(17)
+    @Order(18)
     @DisplayName("Notification test- close shop with delayed notification, check message exists.")
     public void closeShopDelayed() {
         try {
@@ -422,7 +432,7 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(18)
+    @Order(19)
     @DisplayName("Notification test- close shop with real time notification, check message exists.")
     public void closeShopRealTime() {
         try {
@@ -447,7 +457,7 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(19)
+    @Order(20)
     @DisplayName("Notification test- close shop with real time notification, check message exists.")
     public void shopManagerStatistics() {
         try {
@@ -471,7 +481,7 @@ public class ServicesTests {
         }
     }
     @Test
-    @Order(20)
+    @Order(21)
     @DisplayName("Notification test- close shop with real time notification, not system manager")
     public void shopManagerStatisticsNoManager() {
         try {
