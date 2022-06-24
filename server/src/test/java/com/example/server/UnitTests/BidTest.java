@@ -39,9 +39,17 @@ public class BidTest {
     @Test
     @DisplayName("Remove approves - good test - approved = true")
     public void removeApprovesGoodTestApprovedTrue(){
-        bid.removeApproves("ayala");
+        try {
+            bid.removeApproves("ayala");
+        } catch (MarketException e) {
+            assert false;
+        }
         Assertions.assertEquals(1,bid.getShopOwnersStatus().size());
-        bid.approveBid("ido");
+        try {
+            bid.approveBid("ido");
+        } catch (MarketException e) {
+            assert false;
+        }
         Assertions.assertTrue(bid.isApproved());
     }
 
@@ -49,7 +57,11 @@ public class BidTest {
     @DisplayName("Remove approves - good test - approved = false")
     public void removeApprovesApproveFalseTest(){
         Assertions.assertFalse(bid.isApproved());
-        bid.approveBid("ido");
+        try {
+            bid.approveBid("ido");
+        } catch (MarketException e) {
+            assert false;
+        }
         Assertions.assertFalse(bid.isApproved());
     }
 
@@ -57,50 +69,83 @@ public class BidTest {
     @DisplayName("Remove approves - good test")
     public void removeApprovesSideBuyer(){
         bid.setSideNeedToApprove(Bid.Side.buyer);
-        bid.approveBid("ido");
+        try {
+            bid.approveBid("ido");
+        } catch (MarketException e) {
+            assert false;
+        }
         Assertions.assertFalse(bid.isApproved());
-        bid.approveBid("ayala");
+        try {
+            bid.approveBid("ayala");
+        } catch (MarketException e) {
+            assert false;
+        }
         Assertions.assertFalse(bid.isApproved());
     }
     @Test
     @DisplayName("Approve bid  - good test - buyer needs to approve")
     public void approveBidBuyerNeedsToApproveTest(){
         bid.setSideNeedToApprove(Bid.Side.buyer);
-        Assertions.assertTrue(bid.approveBid("raz"));
+        try {
+            Assertions.assertTrue(bid.approveBid("raz"));
+        } catch (MarketException e) {
+            assert false;
+        }
     }
 
     @Test
     @DisplayName("Approve bid  - good test - seller needs to approve")
     public void approveBidSellerNeedsToApproveTest(){
-        Assertions.assertFalse(bid.approveBid("ido"));
-        Assertions.assertTrue(bid.approveBid("ayala"));
+        try {
+            Assertions.assertFalse(bid.approveBid("ido"));
+            Assertions.assertTrue(bid.approveBid("ayala"));
+        } catch (MarketException e) {
+            assert false;
+        }
     }
     @Test
     @DisplayName("Approve bid  - fail test - buyer needs to approve , invalid name")
     public void approveBidBuyerApproveInvalidNameTest(){
         bid.setSideNeedToApprove(Bid.Side.buyer);
-        Assertions.assertFalse(bid.approveBid("moshe"));
+        try {
+            bid.approveBid("moshe");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
     }
     @Test
     @DisplayName("Approve bid  - fail test - seller needs to approve , buyer name")
     public void approveBidSellerApproveBuyerNameTest(){
         bid.setSideNeedToApprove(Bid.Side.seller);
-        Assertions.assertFalse(bid.approveBid("raz"));
+        try {
+            Assertions.assertFalse(bid.approveBid("raz"));
+        } catch (MarketException e) {
+            assert false;
+        }
     }
     @Test
     @DisplayName("Approve bid - both sides need to approve but only seller approve")
     public void approveBidBothSidesFailTest(){
         bid.setSideNeedToApprove(Bid.Side.both);
-        Assertions.assertFalse(bid.approveBid("ido"));
-        Assertions.assertFalse(bid.approveBid("ayala"));
+        try {
+            Assertions.assertFalse(bid.approveBid("ido"));
+            Assertions.assertFalse(bid.approveBid("ayala"));
+        } catch (MarketException e) {
+            assert false;
+        }
     }
     @Test
     @DisplayName("Approve bid - both sides approve ")
     public void approveBidBothSidesGoodTest(){
         bid.setSideNeedToApprove(Bid.Side.both);
-        bid.approveBid("ido");
-        bid.approveBid("ayala");
-        Assertions.assertTrue(bid.approveBid("raz"));
+        try {
+            bid.approveBid("ido");
+            bid.approveBid("ayala");
+            Assertions.assertTrue(bid.approveBid("raz"));
+        } catch (MarketException e) {
+            assert false;
+        }
     }
     @Test
     @DisplayName("Reject bid test -fail test -buyer  ")
