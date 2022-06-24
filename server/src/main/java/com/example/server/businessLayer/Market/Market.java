@@ -727,7 +727,7 @@ public class Market {
 
     }
 
-    public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
+    public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
                                         Address address) throws MarketException, JsonProcessingException {
 
         // If visitor exists under that name.
@@ -736,7 +736,7 @@ public class Market {
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart;
         Acquisition acquisition;
-        ShoppingCart shoppingCartToReturn;
+
         try {
             shoppingCart = visitor.getCart();
             if (shoppingCart.isEmpty()) {
@@ -757,17 +757,15 @@ public class Market {
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
-            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
+            acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
         } catch (Exception e) {
 
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log(e.getMessage());
             throw new MarketException(e.getMessage());
         }
-        if (shoppingCartToReturn == null) {
-            throw new MarketException("Could not make the purchase right now for the shopping cart. Please try again later. ");
-        }
-        return shoppingCartToReturn;
+       
+
     }
 
     private ShoppingCart validateCart(ShoppingCart currentCart) throws MarketException {

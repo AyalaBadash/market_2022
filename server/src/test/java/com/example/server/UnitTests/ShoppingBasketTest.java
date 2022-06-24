@@ -1,5 +1,6 @@
 package com.example.server.UnitTests;
 
+import com.example.server.businessLayer.Market.Bid;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
@@ -15,6 +16,8 @@ public class ShoppingBasketTest {
     ShoppingBasket basket = new ShoppingBasket();
     @Mock
     Item item;
+    @Mock
+    Bid bid;
 
 
     @Test
@@ -188,5 +191,21 @@ public class ShoppingBasketTest {
         Assertions.assertEquals(52,basket.getPrice());
         basket.removeItem(otherItem);
         Assertions.assertEquals(25,basket.getPrice());
+    }
+    @Test
+    @DisplayName("Add a bid")
+    public void addBidTest(){
+        Mockito.when(bid.getItemId()).thenReturn(3212);
+        basket.addABid(bid);
+        Assertions.assertEquals(1,basket.getBids().size());
+    }
+    @Test
+    @DisplayName("Remove bid")
+    public void removeBidTest()
+    {
+        Mockito.when(bid.getItemId()).thenReturn(3212);
+        basket.addABid(bid);
+        basket.removeBid(3212);
+        Assertions.assertEquals(0,basket.getBids().size());
     }
 }
