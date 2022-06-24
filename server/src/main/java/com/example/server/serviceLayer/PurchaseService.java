@@ -59,7 +59,7 @@ public class PurchaseService {
 
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
         try {
-            ShoppingCartFacade cart =new ShoppingCartFacade(market.calculateShoppingCart(visitorName));
+            ShoppingCartFacade cart = new ShoppingCartFacade(market.calculateShoppingCart(visitorName));
             ResponseT<ShoppingCartFacade> responseT = new ResponseT<>(cart);
             return responseT;
         }
@@ -75,7 +75,7 @@ public class PurchaseService {
         try {
             ShoppingCart shoppingCart = this.market.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
             // null if items some items didn't found
-            if(shoppingCart != null && !shoppingCart.isEmpty ())
+            if(shoppingCart != null && !shoppingCart.isEmpty())
                 return new ResponseT<>("some of the items in the cart are missing. car was updated and the price was changed", new ShoppingCartFacade(shoppingCart));
             return new ResponseT<>(new ShoppingCartFacade(new ShoppingCart()));
         }catch (MarketException e){

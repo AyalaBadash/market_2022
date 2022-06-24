@@ -11,6 +11,7 @@ import com.example.server.serviceLayer.Requests.*;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.ResponseT;
 import com.example.server.serviceLayer.Service;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 

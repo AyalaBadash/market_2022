@@ -156,14 +156,17 @@ public class ShoppingCart implements IHistory {
 
 
     public boolean isEmpty() {
-        if (cart.isEmpty())
+        // no baskets exist
+        if (cart.isEmpty()){
             return true;
+        }
+        // if baskets are empty
         for(Map.Entry<Shop, ShoppingBasket> basket : cart.entrySet()){
-            if(basket.getValue().isEmpty()){
-                return true;
+            if(!basket.getValue().isEmpty()){
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public void addABid(Bid bid, Shop shop) {

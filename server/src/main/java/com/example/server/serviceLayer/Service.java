@@ -260,7 +260,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/reOpenClosedShop")
     @CrossOrigin
-    public Response reOpenClosedShop(TwoStringRequest request){
+    public Response reOpenClosedShop(@RequestBody TwoStringRequest request){
         return this.marketService.reOpenClosedShop(request.getShopName(), request.getName());
     }
     @Override
@@ -315,7 +315,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeMember")
     @CrossOrigin
-    public Response removeMember(@RequestBody RemoveMemberRequest request) {
+        public Response removeMember(@RequestBody RemoveMemberRequest request) {
         return marketService.removeMember(request.getManager(), request.getMemberToRemove());
     }
 

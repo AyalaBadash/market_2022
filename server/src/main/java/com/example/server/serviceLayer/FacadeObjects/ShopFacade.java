@@ -30,6 +30,7 @@ public class ShopFacade implements FacadeObject<Shop> {
         this.closed = closed;
     }
 
+
     public ShopFacade(Shop fromShop) {
         this.shopName = fromShop.getShopName();
         updateItemMap (fromShop.getItemMap());
@@ -92,6 +93,14 @@ public class ShopFacade implements FacadeObject<Shop> {
 
     public void setItemsCurrentAmount(Map<java.lang.Integer, Double> itemsCurrentAmount) {
         this.itemsCurrentAmount = itemsCurrentAmount;
+    }
+
+    public List<BidFacade> getBidsInShop() {
+        return bidsInShop;
+    }
+
+    public void setBidsInShop(List<BidFacade> bidsInShop) {
+        this.bidsInShop = bidsInShop;
     }
 
     public Map<java.lang.Integer, Double> getItemsCurrentAmount() {
