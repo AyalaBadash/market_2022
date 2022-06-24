@@ -23,7 +23,6 @@ import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.NameValuePair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -669,8 +668,25 @@ public class Market {
         ClosedShopsHistory.getInstance().reopenShop(shopName);
         shopToOpen.setClosed(false);
         validateAllEmployees(shopToOpen);
+        addItemsFromReopenedShop(shopToOpen);
         //TODO - send notifications for managers and owners.
         EventLog.getInstance().Log(shopName+" has been re-opened.");
+    }
+
+    private void addItemsFromReopenedShop(Shop shopToOpen) {
+        Map<Integer, Item> shopItems = shopToOpen.getItemMap();
+        for (Map.Entry<Integer,Item> entry:shopItems.entrySet())
+        {
+            this.allItemsInMarketToShop.put(entry.getKey(),shopToOpen.getShopName());
+            if (itemByName.containsKey(entry.getValue().getName())){
+                itemByName.get(entry.getValue().getName()).add(entry.getKey());
+            }
+            else {
+                List<Integer> lst = new ArrayList<>();
+                lst.add(entry.getKey());
+                itemByName.put(entry.getValue().getName(),lst);
+            }
+        }
     }
 
     private void validateAllEmployees(Shop shopToOpen) {
@@ -951,8 +967,9 @@ public class Market {
     }
 
     public boolean isInit() throws MarketException {
-        readDataSourceConfig();
+
         if (MarketConfig.USING_DATA) {
+            readDataSourceConfig();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             readInitFile(MarketConfig.DATA_FILE_NAME);
             return true;
@@ -1035,7 +1052,7 @@ public class Market {
         } else if (val.contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
             initNotificationService(val1);
         } else {
-            if (systemManagerName == null || systemManagerName.isEmpty())
+            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty()))
                 initManager(val, val1);
         }
     }
@@ -1059,8 +1076,6 @@ public class Market {
     }
 
     private void initManager(String val, String val1) throws MarketException {
-        if(instance.systemManagerName != null)
-            throw new MarketException ( "manager already exists" );
         register(val, val1);
         instance.systemManagerName = val;
     }
@@ -1366,5 +1381,15 @@ public class Market {
 
     public boolean isSystemManager(String name) {
         return name.equals(this.systemManagerName);
+    }
+
+    public String resetSystemManager() {
+        String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
+        systemManagerName="";
+        return ret;
+    }
+    public void restoreSytemManager(String uName, String password){
+        systemManagerName=uName;
+
     }
 }

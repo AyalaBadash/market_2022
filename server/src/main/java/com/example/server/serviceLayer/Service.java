@@ -257,7 +257,12 @@ public class Service implements IService {
     public Response closeShop(@RequestBody CloseShopRequest request) {
         return this.marketService.closeShop(request.getShopOwnerName(), request.getShopName());
     }
-
+    @Override
+    @RequestMapping(value = "/reOpenClosedShop")
+    @CrossOrigin
+    public Response reOpenClosedShop(TwoStringRequest request){
+        return this.marketService.reOpenClosedShop(request.getShopName(), request.getName());
+    }
     @Override
     @RequestMapping(value = "/getShopEmployeesInfo")
     @CrossOrigin

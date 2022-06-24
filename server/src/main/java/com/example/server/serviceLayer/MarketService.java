@@ -622,4 +622,15 @@ public class MarketService {
             return new ResponseT<>(true);
         else return new ResponseT<>(false);
     }
+
+    public Response reOpenClosedShop(String shopName, String ownerName) {
+        try{
+            this.market.reopenClosedShop(shopName,ownerName);
+            return new Response();
+        } catch (MarketException e) {
+            return new Response(e.getMessage());
+        }catch (Exception e){
+            return new Response("server error has occurred, please try again later");
+        }
+    }
 }
