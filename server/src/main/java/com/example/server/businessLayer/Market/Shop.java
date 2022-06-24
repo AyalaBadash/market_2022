@@ -10,7 +10,6 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
-import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
@@ -29,7 +28,11 @@ public class Shop implements IHistory {
     @Id
     @Column (name = "shop_name")
     private String shopName;
-    @Transient
+    @ManyToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinTable (name = "allItemsInShop",
+            joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
+            inverseJoinColumns = {@JoinColumn(name = "item", referencedColumnName = "ID")})
+    @MapKeyColumn (name = "item_id")
     private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
     @ManyToMany(cascade = {CascadeType.REMOVE})
     @JoinTable (name = "shopManagers",
@@ -49,7 +52,6 @@ public class Shop implements IHistory {
     @Column(name="amount")
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
-    @Transient
     private static ShopRep shopRep;
     @OneToOne
     Member shopFounder;//todo
@@ -115,7 +117,6 @@ public class Shop implements IHistory {
         if (newItemId != oldItemId)
             throw new MarketException ( "must not change the item id" );
         itemMap.put( newItem.getID ( ), newItem );
-        //todo save
     }
 
 
@@ -123,7 +124,6 @@ public class Shop implements IHistory {
         itemMap.remove( item.getID() );
         itemsCurrentAmount.remove(item.getID());
         shopRep.save(this);
-//        getDalObject().removeItemFromShop(item.toDalObject()); //todo
     }
     /*
     private void addItem(Item item) throws MarketException {
@@ -631,6 +631,14 @@ public Item addItem(String shopOwnerName, String itemName, double price, Item.Ca
 
     public PurchasePolicy getPurchasePolicy() {
         return purchasePolicy;
+    }
+
+    public Map<Integer, Double> getItemsCurrentAmount() {
+        return itemsCurrentAmount;
+    }
+
+    public List<StringBuilder> getPurchaseHistory() {
+        return purchaseHistory;
     }
 }
 

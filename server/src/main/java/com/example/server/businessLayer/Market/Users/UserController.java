@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market.Users;
 
+import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.SynchronizedCounter;
@@ -7,9 +8,6 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingCart;
-import org.springframework.stereotype.Component;
-
-import javax.persistence.*;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -84,8 +82,6 @@ public class UserController {
     public boolean register(String userName) throws MarketException {
         Member newMember = new Member(userName);
         members.put(userName,newMember);
-        if (true)
-            throw new MarketException("m");
         EventLog.getInstance().Log("Welcome to our new member: "+userName);
         return true;
     }
@@ -216,5 +212,20 @@ public class UserController {
             }
         }
         return true;
+    }
+
+    public void loadData(List<Member> members){
+        for (Member mem : members) {
+            this.members.put(mem.getName(), mem);
+            List<Appointment> appts = mem.getAppointedByMe();
+            for (Appointment apt : appts)
+                apt.getPermissions().toString();
+            appts.toString();
+            List<Appointment> appts2 = mem.getMyAppointments();
+            for (Appointment apt : appts2)
+                apt.getPermissions().toString();
+            appts2.toString();
+            mem.getPurchaseHistory().toString();
+        }
     }
 }

@@ -13,7 +13,7 @@ public class LoginCard {
     @Id
     private String name;
     private int password;
-    @ElementCollection
+    @ElementCollection (fetch = FetchType.EAGER)
     @CollectionTable(name = "Q_and_A")
     @Column(name="answer")
     @MapKeyColumn(name="question")
@@ -48,6 +48,7 @@ public class LoginCard {
 
     public void addPrivateQuestion(String q, String ans){
         QandA.put(q,ans);
+        loginCardRep.save(this);
     }
     public void removePrivateQuestion(String q){
         if (QandA.containsKey(q))

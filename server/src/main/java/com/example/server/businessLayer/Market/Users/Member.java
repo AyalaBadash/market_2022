@@ -15,17 +15,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Member implements IHistory {
     @Id
     private String name;
-    @OneToOne (cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToOne (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private ShoppingCart myCart;
-    @ManyToMany (cascade = {CascadeType.MERGE})
+    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     private List<Appointment> appointedByMe;
-    @ManyToMany
+    @ManyToMany ()
     private List<Appointment> myAppointments;
-    @OneToMany(targetEntity =  AcquisitionHistory.class, cascade =
-            {CascadeType.REMOVE})
-    @JoinColumn(name = "member_name", referencedColumnName = "name")
-    @Transient
+//    @OneToMany(targetEntity =  AcquisitionHistory.class, cascade =
+//            {CascadeType.REMOVE})
+//    @JoinColumn(name = "member_name", referencedColumnName = "name")
+    @ManyToMany()
     private List<AcquisitionHistory> purchaseHistory;
+    private boolean isSystemManager = false;
     private static MemberRep memberRep;
 
     public Member(String name) throws MarketException {
@@ -111,7 +112,7 @@ public class Member implements IHistory {
 
     public void savePurchase(AcquisitionHistory acquisitionHistory) {
         purchaseHistory.add (acquisitionHistory);
-//        memberRep.save(this);
+        memberRep.save(this);
     }
 
     @Override
@@ -135,5 +136,14 @@ public class Member implements IHistory {
 
     public static MemberRep getMemberRep() {
         return memberRep;
+    }
+
+    public boolean isSystemManager() {
+        return isSystemManager;
+    }
+
+    public void setSystemManager(boolean systemManager) {
+        isSystemManager = systemManager;
+        memberRep.save(this);
     }
 }

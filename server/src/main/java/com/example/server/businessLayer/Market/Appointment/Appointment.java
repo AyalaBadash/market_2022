@@ -6,7 +6,6 @@ import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseH
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.Users.Member;
-import com.example.server.dataLayer.entities.DalAppointment;
 import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
@@ -27,15 +26,15 @@ Appointment {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
     private Long id;
-    @OneToOne (cascade = CascadeType.MERGE)
+    @OneToOne (cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Member appointed;       //  the actual appointed member
-    @OneToOne (cascade = CascadeType.MERGE)
+    @OneToOne (cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Member superVisor;      //  member appointedMe
 //    @OneToOne (cascade = {CascadeType.MERGE})
     @Transient
     private Shop relatedShop;
     //TODO - needs to be not an object? :O
-    @Transient //todo dal
+    @ManyToMany (cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     List<IPermission> permissions;
 
     public Appointment(Member appointed, Member appoint, Shop relatedShop) {

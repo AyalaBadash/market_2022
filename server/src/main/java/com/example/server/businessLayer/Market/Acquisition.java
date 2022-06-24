@@ -102,8 +102,6 @@ public class Acquisition {
                 actualPrice = actualPrice + currShop.getDiscountPolicy().calculateDiscount(entry.getValue());
             }
             AcquisitionHistory acq = new AcquisitionHistory(shoppingCartToBuy, member.getName(), actualPrice, expectedPrice);
-            if (true)
-                throw new MarketException("toDelete");
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();

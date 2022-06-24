@@ -2,14 +2,11 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.dataLayer.entities.DalItem;
-import com.example.server.dataLayer.entities.DalShoppingBasket;
 import com.example.server.dataLayer.repositories.ShoppingBasketRep;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 @Entity
@@ -19,24 +16,32 @@ public class ShoppingBasket implements IHistory , Serializable {
     @GeneratedValue
     private long basket_id;
     @ElementCollection
-    @CollectionTable(name = "items_in_basket")
+    @CollectionTable(name = "item_amounts_in_basket")
     @Column(name = "amount")
     @MapKeyColumn(name = "item_id")
     private Map<java.lang.Integer, Double> items;//<Item,quantity>
-    @Transient
+    @ManyToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinTable (name = "allItemsInBasket",
+            joinColumns = {@JoinColumn(name = "basket", referencedColumnName = "basket_id")},
+            inverseJoinColumns = {@JoinColumn(name = "item", referencedColumnName = "ID")})
+    @MapKeyColumn (name = "item_id")
     private Map<java.lang.Integer, Item> itemMap;
     private double price;
     private static ShoppingBasketRep shoppingBasketRep;
 
-    public ShoppingBasket() {
+    public ShoppingBasket(){}
+
+    public ShoppingBasket(int i) {
         items = new ConcurrentHashMap<>();
         itemMap = new ConcurrentHashMap<>();
         price = 0;
+        shoppingBasketRep.save(this);
     }
     public ShoppingBasket(Map<java.lang.Integer,Double> items , Map<java.lang.Integer, Item> itemMap , double price){
         this.items = items;
         this.itemMap = itemMap;
         this.price = price;
+        shoppingBasketRep.save(this);
     }
 
     @Override

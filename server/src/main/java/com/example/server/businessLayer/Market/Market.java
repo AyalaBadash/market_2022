@@ -16,7 +16,6 @@ import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.SupplyService;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
-import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Market.ResourcesObjects.*;
 import com.example.server.businessLayer.Publisher.NotificationDispatcher;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
@@ -25,21 +24,14 @@ import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
-import com.example.server.dataLayer.entities.DalMarket;
 import com.example.server.dataLayer.repositories.*;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.error.Mark;
 
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Transient;
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -52,30 +44,20 @@ public class Market {
 //    @Id
 //    @GeneratedValue
 //    private long id;
-    @Transient
     private UserController userController;
     private String systemManagerName;
-    @Transient
     private Map<String, Shop> shops;                                 // <shopName, shop>
-    @Transient
     private NotificationHandler notificationHandler;
-    @Transient
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
-    @Transient
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
-    @Transient
     private SynchronizedCounter nextItemID;
-    @Transient
     private PaymentServiceProxy paymentServiceProxy;
-    @Transient
     private SupplyServiceProxy supplyServiceProxy;
-    @Transient
     private Publisher publisher;
     private static Market instance;
     boolean dataInitialized = false;
     boolean servicesInitialized = false;
     boolean test = false;
-    @Transient
     Map<String, Integer> numOfAcqsPerShop;
 
     @Autowired
@@ -102,8 +84,6 @@ public class Market {
     @Autowired
     @Transient
     private ClosedShopsHistoryRep closedShopsHistoryRep;
-//    @Autowired
-//    private UserControllerRep userControllerRep;
     @Autowired
     @Transient
     private VisitorRep visitorRep;
@@ -213,6 +193,7 @@ public class Market {
             }
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
+                userController.getMember(userName).setSystemManager(true);
                 instance.systemManagerName = userName;
             }
             checkSystemInit();
@@ -830,7 +811,6 @@ public class Market {
         Item itemToDelete = shop.getItemMap().get(itemID);
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         shop.deleteItem(itemToDelete);
-//        shopRepository.save(shop.getDalObject()); //todo
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
@@ -1083,12 +1063,12 @@ public class Market {
             throw new MarketException("Shopping cart is not exists for the user.");
         }
 
-        if (supplyServiceProxy == null) {
-            throw new MarketException("The supply service is not available right now.");
-        }
-        if (paymentServiceProxy == null) {
-            throw new MarketException("The payment service is not available right now.");
-        }
+//        if (supplyServiceProxy == null) {
+//            throw new MarketException("The supply service is not available right now.");
+//        }
+//        if (paymentServiceProxy == null) {
+//            throw new MarketException("The payment service is not available right now.");
+//        }
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
@@ -1439,8 +1419,50 @@ public class Market {
     }
 
     public void loadData(){
-        for (Shop shop : shopRep.findAll())
-            this.shops.put(shop.getShopName(), shop);
+        List<Item> items = itemRep.findAll();
+        List<Member> members = memberRep.findAll();
+        shopOwnerAppointmentRep.findAll();
+        shopManagerAppointmentRep.findAll();
+        memberRep.findAll();
+        List<Shop> shops = shopRep.findAll();
+        List<LoginCard> cards = loginCardRep.findAll();
+        itemRep.findAll();
+        shopRep.findAll();
+        loginCardRep.findAll();
+        Security.getInstance().loadData(cards);
+        userController.loadData(members);
+
+        for (Shop shop : shops) {
+            this.shops.put(shop.getShopName(), shop); //init shops
+            shop.getItemMap().toString();
+            shop.getItemsCurrentAmount().toString();
+            shop.getPurchaseHistory().toString();
+            for (Integer itemid : shop.getItemMap().keySet())
+                this.allItemsInMarketToShop.put(itemid, shop.getShopName()); //init allItemsInShop
+            for (Appointment a : shop.getEmployees().values())
+                a.setRelatedShop(shop); //set related shop in appointment
+        }
+
+        int largestItemId = 1;
+        for (Item item : items){
+            itemByName.computeIfAbsent(item.getName(), k -> new ArrayList<>());
+            itemByName.get(item.getName()).add(item.getID()); //init itemBtName
+
+            if (item.getID() > largestItemId) //find largest item id
+                largestItemId = item.getID();
+        }
+        this.nextItemID.setValue(largestItemId + 1);
+
+        for (Member mem : members){ //find system manager
+            if (mem.isSystemManager()) {
+                this.systemManagerName = mem.getName();
+                break;
+            }
+        }
+        memberRep.findAll();
+        itemRep.findAll();
+        shopRep.findAll();
+        loginCardRep.findAll();
 
     }
 }

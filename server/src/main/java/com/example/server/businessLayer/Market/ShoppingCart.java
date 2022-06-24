@@ -1,12 +1,8 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.dataLayer.entities.DalShoppingBasket;
-import com.example.server.dataLayer.entities.DalShoppingCart;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
-import com.example.server.dataLayer.repositories.ShoppingBasketRep;
 import com.example.server.dataLayer.repositories.ShoppingCartRep;
-import org.hibernate.action.internal.OrphanRemovalAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,7 +15,7 @@ public class ShoppingCart implements IHistory {
     @Id
     @GeneratedValue
     private long id;
-    @ManyToMany (cascade = CascadeType.ALL)
+    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable (name = "baskets_in_cart", joinColumns = {@JoinColumn(name = "shopping_cart_id",
         referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "basket_id", referencedColumnName = "basket_id")})
@@ -119,7 +115,7 @@ public class ShoppingCart implements IHistory {
     public void addItem(Shop shop, Item item, double amount) throws MarketException {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
-            shoppingBasket = new ShoppingBasket();
+            shoppingBasket = new ShoppingBasket(1);
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addItem ( item, amount );

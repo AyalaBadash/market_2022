@@ -691,3 +691,41 @@ Level Error : toDelete
 Level Error : you must be a visitor in the market in order to make actions
 Level Error : null
 Level Error : null
+Level Error : toDelete
+Level Error : toDelete
+Level Error : Unable to find com.example.server.businessLayer.Market.Appointment.Appointment with id 2; nested exception is javax.persistence.EntityNotFoundException: Unable to find com.example.server.businessLayer.Market.Appointment.Appointment with id 2
+Level Error : Unable to find com.example.server.businessLayer.Market.Appointment.Appointment with id 2; nested exception is javax.persistence.EntityNotFoundException: Unable to find com.example.server.businessLayer.Market.Appointment.Appointment with id 2
+Level Error : A market initialization failed .already initialized
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Member didnt gave number of answers equal to questions number
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Member didnt gave number of answers equal to questions number
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : member who is not visiting tried to logout
+Level Error : failed to lazily initialize a collection of role: com.example.server.businessLayer.Market.Shop.itemsCurrentAmount, could not initialize proxy - no Session
+Level Error : User tried to register with taken name.
+Level Error : s tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : A different object with the same identifier value was already associated with the session : [com.example.server.businessLayer.Market.Item#2]; nested exception is javax.persistence.EntityExistsException: A different object with the same identifier value was already associated with the session : [com.example.server.businessLayer.Market.Item#2]
+Level Error : User tried to register with taken name.

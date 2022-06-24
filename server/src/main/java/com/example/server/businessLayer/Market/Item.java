@@ -33,7 +33,7 @@ public class Item implements IHistory {
 
     private static ItemRep itemRep;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "keyword")
     @CollectionTable(name = "item_keywords", joinColumns = {@JoinColumn(name = "ID")})
     private List<String> keywords;

@@ -115,8 +115,9 @@ public class Security {
         }
         else {
             LoginCard card = namesToLoginInfo.get(name);
-            Map<String, String> QA = card.getQandA();
-            QA.put(userAdditionalQueries, userAdditionalAnswers);
+//            Map<String, String> QA = card.getQandA();
+//            QA.put(userAdditionalQueries, userAdditionalAnswers);
+            card.addPrivateQuestion(userAdditionalQueries, userAdditionalAnswers);
         }
     }
 
@@ -217,5 +218,10 @@ public class Security {
 
     public void removeMember(String memberToRemove) {
         this.namesToLoginInfo.remove(memberToRemove);
+    }
+
+    public void loadData(List<LoginCard> cards){
+        for (LoginCard card : cards)
+            this.namesToLoginInfo.put(card.getName(), card);
     }
 }
