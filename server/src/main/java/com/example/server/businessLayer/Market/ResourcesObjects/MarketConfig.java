@@ -15,5 +15,6 @@ public class MarketConfig {
     public static String DATA_FILE_NAME="Data.txt";
     public static boolean IS_MAC=true;
     public static String DATA_SOURCE_FILE_NAME ="DataSourceConfig.txt";
-    public static String MISS_DATA_SOURCE_FILE_NAME ="missDataSourceConfig.txt";
+    public static String MISS_NAME_DATA_SOURCE_FILE_NAME ="missNameDataSourceConfig.txt";
+    public static String MISS_PASSWORD_DATA_SOURCE_FILE_NAME ="missPassDataSourceConfig.txt";
 }

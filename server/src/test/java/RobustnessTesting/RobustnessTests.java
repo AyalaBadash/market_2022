@@ -290,4 +290,36 @@ public class RobustnessTests {
             Assertions.assertEquals("Data source config file not found.",e.getMessage());
         }
     }
+    @Test
+    @Order(14)
+    @DisplayName("System init from data source file with no password. should not continue the market init.")
+    public void initFromDataSourceBadArgsPass() {
+        String name=MarketConfig.DATA_SOURCE_FILE_NAME;
+        try{
+            Market market= Market.getInstance();
+            MarketConfig.DATA_SOURCE_FILE_NAME =MarketConfig.MISS_PASSWORD_DATA_SOURCE_FILE_NAME;
+            DataSourceConfigReader.resetInstance();
+            market.isInit();
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
+            Assertions.assertEquals("Missing password in data source config file.",e.getMessage());
+        }
+    }
+    @Test
+    @Order(14)
+    @DisplayName("System init from data source good scenario.")
+    public void initFromDataSource() {
+        try{
+            Market market= Market.getInstance();
+            DataSourceConfigReader.resetInstance();
+            market.isInit();
+            assert true;
+        }
+        catch(Exception e){
+            assert false;
+        }
+    }
 }
