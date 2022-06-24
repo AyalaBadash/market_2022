@@ -77,7 +77,7 @@ public class PurchaseService {
     }
 
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<ShoppingCartFacade> buyShoppingCart(String visitorName, double expectedPrice,
                                     PaymentMethod paymentMethod, Address address){
         try {

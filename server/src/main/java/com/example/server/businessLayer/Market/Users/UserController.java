@@ -7,6 +7,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.SynchronizedCoun
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
+import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import java.text.DecimalFormat;
 import java.time.LocalDate;

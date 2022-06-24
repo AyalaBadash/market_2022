@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Transient;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -100,7 +101,7 @@ public class Market {
     @Autowired
     @Transient private AckHisRep ackHisRep;
     //constructor
-    private Market() {
+    public Market() {
         this.shops = new ConcurrentHashMap<>();
         this.allItemsInMarketToShop = new ConcurrentHashMap<>();
         this.itemByName = new ConcurrentHashMap<>();
@@ -1423,6 +1424,10 @@ public class Market {
         List<Member> members = memberRep.findAll();
         shopOwnerAppointmentRep.findAll();
         shopManagerAppointmentRep.findAll();
+        for (ShoppingBasket basket : shoppingBasketRep.findAll()) {
+            basket.getItems().toString();
+            basket.getItemMap().toString();
+        }
         memberRep.findAll();
         List<Shop> shops = shopRep.findAll();
         List<LoginCard> cards = loginCardRep.findAll();
@@ -1439,8 +1444,10 @@ public class Market {
             shop.getPurchaseHistory().toString();
             for (Integer itemid : shop.getItemMap().keySet())
                 this.allItemsInMarketToShop.put(itemid, shop.getShopName()); //init allItemsInShop
-            for (Appointment a : shop.getEmployees().values())
+            for (Appointment a : shop.getEmployees().values()) {
                 a.setRelatedShop(shop); //set related shop in appointment
+                a.getPermissions().toString();
+            }
         }
 
         int largestItemId = 1;
