@@ -1,5 +1,6 @@
 package com.example.server.UnitTests;
 
+import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
@@ -416,6 +417,16 @@ public class ShopTest {
         catch (Exception ex){
             assert false;
         }
+    }
+    @Test
+    @DisplayName("Get pending apps for owner - valid name")
+    public void GetPendingAppsForOwner(){
+        Assertions.assertDoesNotThrow(()->shop.getAllPendingForOwner(memberFounder.getName()));
+    }
+    @Test
+    @DisplayName("Get pending apps for owner - Invalid name")
+    public void GetPendingAppsForNotOwner(){
+        Assertions.assertThrows(MarketException.class,()->shop.getAllPendingForOwner("not owner"));
     }
 
 

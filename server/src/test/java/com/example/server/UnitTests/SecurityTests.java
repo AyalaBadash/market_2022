@@ -56,29 +56,39 @@ public class SecurityTests {
     }
 
     @Test
-    @DisplayName("Invalid register -Invalid Name")
-    public void InvalidRegisterTestInvalidName(){
+    @DisplayName("Invalid register -Invalid Name - Empty String")
+    public void InvalidRegisterTestEmptyName(){
         try {
             security.validateRegister("","123");
             assert false;
         }
         catch (MarketException e)
         {
-            try {
-                security.validateRegister("@raz","");
-                assert false;
-            }
-            catch (MarketException e1)
-            {
-                try {
-                    security.validateRegister(null,"pass");
-                    assert false;
-                }
-                catch (MarketException e2)
-                {
-                    assert true;
-                }
-            }
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Invalid register -Invalid Name - Starting with @")
+    public void InvalidRegisterTestInvalidSign(){
+        try {
+            security.validateRegister("@raz","");
+            assert false;
+        }
+        catch (MarketException e1)
+        {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Invalid register -Invalid Name - Null")
+    public void InvalidRegisterTestNullName(){
+        try {
+            security.validateRegister(null,"pass");
+            assert false;
+        }
+        catch (MarketException e2)
+        {
+            assert true;
         }
     }
     @Test

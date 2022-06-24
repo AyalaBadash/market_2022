@@ -900,7 +900,7 @@ public class MarketUnitTest {
     }
     @Test
     @DisplayName("Reopen closed shop - valid case")
-    public void reopenShop(){ // TODO review - problem is : shops.remove in closeShop ()
+    public void reopenShop(){
         try {
             market.closeShop("raz","razShop");
         } catch (MarketException e) {
