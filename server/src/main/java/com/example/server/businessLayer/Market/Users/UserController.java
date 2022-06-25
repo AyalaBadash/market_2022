@@ -69,7 +69,7 @@ public class UserController {
             Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
             this.visitorsInMarket.remove(visitorName);
 //            userControllerRep.save(this);
-            Visitor.getVisitorRep().delete(visitorToDelete);
+//            Visitor.getVisitorRep().delete(visitorToDelete);
             ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
             EventLog.getInstance().Log("User left the market.");
         }
@@ -130,7 +130,7 @@ public class UserController {
         Visitor newVisitor = new Visitor(newVisitorName);
         visitorsInMarket.put(newVisitorName, newVisitor);
 //        userControllerRep.save(this);
-        Visitor.getVisitorRep().delete(visitorToDelete);
+//        Visitor.getVisitorRep().delete(visitorToDelete);
         EventLog.getInstance().Log("Our beloved member " + member + " logged out.");
         return newVisitorName;
     }
@@ -142,7 +142,7 @@ public class UserController {
         Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
         visitorsInMarket.remove(visitorName);
 //        userControllerRep.save(this);
-        Visitor.getVisitorRep().delete(visitorToDelete);
+//        Visitor.getVisitorRep().delete(visitorToDelete);
         ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
         EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();

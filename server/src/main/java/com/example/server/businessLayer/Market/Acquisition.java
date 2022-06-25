@@ -96,10 +96,10 @@ public class Acquisition {
             for (Map.Entry<Shop,ShoppingBasket> entry:shoppingCartToBuy.getCart().entrySet())
             {
                 Shop currShop = entry.getKey();
-                if (!currShop.getPurchasePolicy().isPoliciesHeld(entry.getValue())){
-                    throw new MarketException("One of the baskets does not match its shop policy");
-                }
-                actualPrice = actualPrice + currShop.getDiscountPolicy().calculateDiscount(entry.getValue());
+//                if (!currShop.getPurchasePolicy().isPoliciesHeld(entry.getValue())){
+//                    throw new MarketException("One of the baskets does not match its shop policy");
+//                }
+//                actualPrice = actualPrice + currShop.getDiscountPolicy().calculateDiscount(entry.getValue());
             }
             AcquisitionHistory acq = new AcquisitionHistory(shoppingCartToBuy, member.getName(), actualPrice, expectedPrice);
             member.savePurchase(acq);

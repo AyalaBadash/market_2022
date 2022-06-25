@@ -4,6 +4,7 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.dataLayer.repositories.ConditionalDiscountRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
@@ -19,10 +20,12 @@ import javax.persistence.Transient;
 public class ConditionalDiscount extends DiscountType{
     @Transient
     private Condition condition;
+    private static ConditionalDiscountRep condDiscountRep;
 
     public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Condition condition) {
         super ( percentageOfDiscount, discountLevelState );
         this.condition = condition;
+        condDiscountRep.save(this);
     }
 
     public ConditionalDiscount(){}
@@ -68,5 +71,13 @@ public class ConditionalDiscount extends DiscountType{
     @Override
     public DiscountTypeFacade visitToFacade(MaxCompositeDiscountTypeFacade discountFacade) {
         return null;
+    }
+
+    public static ConditionalDiscountRep getCondDiscountRep() {
+        return condDiscountRep;
+    }
+
+    public static void setCondDiscountRep(ConditionalDiscountRep condDiscountRep) {
+        ConditionalDiscount.condDiscountRep = condDiscountRep;
     }
 }

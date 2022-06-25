@@ -8,7 +8,7 @@ import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ShoppingCart;
-import com.example.server.dataLayer.repositories.VisitorRep;
+//import com.example.server.dataLayer.repositories.VisitorRep;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import org.springframework.beans.factory.annotation.Autowired;

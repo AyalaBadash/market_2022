@@ -3,14 +3,14 @@ package com.example.server.businessLayer.Market.Users;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingCart;
-import com.example.server.dataLayer.repositories.VisitorRep;
+//import com.example.server.dataLayer.repositories.VisitorRep;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-@Entity
+//@Entity
 public class Visitor {
     @Id
     private String name;
@@ -18,7 +18,7 @@ public class Visitor {
     private Member member;
     @OneToOne (cascade = {CascadeType.MERGE})
     private ShoppingCart cart;
-    private static VisitorRep visitorRep;
+//    private static VisitorRep visitorRep;
 
     public Visitor(String name) throws MarketException {
         if (name == null || name.equals(""))
@@ -27,7 +27,7 @@ public class Visitor {
         this.member = null;
         this.cart = new ShoppingCart();
         ShoppingCart.getShoppingCartRep().save(cart);
-        visitorRep.save(this);
+//        visitorRep.save(this);
     }
 
     public Visitor(String name, Member member, ShoppingCart cart) {
@@ -35,7 +35,7 @@ public class Visitor {
         this.member = member;
         this.cart = cart;
         ShoppingCart.getShoppingCartRep().save(cart);
-        visitorRep.save(this);
+//        visitorRep.save(this);
     }
     public Visitor(){}
 
@@ -72,15 +72,15 @@ public class Visitor {
 
     public boolean updateAmountInCart(double amount, Item item, String shopName) throws MarketException {
         cart.editQuantity (amount,item,shopName);
-        visitorRep.save(this);
+//        visitorRep.save(this);
         return true;
     }
 
-    public static void setVisitorRep(VisitorRep visitorRep) {
-        Visitor.visitorRep = visitorRep;
-    }
-
-    public static VisitorRep getVisitorRep() {
-        return visitorRep;
-    }
+//    public static void setVisitorRep(VisitorRep visitorRep) {
+//        Visitor.visitorRep = visitorRep;
+//    }
+//
+//    public static VisitorRep getVisitorRep() {
+//        return visitorRep;
+//    }
 }

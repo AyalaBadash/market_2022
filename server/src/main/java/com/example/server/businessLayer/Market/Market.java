@@ -1,10 +1,11 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
-
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.SimpleDiscount;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
@@ -85,9 +86,9 @@ public class Market {
     @Autowired
     @Transient
     private ClosedShopsHistoryRep closedShopsHistoryRep;
-    @Autowired
-    @Transient
-    private VisitorRep visitorRep;
+//    @Autowired
+//    @Transient
+//    private VisitorRep visitorRep;
     @Autowired
     @Transient
     private LoginCardRep loginCardRep;
@@ -98,8 +99,10 @@ public class Market {
     @Transient ShopOwnerAppointmentRep shopOwnerAppointmentRep;
     @Autowired
     @Transient private ItemAckHistRep itemAckHistRep;
-    @Autowired
-    @Transient private AckHisRep ackHisRep;
+    @Autowired @Transient private AckHisRep ackHisRep;
+    @Autowired @Transient private SimpleDiscountRep simpleDiscountRep;
+    @Autowired @Transient private ConditionalDiscountRep condDiscountRep;
+
     //constructor
     public Market() {
         this.shops = new ConcurrentHashMap<>();
@@ -162,11 +165,13 @@ public class Market {
         AcquisitionHistory.setAcquisitionHistoryRep(acquisitionHistoryRep);
         ClosedShopsHistory.setClosedShopsHistoryRep(closedShopsHistoryRep);
 //        UserController.setUserControllerRep(userControllerRep);
-        Visitor.setVisitorRep(visitorRep);
+//        Visitor.setVisitorRep(visitorRep);
         LoginCard.setLoginCardRep(loginCardRep);
         ShopManagerAppointment.setShopManagerAppointmentRep(shopManagerAppointmentRep);
         ShopOwnerAppointment.setShopOwnerAppointmentRep(shopOwnerAppointmentRep);
         ItemAcquisitionHistory.setItemAckHistRep(itemAckHistRep);
+        SimpleDiscount.setSimpleDiscountRep(simpleDiscountRep);
+        ConditionalDiscount.setCondDiscountRep(condDiscountRep);
 
     }
     /**
@@ -587,6 +592,7 @@ public class Market {
         return history;
     }
 
+    @Transactional(rollbackOn = MarketException.class)
     public void register(String name, String password) throws MarketException {
         Security security = Security.getInstance();
         security.validateRegister(name, password);

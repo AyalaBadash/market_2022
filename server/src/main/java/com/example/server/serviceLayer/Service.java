@@ -1,14 +1,11 @@
 package com.example.server.serviceLayer;
 
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
-
-import com.example.server.dataLayer.entities.*;
-import com.example.server.dataLayer.repositories.*;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
@@ -18,10 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,7 +25,6 @@ public class Service implements IService {
     MarketService marketService;
     PurchaseService purchaseService;
     UserService userService;
-
     protected Service() {
 //        marketService = MarketService.getInstance();
 //        purchaseService = PurchaseService.getInstance();
@@ -47,6 +40,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
         purchaseService = PurchaseService.getInstance();
         userService = UserService.getInstance();
@@ -58,6 +52,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/guestLogin")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<VisitorFacade> guestLogin() {
         return this.userService.guestLogin();
     }
@@ -66,6 +61,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/exitSystem")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response exitSystem(@RequestBody ExitSystemRequest request) {
         return this.userService.exitSystem(request.getVisitorName());
     }
@@ -73,13 +69,15 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/register")
     @CrossOrigin
-    public ResponseT<Boolean> register(@RequestBody NamePasswordRequest request) throws Exception {
+    @Transactional(rollbackOn = MarketException.class)
+    public ResponseT<Boolean> register(@RequestBody NamePasswordRequest request) throws MarketException {
         return userService.register(request.getName(), request.getPassword());
     }
 
     @Override
     @RequestMapping(value = "/addPersonalQuery")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response addPersonalQuery(@RequestBody AddPersonalQueryRequest request) {
         return userService.addPersonalQuery(request.getUserAdditionalQueries(), request.getUserAdditionalAnswers(), request.getMember());
     }

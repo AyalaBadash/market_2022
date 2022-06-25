@@ -49,14 +49,16 @@ public class UserService {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
-    public ResponseT<Boolean> register(String userName, String userPassword) {
+
+
+    @Transactional(rollbackOn = MarketException.class)
+    public ResponseT<Boolean> register(String userName, String userPassword) throws MarketException{
         ResponseT<Boolean> responseT;
         try {
             market.register(userName, userPassword);
             responseT = new ResponseT<>(true);
         }
-        catch (MarketException e)
+        catch (Exception e)
         {
             responseT = new ResponseT<>(e.getMessage());
         }
