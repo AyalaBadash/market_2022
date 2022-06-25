@@ -3,6 +3,10 @@ package com.example.server.businessLayer.Market.Appointment.Permissions;
 import com.example.server.businessLayer.Market.Shop;
 
 public class ApproveBidPermission extends IPermission{
+
+    public ApproveBidPermission(){
+        this.name = "ApproveBidPermission";
+    }
     @Override
     public Object apply(Shop relatedShop) {
         return null;
@@ -10,6 +14,6 @@ public class ApproveBidPermission extends IPermission{
 
     @Override
     public boolean isPermission(String permission) {
-        return permission == name;
+        return permission.equals(name);
     }
 }
