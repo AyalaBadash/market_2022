@@ -359,7 +359,7 @@ public class Shop implements IHistory {
         return discountPolicy.calculateDiscount ( shoppingBasket );
     }
 
-    public synchronized void addEmployee(Appointment newAppointment) throws MarketException {
+    public synchronized void OldaddEmployee(Appointment newAppointment) throws MarketException {
         String employeeName = newAppointment.getAppointed ( ).getName ( );
         Appointment oldAppointment = shopOwners.get ( employeeName );
         if (oldAppointment != null) {
@@ -384,14 +384,18 @@ public class Shop implements IHistory {
             }
     }
 
-    //todo mix those two methods.
-    public void newAddEmployee(Appointment newAppointment) throws MarketException {
+
+    public synchronized void addEmployee(Appointment newAppointment) throws MarketException {
         String employeeName = newAppointment.getAppointed ( ).getName ( );
         Appointment oldAppointment = shopOwners.get ( employeeName );
         if (oldAppointment != null) {
             if (newAppointment.isOwner ( ))
                 throw new MarketException ( "this member is already a shop owner" );
             shopManagers.put ( employeeName, newAppointment );
+            if(newAppointment.hasPermission ( "ApproveBidPermission" ))
+                for(Bid bid : bids){
+                    bid.addApproves(newAppointment.getAppointed ().getName ());
+                }
         } else {
             oldAppointment = shopManagers.get ( employeeName );
             if (oldAppointment != null) {
@@ -417,8 +421,13 @@ public class Shop implements IHistory {
                 approveAppointment(app.getAppointed().getName(),app.getSuperVisor().getName());
                 //TODO send notification to all shop owners.
             }
-            else
-                shopManagers.put ( employeeName, newAppointment );
+            else {
+                shopManagers.put(employeeName, newAppointment);
+                if(newAppointment.hasPermission ( "ApproveBidPermission" ))
+                    for(Bid bid : bids){
+                        bid.addApproves(newAppointment.getAppointed ().getName ());
+                    }
+            }
         }
     }
 
@@ -820,9 +829,13 @@ public class Shop implements IHistory {
         }
         boolean approved = pendingAppointments.approve(appointedName,ownerName);
         if (approved){
-            shopOwners.put(appointedName,pendingAppointments.getAppointments().get(appointedName));
+            ShopOwnerAppointment appointment = pendingAppointments.getAppointments().get(appointedName);
+            shopOwners.put(appointedName,appointment);
             pendingAppointments.removeAppointment(appointedName);
             EventLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
+            for(Bid bid : bids) {
+                bid.addApproves(appointedName);
+            }
             //TODO send notification the the appointed.
             return true;
         }
