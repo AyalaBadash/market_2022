@@ -131,7 +131,7 @@ public class Market {
 
     public StringBuilder getHistoryByMember(String systemManagerName, String memberName) throws MarketException {
         alertIfNotLoggedIn(systemManagerName);
-        if (systemManagerName.equals(this.systemManagerName)) {
+        if (!systemManagerName.equals(this.systemManagerName)) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("Member who is not the system manager tried to access system purchase history");
             throw new MarketException("member is not a system manager so is not authorized to get th information");
@@ -1297,9 +1297,9 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir");
-        String additional_dir = "\\config\\";
+        String additional_dir = "\\server\\config\\";
         if (MarketConfig.IS_MAC) {
-            additional_dir = "/config/";
+            additional_dir = "/server/config/";
         }
         dir += additional_dir;
         return dir;

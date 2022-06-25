@@ -1016,3 +1016,16 @@ Level Error : Method register from init file has called. Args are: u2 p2
 Level Error : User tried to register with taken name.
 Level Error : Method register from init file has called. Args are: u2 p2
 Level Error : User tried to register with taken name.
+Level Error : shop does not exist in the market
+Level Error : shop does not exist in the market
+Level Error : shop does not exist in the market
+Level Error : shop does not exist in the market
+Level Error : User tried to register with taken name.
+Level Error : Payment method details are illegal.
+Level Error : Payment method details are illegal.
+Level Error : Member who is not the system manager tried to access system purchase history
+Level Error : member is not a system manager so is not authorized to get th information
+Level Error : Member who is not the system manager tried to access system purchase history
+Level Error : member is not a system manager so is not authorized to get th information
+Level Error : Member who is not the system manager tried to access system purchase history
+Level Error : member is not a system manager so is not authorized to get th information
