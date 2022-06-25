@@ -9,11 +9,14 @@ import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
-import com.example.server.serviceLayer.*;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
+import com.example.server.serviceLayer.MarketService;
+import com.example.server.serviceLayer.PurchaseService;
+import com.example.server.serviceLayer.ResponseT;
+import com.example.server.serviceLayer.UserService;
 import org.junit.jupiter.api.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +35,7 @@ public class RobustnessTests {
     String userName = "userTest";
     String password = "password";
     String shopManagerName = "shaked";
-    String shopManagerPassword = "password";
+    String shopManagerPassword = "shaked1234";
     String shopName = "kolbo";
     Double productAmount;
     Double productPrice;
@@ -40,18 +43,24 @@ public class RobustnessTests {
     UserService userService;
     PurchaseService purchaseService;
 
+    static boolean useData;
 
-
-    @BeforeEach
-    public void init()  {
-
+    @BeforeAll
+    public void reset(){
+        useData=MarketConfig.USING_DATA;
+        MarketConfig.IS_TEST_MODE=true;
+        MarketConfig.USING_DATA=true;
         Market.restartMarket();
         productAmount = 3.0;
         productPrice = 1.2;
         creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
         address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
         loadAdminName();
+    }
+    @AfterAll
+    public static void setUseData(){
 
+        MarketConfig.IS_TEST_MODE=false;
     }
 
     private void loadAdminName() {
@@ -165,21 +174,20 @@ public class RobustnessTests {
     @DisplayName("Publish service null check")
     public void PublishService() {
         try {
+
+            marketService.setPublishService(null,managerName);
             ResponseT<VisitorFacade> visitor = userService.guestLogin();
             ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
             ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
             ItemFacade chocolate = res.getValue().get(0);
-            Response r = marketService.setItemCurrentAmount ( shopManagerName, chocolate, 3, shopName );
-            shop = marketService.getShopInfo(shopManagerName, shopName);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = itemAmount;
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
-            marketService.setPublishService(null,managerName);
             purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
-            marketService.setPublishService(TextDispatcher.getInstance(),managerName);
+            marketService.setPublishService(TextDispatcher.getInstance(),userName);
             assert true;
         } catch (Exception e) {
-            marketService.setPublishService(TextDispatcher.getInstance(),managerName);
+            marketService.setPublishService(TextDispatcher.getInstance(),userName);
             assert false;
         }
     }

@@ -76,7 +76,7 @@ public class ShoppingCart implements IHistory {
                 succeedShops.add(shopToBasket.getKey());
             } catch (MarketException e) {
                 succeeded = false;
-                shopToBasket.getKey ().validateBasket ( shopToBasket.getValue () );
+                shopToBasket.getKey ().validateBasket (shopToBasket.getValue ());
                 missing.append(e.getMessage());
                 missing.append("\n");
             }

@@ -13,8 +13,8 @@ public class ItemTest {
 
 
     @Test
-    @DisplayName("Invalid item details")
-    public void InvalidItemDetails()
+    @DisplayName("Invalid item details - Invalid ID")
+    public void InvalidItemID()
     {
         String name = "Milk";
         double price = 5.0;
@@ -25,7 +25,23 @@ public class ItemTest {
         try {
             Item testItem = new Item(-1,name,price,info,category,keywords);
             assert false;
-            testItem = new Item(2,name,-1,info,category,keywords);
+        }
+        catch (MarketException e)
+        {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Invalid item details - Invalid price ")
+    public void InvalidItemDetails()
+    {
+        String name = "Milk";
+        String info ="1.0L";
+        List<String> keywords = new ArrayList<>();
+        keywords.add("dairy");
+        Item.Category category = Item.Category.general;
+        try {
+            Item testItem = new Item(2,name,-1,info,category,keywords);
             assert false;
         }
         catch (MarketException e)
@@ -45,6 +61,20 @@ public class ItemTest {
         try {
             Item testItem = new Item(1,name , price,info,category,keywords);
             testItem = new Item(2,name,price,null,null,null);
+            assert true;
+        }
+        catch (MarketException e){
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Valid item details - inserting null where legal")
+    public void ValidItemWithNullLegalDetails()
+    {
+        String name = "Milk";
+        double price = 5.0;
+        try {
+            Item testItem = new Item(2,name,price,null,null,null);
             assert true;
         }
         catch (MarketException e){

@@ -137,7 +137,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/buyShoppingCart")
     @CrossOrigin
-    public ResponseT<ShoppingCartFacade> buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
+    public Response buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
         return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
                 request.getPaymentMethod(), request.getAddress());
     }

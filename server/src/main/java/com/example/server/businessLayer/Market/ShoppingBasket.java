@@ -129,6 +129,11 @@ public class ShoppingBasket implements IHistory {
     }
 
     public void addABid(Bid bid) {
+        if(bid==null)
+        {
+            DebugLog.getInstance().Log("Bid cant be null");
+            //throw new MarketException("Bid cant be null");
+        }
         bids.put ( bid.getItemId (), bid );
     }
 
