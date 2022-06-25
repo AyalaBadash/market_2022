@@ -5,6 +5,8 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import org.junit.jupiter.api.Assertions;
@@ -82,11 +84,6 @@ public class ShoppingCartUnitTest{
                 System.out.println(e.getMessage());
                 assert false;
             }
-    }
-    @Test
-    @DisplayName("Save from shops - fail test - amount mismatch")
-    public void saveFromShopAmountMismatch(){
-        assert false;
     }
     @Test
     @DisplayName("Clear cart test")

@@ -733,8 +733,10 @@ public class Shop implements IHistory {
     }
 
     public void rejectABid(String opposed, String buyer, int itemId) throws MarketException {
+        //TODO review - if with thr should come first?
         Bid bidToReject = findBid ( buyer, itemId );
-        bidToReject.rejectBid ( buyer );
+        bidToReject.rejectBid(opposed);
+        //bidToReject.rejectBid ( buyer ); //TODO Review - sending buyer mistake.
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = itemMap.get ( itemId ).getName ();
         if(opposed.equals ( buyer )){

@@ -338,7 +338,7 @@ public class ShopTest {
     }
 
     @Test
-    @DisplayName("Validate basket - good test.")
+    @DisplayName("Validate basket.")
     public void validateBasketTest() {
         Map<java.lang.Integer, Double> items = new HashMap<>();
         Item item1 = Mockito.mock(Item.class);

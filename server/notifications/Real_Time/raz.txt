@@ -42,3 +42,67 @@ Real Time message:
 The shoprazShop was closed
 
 
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from raz has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from raz has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ The bid for milk in shop razShop from ayala got a counter-bid at a price of 4.000000. 
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+The shoprazShop was closed
+
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+The shoprazShop was closed
+
+
