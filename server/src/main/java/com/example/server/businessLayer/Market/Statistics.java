@@ -6,15 +6,18 @@ import org.eclipse.jetty.util.ajax.JSON;
 
 public class Statistics {
 
-    private NotificationHandler notificationHandler;
-    private static Statistics instance=null;
-    private int numOfVisitors;
-    private int numOfMembers;
-    private int numOfAcquisitions;
-    private int numOfShops;
-    private int shopClosed;
+    public class StatisticsData{
 
-    private String systemManager;
+        private int numOfVisitors;
+        private int numOfMembers;
+        private int numOfAcquisitions;
+        private int numOfShops;
+        private int shopClosed;
+        private String systemManager;
+    }
+    private NotificationHandler notificationHandler;
+    private StatisticsData data;
+    private static Statistics instance=null;
 
     public static Statistics getInstance(){
         if(instance==null){
@@ -24,11 +27,7 @@ public class Statistics {
     }
 
     private Statistics( ){
-        numOfVisitors=0;
-        numOfMembers=0;
-        numOfShops=0;
-        shopClosed=0;
-        numOfAcquisitions =0;
+        data=new StatisticsData();
         notificationHandler= NotificationHandler.getInstance();
     }
     public static void setInstance(Statistics instance) {
@@ -36,107 +35,107 @@ public class Statistics {
     }
 
     public int getNumOfVisitors() {
-        return numOfVisitors;
+        return data.numOfVisitors;
     }
 
     public void incNumOfVisitors() {
-        this.numOfVisitors ++;
+        this.data.numOfVisitors ++;
         if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
+            notificationHandler.sendStatistics(this, data.systemManager);
         }
     }
     public void decNumOfVisitors() {
-        this.numOfVisitors --;
+        this.data.numOfVisitors --;
         if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
+            notificationHandler.sendStatistics(this, data.systemManager);
         }
     }
     public int getNumOfMembers() {
-        return numOfMembers;
+        return data.numOfMembers;
     }
 
     public void incNumOfMembers() {
-        this.numOfMembers ++;
+        this.data.numOfMembers ++;
         if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
+            notificationHandler.sendStatistics(this, data.systemManager);
         }
     }
     public void decNumOfMembers() {
-        this.numOfMembers --;
+        this.data.numOfMembers --;
         if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
+            notificationHandler.sendStatistics(this, data.systemManager);
         }
     }
     public int getNumOfAcquisitions() {
-        return numOfAcquisitions;
+        return data.numOfAcquisitions;
     }
 
     public void incNumOfAcquisitions() {
-        this.numOfAcquisitions++;
+        this.data.numOfAcquisitions++;
         try {
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                notificationHandler.sendStatistics(this, data.systemManager);
             }
         }catch (Exception e){}
     }
     public void decNumOfAcquisitions() {
-        this.numOfAcquisitions--;
+        this.data.numOfAcquisitions--;
         try {
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                notificationHandler.sendStatistics(this, data.systemManager);
             }
         }catch (Exception e){}
     }
     public int getNumOfShops() {
-        return numOfShops;
+        return data.numOfShops;
     }
 
     public void incNumOfShops() {
-        this.numOfShops++;
+        this.data.numOfShops++;
         try {
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                notificationHandler.sendStatistics(this, data.systemManager);
             }
         }catch (Exception e){}
     }
     public void decNumOfShops() {
-        this.numOfShops--;
+        this.data.numOfShops--;
         try {
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                notificationHandler.sendStatistics(this, data.systemManager);
             }
         }catch (Exception e){}
     }
     public int getShopClosed() {
-        return shopClosed;
+        return data.shopClosed;
     }
 
     public void incShopClosed() {
-        this.shopClosed ++;
+        this.data.shopClosed ++;
         try {
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                notificationHandler.sendStatistics(this, data.systemManager);
             }
         }catch (Exception e){}
     }
     public void decShopClosed() {
-        this.shopClosed --;
+        this.data.shopClosed --;
         try {
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                notificationHandler.sendStatistics(this, data.systemManager);
             }
         }catch (Exception e){}
     }
 
     private boolean hasManager(){
-        return (systemManager!=null && !systemManager.isEmpty());
+        return (data.systemManager!=null && !data.systemManager.isEmpty());
     }
     private boolean managerLogged(){
-        return notificationHandler.isConnected(systemManager);
+        return notificationHandler.isConnected(data.systemManager);
     }
     public void setSystemManager(String manager){
         if(manager!=null && !manager.isEmpty()){
-            systemManager=manager;
+            data.systemManager=manager;
         }
     }
 
@@ -144,6 +143,6 @@ public class Statistics {
     public String toString() {
 
         Gson gson =new Gson();
-        return gson.toJson(Statistics.getInstance());
+        return "Statistics "+gson.toJson(data);
     }
 }

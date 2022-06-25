@@ -263,7 +263,7 @@ public class RobustnessTests {
     }
     @Test
     @DisplayName("Market init from wrong file name file")
-    public void initTestNouserName() {
+    public void initTestNewUserName() {
         try {
             MarketConfig.DATA_FILE_NAME = "noFile.txt";
             boolean res = marketService.isServerInit().isErrorOccurred();
