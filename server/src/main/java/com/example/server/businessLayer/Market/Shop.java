@@ -824,7 +824,7 @@ public class Shop implements IHistory {
 
     public boolean approveAppointment(String appointedName, String ownerName) throws MarketException {
         if (!shopOwners.containsKey(ownerName)){
-            DebugLog.getInstance().Log(ownerName+" is not an owner in this shop. Therefore he cannot approve any appointment.");
+            DebugLog.getInstance().Log(ownerName+" is not an owner in this shop. Therefore she/he cannot approve any appointment.");
             throw new MarketException(ownerName+" is not an owner in this shop. Therefore he cannot approve any appointment.");
         }
         boolean approved = pendingAppointments.approve(appointedName,ownerName);
@@ -832,7 +832,7 @@ public class Shop implements IHistory {
             ShopOwnerAppointment appointment = pendingAppointments.getAppointments().get(appointedName);
             shopOwners.put(appointedName,appointment);
             pendingAppointments.removeAppointment(appointedName);
-            EventLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
+            EventLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now she/he is a shop owner");
             for(Bid bid : bids) {
                 bid.addApproves(appointedName);
             }
@@ -840,7 +840,7 @@ public class Shop implements IHistory {
             return true;
         }
         else {
-            EventLog.getInstance().Log(ownerName +"approved "+appointedName+"appointment. Waiting for other owners approval.");
+            EventLog.getInstance().Log(ownerName +" approved "+appointedName+" appointment. Waiting for other owners approval.");
             return false;
         }
     }
@@ -884,5 +884,9 @@ public class Shop implements IHistory {
 
     public void setShopOwners(Map<String, Appointment> shopOwners) {
         this.shopOwners = shopOwners;
+    }
+
+    public void setPendingAppointments(PendingAppointments pendingAppointments) {
+        this.pendingAppointments = pendingAppointments;
     }
 }

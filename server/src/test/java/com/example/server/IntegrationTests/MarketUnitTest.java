@@ -1144,7 +1144,6 @@ public class MarketUnitTest {
             assert false;
         }
         try {
-
             market.approveAppointment("razShop","ido","raz");
             Assertions.assertEquals(2,shop.getShopOwners().size());//waiting for ayala's approval
             market.approveAppointment("razShop","ido","ayala");
@@ -1153,8 +1152,182 @@ public class MarketUnitTest {
         } catch (MarketException e) {
             assert false;
         }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - No such shop")
+    public void approveAppointmentFailTestNoShop(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop2","ido","raz");
+            assert false;
 
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - Not shop owner")
+    public void approveAppointmentFailTestNotOwner(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop","ido","razraz");
+            assert false;
 
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - No such appointment for member")
+    public void approveAppointmentFailTestNotAppointed(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop","idoo","raz");
+            assert false;
+
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - Non existing member")
+    public void approveAppointmentFailTestNonMember(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop2","idooo","raz");
+            assert false;
+
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - good test")
+    public void rejectAppointment(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+
+            Assertions.assertEquals(1,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            market.rejectAppointment("razShop","ido","raz");
+            Assertions.assertEquals(0,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            Assertions.assertEquals(0,market.getMyPendingAppointmentsToApprove("razShop","raz").size());
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - no such shop ")
+    public void rejectAppointmentFailTestNoShop(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            Assertions.assertEquals(1,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            market.rejectAppointment("razShop","ido","raz");
+            Assertions.assertEquals(0,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            Assertions.assertEquals(0,market.getMyPendingAppointmentsToApprove("razShop","raz").size());
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - not an owner ")
+    public void rejectAppointmentFailTestNotOnwer(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            Assertions.assertEquals(1,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            market.rejectAppointment("razShop","ido","razraz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - no such appointment ")
+    public void rejectAppointmentFailTestNoSuchAppointment(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            Assertions.assertEquals(1,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            market.rejectAppointment("razShop","idoo","raz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - owner does not take part in agreement ")
+    public void rejectAppointmentFailTestOwnerNotInAgreement(){
+        try {
+            market.register("ido","password");
+            market.register("shaked","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+            market.appointShopOwner("raz","shaked","razShop");
+            market.approveAppointment("razShop","ido","ayala");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.rejectAppointment("razShop","shaked","ido");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
     }
 
 }
