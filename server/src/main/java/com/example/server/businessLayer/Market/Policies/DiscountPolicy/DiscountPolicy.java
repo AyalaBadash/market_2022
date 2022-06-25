@@ -21,7 +21,7 @@ public class DiscountPolicy {
         double priceAfterDiscount = price;
         for (DiscountType discountType : validDiscounts) {
             double curPrice = discountType.calculateDiscount(shoppingBasket);
-            priceAfterDiscount -= (price - curPrice);
+            priceAfterDiscount -= (price - curPrice);//x-= y => x= x-y
         }
         return priceAfterDiscount;
     }
