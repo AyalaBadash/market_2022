@@ -357,7 +357,18 @@ public class NotificationHandler {
     }
 
     public void sendStatistics(Statistics statistics, String systemManager) {
-        //TODO:CREATE THE JSON.
-        throw new UnsupportedOperationException("sendStatistics not implemented. ");
+        RealTimeNotifications not = new RealTimeNotifications();
+        not.createAnotherMessage(statistics.toString());
+        UserController userController = UserController.getInstance();
+        String session;
+        if ((MarketConfig.IS_TEST_MODE && userController.isLoggedIn(systemManager))) {
+            //if user logged in test.
+            session = systemManager;
+            dispatcher.addMessgae(session, not);
+        } else if (sessions.containsKey(systemManager)) {
+            //if user logged.
+            session = sessions.get(systemManager);
+            dispatcher.addMessgae(session, not);
+        }
     }
 }

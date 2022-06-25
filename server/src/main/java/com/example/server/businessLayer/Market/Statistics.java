@@ -144,6 +144,6 @@ public class Statistics {
     public String toString() {
 
         Gson gson =new Gson();
-        return gson.toJson(this);
+        return gson.toJson(Statistics.getInstance());
     }
 }

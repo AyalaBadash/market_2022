@@ -286,7 +286,7 @@ public class ServicesTests {
     public void initFromDataSourceNoFile() {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
         try{
-
+            MarketConfig.USING_DATA=true;
             MarketConfig.DATA_SOURCE_FILE_NAME ="noName.txt";
             DataSourceConfigReader.resetInstance();
             market.isInit();
@@ -454,10 +454,10 @@ public class ServicesTests {
             List<String> nots= new ArrayList<>();
             RealTimeNotifications not= new RealTimeNotifications();
             setUpCloseShop(owner,appointedName,not,testShopName);
-            nots.addAll(readRealTimeMessages(userName));
+            nots.addAll(readRealTimeMessages(market.getSystemManagerName()));
             boolean found = false;
             for(String message : nots){
-                if(message.contains("Statistics")){
+                if(message.contains("numOfVisitors\":")){
                     found=true;
                 }
             }
@@ -474,17 +474,17 @@ public class ServicesTests {
             String appointedName = "appointedNameTest5";
             String testShopName = "ShopName5";
             String owner = "ownerNameTest5";
+            List<String> prevNots= new ArrayList<>();
+            prevNots.addAll(readRealTimeMessages(market.getSystemManagerName()));
+            market.memberLogout(market.getSystemManagerName());
             List<String> nots= new ArrayList<>();
             RealTimeNotifications not= new RealTimeNotifications();
             setUpCloseShop(owner,appointedName,not,testShopName);
-            nots.addAll(readRealTimeMessages(userName));
-            boolean found = false;
-            for(String message : nots){
-                if(message.contains("Statistics")){
-                    found=true;
-                }
-            }
-            Assertions.assertFalse(found);
+            nots.addAll(readRealTimeMessages(market.getSystemManagerName()));
+            loginMember(userName,password);
+            boolean found ;
+            found= (nots.size()==prevNots.size());
+            Assertions.assertTrue(found);
         } catch (Exception e) {
             assert true;
         }
