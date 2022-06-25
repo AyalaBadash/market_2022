@@ -637,4 +637,15 @@ public class MarketService {
             return new Response("server error has occurred, please try again later");
         }
     }
+
+    public ResponseT<List<String>> approveOrRejectBatch(String shopName, String ownerName, List<String> appointedNames, boolean approve) {
+        ResponseT<List<String>> res;
+        try {
+            List<String> failed = market.approveOrRejectBatch(shopName,ownerName,appointedNames,approve);
+            res= new ResponseT<>(failed);
+        } catch (MarketException e) {
+            return new ResponseT<>(e.getMessage());
+        }
+        return res;
+    }
 }

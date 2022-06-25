@@ -214,8 +214,7 @@ public interface IService {
      */
     public Response changeShopItemInfo(ChangeShopItemInfoRequest request);
 
-    @RequestMapping(value = "/editItemRequest")
-    @CrossOrigin
+
     Response editItem(@RequestBody editItemRequest request);
 
     /**
@@ -410,4 +409,7 @@ public interface IService {
     ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request);
 
     ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request);
+
+
+    ResponseT<List<String>> approveOrRejectBatch(@RequestBody approveOrRejectBatchRequest request);
 }

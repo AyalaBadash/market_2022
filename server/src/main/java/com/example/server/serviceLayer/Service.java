@@ -442,6 +442,12 @@ public class Service implements IService {
     public ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request) {
         return marketService.isSystemManager(request.getName());
     }
+    @Override
+    @RequestMapping(value = "/approveOrRejectBatch")
+    @CrossOrigin
+    public ResponseT<List<String>> approveOrRejectBatch(@RequestBody approveOrRejectBatchRequest request) {
+        return marketService.approveOrRejectBatch(request.getShopName(),request.getOwnerName(),request.getAppointedNames(),request.isApprove());
+    }
 
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);
