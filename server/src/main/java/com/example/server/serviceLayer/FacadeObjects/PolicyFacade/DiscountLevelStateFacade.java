@@ -1,11 +1,6 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.*;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.OrCompositePurchasePolicyLevelState;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.XorCompositePurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
 

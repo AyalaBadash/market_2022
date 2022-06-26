@@ -4,19 +4,28 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchaseP
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.dataLayer.repositories.AtLeastPolicyRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.AtLeastPurchasePolicyTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.AtMostPurchasePolicyTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.OrCompositePurchasePolicyTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.PurchasePolicyTypeFacade;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue(value = "AtLeast")
 public class AtLeastPurchasePolicyType extends PurchasePolicyType {
     private double amount;
+    private static AtLeastPolicyRep atLeastPolicyRep;
 
     public AtLeastPurchasePolicyType(PurchasePolicyLevelState purchasePolicyLevelState, double amount) {
         super ( purchasePolicyLevelState );
         this.amount = amount;
+        atLeastPolicyRep.save(this);
     }
 
+    public AtLeastPurchasePolicyType(){}
     @Override
     public boolean equals(Object object) {
         if(object instanceof AtLeastPurchasePolicyType){
@@ -67,5 +76,13 @@ public class AtLeastPurchasePolicyType extends PurchasePolicyType {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public static AtLeastPolicyRep getAtLeastPolicyRep() {
+        return atLeastPolicyRep;
+    }
+
+    public static void setAtLeastPolicyRep(AtLeastPolicyRep atLeastPolicyRep) {
+        AtLeastPurchasePolicyType.atLeastPolicyRep = atLeastPolicyRep;
     }
 }

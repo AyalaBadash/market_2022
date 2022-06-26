@@ -1,12 +1,13 @@
 package com.example.server.businessLayer.Market;
 
-import com.example.server.businessLayer.Market.Appointment.Appointment;
-import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
-import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.Appointment.*;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.SimpleDiscount;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.CategoryPurchasePolicyLevelState;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
@@ -40,11 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Component
-//@Entity
 public class Market {
-//    @Id
-//    @GeneratedValue
-//    private long id;
     private UserController userController;
     private String systemManagerName;
     private Map<String, Shop> shops;                                 // <shopName, shop>
@@ -58,47 +55,32 @@ public class Market {
     private static Market instance;
     Map<String, Integer> numOfAcqsPerShop;
 
-    @Autowired
-    @Transient
-    private ItemRep itemRep;
-    @Autowired
-    @Transient
-    private ShopRep shopRep;
-    @Autowired
-    @Transient
-    private ShoppingCartRep shoppingCartRep;
-    @Autowired
-    @Transient
-    private ShoppingBasketRep shoppingBasketRep;
-    @Autowired
-    @Transient
-    private MemberRep memberRep;
-    @Autowired
-    @Transient
-    private AcquisitionRep acquisitionRep;
-    @Autowired
-    @Transient
-    private AcquisitionHistoryRep acquisitionHistoryRep;
-    @Autowired
-    @Transient
-    private ClosedShopsHistoryRep closedShopsHistoryRep;
-//    @Autowired
-//    @Transient
-//    private VisitorRep visitorRep;
-    @Autowired
-    @Transient
-    private LoginCardRep loginCardRep;
-    @Autowired
-    @Transient
-    private ShopManagerAppointmentRep shopManagerAppointmentRep;
-    @Autowired
-    @Transient ShopOwnerAppointmentRep shopOwnerAppointmentRep;
-    @Autowired
-    @Transient private ItemAckHistRep itemAckHistRep;
+    @Autowired @Transient private ItemRep itemRep;
+    @Autowired @Transient private ShopRep shopRep;
+    @Autowired @Transient private ShoppingCartRep shoppingCartRep;
+    @Autowired @Transient private ShoppingBasketRep shoppingBasketRep;
+    @Autowired @Transient private MemberRep memberRep;
+    @Autowired @Transient private AcquisitionRep acquisitionRep;
+    @Autowired @Transient private AcquisitionHistoryRep acquisitionHistoryRep;
+    @Autowired @Transient private ClosedShopsHistoryRep closedShopsHistoryRep;
+    @Autowired @Transient private LoginCardRep loginCardRep;
+    @Autowired @Transient private ShopManagerAppointmentRep shopManagerAppointmentRep;
+    @Autowired @Transient private ShopOwnerAppointmentRep shopOwnerAppointmentRep;
+    @Autowired @Transient private ItemAckHistRep itemAckHistRep;
     @Autowired @Transient private AckHisRep ackHisRep;
     @Autowired @Transient private SimpleDiscountRep simpleDiscountRep;
     @Autowired @Transient private ConditionalDiscountRep condDiscountRep;
     @Autowired @Transient private BidRep bidRep;
+    @Autowired @Transient private AgreementRep agreementRep;
+    @Autowired @Transient private PendingAppointmentsRep pendingAptsRep;
+    @Autowired @Transient private DiscountPolicyRep discountPolicyRep;
+    @Autowired @Transient private MaxCompDiscountRep maxCompDiscountRep;
+    @Autowired @Transient private OrTypePolicyRep orTypePolicyRep;
+    @Autowired @Transient private AtMostPolicyRep atMostPolicyRep;
+    @Autowired @Transient private AtLeastPolicyRep atLeastPolicyRep;
+    @Autowired @Transient private PurchasePolicyRep purchasePolicyRep;
+    @Autowired @Transient private CategoryPolicyRep categoryPolicyRep;
+
 
     //constructor
     public Market() {
@@ -135,8 +117,6 @@ public class Market {
         Acquisition.setAcquisitionRep(acquisitionRep);
         AcquisitionHistory.setAcquisitionHistoryRep(acquisitionHistoryRep);
         ClosedShopsHistory.setClosedShopsHistoryRep(closedShopsHistoryRep);
-//        UserController.setUserControllerRep(userControllerRep);
-//        Visitor.setVisitorRep(visitorRep);
         LoginCard.setLoginCardRep(loginCardRep);
         ShopManagerAppointment.setShopManagerAppointmentRep(shopManagerAppointmentRep);
         ShopOwnerAppointment.setShopOwnerAppointmentRep(shopOwnerAppointmentRep);
@@ -144,17 +124,25 @@ public class Market {
         SimpleDiscount.setSimpleDiscountRep(simpleDiscountRep);
         ConditionalDiscount.setCondDiscountRep(condDiscountRep);
         Bid.setBidRep(bidRep);
-
+        Agreement.setAgreementRep(agreementRep);
+        PendingAppointments.setPendingAptsRep(pendingAptsRep);
+        DiscountPolicy.setDiscountPolicyRep(discountPolicyRep);
+        MaxCompositeDiscount.setMaxCompDiscountRep(maxCompDiscountRep);
+        OrCompositePurchasePolicyType.setOrTypePolicyRep(orTypePolicyRep);
+        AtMostPurchasePolicyType.setAtMostPolicyRep(atMostPolicyRep);
+        AtLeastPurchasePolicyType.setAtLeastPolicyRep(atLeastPolicyRep);
+        PurchasePolicy.setPurchasePolicyRep(purchasePolicyRep);
+        CategoryPurchasePolicyLevelState.setCategoryPolicyRep(categoryPolicyRep);
     }
 
     public synchronized void firstInitMarket(String userName, String password) throws MarketException {
         try {
-            initRepositories();
-            loadData();
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
             }
+            initRepositories();
+            loadData();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
@@ -1429,6 +1417,10 @@ public class Market {
                 a.getPermissions().toString();
             }
             shop.bids.toString();
+            shop.getDiscountPolicy().getValidDiscounts().toString();
+            shop.getDiscountPolicy().toString();
+            shop.getPurchasePolicies().toString();
+            shop.getPurchasePolicy().toString();
         }
 
         int largestItemId = 1;

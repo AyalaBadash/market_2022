@@ -784,3 +784,18 @@ Level Error : User tried to register with taken name.
 Level Error : failed to lazily initialize a collection of role: com.example.server.businessLayer.Market.Shop.bids, could not initialize proxy - no Session
 Level Error : User tried to register with taken name.
 Level Error : Cannot invoke "com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy.calculateDiscount(com.example.server.businessLayer.Market.ShoppingBasket)" because "this.discountPolicy" is null
+Level Error : shop does not exist in the market
+Level Error : User tried to register with taken name.
+Level Error : shop does not exist in the market
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy.calculateDiscount(com.example.server.businessLayer.Market.ShoppingBasket)" because "this.discountPolicy" is null
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : shop does not exist in the market
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : shop does not exist in the market
+Level Error : User tried to register with taken name.

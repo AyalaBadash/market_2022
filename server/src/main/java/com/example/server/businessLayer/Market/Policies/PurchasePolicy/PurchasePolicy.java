@@ -5,16 +5,23 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountT
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.dataLayer.repositories.PurchasePolicyRep;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
 public class PurchasePolicy {
+    @Id
+    @GeneratedValue
+    private long id;
+    private static PurchasePolicyRep purchasePolicyRep;
 
     public PurchasePolicy() {
         this.validPurchasePolicies = new ArrayList<>();
     }
 
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<PurchasePolicyType> validPurchasePolicies;
     public List<PurchasePolicyType> getValidPurchasePolicies() {
         return validPurchasePolicies;
@@ -45,6 +52,7 @@ public class PurchasePolicy {
             purePolicies ( purchasePolicyType);
         }
         validPurchasePolicies.add ( purchasePolicyType );
+        purchasePolicyRep.save(this);
     }
 
     private void purePolicies(PurchasePolicyType purchasePolicyType) {
@@ -59,10 +67,20 @@ public class PurchasePolicy {
             }
         } else if(validPurchasePolicies.contains ( purchasePolicyType ))
             validPurchasePolicies.remove ( purchasePolicyType );
+        purchasePolicyRep.save(this);
     }
 
     public void removePurchasePolicy(PurchasePolicyType purchasePolicyType) {
         if(validPurchasePolicies.contains ( purchasePolicyType ))
             validPurchasePolicies.remove ( purchasePolicyType );
+        purchasePolicyRep.save(this);
+    }
+
+    public static PurchasePolicyRep getPurchasePolicyRep() {
+        return purchasePolicyRep;
+    }
+
+    public static void setPurchasePolicyRep(PurchasePolicyRep purchasePolicyRep) {
+        PurchasePolicy.purchasePolicyRep = purchasePolicyRep;
     }
 }

@@ -1,24 +1,23 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CategoryLevelState;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.Map;
-//@Entity
+@Entity
 @DiscriminatorValue(value = "AmountOfItemCondition")
-public class AmountOfItemCondition extends Condition {
+public class AmountOfItemCond extends Cond {
     private double amountNeeded;
     private Integer itemNeeded;
 
-    public AmountOfItemCondition(double amountNeeded, Integer itemNeeded) {
+    public AmountOfItemCond(double amountNeeded, Integer itemNeeded) {
         this.amountNeeded = amountNeeded;
         this.itemNeeded = itemNeeded;
     }
 
-    public AmountOfItemCondition(){}
+    public AmountOfItemCond(){}
 
     /**
      *
@@ -32,8 +31,8 @@ public class AmountOfItemCondition extends Condition {
     }
     @Override
     public boolean equals(Object object){
-        if(object instanceof AmountOfItemCondition){
-            AmountOfItemCondition toCompare = (AmountOfItemCondition) object;
+        if(object instanceof AmountOfItemCond){
+            AmountOfItemCond toCompare = (AmountOfItemCond) object;
             return this.amountNeeded == toCompare.amountNeeded && this.itemNeeded == toCompare.itemNeeded;
         }
         return false;

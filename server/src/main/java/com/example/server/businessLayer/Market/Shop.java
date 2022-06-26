@@ -6,7 +6,6 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountT
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
@@ -17,9 +16,7 @@ import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.dataLayer.repositories.ShopRep;
-
 import javax.persistence.*;
-import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +53,7 @@ public class Shop implements IHistory {
     @Column(name="amount")
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
-    @Transient //TODO
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private PendingAppointments pendingAppointments;
 
     private static ShopRep shopRep;
@@ -69,9 +66,9 @@ public class Shop implements IHistory {
     @CollectionTable (name = "purchase_histories")
     private List<StringBuilder> purchaseHistory;
     //TODO getter,setter,constructor
-    @Transient
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private DiscountPolicy discountPolicy;
-    @Transient //todo
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private PurchasePolicy purchasePolicy;
     @ManyToMany (cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     List<Bid> bids;
@@ -91,13 +88,14 @@ public class Shop implements IHistory {
         rnkers = 0;
         this.shopFounder = founder;
         discountPolicy = new DiscountPolicy ();
+        DiscountPolicy.getDiscountPolicyRep().save(discountPolicy);
         purchasePolicy = new PurchasePolicy ();
+        PurchasePolicy.getPurchasePolicyRep().save(purchasePolicy);
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
         shopOwners.put(founder.getName(), shopOwnerAppointment);
         founder.addAppointmentToMe(shopOwnerAppointment);
-        discountPolicy = new DiscountPolicy ();
-        purchasePolicy = new PurchasePolicy ();
         this.pendingAppointments = new PendingAppointments();
+        PendingAppointments.getPendingAptsRep().save(pendingAppointments);
         bids = new ArrayList<> (  );
         shopRep.save(this);
         shopOwnerAppointment.setRelatedShop(this);

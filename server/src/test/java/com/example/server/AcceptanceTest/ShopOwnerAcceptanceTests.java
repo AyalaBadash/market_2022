@@ -2,7 +2,7 @@ package com.example.server.AcceptanceTest;
 
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCond;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.ItemLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.ShopLevelState;
@@ -64,7 +64,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
         List<DiscountType> discountTypeList = new ArrayList<>();
         discountTypeList.add(simpleDiscount);
         discountTypeList.add(simpleDiscount2);
-        DiscountType condDisc = new ConditionalDiscount(30, new ShopLevelState(), new PriceCondition(3 * applePrice));
+        DiscountType condDisc = new ConditionalDiscount(30, new ShopLevelState(), new PriceCond(3 * applePrice));
         discountTypeList.add(condDisc);
         maxCompositeDiscount = new MaxCompositeDiscount(discountTypeList);
         // simple

@@ -8,7 +8,6 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDis
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
-
 import javax.persistence.*;
 
 @Entity
@@ -22,7 +21,7 @@ public abstract class DiscountType {
     @GeneratedValue
     private long id;
     protected double percentageOfDiscount;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     protected DiscountLevelState discountLevelState;
 
     public DiscountType(double percentageOfDiscount, DiscountLevelState discountLevelState) {

@@ -6,7 +6,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
-//@Entity
+@Entity
 @DiscriminatorValue(value = "AndCompositeDiscountLevelState")
 public class AndCompositeDiscountLevelState extends CompositeDiscountLevelState{
     public AndCompositeDiscountLevelState(List<DiscountLevelState> discountLevelStates) {

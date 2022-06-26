@@ -2,15 +2,24 @@ package com.example.server.businessLayer.Market.Policies.PurchasePolicy.Purchase
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.dataLayer.repositories.OrPolicyRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "Or_ls")
 public class OrCompositePurchasePolicyLevelState extends CompositePurchasePolicyLevelState{
+
+    private static OrPolicyRep orPolicyRep;
 
     public OrCompositePurchasePolicyLevelState(List<PurchasePolicyLevelState> purchasePolicyLevelStates) {
         super ( purchasePolicyLevelStates );
+//        orPolicyRep.save(this);
     }
+
+    public OrCompositePurchasePolicyLevelState(){}
 
     @Override
     public boolean isPolicyHeld(ShoppingBasket shoppingBasket, double amount, boolean greater) throws MarketException {
@@ -98,5 +107,13 @@ public class OrCompositePurchasePolicyLevelState extends CompositePurchasePolicy
     @Override
     public PurchasePolicyLevelStateFacade visitToFacade(OrCompositePurchasePolicyLevelStateFacade levelStateFacade) {
         return null;
+    }
+
+    public static OrPolicyRep getOrPolicyRep() {
+        return orPolicyRep;
+    }
+
+    public static void setOrPolicyRep(OrPolicyRep orPolicyRep) {
+        OrCompositePurchasePolicyLevelState.orPolicyRep = orPolicyRep;
     }
 }

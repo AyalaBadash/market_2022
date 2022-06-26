@@ -4,12 +4,21 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountT
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "CompositeDiscount")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "CompositeDiscountt",
+        discriminatorType = DiscriminatorType.STRING
+)
 public abstract class CompositeDiscount extends DiscountType{
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.PERSIST})
     protected List<DiscountType> discountTypes;
 
+    public CompositeDiscount(){}
     public CompositeDiscount(List<DiscountType> discountTypes) {
         this.discountTypes = discountTypes;
     }

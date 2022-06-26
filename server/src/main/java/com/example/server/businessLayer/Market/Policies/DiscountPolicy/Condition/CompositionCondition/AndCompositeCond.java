@@ -1,26 +1,24 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Cond;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
 import java.util.List;
 //@Entity
 @DiscriminatorValue(value = "AndCompositeCondition")
-public class AndCompositeCondition extends CompositeCondition{
-    public AndCompositeCondition(List<Condition> conditions) {
+public class AndCompositeCond extends CompositeCond {
+    public AndCompositeCond(List<Cond> conditions) {
         super ( conditions );
     }
 
-    public AndCompositeCondition(){}
+    public AndCompositeCond(){}
 
     @Override
     public boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException {
-        for ( Condition condition: conditions )
+        for ( Cond condition: conditions )
             if(!condition.isDiscountHeld ( shoppingBasket ))
                 return false;
         return true;
@@ -28,13 +26,13 @@ public class AndCompositeCondition extends CompositeCondition{
 
     @Override
     public boolean equals(Object object) {
-        if(object instanceof AndCompositeCondition){
-            AndCompositeCondition toCompare = (AndCompositeCondition) object;
-            for( Condition condition: this.conditions){
+        if(object instanceof AndCompositeCond){
+            AndCompositeCond toCompare = (AndCompositeCond) object;
+            for( Cond condition: this.conditions){
                 if (!toCompare.conditions.contains ( condition ))
                     return false;
             }
-            for( Condition condition: toCompare.conditions){
+            for( Cond condition: toCompare.conditions){
                 if ( !this.conditions.contains ( condition ))
                     return false;
             }

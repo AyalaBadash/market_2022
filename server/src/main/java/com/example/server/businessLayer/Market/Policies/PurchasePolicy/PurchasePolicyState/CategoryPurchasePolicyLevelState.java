@@ -4,16 +4,26 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.dataLayer.repositories.CategoryPolicyRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "Category")
 public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
+    @Enumerated(EnumType.STRING)
     Item.Category category;
+    private static CategoryPolicyRep categoryPolicyRep;
 
+    public CategoryPurchasePolicyLevelState(){}
     public CategoryPurchasePolicyLevelState(Item.Category category) {
         this.category = category;
+//        categoryPolicyRep.save(this);
     }
 
     @Override
@@ -109,5 +119,13 @@ public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
 
     public void setCategory(Item.Category category) {
         this.category = category;
+    }
+
+    public static CategoryPolicyRep getCategoryPolicyRep() {
+        return categoryPolicyRep;
+    }
+
+    public static void setCategoryPolicyRep(CategoryPolicyRep categoryPolicyRep) {
+        CategoryPurchasePolicyLevelState.categoryPolicyRep = categoryPolicyRep;
     }
 }

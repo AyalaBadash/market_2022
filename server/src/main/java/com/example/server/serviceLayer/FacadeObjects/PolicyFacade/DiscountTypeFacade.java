@@ -1,7 +1,7 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Cond;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
@@ -60,7 +60,7 @@ public abstract class DiscountTypeFacade implements FacadeObject<DiscountType> {
         return discountLevelStateFacade;
     }
 
-    protected ConditionFacade getConditionFacade(Condition condition){
+    protected ConditionFacade getConditionFacade(Cond condition){
         ConditionFacade conditionFacade;
         if(condition.isAnd ()){
             conditionFacade = new AndCompositeConditionFacade (  );

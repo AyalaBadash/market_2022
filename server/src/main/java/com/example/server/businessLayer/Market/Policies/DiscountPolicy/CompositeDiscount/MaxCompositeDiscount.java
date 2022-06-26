@@ -2,17 +2,24 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Composit
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.repositories.MaxCompDiscountRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "MaxCompositeDiscount")
 public class MaxCompositeDiscount extends CompositeDiscount{
+    private static MaxCompDiscountRep maxCompDiscountRep;
     public MaxCompositeDiscount(List<DiscountType> discountTypes) {
         super (discountTypes);
+        maxCompDiscountRep.save(this);
     }
+    public MaxCompositeDiscount(){}
 
     @Override
     protected Double calculateAllDiscount(double price, List<Double> discounts) throws MarketException {
@@ -54,5 +61,13 @@ public class MaxCompositeDiscount extends CompositeDiscount{
     @Override
     public DiscountTypeFacade visitToFacade(MaxCompositeDiscountTypeFacade discountFacade) {
         return discountFacade.toFacade ( this );
+    }
+
+    public static MaxCompDiscountRep getMaxCompDiscountRep() {
+        return maxCompDiscountRep;
+    }
+
+    public static void setMaxCompDiscountRep(MaxCompDiscountRep maxCompDiscountRep) {
+        MaxCompositeDiscount.maxCompDiscountRep = maxCompDiscountRep;
     }
 }

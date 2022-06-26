@@ -1,6 +1,6 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Cond;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 
@@ -13,24 +13,24 @@ import java.util.List;
         discriminatorType = DiscriminatorType.STRING
 )
 @DiscriminatorValue(value = "CompositeCondition")
-public abstract class CompositeCondition extends Condition {
+public abstract class CompositeCond extends Cond {
     @ManyToMany
-    List<Condition> conditions;
+    List<Cond> conditions;
 
-    public CompositeCondition(List<Condition> conditions) {
+    public CompositeCond(List<Cond> conditions) {
         this.conditions = conditions;
     }
 
-    public CompositeCondition(){}
+    public CompositeCond(){}
 
     @Override
     public abstract boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException;
 
-    public List<Condition> getConditions() {
+    public List<Cond> getConditions() {
         return conditions;
     }
 
-    public void setConditions(List<Condition> conditions) {
+    public void setConditions(List<Cond> conditions) {
         this.conditions = conditions;
     }
 }

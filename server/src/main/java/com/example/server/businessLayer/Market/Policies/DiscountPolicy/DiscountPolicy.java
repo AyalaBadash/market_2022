@@ -2,14 +2,10 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.CompositeDiscount;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import com.example.server.dataLayer.repositories.DiscountPolicyRep;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 @Entity
@@ -17,8 +13,9 @@ public class DiscountPolicy {
     @Id
     @GeneratedValue
     private long id;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<DiscountType> validDiscounts;
+    private static DiscountPolicyRep discountPolicyRep;
 
     public DiscountPolicy() {
         this.validDiscounts = new ArrayList<>();
@@ -47,6 +44,7 @@ public class DiscountPolicy {
             pureDiscounts(discountType);
         }
         validDiscounts.add(discountType);
+        discountPolicyRep.save(this);
     }
 
     private void pureDiscounts(DiscountType discount) {
@@ -60,11 +58,13 @@ public class DiscountPolicy {
             }
         } else if (validDiscounts.contains(discount))
             validDiscounts.remove(discount);
+        discountPolicyRep.save(this);
     }
 
     public void removeDiscount(DiscountType discountType) {
         if (validDiscounts.contains(discountType))
             validDiscounts.remove(discountType);
+        discountPolicyRep.save(this);
     }
 
     public List<DiscountType> getValidDiscounts() {
@@ -73,5 +73,14 @@ public class DiscountPolicy {
 
     public void setValidDiscounts(List<DiscountType> validDiscounts) {
         this.validDiscounts = validDiscounts;
+        discountPolicyRep.save(this);
+    }
+
+    public static DiscountPolicyRep getDiscountPolicyRep() {
+        return discountPolicyRep;
+    }
+
+    public static void setDiscountPolicyRep(DiscountPolicyRep discountPolicyRep) {
+        DiscountPolicy.discountPolicyRep = discountPolicyRep;
     }
 }

@@ -1,17 +1,8 @@
 package com.example.server.serviceLayer;
 
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.*;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Payment.PaymentService;
@@ -22,11 +13,9 @@ import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.serviceLayer.FacadeObjects.*;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.*;
-import org.springframework.boot.ansi.Ansi8BitColor;
 
 
 import javax.transaction.Transactional;
@@ -439,7 +428,7 @@ public class MarketService {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
+//    @Transactional(rollbackOn = Exception.class)
     public Response addDiscountToShop(String visitorName, String shopName, DiscountTypeWrapper discountTypeWrapper) {
         try {
             DiscountType discountType = discountTypeWrapper.toBusinessObject();
@@ -461,7 +450,7 @@ public class MarketService {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
+//    @Transactional(rollbackOn = Exception.class)
     public Response addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
         try {
             PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();

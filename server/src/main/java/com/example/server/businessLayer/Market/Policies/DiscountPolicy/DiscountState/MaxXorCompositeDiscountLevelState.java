@@ -6,7 +6,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
-//@Entity
+@Entity
 @DiscriminatorValue(value = "MaxXorCompositeDiscountLevelState")
 public class MaxXorCompositeDiscountLevelState extends CompositeDiscountLevelState{
     public MaxXorCompositeDiscountLevelState(List<DiscountLevelState> discountLevelStates) {
