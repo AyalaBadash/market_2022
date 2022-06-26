@@ -70,7 +70,7 @@ public class ServicesTests {
 
         MarketConfig.USING_DATA=useData;
         MarketConfig.IS_TEST_MODE=false;
-        market.restoreSytemManager(ManName,ManPass);
+        market.restoreSystemManager(ManName,ManPass);
     }
     @BeforeEach
     public void init() {
@@ -146,7 +146,7 @@ public class ServicesTests {
 
                 Visitor visitor = market.guestLogin();
                 market.memberLogin(userName, password);
-                market.restoreSytemManager(userName,password);
+                market.restoreSystemManager(userName,password);
                 market.validateSecurityQuestions(userName, new ArrayList<>(), visitor.getName());
             }catch (Exception e){
                 String str= e.getMessage();

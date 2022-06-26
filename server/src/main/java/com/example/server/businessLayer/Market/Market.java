@@ -23,7 +23,6 @@ import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.NameValuePair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1302,7 +1301,7 @@ public class Market {
         String dir = System.getProperty("user.dir");
         String additional_dir = "\\server\\config\\";
         if (MarketConfig.IS_MAC) {
-            additional_dir = "/config/";
+            additional_dir = "/server/config/";
         }
         dir += additional_dir;
         return dir;
@@ -1388,7 +1387,7 @@ public class Market {
         systemManagerName="";
         return ret;
     }
-    public void restoreSytemManager(String uName, String password){
+    public void restoreSystemManager(String uName, String password){
         systemManagerName=uName;
 
     }

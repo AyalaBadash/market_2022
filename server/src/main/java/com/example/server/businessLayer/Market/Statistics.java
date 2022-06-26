@@ -143,6 +143,6 @@ public class Statistics {
     public String toString() {
 
         Gson gson =new Gson();
-        return "Statistics "+gson.toJson(data);
+        return gson.toJson(data);
     }
 }
