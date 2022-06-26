@@ -5,6 +5,8 @@ import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.DataSourceConfigReader;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Users.UserController;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
@@ -15,6 +17,7 @@ import com.example.server.serviceLayer.FacadeObjects.ShopFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
 import com.example.server.serviceLayer.FacadeObjects.VisitorFacade;
 import com.example.server.serviceLayer.MarketService;
+import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.example.server.serviceLayer.PurchaseService;
 import com.example.server.serviceLayer.ResponseT;
 import com.example.server.serviceLayer.UserService;
@@ -31,10 +34,13 @@ public class RobustnessTests {
 
     CreditCard creditCard;
     Address address;
-    String managerName = "";
-    String managerPassword = "";
+    String managerName = "u1";
+    String managerPassword = "p1";
+    String shopOwnerName = "bar";
+    String shopOwnerPassword = "password";
     String userName = "userTest";
     String password = "password";
+    String ItemName= "item1";
     String shopManagerName = "shaked";
     String shopManagerPassword = "shaked1234";
     String shopName = "kolbo";
@@ -43,6 +49,10 @@ public class RobustnessTests {
     MarketService marketService;
     UserService userService;
     PurchaseService purchaseService;
+    Item itemAdded;
+    double newAmount;
+
+    Market market=Market.getInstance();
 
     static boolean useData;
 
@@ -111,6 +121,8 @@ public class RobustnessTests {
         }
     }
 
+
+
     @Test
     @DisplayName("Payment service null check")
     public void PaymentService() {
@@ -142,6 +154,108 @@ public class RobustnessTests {
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = 10;
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
+            ResponseT<ShoppingCartFacade> ret= purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            Assertions.assertTrue(ret.getValue().getCart().isEmpty());
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Payment service is good check case 2")
+    public void PaymentServiceGood2() {
+        try {
+            ResponseT<VisitorFacade> visitor = userService.guestLogin();
+            ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
+            ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
+            ItemFacade chocolate = res.getValue().get(0);
+            Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
+            double buyingAmount = 20;
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
+            ResponseT<ShoppingCartFacade> ret= purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            Assertions.assertTrue(ret.getValue().getCart().isEmpty());
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("System init from bas config file, no supply service. should not continue the market init.")
+    public void initFromBadSupplyFile(){
+        String name= MarketConfig.SERVICES_FILE_NAME;
+        try{
+            MarketConfig.SERVICES_FILE_NAME="badSupplyConfig.txt";
+            market.isInit();
+            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
+            market.memberLogout(market.getSystemManager());
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("System init from bas config file, no supply service. should not continue the market init.")
+    public void initFromBadPaymentFile(){
+        String name= MarketConfig.SERVICES_FILE_NAME;
+        try{
+            MarketConfig.SERVICES_FILE_NAME="badPaymentConfig.txt";
+            market.isInit();
+            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
+            market.memberLogout(market.getSystemManager());
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("System init from bas config file, no supply service. should not continue the market init.")
+    public void initFromBadPublisherFile(){
+        String name= MarketConfig.SERVICES_FILE_NAME;
+        try{
+            MarketConfig.SERVICES_FILE_NAME="badPublisherConfig.txt";
+            market.isInit();
+            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
+            market.memberLogout(market.getSystemManager());
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("System init from bas config file, no system manager. should not continue the market init.")
+    public void initFromBadSystemmANAGERFile(){
+        String name= MarketConfig.SERVICES_FILE_NAME;
+        try{
+            MarketConfig.SERVICES_FILE_NAME="badSystemManagerConfig.txt";
+            market.isInit();
+            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
+            market.memberLogout(market.getSystemManager());
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            Assertions.assertEquals("Market needs system manager services for initialize",e.getMessage());
+        }
+    }
+    @Test
+    @DisplayName("Payment service is good check 3 case 3")
+    public void PaymentServiceGood3() {
+        try {
+            ResponseT<VisitorFacade> visitor = userService.guestLogin();
+            ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
+            ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
+            ItemFacade chocolate = res.getValue().get(0);
+            Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
+            double buyingAmount = 30;
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
             ResponseT<ShoppingCartFacade> ret= purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
             Assertions.assertTrue(ret.getValue().getCart().isEmpty());
@@ -321,5 +435,114 @@ public class RobustnessTests {
         catch(Exception e){
             assert false;
         }
+    }
+    @Test
+    @DisplayName("shop owner add new item bad case - not a real shop")
+    public void addNewItemFail2() {
+        try {
+            //login owner and add product
+
+            loginMember(shopOwnerName, shopOwnerPassword);
+            market.addItemToShop(shopOwnerName, ItemName, productPrice, Item.Category.general,
+                    "some info",new ArrayList<>() , productAmount,"non existing shop name");
+            assert  false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
+        } catch (Exception e) {
+            assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("set item new amount")
+    public void setItemAmount() {
+        try {
+            //login owner and add product
+
+            registerVisitor(shopOwnerName,shopOwnerPassword);
+            loginMember(shopOwnerName,shopOwnerPassword);
+            openShop();
+            //get the item from the market for args.
+            market.setItemCurrentAmount(shopOwnerName,itemAdded,newAmount,shopName);
+            assert market.getItemCurrentAmount(itemAdded.getID()).equals(newAmount);
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
+        } catch (Exception e) {
+            assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("set item new amount bad case - not an existing item")
+    public void setItemAmountFail() {
+        try {
+            //login owner and add product
+
+            loginMember(shopOwnerName,shopOwnerPassword);
+            //set amount for item that is not exists.
+            market.setItemCurrentAmount(shopOwnerName,new Item(111,ItemName,10,"inf", Item.Category.fruit,new ArrayList<>()),newAmount,shopName);
+            assert false;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
+        } catch (Exception e) {
+            assert true;
+            try {
+                logoutMember(shopOwnerName);
+            } catch (MarketException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    public void setUpAppointOwner(String appointedName, RealTimeNotifications not) throws MarketException {
+        String owner="notificationTestUser3";
+        String testShopName="testShopName3";
+        not.createNewOwnerMessage(owner,appointedName,testShopName);
+        registerVisitor(owner, shopOwnerPassword);
+        registerVisitor(appointedName, shopOwnerPassword);
+        loginMember(owner, shopOwnerPassword);
+        market.openNewShop(owner, testShopName);
+        market.appointShopOwner(owner,appointedName,testShopName);
+        market.memberLogout(owner);
+    }
+    public void loginMember(String name, String password) throws MarketException {
+        if(UserController.getInstance().isLoggedIn(name))
+            return;
+        Visitor visitor = market.guestLogin();
+        market.memberLogin(name, password);
+        market.validateSecurityQuestions(name, new ArrayList<>(), visitor.getName());
+    }
+    public void logoutMember(String name) throws MarketException {
+        market.memberLogout(name);
+    }
+    public void registerVisitor(String name, String pass) throws MarketException {
+        // shop manager register
+        Visitor visitor = market.guestLogin();
+        market.register(name, pass);
+    }
+    private void openShop() throws MarketException {
+        loginMember(shopOwnerName,shopOwnerPassword);
+        market.openNewShop(shopOwnerName, shopName);
+        itemAdded = market.addItemToShopItem(shopOwnerName, ItemName, productPrice, Item.Category.electricity, "", new ArrayList<>(), productAmount, shopName);
+
     }
 }

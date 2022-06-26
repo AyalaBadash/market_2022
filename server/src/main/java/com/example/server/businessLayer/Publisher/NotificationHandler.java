@@ -24,7 +24,7 @@ public class NotificationHandler {
     private Publisher dispatcher;
 
     //Map for sessionId-name pairs.
-    private Map<String, String> sessions;
+    private static Map<String, String> sessions;
 
 
     public static NotificationHandler getInstance(){

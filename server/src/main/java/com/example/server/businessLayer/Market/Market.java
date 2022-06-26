@@ -2,6 +2,8 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 
+import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
+import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Payment.PaymentService;
@@ -23,6 +25,7 @@ import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,6 +33,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+
+@Component
 public class Market {
     private UserController userController;
     private String systemManagerName;
@@ -346,19 +351,41 @@ public class Market {
         List<Appointment> myAppointments = member.getMyAppointments();
         userController.finishLogin(userName, visitorName);
         Member ret=  new Member(member.getName(), member.getMyCart(), appointmentByMe, myAppointments, member.getPurchaseHistory());//,member.getPurchaseHistory()
-        RealTimeNotifications notifications= new RealTimeNotifications();
-        notifications.createMemberLoggedIn(member.getName(),visitorName);
-        statistics.incNumOfMembers();
+        setLoginMemberPermissionStatistics(ret);
         return ret;
     }
 
+    private void setLoginMemberPermissionStatistics(Member ret) {
+        List<Appointment> myAppointments= ret.getMyAppointments();
+        boolean isOwner=false;
+        boolean isManager=false;
+        for(Appointment appointment : myAppointments){
+            if(appointment instanceof ShopOwnerAppointment){
+                isOwner=true;
+            }
+            else if( appointment instanceof ShopManagerAppointment){
+                isManager=true;
+            }
+        }
+        if(ret.getName().equals(systemManagerName)){
+            statistics.incNumOfSystemManagers(ret.getName());
+        }
+        if (isOwner){
+            statistics.incNumOfOwners(ret.getName());
+        }
+        else if(isManager){
+            statistics.incNumOfManagers(ret.getName());
+        }
+        else {
+            statistics.incNumOfMembers(ret.getName());
+        }
+    }
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         alertIfNotLoggedIn(visitorName);
         userController.exitSystem(visitorName);
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedout(visitorName,userController.getVisitorsInMarket().size());
-        statistics.decNumOfVisitors();
         EventLog.getInstance().Log("A visitor exited the market.");
     }
 
@@ -406,8 +433,6 @@ public class Market {
             } catch (Exception e) {
             }
             shopToClose.setClosed(true);
-            statistics.incShopClosed();
-            statistics.decNumOfShops();
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
         }
     }
@@ -472,7 +497,6 @@ public class Market {
         String ret= userController.memberLogout(member);
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createMemberLoggedOut(member,ret);
-        statistics.decNumOfMembers();
         EventLog.getInstance().Log("A member logged out from the system");
         return ret;
     }
@@ -544,7 +568,6 @@ public class Market {
             DebugLog.getInstance().Log("Non member tried to open a shop.");
             throw new MarketException("You are not a member. Only members can open a new shop in the market");
         }
-        statistics.incNumOfShops();
         EventLog.getInstance().Log(visitorName + " opened a new shop named:" + shopName);
         return true;
     }
@@ -667,8 +690,6 @@ public class Market {
         ClosedShopsHistory.getInstance().reopenShop(shopName);
         shopToOpen.setClosed(false);
         validateAllEmployees(shopToOpen);
-        statistics.incNumOfShops();
-        statistics.decShopClosed();
         //TODO - send notifications for managers and owners.
         EventLog.getInstance().Log(shopName+" has been re-opened.");
     }
@@ -733,9 +754,11 @@ public class Market {
         }
 
         if (supplyServiceProxy == null) {
+            DebugLog.getInstance().Log("The supply service is not available right now.");
             throw new MarketException("The supply service is not available right now.");
         }
         if (paymentServiceProxy == null) {
+            DebugLog.getInstance().Log("The payment service is not available right now.");
             throw new MarketException("The payment service is not available right now.");
         }
         //After  cart found, try to make the acquisition from each basket in the cart.
@@ -750,9 +773,6 @@ public class Market {
         }
         if (shoppingCartToReturn == null) {
             throw new MarketException("Could not make the purchase right now for the shopping cart. Please try again later. ");
-        }
-        if(!shoppingCartToReturn.isEmpty()){
-            statistics.incNumOfAcquisitions();
         }
         return shoppingCartToReturn;
     }
@@ -1014,22 +1034,27 @@ public class Market {
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
+                if(data.isEmpty())
+                    continue;
                 String[] vals = data.split("::");
                 setService(vals);
             }
         } catch (FileNotFoundException e){
-            throw new MarketException("file not found while reading configuration file");
+            DebugLog.getInstance().Log("File not found while reading configuration file in market init");
+            throw new MarketException("File not found while reading configuration file");
         }
         if (paymentServiceProxy == null || supplyServiceProxy == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-            throw new MarketException("market needs payment and supply services for initialize");
+            DebugLog.getInstance().Log("A market initialization failed . Lack of payment / supply services ");
+            throw new MarketException("Market needs payment and supply services for initialize");
         }
         if (publisher == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of publisher services ");
-            throw new MarketException("market needs publisher services for initialize");
+            DebugLog.getInstance().Log("A market initialization failed . Lack of publisher services ");
+            throw new MarketException("Market needs publisher services for initialize");
 
+        }
+        if(systemManagerName==null ||systemManagerName.isEmpty()){
+            DebugLog.getInstance().Log("A market initialization failed . Lack of system manager ");
+            throw new MarketException("Market needs system manager services for initialize");
         }
 
     }
@@ -1040,7 +1065,7 @@ public class Market {
             return;
         }
         if(vals.length<2 || (vals[0].equals(MarketConfig.SYSTEM_MANAGER_NAME) && vals.length<3)){
-            throw new MarketException(String.format("Missing init values for %s. Could not init the services.",vals[0]));
+            throw new MarketException(String.format("Missing init values for %s. Could not init the system services.",vals[0]));
         }
         if (vals[0].contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
             initPaymentService(vals[1]);
@@ -1088,6 +1113,7 @@ public class Market {
         } else if (val.contains(MarketConfig.TEXT_PUBLISHER)) {
             publisher = TextDispatcher.getInstance();
         } else {
+            DebugLog.getInstance().Log("Faileed to init notification service.");
             throw new MarketException("Failed to init notification service");
         }
         notificationHandler = NotificationHandler.getInstance();
@@ -1299,9 +1325,9 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir");
-        String additional_dir = "\\server\\config\\";
+        String additional_dir = "\\config\\";
         if (MarketConfig.IS_MAC) {
-            additional_dir = "/server/config/";
+            additional_dir = "/config/";
         }
         dir += additional_dir;
         return dir;
@@ -1385,6 +1411,10 @@ public class Market {
     public String resetSystemManager() {
         String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
         systemManagerName="";
+        return ret;
+    }
+    public String getSystemManager() {
+        String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
         return ret;
     }
     public void restoreSystemManager(String uName, String password){

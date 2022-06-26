@@ -115,9 +115,9 @@ public class DataSourceConfigReader {
 
      private String getProperiesDir() {
         String dir = System.getProperty("user.dir");
-        String additional_dir = "\\server\\src\\main\\resources\\application.properties";
+        String additional_dir = "\\src\\main\\resources\\application.properties";
         if (MarketConfig.IS_MAC) {
-            additional_dir = "/server/src/main/resources/application.properties";
+            additional_dir = "/src/main/resources/application.properties";
         }
         dir += additional_dir;
         return dir;
