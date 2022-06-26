@@ -805,7 +805,7 @@ public class Market {
     }
 
     public Item getItemByID(java.lang.Integer id) throws MarketException {
-        String itemShopName = allItemsInMarketToShop.get(id);
+        String itemShopName = getAllItemsInMarketToShop().get(id);
         if (itemShopName == null)
             throw new MarketException("no such item in market");
         Shop itemShop = shops.get(itemShopName);
@@ -1388,5 +1388,9 @@ public class Market {
     public void restoreSytemManager(String uName, String password){
         systemManagerName=uName;
 
+    }
+
+    public void setAllItemsInMarketToShop(Map<Integer, String> allItemsInMarketToShop) {
+        this.allItemsInMarketToShop = allItemsInMarketToShop;
     }
 }

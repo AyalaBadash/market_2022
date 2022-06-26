@@ -30,6 +30,7 @@ public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
             if(Market.getInstance ().getItemByID ( itemId ).getCategory ().equals ( category ))
                 curAmount += shoppingBasket.getItems ().get ( itemId );
         amount.add ( curAmount );
+        //TODO - review - amount.add should be inside if?
         return amount;
     }
 
