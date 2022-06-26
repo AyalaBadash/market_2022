@@ -1411,6 +1411,7 @@ public class Market {
         List<Shop> shops = shopRep.findAll();
         List<LoginCard> cards = loginCardRep.findAll();
         itemRep.findAll();
+        bidRep.findAll();
         shopRep.findAll();
         loginCardRep.findAll();
         Security.getInstance().loadData(cards);
@@ -1427,6 +1428,7 @@ public class Market {
                 a.setRelatedShop(shop); //set related shop in appointment
                 a.getPermissions().toString();
             }
+            shop.bids.toString();
         }
 
         int largestItemId = 1;

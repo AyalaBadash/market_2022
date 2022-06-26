@@ -780,3 +780,7 @@ Level Error : Non member visitor tried to log in.
 Level Error : Unable to resolve entity name from Class [com.example.server.businessLayer.Market.Appointment.Permissions.ApproveBidPermission] expected instance/subclass of [com.example.server.businessLayer.Market.Appointment.Permissions.IPermission]; nested exception is org.hibernate.HibernateException: Unable to resolve entity name from Class [com.example.server.businessLayer.Market.Appointment.Permissions.ApproveBidPermission] expected instance/subclass of [com.example.server.businessLayer.Market.Appointment.Permissions.IPermission]
 Level Error : User tried to register with taken name.
 Level Error : you must be a visitor in the market in order to make actions
+Level Error : User tried to register with taken name.
+Level Error : failed to lazily initialize a collection of role: com.example.server.businessLayer.Market.Shop.bids, could not initialize proxy - no Session
+Level Error : User tried to register with taken name.
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy.calculateDiscount(com.example.server.businessLayer.Market.ShoppingBasket)" because "this.discountPolicy" is null

@@ -195,26 +195,10 @@ public class ShoppingCart implements IHistory {
     public void addABid(Bid bid, Shop shop) {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
-            shoppingBasket = new ShoppingBasket ();
+            shoppingBasket = new ShoppingBasket (1);
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addABid(bid);
-    }
-
-    public static void setShoppingCartRep(ShoppingCartRep scRepository){
-        shoppingCartRep = scRepository;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public static ShoppingCartRep getShoppingCartRep() {
-        return shoppingCartRep;
     }
 
     public void approveBid(Integer itemId, Shop shop) throws MarketException {
@@ -234,4 +218,21 @@ public class ShoppingCart implements IHistory {
         }
         shoppingBasket.removeBid ( itemId );
     }
+
+    public static void setShoppingCartRep(ShoppingCartRep scRepository){
+        shoppingCartRep = scRepository;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static ShoppingCartRep getShoppingCartRep() {
+        return shoppingCartRep;
+    }
+
 }

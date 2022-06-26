@@ -29,8 +29,12 @@ public class ShoppingBasket implements IHistory , Serializable {
     private double price;
     private static ShoppingBasketRep shoppingBasketRep;
 
-    @Transient //TODO dal
-    private HashMap<Integer, Bid> bids;
+    @ManyToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinTable (name = "bids_in_basket",
+            joinColumns = {@JoinColumn(name = "basket", referencedColumnName = "basket_id")},
+            inverseJoinColumns = {@JoinColumn(name = "item", referencedColumnName = "ID")})
+    @MapKeyColumn (name = "item_id")
+    private Map<Integer, Bid> bids;
 
     public ShoppingBasket(){}
 
@@ -161,9 +165,10 @@ public class ShoppingBasket implements IHistory , Serializable {
             //throw new MarketException("Bid cant be null");
         }
         bids.put ( bid.getItemId (), bid );
+        shoppingBasketRep.save(this);
     }
 
-    public HashMap<Integer, Bid> getBids() {
+    public Map<Integer, Bid> getBids() {
         return bids;
     }
 
@@ -174,6 +179,7 @@ public class ShoppingBasket implements IHistory , Serializable {
     public void removeBid(Integer itemId) {
         bids.remove ( itemId );
         calculatePrice ();
+        shoppingBasketRep.save(this);
     }
 
     public static void setShoppingBasketRep(ShoppingBasketRep sbRepositoryToSet){

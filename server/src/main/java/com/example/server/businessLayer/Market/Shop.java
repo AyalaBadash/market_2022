@@ -752,6 +752,7 @@ public class Shop implements IHistory {
         }
         Bid bid = new Bid (visitorName,UserController.getInstance ().isMember ( visitorName ), itemId, price, amount, approvingAppointments);
         bids.add ( bid );
+        shopRep.save(this);
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = item.getName ();
         handler.sendNewBidToApprovalOfApprovesNotificationBatch ( approvingAppointments, visitorName, price, itemName, shopName);
