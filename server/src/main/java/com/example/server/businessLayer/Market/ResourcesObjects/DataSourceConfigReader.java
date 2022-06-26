@@ -1,8 +1,8 @@
 package com.example.server.businessLayer.Market.ResourcesObjects;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import org.springframework.util.DefaultPropertiesPersister;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -24,12 +24,16 @@ public class DataSourceConfigReader {
         try {
             this.prop = new Properties();
             prop.load(propsInput);
+            File f = new File(getProperiesDir());
+            OutputStream out = new FileOutputStream( f );
+            // write into it
+            DefaultPropertiesPersister p = new DefaultPropertiesPersister();
+            p.store(prop, out, "Header Comment");
         } catch (Exception e) {
             throw new MarketException("Failed to init properties out of Data source config file.");
         }
+
     }
-
-
     private void checkContent(String path) throws MarketException {
         Map<String, String> ret= readFromFile(path);
         if(!ret.containsKey("url") || (ret.get("url")==null || ret.get("url").isEmpty())){throw new MarketException("Missing url in data source config file.");}
@@ -107,5 +111,15 @@ public class DataSourceConfigReader {
 
     public String getProperty(String prop) {
         return this.prop.getProperty(prop);
+    }
+
+     private String getProperiesDir() {
+        String dir = System.getProperty("user.dir");
+        String additional_dir = "\\src\\main\\resources\\application.properties";
+        if (MarketConfig.IS_MAC) {
+            additional_dir = "/src/main/resources/application.properties";
+        }
+        dir += additional_dir;
+        return dir;
     }
 }

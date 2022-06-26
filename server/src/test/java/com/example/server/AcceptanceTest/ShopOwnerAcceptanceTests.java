@@ -579,7 +579,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             addItemToCart(apple, 1, visitor.getName());
             ShoppingCartFacade cart = showShoppingCart(visitor.getName()).getValue();
             // check whether condition discount didn't count (must have atleast 2 apples)
-            Assertions.assertEquals(cart.getPrice(), applePrice * 0.75);
+            Assertions.assertEquals(cart.getPrice(), applePrice * 1);
             addItemToCart(apple, 2, visitor.getName());
             cart = showShoppingCart(visitor.getName()).getValue();
             Assertions.assertEquals (cart.getPrice(), applePrice * 3 * 0.7);

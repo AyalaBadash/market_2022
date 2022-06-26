@@ -12,6 +12,10 @@ Login::u6::password
 Open_Shop::u2::s1
 Add_Item::u2::Bamba::30::snacks::::20::s1
 Appoint_Manager::u2::u3::s1
+Logout::u1
+Logout::u2
+Logout::u3
+Logout::u4
 Logout::u5
 Appoint_Owner::u2::u4::s1
 Appoint_Owner::u2::u5::s1
