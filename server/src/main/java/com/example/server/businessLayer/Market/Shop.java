@@ -16,6 +16,7 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
+import org.springframework.stereotype.Component;
 
 import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;

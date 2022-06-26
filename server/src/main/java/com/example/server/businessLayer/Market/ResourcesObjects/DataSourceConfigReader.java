@@ -25,7 +25,7 @@ public class DataSourceConfigReader {
             this.prop = new Properties();
             prop.load(propsInput);
             File f = new File(getProperiesDir());
-            OutputStream out = new FileOutputStream( f );
+            OutputStream out = new FileOutputStream(f);
             // write into it
             DefaultPropertiesPersister p = new DefaultPropertiesPersister();
             p.store(prop, out, "Header Comment");

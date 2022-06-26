@@ -192,7 +192,7 @@ public class RobustnessTests {
         }
         catch(Exception e){
             MarketConfig.SERVICES_FILE_NAME=name;
-            assert true;
+            Assertions.assertEquals("Missing init values for SupplyService . Could not init the system services.",e.getMessage());
         }
     }
     @Test
@@ -209,7 +209,7 @@ public class RobustnessTests {
         }
         catch(Exception e){
             MarketConfig.SERVICES_FILE_NAME=name;
-            assert true;
+            Assertions.assertEquals("Missing init values for PaymentService . Could not init the system services.",e.getMessage());
         }
     }
     @Test
@@ -226,24 +226,8 @@ public class RobustnessTests {
         }
         catch(Exception e){
             MarketConfig.SERVICES_FILE_NAME=name;
-            assert true;
-        }
-    }
-    @Test
-    @DisplayName("System init from bas config file, no system manager. should not continue the market init.")
-    public void initFromBadSystemmANAGERFile(){
-        String name= MarketConfig.SERVICES_FILE_NAME;
-        try{
-            MarketConfig.SERVICES_FILE_NAME="badSystemManagerConfig.txt";
-            market.isInit();
-            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(market.getSystemManager());
-            MarketConfig.SERVICES_FILE_NAME=name;
-            assert false;
-        }
-        catch(Exception e){
-            MarketConfig.SERVICES_FILE_NAME=name;
-            Assertions.assertEquals("Market needs system manager services for initialize",e.getMessage());
+            Assertions.assertEquals("Missing init values for Publisher . Could not init the system services.",e.getMessage());
+
         }
     }
     @Test
