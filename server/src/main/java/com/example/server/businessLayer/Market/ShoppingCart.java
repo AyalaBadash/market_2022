@@ -1,5 +1,7 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.dataLayer.repositories.ShoppingCartRep;
@@ -74,18 +76,18 @@ public class ShoppingCart implements IHistory {
      *                         return all items to shops, MarketException message include missing items
      */
 
-    public synchronized double saveFromShops(NotificationHandler publisher, String buyer,boolean test) throws MarketException {
+    public synchronized double saveFromShops(NotificationHandler publisher, String buyer ) throws MarketException {
         boolean succeeded = true;
         List<Shop> succeedShops = new ArrayList<>();
         StringBuilder missing = new StringBuilder();
         double price = 0;
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             try {
-                price += shopToBasket.getKey().buyBasket(publisher,shopToBasket.getValue(),buyer,test);
+                price += shopToBasket.getKey().buyBasket(publisher,shopToBasket.getValue(),buyer);
                 succeedShops.add(shopToBasket.getKey());
             } catch (MarketException e) {
                 succeeded = false;
-                shopToBasket.getKey ().validateBasket ( shopToBasket.getValue () );
+                shopToBasket.getKey ().validateBasket (shopToBasket.getValue ());
                 missing.append(e.getMessage());
                 missing.append("\n");
             }
@@ -120,6 +122,7 @@ public class ShoppingCart implements IHistory {
         }
         shoppingBasket.addItem ( item, amount );
         shoppingCartRep.save(this);
+        shoppingBasket.updatePrice(shop);
     }
 
     public void removeItem(Shop shop, Item item) throws MarketException {
@@ -127,22 +130,25 @@ public class ShoppingCart implements IHistory {
         if(shoppingBasket == null)
             return;
         shoppingBasket.removeItem ( item);
+        shoppingBasket.updatePrice(shop);
         shoppingCartRep.save(this);
     }
 
     public void calculate() {
         double price = 0;
         for(ShoppingBasket shoppingBasket : cart.values ())
-            price += shoppingBasket.getPrice ();
+            price += shoppingBasket.getCurrentPrice ();
         currentPrice = price;
         shoppingCartRep.save(this);
     }
 
     public void editQuantity(double amount, Item item, String shopName) throws MarketException {
         ShoppingBasket basket=null;
+        Shop shop = null;
         for (Map.Entry<Shop, ShoppingBasket> bask: cart.entrySet()){
             if(bask.getKey().getShopName().equals(shopName)){
                 basket=bask.getValue();
+                shop = bask.getKey ();
                 break;
             }
         }
@@ -150,6 +156,7 @@ public class ShoppingCart implements IHistory {
             throw new MarketException("The basket does not exist in the cart.");
         }
         basket.updateQuantity(amount, item);
+        basket.updatePrice(shop);
     }
 
 
@@ -172,14 +179,26 @@ public class ShoppingCart implements IHistory {
 
 
     public boolean isEmpty() {
-        if (cart.isEmpty())
+        // no baskets exist
+        if (cart.isEmpty()){
             return true;
+        }
+        // if baskets are empty
         for(Map.Entry<Shop, ShoppingBasket> basket : cart.entrySet()){
-            if(basket.getValue().isEmpty()){
-                return true;
+            if(!basket.getValue().isEmpty()){
+                return false;
             }
         }
-        return false;
+        return true;
+    }
+
+    public void addABid(Bid bid, Shop shop) {
+        ShoppingBasket shoppingBasket = cart.get ( shop );
+        if (shoppingBasket == null){
+            shoppingBasket = new ShoppingBasket ();
+            cart.put ( shop, shoppingBasket );
+        }
+        shoppingBasket.addABid(bid);
     }
 
     public static void setShoppingCartRep(ShoppingCartRep scRepository){
@@ -196,5 +215,23 @@ public class ShoppingCart implements IHistory {
 
     public static ShoppingCartRep getShoppingCartRep() {
         return shoppingCartRep;
+    }
+
+    public void approveBid(Integer itemId, Shop shop) throws MarketException {
+        ShoppingBasket shoppingBasket = cart.get ( shop );
+        if(shoppingBasket == null){
+            DebugLog.getInstance ().Log ( "Visitor does not have a bid in this shop." );
+            throw new MarketException ( "Visitor does not have a bid in this shop." );
+        }
+
+    }
+
+    public void rejectBid(Integer itemId, Shop shop) throws MarketException {
+        ShoppingBasket shoppingBasket = cart.get ( shop );
+        if(shoppingBasket == null || shoppingBasket.getBids ().containsKey ( itemId )){
+            DebugLog.getInstance ().Log ( "this user has no such bid in his basket." );
+            throw new MarketException ( "this user has no such bid in his basket." );
+        }
+        shoppingBasket.removeBid ( itemId );
     }
 }

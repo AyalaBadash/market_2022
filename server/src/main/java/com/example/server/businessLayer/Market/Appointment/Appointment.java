@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market.Appointment;
 
+import com.example.server.businessLayer.Market.Appointment.Permissions.ApproveBidPermission;
 import com.example.server.businessLayer.Market.Appointment.Permissions.EmployeesPermission;
 import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
 import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
@@ -56,6 +57,7 @@ Appointment {
     public void addAllPermissions(){
         permissions.add(new PurchaseHistoryPermission());
         permissions.add(new EmployeesPermission());
+        permissions.add ( new ApproveBidPermission() );
     }
 
     public List<IPermission> getPermissions() {

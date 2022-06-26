@@ -16,6 +16,15 @@ public class AddPurchasePolicyToShopRequest {
 
     AddPurchasePolicyToShopRequest(){}
 
+
+    public PurchasePolicyTypeWrapper getPurchasePolicyTypeFacade() {
+        return purchasePolicyTypeFacade;
+    }
+
+    public void setPurchasePolicyTypeFacade(PurchasePolicyTypeWrapper purchasePolicyTypeFacade) {
+        this.purchasePolicyTypeFacade = purchasePolicyTypeFacade;
+    }
+
     public PurchasePolicyTypeWrapper getPolicy() {
         return purchasePolicyTypeFacade;
     }

@@ -87,6 +87,10 @@ public class ClosedShopsHistory {
         overallHistory = new StringBuilder();
     }
 
+    public void reopenShop(String shopName) {
+        this.closedShops.remove(shopName);
+    }
+
     public static void setClosedShopsHistoryRep(ClosedShopsHistoryRep closedShopsHistoryRep) {
         ClosedShopsHistory.closedShopsHistoryRep = closedShopsHistoryRep;
     }

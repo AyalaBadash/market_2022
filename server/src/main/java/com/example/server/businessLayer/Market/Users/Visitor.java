@@ -26,7 +26,7 @@ public class Visitor {
         this.name = name;
         this.member = null;
         this.cart = new ShoppingCart();
-        ShoppingCart.getShoppingCartRep().save(cart);
+//        ShoppingCart.getShoppingCartRep().save(cart);
 //        visitorRep.save(this);
     }
 
@@ -34,7 +34,7 @@ public class Visitor {
         this.name = name;
         this.member = member;
         this.cart = cart;
-        ShoppingCart.getShoppingCartRep().save(cart);
+//        ShoppingCart.getShoppingCartRep().save(cart);
 //        visitorRep.save(this);
     }
     public Visitor(){}

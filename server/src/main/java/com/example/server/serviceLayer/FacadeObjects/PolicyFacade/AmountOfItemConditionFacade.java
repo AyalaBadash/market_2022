@@ -6,15 +6,14 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionFacade;
 
 public class AmountOfItemConditionFacade extends ConditionFacade {
     private double amount;
-    int itenID;
+    int itemID;
 
-    public AmountOfItemConditionFacade(double amount, int itenID) {
+    public AmountOfItemConditionFacade(double amount, int itemID) {
         this.amount = amount;
-        this.itenID = itenID;
+        this.itemID = itemID;
     }
 
     public AmountOfItemConditionFacade() {
@@ -28,17 +27,17 @@ public class AmountOfItemConditionFacade extends ConditionFacade {
         this.amount = amount;
     }
 
-    public int getItenID() {
-        return itenID;
+    public int getItemID() {
+        return itemID;
     }
 
-    public void setItenID(int itenID) {
-        this.itenID = itenID;
+    public void setItemID(int itemID) {
+        this.itemID = itemID;
     }
 
     @Override
     public Condition toBusinessObject() throws MarketException {
-        return new AmountOfItemCondition (amount, itenID);
+        return new AmountOfItemCondition (amount, itemID);
     }
 
     @Override

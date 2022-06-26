@@ -1,6 +1,10 @@
 package com.example.server.AcceptanceTest;
 
+import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Payment.CreditCard;
+import com.example.server.businessLayer.Payment.PaymentServiceProxy;
+import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
+import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
@@ -17,23 +21,23 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
 
 //    VisitorFacade curVisitor;
     static String shopOwnerName = "shaked";
-    static String shopOwnerPassword = "shaked1234";
+    static String shopOwnerPassword = "password";
     static String shopName = "kolbo";
     static Double productAmount;
     static Double productPrice;
     static CreditCard creditCard;
     static Address address;
-    static ItemFacade milk;
+    static ItemFacade oil;
 
     static ItemFacade bamba;
 
-    static double appleAmount;
-    static String appleName;
-    static Item.Category appleCategory;
-    static double applePrice;
-    static ArrayList<String> appleKeywords;
-    static String appleInfo;
-    static ItemFacade apple;
+    static double melonAmount;
+    static String melonName;
+    static Item.Category melonCategory;
+    static double melonPrice;
+    static ArrayList<String> melonKeywords;
+    static String melonInfo;
+    static ItemFacade melon;
 
     static double onePlusAmount;
     static String onePlusName;
@@ -46,7 +50,11 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     @BeforeAll
     public static void setup() {
         try {
-            initMarket();
+            try {
+                initMarket();
+                Market market = Market.getInstance();
+                market.isInit();
+            }catch (Exception e){}
             // shop manager register
             VisitorFacade visitor = guestLogin();
             register(shopOwnerName, shopOwnerPassword);
@@ -56,23 +64,23 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             openShop(shopOwnerName, shopName);
             productAmount = 3.0;
             productPrice = 1.2;
-            addItemToShop(shopOwnerName, "milk", productPrice, Item.Category.general,
+            addItemToShop(shopOwnerName, "oil", productPrice, Item.Category.general,
                     "soy", new ArrayList<>(), productAmount, shopName).getValue ();
             addItemToShop(shopOwnerName, "bamba", productPrice, Item.Category.general,
                     "nugat", new ArrayList<>(), productAmount, shopName);
             List<ItemFacade> res = searchProductByName("bamba");
             bamba = res.get(0);
 
-            appleAmount = 4.0;
-            appleName = "apple";
-            appleCategory = Item.Category.fruit;
-            applePrice = 10.0;
-            appleKeywords = new ArrayList<>();
-            appleKeywords.add("tasty");
-            appleKeywords.add("in sale");
-            appleInfo = "pink lady";
-            addItemToShop(shopOwnerName, appleName, applePrice, appleCategory, appleInfo, appleKeywords, appleAmount, shopName);
-            apple = searchProductByName("apple").get(0);
+            melonAmount = 4.0;
+            melonName = "melon";
+            melonCategory = Item.Category.fruit;
+            melonPrice = 10.0;
+            melonKeywords = new ArrayList<>();
+            melonKeywords.add("tasty");
+            melonKeywords.add("in sale");
+            melonInfo = "big";
+            addItemToShop(shopOwnerName, melonName, melonPrice, melonCategory, melonInfo, melonKeywords, melonAmount, shopName);
+            melon = searchProductByName("melon").get(0);
 
             onePlusAmount = 2.0;
             onePlusName = "onePlus";
@@ -96,7 +104,7 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     @BeforeEach
     public void reset() {
         try {
-            setItemCurrentAmount(shopOwnerName, milk, productAmount, shopName);
+            setItemCurrentAmount(shopOwnerName, oil, productAmount, shopName);
         } catch (Exception e) {
             String msg = e.getMessage();
         }
@@ -189,9 +197,9 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     @DisplayName("search item by name")
     public void searchItemName() {
         try {
-            List<ItemFacade> res = searchProductByName("milk");
+            List<ItemFacade> res = searchProductByName("oil");
             assert res.size() > 0;
-            assert res.get(0).getName().equals("milk");
+            assert res.get(0).getName().equals("oil");
         } catch (Exception e) {
             assert false;
         }
@@ -204,13 +212,13 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
             List<ItemFacade> res = searchProductByKeyword("in sale");
             assert res.size() > 1;
             boolean onePLusFound = false;
-            boolean appleFound = false;
+            boolean melonFound = false;
             for (ItemFacade item : res) {
                 assert item.getKeywords().contains("in sale");
-                appleFound = item.getName().equals(appleName) || appleFound;
+                melonFound = item.getName().equals(melonName) || melonFound;
                 onePLusFound = item.getName().equals(onePlusName) || onePLusFound;
             }
-            assert appleFound && onePLusFound;
+            assert melonFound && onePLusFound;
         } catch (Exception e) {
             assert false;
         }
@@ -222,10 +230,10 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
         try {
             List<ItemFacade> res = searchProductByCategory(Item.Category.fruit);
             assert res.size() >= 1;
-            boolean appleFound = false;
+            boolean melonFound = false;
             for (ItemFacade item : res) {
                 assert item.getCategory() == Item.Category.fruit;
-                appleFound = appleFound || item.getName().equals(appleName);
+                melonFound = melonFound || item.getName().equals(melonName);
             }
         } catch (Exception e) {
             assert false;
@@ -237,11 +245,11 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void addItemCart() {
         try {
             VisitorFacade visitor = guestLogin();
-            List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(1);
-            Response response = addItemToCart(milk, 3,  visitor.getName());
+            List<ItemFacade> res = searchProductByName("oil");
+            ItemFacade oil = res.get(0);
+            Response response = addItemToCart(oil, 3,  visitor.getName());
             assert !response.isErrorOccurred();
-            //check shopping basket includes only the milk
+            //check shopping basket includes only the oil
             visitor = getVisitor(visitor.getName());
             assert visitor.getCart().getCart().size() == 1;
             for (Map.Entry<String, ShoppingBasketFacade> entry : visitor.getCart().getCart().entrySet()){
@@ -249,16 +257,16 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
                 assert entry.getKey().equals(shopName);
                 // check shop amount didn't change
                 ShopFacade shopFacade = getShopInfo(visitor.getName(), shopName).getValue();
-                assert shopFacade.getItemsCurrentAmount().get(milk.getId()).equals(productAmount);
+                assert shopFacade.getItemsCurrentAmount().get(oil.getId()).equals(productAmount);
                 // check right amount added
-                assert entry.getValue().getItems().get(milk.getId()).equals(3.0);
+                assert entry.getValue().getItems().get(oil.getId()).equals(3.0);
             }
             // checks adding item
-            response = addItemToCart(milk, 2,  visitor.getName());
+            response = addItemToCart(oil, 2,  visitor.getName());
             visitor = getVisitor(visitor.getName());
             assert !response.isErrorOccurred();
             for(Map.Entry<String, ShoppingBasketFacade> entry:visitor.getCart().getCart().entrySet()){
-                assert entry.getValue().getItems().get(milk.getId()).equals(5.0);
+                assert entry.getValue().getItems().get(oil.getId()).equals(5.0);
             }
         } catch (Exception e) {
             assert false;
@@ -270,9 +278,9 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void emptyCartWhenExit() {
         try {
             VisitorFacade visitor = guestLogin();
-            List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(0);
-            Response response = addItemToCart(milk, 3,  visitor.getName());
+            List<ItemFacade> res = searchProductByName("oil");
+            ItemFacade oil = res.get(0);
+            Response response = addItemToCart(oil, 3,  visitor.getName());
             assert !response.isErrorOccurred();
             visitor = getVisitor(visitor.getName());
             assert !visitor.getCart().getCart().isEmpty();
@@ -289,9 +297,9 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     public void addZeroAmount() {
         try {
             VisitorFacade visitor = guestLogin();
-            List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(0);
-            Response response = addItemToCart(milk, 0,  visitor.getName());
+            List<ItemFacade> res = searchProductByName("oil");
+            ItemFacade oil = res.get(0);
+            Response response = addItemToCart(oil, 0,  visitor.getName());
             assert response.isErrorOccurred();
             visitor = getVisitor(visitor.getName());
             assert visitor.getCart().getCart().isEmpty();
@@ -305,6 +313,8 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
     @DisplayName("buy item, valid amount")
     public void buyItemValid() {
         try {
+            Market market= Market.getInstance();
+            market.setPaymentServiceProxy(new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(),true),market.getSystemManagerName(),true);
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
             List<ItemFacade> res = searchProductByName("bamba");
@@ -330,17 +340,17 @@ public class VisitorAcceptanceTests extends AcceptanceTests {
         try {
             VisitorFacade visitor = guestLogin();
             ShopFacade shop = getShopInfo(shopOwnerName, shopName).getValue();
-            List<ItemFacade> res = searchProductByName("milk");
-            ItemFacade milk = res.get(1);
-            Double itemAmount = shop.getItemsCurrentAmount().get(milk.getId());
+            List<ItemFacade> res = searchProductByName("oil");
+            ItemFacade oil = res.get(0);
+            Double itemAmount = shop.getItemsCurrentAmount().get(oil.getId());
             double buyingAmount = itemAmount + 1;
-            Response response = addItemToCart(milk, buyingAmount,  visitor.getName());
+            Response response = addItemToCart(oil, buyingAmount,  visitor.getName());
             // add not existing item shouldn't fail
             assert !response.isErrorOccurred();
             Response result = buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             assert result.isErrorOccurred();
             shop = getShopInfo(shopOwnerName, shopName).getValue();
-            Double newAMount = shop.getItemsCurrentAmount().get(milk.getId());
+            Double newAMount = shop.getItemsCurrentAmount().get(oil.getId());
             Assertions.assertEquals(newAMount, itemAmount);
 
         } catch (Exception e) {

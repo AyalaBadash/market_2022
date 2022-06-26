@@ -30,11 +30,11 @@ public class AndCompositeDiscountLevelState extends CompositeDiscountLevelState{
         if(object instanceof AndCompositeDiscountLevelState){
             AndCompositeDiscountLevelState toCompare = (AndCompositeDiscountLevelState) object;
             for( DiscountLevelState discountLevelState: this.discountLevelStates){
-                if (toCompare.discountLevelStates.contains ( discountLevelState ))
+                if (!toCompare.discountLevelStates.contains ( discountLevelState ))
                     return false;
             }
             for(DiscountLevelState discountLevelState: toCompare.discountLevelStates){
-                if (this.discountLevelStates.contains ( discountLevelState ))
+                if (!this.discountLevelStates.contains ( discountLevelState ))
                     return false;
             }
             return true;

@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 
 public class SystemTests {
     Market market;
-    String userName = "userTest";
-    String password = "passTest";
+    String userName = "u1";
+    String password = "password";
     @BeforeEach
     public void setUp(){
         try {
             market = Market.getInstance();
         if (market.getPaymentService()==null)
-                market.firstInitMarket (userName, password ,true);
+                market.firstInitMarket (userName, password );
 
         }
         catch (Exception e){}
@@ -24,7 +24,7 @@ public class SystemTests {
     @Test
     public void initTwice() {
         try {
-            market.firstInitMarket (userName, password ,true);
+            market.firstInitMarket (userName, password );
             assert false;
         } catch (Exception e) {
             assert true;

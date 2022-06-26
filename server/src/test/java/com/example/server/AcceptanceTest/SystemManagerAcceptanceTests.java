@@ -74,7 +74,7 @@ public class SystemManagerAcceptanceTests extends AcceptanceTests {
 
     protected void registerAndLoginNewUser() throws Exception {
         currentVisitor = guestLogin();
-        currentMemberPassword = "1";
+        currentMemberPassword = "password";
         String name = generateMemberName();
         register(name, currentMemberPassword);
         List<String> questions = memberLogin(name, currentMemberPassword).getValue();

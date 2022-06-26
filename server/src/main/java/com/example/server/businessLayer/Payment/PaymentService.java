@@ -12,6 +12,7 @@ public interface PaymentService {
     RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(30 * 1000).build();
     int pay(List<NameValuePair> request) throws MarketException, IOException;
     int cancelPayment(List<NameValuePair> request) throws MarketException, IOException;
-    String handShake(List<NameValuePair> request);
+    String handShake(List<NameValuePair> request) throws Exception;
 
+    void setAddress(String address);
 }

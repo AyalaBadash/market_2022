@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Users;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.SynchronizedCounter;
@@ -71,6 +72,7 @@ public class UserController {
 //            userControllerRep.save(this);
 //            Visitor.getVisitorRep().delete(visitorToDelete);
             ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
+            Market.getInstance ().updateBidInLoggingOut(visitorName);
             EventLog.getInstance().Log("User left the market.");
         }
         else

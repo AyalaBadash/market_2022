@@ -5,7 +5,7 @@
 //import com.example.server.businessLayer.ExternalComponents.Payment.PaymentMethod;
 //import com.example.server.ServerApplication;
 //import com.example.server.businessLayer.Market.Item;
-//import com.example.server.serviceLayer.AppointmentShopManagerRequest;
+//import com.example.server.serviceLayer.Requests.AppointmentShopManagerRequest;
 //import com.example.server.serviceLayer.FacadeObjects.*;
 //import com.example.server.serviceLayer.Requests.*;
 //import com.example.server.serviceLayer.Response;

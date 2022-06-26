@@ -52,7 +52,7 @@ public class UserService {
 
 
     @Transactional(rollbackOn = MarketException.class)
-    public ResponseT<Boolean> register(String userName, String userPassword) throws MarketException{
+    public ResponseT<Boolean> register(String userName, String userPassword) {
         ResponseT<Boolean> responseT;
         try {
             market.register(userName, userPassword);
@@ -176,6 +176,8 @@ public class UserService {
             return new ResponseT<>(e.getMessage());
         }
     }
+
+
 
     //  public ResponseT<String> checkNotifications(String userName, ){
     //  }

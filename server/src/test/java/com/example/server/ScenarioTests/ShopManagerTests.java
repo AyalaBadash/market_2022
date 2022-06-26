@@ -15,11 +15,11 @@ import java.util.List;
 public class ShopManagerTests {
     Market market;
     String userName = "userTest";
-    String password = "passTest";
+    String password = "password";
     String shopOwnerName = "bar3";
-    String shopOwnerPassword = "pass3";
+    String shopOwnerPassword = "password";
     String managerName = "bar4";
-    String managerPassword = "pass4";
+    String managerPassword = "password";
     String shopName = "foodStore";
     int productAmount;
     Double productPrice;
@@ -33,7 +33,7 @@ public class ShopManagerTests {
             productPrice = 1.2;
             newAmount=10;
             if (market.getPaymentService() == null) {
-                market.firstInitMarket(userName, password,true);
+                market.firstInitMarket(userName, password);
             }
 
             // shop manager register

@@ -1,5 +1,6 @@
 package com.example.server.ScenarioTests;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
@@ -20,28 +21,29 @@ import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MemberTests {
-    Market market;
-    Member testMember;
-    String testMemberPassword;
-    String testMemberName;
-    String userName = "userTest";
-    String password = "passTest";
-    String shopManagerName = "shakedMember";
-    String shopManagerPassword = "shaked1234";
-    String shopName = "kolbo2";
-    Double productAmount;
-    Double productPrice;
-    CreditCard creditCard;
-    Address address;
-    Item milk;
-    Item cookies;
+    static Market market;
+    static Member testMember;
+    static String testMemberPassword;
+    static String testMemberName;
+    static String systemManager = "u1";
+    static String userName = "userTest";
+    static String password = "password";
+    static String shopManagerName = "shakedMember";
+    static String shopManagerPassword = "password";
+    static String shopName = "kolbo2";
+    static Double productAmount;
+    static Double productPrice;
+    static CreditCard creditCard;
+    static Address address;
+    static Item milk;
+    static Item cookies;
 
     @BeforeAll
-    public void setUpMember() {
+    public static void setUpMember() {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null) {
-                market.firstInitMarket(userName, password,true);
+                market.firstInitMarket("", password);
             }
 
             // shop manager register
@@ -60,7 +62,7 @@ public class MemberTests {
             cookies = market.addItemToShopItem(shopManagerName, "cookies", productPrice, Item.Category.general, "",
                     keywords, productAmount, shopName);
             testMemberName = "managerTest";
-            testMemberPassword = "1234";
+            testMemberPassword = "password";
             Visitor visitor2 = market.guestLogin();
             market.register(testMemberName, testMemberPassword);
             market.memberLogin(testMemberName, testMemberPassword);
@@ -230,7 +232,7 @@ public class MemberTests {
         try {
             Visitor visitor = market.guestLogin();
             String currName = "questionsName";
-            String password = "1234";
+            String password = "password";
             market.register(currName, password);
             List<String> questions = market.memberLogin(currName, password);
             assert questions.size() == 0;
@@ -256,7 +258,7 @@ public class MemberTests {
         try {
             Visitor visitor = market.guestLogin();
             String currName = "questionsName2";
-            String password = "1234";
+            String password = "password";
             market.register(currName, password);
             List<String> questions = market.memberLogin(currName, password);
             Member member = market.validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
@@ -288,7 +290,7 @@ public class MemberTests {
     @DisplayName("login-addToCart-logout-addToCart-buy")
     public void loginAndLogoutSenario() {
         String memberName = "Kim";
-        String password = "guideDog";
+        String password = "password";
         Visitor visitor = market.guestLogin();
         try {
             market.register(memberName, password);

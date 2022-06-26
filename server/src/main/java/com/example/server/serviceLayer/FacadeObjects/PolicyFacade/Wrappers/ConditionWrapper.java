@@ -100,6 +100,14 @@ public class ConditionWrapper implements FacadeObject<Condition> {
         this.price = price;
     }
 
+    public ConditionWrapperType getConditionWrapperType() {
+        return conditionWrapperType;
+    }
+
+    public void setConditionWrapperType(ConditionWrapperType conditionWrapperType) {
+        this.conditionWrapperType = conditionWrapperType;
+    }
+
     public ConditionWrapperType getCompositeConditionWrapperType() {
         return conditionWrapperType;
     }
@@ -138,4 +146,6 @@ public class ConditionWrapper implements FacadeObject<Condition> {
         }
         return conditionWrapper;
     }
+
+
 }

@@ -2,11 +2,11 @@ package com.example.server.serviceLayer.Requests;
 
 public class RemoveMemberRequest {
     String manager;
-    String MemberToRemove;
+    String memberToRemove;
 
     public RemoveMemberRequest(String manager, String memberToRemove) {
         this.manager = manager;
-        MemberToRemove = memberToRemove;
+        this.memberToRemove = memberToRemove;
     }
     public RemoveMemberRequest(){}
 
@@ -19,10 +19,10 @@ public class RemoveMemberRequest {
     }
 
     public String getMemberToRemove() {
-        return MemberToRemove;
+        return memberToRemove;
     }
 
     public void setMemberToRemove(String memberToRemove) {
-        MemberToRemove = memberToRemove;
+        this.memberToRemove = memberToRemove;
     }
 }

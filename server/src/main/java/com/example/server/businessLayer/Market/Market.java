@@ -28,14 +28,13 @@ import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.dataLayer.repositories.*;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Transient;
 import javax.transaction.Transactional;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -57,9 +56,6 @@ public class Market {
     private SupplyServiceProxy supplyServiceProxy;
     private Publisher publisher;
     private static Market instance;
-    boolean dataInitialized = false;
-    boolean servicesInitialized = false;
-    boolean test = false;
     Map<String, Integer> numOfAcqsPerShop;
 
     @Autowired
@@ -102,6 +98,7 @@ public class Market {
     @Autowired @Transient private AckHisRep ackHisRep;
     @Autowired @Transient private SimpleDiscountRep simpleDiscountRep;
     @Autowired @Transient private ConditionalDiscountRep condDiscountRep;
+    @Autowired @Transient private BidRep bidRep;
 
     //constructor
     public Market() {
@@ -122,38 +119,12 @@ public class Market {
     public synchronized static Market getInstance() {
         if (instance == null) {
             instance = new Market();
+            instance.initRepositories();
         }
+        instance.initRepositories();
         return instance;
     }
 
-
-
-//    public synchronized void firstInitMarket(PaymentServiceProxy paymentServiceProxy1, SupplyServiceProxy supplyServiceProxy1, Publisher publisher, String userName, String password) throws MarketException {
-//        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
-//            DebugLog.getInstance().Log("A market initialization failed .already initialized");
-//            throw new MarketException("market is already initialized");
-//        }
-//        if (paymentServiceProxy1 == null || supplyServiceProxy1 == null) {
-//            DebugLog debugLog = DebugLog.getInstance();
-//            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-//            throw new MarketException("market needs payment and supply services for initialize");
-//        }
-//        if (publisher == null) {
-//            DebugLog debugLog = DebugLog.getInstance();
-//            debugLog.Log("A market initialization failed . Lack of publisher services ");
-//            throw new MarketException("market needs publisher services for initialize");
-//
-//        }
-//        initRepositories();
-//        register(userName, password);
-//        instance.systemManagerName = userName;
-//        instance.paymentServiceProxy = paymentServiceProxy1;
-//        instance.supplyServiceProxy = supplyServiceProxy1;
-//        notificationHandler=NotificationHandler.getInstance();
-////        marketRepository.save(this.toDalObject()); //TODO
-//        EventLog eventLog = EventLog.getInstance();
-//        eventLog.Log("A market has been initialized successfully");
-//    }
 
     private void initRepositories() {
         Item.setItemRep(itemRep);
@@ -172,35 +143,26 @@ public class Market {
         ItemAcquisitionHistory.setItemAckHistRep(itemAckHistRep);
         SimpleDiscount.setSimpleDiscountRep(simpleDiscountRep);
         ConditionalDiscount.setCondDiscountRep(condDiscountRep);
+        Bid.setBidRep(bidRep);
 
     }
-    /**
-     * init system from default files. With given system manager details.
-     *
-     * @param userName the system manager username
-     * @param password the system manager password.
-     * @throws MarketException
-     */
-    public synchronized void firstInitMarket(String userName, String password, boolean test) throws MarketException {
 
+    public synchronized void firstInitMarket(String userName, String password) throws MarketException {
         try {
             initRepositories();
             loadData();
-            this.test = test;
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
             }
-            if (!servicesInitialized) {
-                readConfigurationFile();
-            }
-            if (!dataInitialized) {
-                readInitFile();
-            }
+            readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
-                userController.getMember(userName).setSystemManager(true);
-                instance.systemManagerName = userName;
+                if(instance.systemManagerName == null) {
+                    instance.systemManagerName = userName;
+                    userController.getMember(userName).setSystemManager(true);
+                }
+
             }
             checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
@@ -211,274 +173,54 @@ public class Market {
     }
 
 
-    /**
-     * Init market using system manager details and the init data file's names.
-     *
-     * @param userName     system manager username.
-     * @param password     system manager password.
-     * @param servicesName the service's init file name.
-     * @param dataName     the init data's file name.
-     * @throws MarketException
-     */
-    public synchronized void firstInitMarket(String userName, String password, String servicesName, String dataName, boolean test) throws MarketException {
-
-        try {
-            this.test = test;
-            if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
-                DebugLog.getInstance().Log("A market initialization failed .already initialized");
-                throw new MarketException("market is already initialized");
-            }
-            if (!servicesInitialized) {
-                readConfigurationFile(servicesName);
-            }
-            if (!dataInitialized) {
-                readInitFile(dataName);
-            }
-            if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
-                register(userName, password);
-                instance.systemManagerName = userName;
-            }
-            checkSystemInit();
-            EventLog eventLog = EventLog.getInstance();
-            eventLog.Log("A market has been initialized successfully");
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-    //Loading systems configurations from file.
-    public synchronized void firstInitMarket(String userName, String password) throws MarketException {
-        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
-            DebugLog.getInstance().Log("A market initialization failed .already initialized");
-            throw new MarketException("market is already initialized");
-        }
-        readConfigurationFile();
-        register(userName, password);
-        instance.systemManagerName = userName;
-        EventLog eventLog = EventLog.getInstance();
-        eventLog.Log("A market has been initialized successfully");
-
-    }
-
-    /**
-     * Init the system with default init file's names. The system manager must be in the file.
-     *
-     * @throws MarketException
-     */
-    public synchronized void firstInitMarket(boolean test) throws MarketException {
-
-        try {
-            this.test = test;
-            if (!test && (this.paymentServiceProxy != null || this.supplyServiceProxy != null)) {
-                DebugLog.getInstance().Log("A market initialization failed .already initialized");
-                throw new MarketException("market is already initialized");
-            }
-            if (!servicesInitialized) {
-                readConfigurationFile();
-            }
-            if (test || !dataInitialized) {
-                readInitFile();
-            }
-            checkSystemInit();
-            EventLog eventLog = EventLog.getInstance();
-            eventLog.Log("A market has been initialized successfully");
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    /**
-     * init the system with system manager details and the service's configuration file's name.
-     *
-     * @param userName the system manager username.
-     * @param password the system manager password.
-     * @param fileName the services file name.
-     * @throws MarketException
-     */
-    public synchronized void firstInitMarket(String userName, String password, String fileName, boolean test) throws MarketException {
-
-        this.test = test;
-        if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
-            DebugLog.getInstance().Log("A market initialization failed .already initialized");
-            throw new MarketException("market is already initialized");
-        }
-        if (fileName == null || fileName.isEmpty() & !servicesInitialized) {
-            readConfigurationFile();
-        } else {
-            if (!servicesInitialized) {
-                readConfigurationFile(fileName);
-            }
-        }
-        register(userName, password);
-        instance.systemManagerName = userName;
-
-
-        if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
-            register(userName, password);
-            instance.systemManagerName = userName;
-        }
-        if (!dataInitialized) {
-            readInitFile();
-        }
-        checkSystemInit();
-        EventLog eventLog = EventLog.getInstance();
-        eventLog.Log("A market has been initialized successfully");
-
-    }
-
-    /**
-     * Config the external services of the system.
-     * The data is in text file name config.txt
-     */
-    private void readConfigurationFile() {
-
-        try {
-
-            File myObj = new File(getConfigDir() + "config.txt");
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] vals = data.split("::");
-                setService(vals[0], vals[1]);
-            }
-            servicesInitialized = true;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void readInitFile() {
-
-        try {
-
-            File myObj = new File(getConfigDir() + "Data.txt");
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] vals = data.split("::");
-                setData(vals);
-
-            }
-            dataInitialized = true;
-
-        } catch (Exception e) {
-        }
-    }
-
     private void readInitFile(String fileName) throws MarketException {
-
-        try {
-
-            File myObj = new File(getConfigDir() + fileName);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] vals = data.split("::");
-                setData(vals);
-
-            }
-            dataInitialized = true;
-        } catch (Exception e) {
+        File myObj = new File(getConfigDir() + fileName);
+        if (!myObj.exists()) {
+            throw new MarketException("Data file does not exists.");
         }
+        Scanner myReader ;
+        try {
+            myReader = new Scanner(myObj);
+        } catch (FileNotFoundException e) {
+            throw new MarketException("Init data file not found.");
+        }
+        while (myReader.hasNextLine()) {
+            String data = myReader.nextLine();
+            String[] vals = data.split("::");
+            setData(vals);
+        }
+
     }
 
-    private void setData(String[] vals) {
+    private void readConfigurationFile(String name) throws MarketException{
 
-        try {
-            DebugLog debugLog = DebugLog.getInstance();
-            String command = vals[0];
-            if (command.contains("Register")) {
-                if (vals.length >= 3) {
-                    debugLog.Log("Method register from init file has called. Args are: " + vals[1] + " " + vals[2]);
-                    register(vals[1], vals[2]);
-                } else {
-                    debugLog.Log("Method register from init file has called. \n Not enough args number. Number: " + vals.length);
-                }
-            } else if (command.contains("Login")) {
-                try {
-                    if (vals.length >= 3) {
-                        debugLog.Log("Method login from init file has called. Args are: " + vals[1] + " " + vals[2]);
-                        Visitor vis = guestLogin();
-                        memberLogin(vals[1], vals[2]);
-                        validateSecurityQuestions(vals[1], new ArrayList<>(), vis.getName());
-                    } else {
-                        debugLog.Log("Method login from init file has called. \n Not enough args number. Number: " + vals.length);
-                    }
-                } catch (Exception e) {
-                }
-            } else if (command.contains("Logout")) {
-                try {
-                    if (vals.length >= 2) {
-                        debugLog.Log("Method logout from init file has called. Args are: " + vals[1]);
-                        memberLogout(vals[1]);
-                    } else {
-                        debugLog.Log("Method logout from init file has called. \n Not enough args number. Number: " + vals.length);
-                    }
-                } catch (Exception e) {
-                }
-            } else if (command.contains("Open_Shop")) {
-                try {
-                    if (vals.length >= 3) {
-                        debugLog.Log("Method open shop from init file has called. Args are: " + vals[1] + " " + vals[2]);
-                        openNewShop(vals[1], vals[2]);
-                    } else {
-                        debugLog.Log("Method open shop from init file has called. \n Not enough args number. Number: " + vals.length);
-                    }
-                } catch (Exception e) {
-                }
-            } else if (command.contains("Add_Item")) {
-                if (vals.length >= 8) {
-                    debugLog.Log("Method add item from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3] + " " + vals[4] + " " + vals[5] + " " + vals[6] + " " + vals[7]);
-                    addItemToShop(vals[1], vals[2], Double.parseDouble(vals[3]), Item.Category.valueOf(vals[4]), vals[5], new ArrayList<>(), Integer.parseInt(vals[6]), vals[7]);
-                } else {
-                    debugLog.Log("Method add item from init file has called. \n Not enough args number. Number: " + vals.length);
-                }
-            } else if (command.contains("Appoint_Manager")) {
-                if (vals.length >= 4) {
-                    debugLog.Log("Method appoint manager from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
-                    appointShopManager(vals[1], vals[2], vals[3]);
-                } else {
-                    debugLog.Log("Method appoint manager from init file has called. \n Not enough args number. Number: " + vals.length);
-                }
-            } else if (command.contains("Appoint_Owner")) {
-                if (vals.length >= 4) {
-                    debugLog.Log("Method appoint owner from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
-                    appointShopOwner(vals[1], vals[2], vals[3]);
-                } else {
-                    debugLog.Log("Method appoint owner from init file has called. \n Not enough args number. Number: " + vals.length);
-                }
-            }
 
-        } catch (Exception e) {
+        File myObj = new File(getConfigDir() + name);
+        if (!myObj.exists()) {
+            throw new MarketException("Services configurations file does not exists.");
         }
-    }
-
-    private void readConfigurationFile(String name) {
-
-        try {
-
-            File myObj = new File(getConfigDir() + name);
+        try{
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] vals = data.split("::");
                 setService(vals[0], vals[1]);
             }
-            if (paymentServiceProxy == null || supplyServiceProxy == null) {
-                DebugLog debugLog = DebugLog.getInstance();
-                debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-                throw new MarketException("market needs payment and supply services for initialize");
-            }
-            if (publisher == null) {
-                DebugLog debugLog = DebugLog.getInstance();
-                debugLog.Log("A market initialization failed . Lack of publisher services ");
-                throw new MarketException("market needs publisher services for initialize");
-
-            }
-
-            servicesInitialized = true;
-        } catch (Exception e) {
+        } catch (FileNotFoundException e){
+            throw new MarketException("file not found while reading configuration file");
         }
+        if (paymentServiceProxy == null || supplyServiceProxy == null) {
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
+            throw new MarketException("market needs payment and supply services for initialize");
+        }
+        if (publisher == null) {
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("A market initialization failed . Lack of publisher services ");
+            throw new MarketException("market needs publisher services for initialize");
+
+        }
+
     }
 
     /**
@@ -490,14 +232,15 @@ public class Market {
      */
     private void setService(String val, String val1) throws MarketException {
 
-        if (val.contains("PaymentService")) {
+        if (val.contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
             initPaymentService(val1);
-        } else if (val.contains("SupplyService")) {
+        } else if (val.contains(MarketConfig.SUPPLY_SERVICE_NAME)) {
             initSupplyService(val1);
-        } else if (val.contains("Publisher") && (systemManagerName == null || systemManagerName.isEmpty())) {
+        } else if (val.contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
             initNotificationService(val1);
         } else {
-            initManager(val, val1);
+            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty()))
+                initManager(val, val1);
         }
     }
 
@@ -509,11 +252,11 @@ public class Market {
 
     private void initNotificationService(String val) throws MarketException {
 
-        if (test) {
+        if (MarketConfig.IS_TEST_MODE) {
             publisher = TextDispatcher.getInstance();
-        } else if (val.contains("Notifications")) {
+        } else if (val.contains(MarketConfig.NOTIFICATIONS_PUBLISHER)) {
             publisher = NotificationDispatcher.getInstance();
-        } else if (val.contains("Text")) {
+        } else if (val.contains(MarketConfig.TEXT_PUBLISHER)) {
             publisher = TextDispatcher.getInstance();
         } else {
             throw new MarketException("Failed to init notification service");
@@ -524,21 +267,13 @@ public class Market {
 
     private void initSupplyService(String val) throws MarketException {
 
-        if (val.contains("WSEP")) {
-            supplyServiceProxy = new SupplyServiceProxy(new WSEPSupplyServiceAdapter(), false);
+        if (val.contains(MarketConfig.WSEP_SERVICE)) {
+            supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), false);
         } else {
             throw new MarketException("Failed to init payment service");
         }
     }
 
-    private void initPaymentService(String val) throws MarketException {
-
-        if (val.contains("WSEP")) {
-            paymentServiceProxy = new PaymentServiceProxy(new WSEPPaymentServiceAdapter(), false);
-        } else {
-            throw new MarketException("Failed to init payment service");
-        }
-    }
 
 
     public StringBuilder getAllSystemPurchaseHistory(String memberName) throws MarketException {
@@ -609,7 +344,19 @@ public class Market {
 
 
     public Visitor guestLogin() {
-        return userController.guestLogin();
+        Visitor visitor= userController.guestLogin();
+        RealTimeNotifications notifications= new RealTimeNotifications();
+        notifications.createUserLoggedIn(visitor.getName(),userController.getVisitorsInMarket().size());
+        notifyManager(notifications);
+        return visitor;
+    }
+
+    public void notifyManager(RealTimeNotifications notification){
+        if(systemManagerName != null && ( !systemManagerName.isEmpty() & userController.isLoggedIn(systemManagerName))) {
+            NotificationHandler handler = NotificationHandler.getInstance();
+            //The is member is false because the manager received only real time notifications.
+            handler.sendNotification(systemManagerName, notification, false);
+        }
     }
 
     public Shop getShopByName(String shopName) {
@@ -649,6 +396,7 @@ public class Market {
             Shop shop = shops.get(shopStr);
             toReturn.add(shop.getItemMap().get(item));
         }
+        EventLog.getInstance().Log("Filtered items by item name.");
         return toReturn;
     }
 
@@ -657,6 +405,7 @@ public class Market {
         for (Shop shop : shops.values()) {
             toReturn.addAll(shop.getItemsByCategory(category));
         }
+        EventLog.getInstance().Log("Filtered items by item category.");
         return toReturn;
     }
 
@@ -665,6 +414,7 @@ public class Market {
         for (Shop shop : shops.values()) {
             toReturn.addAll(shop.getItemsByKeyword(keyword));
         }
+        EventLog.getInstance().Log("Filtered items by keywords.");
         return toReturn;
     }
 
@@ -674,6 +424,7 @@ public class Market {
             if (item.getPrice() >= minPrice && item.getPrice() <= maxPrice)
                 toReturn.add(item);
         }
+        EventLog.getInstance().Log("Filtered items by price.");
         return toReturn;
     }
 
@@ -702,13 +453,16 @@ public class Market {
      * @param memberName the paying member's name.
      * @throws MarketException
      */
-    public void setPaymentServiceProxy(PaymentServiceProxy paymentService1, String memberName) throws MarketException {
-        alertIfNotLoggedIn(memberName);
-        if (!memberName.equals(systemManagerName)) {
+    public void setPaymentServiceProxy(PaymentServiceProxy paymentService1, String memberName, boolean override) throws MarketException {
+        if (!override && !userController.isLoggedIn(memberName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        if (!override && !memberName.equals(systemManagerName)) {
             DebugLog.getInstance().Log("Only a system manager can change the payment service");
             throw new MarketException("Only a system manager can change the payment service");
         }
-        if (paymentService1 == null) {
+        if (!override && paymentService1 == null) {
             DebugLog.getInstance().Log("Try to initiate payment service with null");
             throw new MarketException("Try to initiate payment service with null");
         }
@@ -726,8 +480,25 @@ public class Market {
         return true;
     }
 
+    public boolean setPaymentServiceAddress(String address, String managerName) throws MarketException {
+        if (!userController.isLoggedIn(managerName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        if (!managerName.equals(systemManagerName)) {
+            DebugLog.getInstance().Log("Only a system manager can change the payment service");
+            throw new MarketException("Only a system manager can change the payment service");
+        }
+
+        this.paymentServiceProxy.setAddress(address);
+        return true;
+    }
+
     public boolean setSupplyService(SupplyService supplyService1, String memberName) throws MarketException {
-        alertIfNotLoggedIn(memberName);
+        if (!userController.isLoggedIn(memberName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
         if (!memberName.equals(systemManagerName)) {
             DebugLog.getInstance().Log("Only a system manager can change the supply service");
             throw new MarketException("Only a system manager can change the supply service");
@@ -736,7 +507,19 @@ public class Market {
         this.supplyServiceProxy.setService(supplyService1);
         return true;
     }
+    public boolean setSupplyServiceAddress(String address, String memberName) throws MarketException {
+        if (!userController.isLoggedIn(memberName)) {
+            DebugLog.getInstance().Log("Member must be logged in for making this action");
+            throw new MarketException("Member must be logged in for making this action");
+        }
+        if (!memberName.equals(systemManagerName)) {
+            DebugLog.getInstance().Log("Only a system manager can change the supply service");
+            throw new MarketException("Only a system manager can change the supply service");
+        }
 
+        this.supplyServiceProxy.setAddress(address);
+        return true;
+    }
 
     public Member validateSecurityQuestions(String userName, List<String> answers, String visitorName) throws MarketException {
         Security security = Security.getInstance();
@@ -745,13 +528,21 @@ public class Market {
         List<Appointment> appointmentByMe = member.getAppointedByMe();
         List<Appointment> myAppointments = member.getMyAppointments();
         userController.finishLogin(userName, visitorName);
-        return new Member(member.getName(), member.getMyCart(), appointmentByMe, myAppointments, member.getPurchaseHistory());//,member.getPurchaseHistory()
+        Member ret=  new Member(member.getName(), member.getMyCart(), appointmentByMe, myAppointments, member.getPurchaseHistory());//,member.getPurchaseHistory()
+        RealTimeNotifications notifications= new RealTimeNotifications();
+        notifications.createMemberLoggedIn(member.getName(),visitorName);
+        notifyManager(notifications);
+        return ret;
     }
 
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         alertIfNotLoggedIn(visitorName);
         userController.exitSystem(visitorName);
+        RealTimeNotifications notifications= new RealTimeNotifications();
+        notifications.createUserLoggedout(visitorName,userController.getVisitorsInMarket().size());
+        notifyManager(notifications);
+        EventLog.getInstance().Log("A visitor exited the market.");
     }
 
     public Appointment getManagerAppointment(String shopOwnerName, String managerName, String relatedShop) throws MarketException {
@@ -773,6 +564,7 @@ public class Market {
             throw new MarketException(String.format("related shop %s does not exist in the market"), relatedShop);
         }
         shop.editManagerPermission(shopOwnerName, managerName, updatedAppointment);
+        EventLog.getInstance().Log("Permissions for"+managerName+"in the shop:"+relatedShop+" has been edited by:"+shopOwnerName);
     }
 
     public void closeShop(String shopOwnerName, String shopName) throws MarketException {
@@ -784,7 +576,8 @@ public class Market {
             throw new MarketException("Tried to close non existing shop");
         }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
-            shops.remove(shopName);
+            //shops.remove(shopName);
+            //todo
             shopRep.delete(shopToClose); //todo shaked check
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
@@ -794,9 +587,10 @@ public class Market {
             try {
                 notificationHandler.sendShopClosedBatchNotificationsBatch(new ArrayList<>(shopToClose.getShopOwners().values().stream()
                         .collect(Collectors.toList()).stream().map(appointment -> appointment.getAppointed().getName())
-                        .collect(Collectors.toList())), shopName, test);
+                        .collect(Collectors.toList())), shopName);
             } catch (Exception e) {
             }
+            shopToClose.setClosed(true);
             //
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
         }
@@ -810,14 +604,9 @@ public class Market {
             DebugLog.getInstance().Log("Tried to remove item from non existing shop");
             throw new MarketException("shop does not exist in the market");
         }
-        //Check if user indeed is the shop owner
-        if (!shop.isShopOwner(shopOwnerName)) {
-            DebugLog.getInstance().Log(shopOwnerName + " tried to remove item from the shop " + shopName + " but he is not a owner.");
-            throw new MarketException(shopOwnerName + " is not " + shopName + " owner . Removing item from shop has failed.");
-        }
         Item itemToDelete = shop.getItemMap().get(itemID);
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
-        shop.deleteItem(itemToDelete);
+        shop.deleteItem(itemToDelete, shopOwnerName);
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
@@ -866,13 +655,19 @@ public class Market {
 
     public String memberLogout(String member) throws MarketException {
         alertIfNotLoggedIn(member);
-        return userController.memberLogout(member);
+        String ret= userController.memberLogout(member);
+        RealTimeNotifications notifications= new RealTimeNotifications();
+        notifications.createMemberLoggedOut(member,ret);
+        notifyManager(notifications);
+        EventLog.getInstance().Log("A member logged out from the system");
+        return ret;
     }
 
     public void addPersonalQuery(String userAdditionalQueries, String userAdditionalAnswers, String member) throws MarketException {
         alertIfNotLoggedIn(member);
         Security security = Security.getInstance();
         security.addPersonalQuery(userAdditionalQueries, userAdditionalAnswers, member);
+        EventLog.getInstance().Log("New personal query has been added to :"+member);
     }
 
 
@@ -900,6 +695,10 @@ public class Market {
             throw new MarketException("only a system manager can get information about a closed shop");
         }
         Shop shop = shops.get(shopName);
+        if (shop.isClosed()){
+            DebugLog.getInstance().Log("user tried to reach a closed shop");
+            throw new MarketException("the shop has been closed! there for cannot enter it any more");
+        }
         //TODO - need to be an employee or not??
 //        if (!shop.isEmployee(member)) {
 //            throw new MarketException("You are not employee in this shop");
@@ -918,8 +717,7 @@ public class Market {
                     if (shopName == null || shopName.length() == 0)
                         throw new MarketException("shop name length has to be positive");
                     Shop shop = new Shop(shopName, curMember);
-//                    ShopOwnerAppointment shopFounder = new ShopOwnerAppointment (curMember, null, shop, true );
-//                    shop.addEmployee(shopFounder);
+
                     shops.put(shopName, shop);
 
                 } else {
@@ -978,8 +776,10 @@ public class Market {
     public void appointShopOwner(String shopOwnerName, String appointedShopOwner, String shopName) throws MarketException {
         alertIfNotLoggedIn(shopOwnerName);
         Member appointed = userController.getMember(appointedShopOwner);
-        if (appointed == null)
+        if (appointed == null) {
+            DebugLog.getInstance().Log("Tried to appoint non member.");
             throw new MarketException("appointed shop owner is not a member");
+        }
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to appoint shop owner for non existing shop.");
@@ -988,7 +788,7 @@ public class Market {
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopOwner(shopOwner, appointed);
         try {
-            notificationHandler.sendNewshopOwner(shopOwner, appointed, shopName, test);
+            notificationHandler.sendNewShopOwner(shopOwner, appointed, shopName);
         } catch (Exception e) {
         }
     }
@@ -996,8 +796,10 @@ public class Market {
     public void appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) throws MarketException {
         alertIfNotLoggedIn(shopOwnerName);
         Member appointed = userController.getMember(appointedShopManager);
-        if (appointed == null)
+        if (appointed == null) {
+            DebugLog.getInstance().Log("Tried to appoint non member.");
             throw new MarketException("appointed shop manager is not a member");
+        }
         Shop shop = shops.get(shopName);
         if (shop == null) {
             DebugLog.getInstance().Log("Tried to appoint shop manager for non existing shop.");
@@ -1006,7 +808,7 @@ public class Market {
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopManager(shopOwner, appointed);
         try {
-            notificationHandler.sendNewshopManager(shopOwner, appointed, shopName, test);
+            notificationHandler.sendNewShopManager(shopOwner, appointed, shopName);
         } catch (Exception e) {
         }
     }
@@ -1032,6 +834,66 @@ public class Market {
         EventLog.getInstance().Log("Edited the item with id " + oldItem + " in the shop " + shopName);
         shop.changeShopItemInfo(shopOwnerName, info, oldItem);
     }
+    public void reopenClosedShop(String shopName,String name) throws MarketException {
+        Shop shopToOpen = shops.get(shopName);
+        if (shopToOpen==null)
+        {
+            DebugLog.getInstance().Log("You tried to reopen a shop with invalid name.");
+            throw new MarketException("You tried to reopen a shop with invalid name.");
+        }
+        if (!shopToOpen.isClosed()){
+            DebugLog.getInstance().Log("The shop "+shopName+" is not closed.");
+            throw new MarketException("The shop "+shopName+" is not closed.");
+        }
+        if (!shopToOpen.getShopFounder().getName().equals(name)){
+            DebugLog.getInstance().Log("You are not the shop founder . Only the founder can reopen the shop");
+            throw new MarketException("You are not the shop founder . Only the founder can reopen the shop");
+        }
+        ClosedShopsHistory.getInstance().reopenShop(shopName);
+        shopToOpen.setClosed(false);
+        validateAllEmployees(shopToOpen);
+        addItemsFromReopenedShop(shopToOpen);
+        //TODO - send notifications for managers and owners.
+        EventLog.getInstance().Log(shopName+" has been re-opened.");
+    }
+
+    private void addItemsFromReopenedShop(Shop shopToOpen) {
+        Map<Integer, Item> shopItems = shopToOpen.getItemMap();
+        for (Map.Entry<Integer,Item> entry:shopItems.entrySet())
+        {
+            this.allItemsInMarketToShop.put(entry.getKey(),shopToOpen.getShopName());
+            if (itemByName.containsKey(entry.getValue().getName())){
+                itemByName.get(entry.getValue().getName()).add(entry.getKey());
+            }
+            else {
+                List<Integer> lst = new ArrayList<>();
+                lst.add(entry.getKey());
+                itemByName.put(entry.getValue().getName(),lst);
+            }
+        }
+    }
+
+    private void validateAllEmployees(Shop shopToOpen) {
+        Map<String,Appointment> employees =  shopToOpen.getShopOwners();
+        for (Map.Entry<String ,Appointment> emp: employees.entrySet())
+        {
+            if (!userController.isMember(emp.getKey()))
+            {
+                employees.remove(emp.getKey());
+            }
+        }
+        shopToOpen.setShopOwners(employees);
+        employees = shopToOpen.getShopManagers();
+        for (Map.Entry<String ,Appointment> emp: employees.entrySet())
+        {
+            if (!userController.isMember(emp.getKey()))
+            {
+                employees.remove(emp.getKey());
+            }
+        }
+        shopToOpen.setShopManagers(employees);
+
+    }
 
     public ShoppingCart showShoppingCart(String visitorName) throws MarketException {
         alertIfNotLoggedIn(visitorName);
@@ -1049,7 +911,7 @@ public class Market {
 //        itemRepository.save(newItem.toDalObject()); //todo
     }
 
-    public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
+    public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
                                         Address address) throws MarketException, JsonProcessingException {
 
         // If visitor exists under that name.
@@ -1058,7 +920,7 @@ public class Market {
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart;
         Acquisition acquisition;
-        ShoppingCart shoppingCartToReturn;
+
         try {
             shoppingCart = visitor.getCart();
             if (shoppingCart.isEmpty()) {
@@ -1070,27 +932,24 @@ public class Market {
             throw new MarketException("Shopping cart is not exists for the user.");
         }
 
-//        if (supplyServiceProxy == null) {
-//            throw new MarketException("The supply service is not available right now.");
-//        }
-//        if (paymentServiceProxy == null) {
-//            throw new MarketException("The payment service is not available right now.");
-//        }
+        if (supplyServiceProxy == null) {
+            throw new MarketException("The supply service is not available right now.");
+        }
+        if (paymentServiceProxy == null) {
+            throw new MarketException("The payment service is not available right now.");
+        }
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
-            shoppingCartToReturn = acquisition.buyShoppingCart(notificationHandler,
-                    expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy, test);
+            acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
         } catch (Exception e) {
 
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log(e.getMessage());
             throw new MarketException(e.getMessage());
         }
-        if (shoppingCartToReturn == null) {
-            throw new MarketException("Could not make the purchase right now for the shopping cart. Please try again later. ");
-        }
-        return shoppingCartToReturn;
+
+
     }
 
     private ShoppingCart validateCart(ShoppingCart currentCart) throws MarketException {
@@ -1140,7 +999,7 @@ public class Market {
     }
 
     //TODO delete
-    public void reset(String systemManagerPass, List<String> questions, List<String> answers) throws MarketException {
+    public void reset(String systemManagerPass, List<String> questions, List<String> answers, boolean includeServices) throws MarketException {
         instance.shops = new HashMap<>();
         instance.allItemsInMarketToShop = new HashMap<>();
         instance.itemByName = new HashMap<>();
@@ -1148,16 +1007,16 @@ public class Market {
         Security.getInstance().reset();
         userController.reset();
         ClosedShopsHistory.getInstance().reset();
+        if(includeServices){
+            paymentServiceProxy = null;
+            supplyServiceProxy = null;
+        }
         userController.register(systemManagerName);
         Security.getInstance().addNewMember(systemManagerName, systemManagerPass, questions, answers);
     }
 
     public String getSystemManagerName() {
         return systemManagerName;
-    }
-
-    public void setSystemManagerName(String systemManagerName) {
-        this.systemManagerName = systemManagerName;
     }
 
     public void setShops(Map<String, Shop> shops) {
@@ -1176,7 +1035,7 @@ public class Market {
         }
         shop.removeShopOwnerAppointment(boss, firedAppointed);
         try {
-            notificationHandler.sendAppointmentRemovedNotification(firedAppointed, shopName, test);
+            notificationHandler.sendAppointmentRemovedNotification(firedAppointed, shopName);
         } catch (Exception e) {
         }
 
@@ -1211,7 +1070,7 @@ public class Market {
         handler.setService(NotificationDispatcher.getInstance());
         RealTimeNotifications not = new RealTimeNotifications();
         not.createMembershipDeniedMessage();
-        handler.sendNotification(memberToRemove, not, true, test);
+        handler.sendNotification(memberToRemove, not, true);
         //
     }
 
@@ -1290,8 +1149,133 @@ public class Market {
         shop.removePurchasePolicyFromShop(visitorName, purchasePolicyType);
     }
 
-    public boolean isInit() {
+    public boolean isInit() throws MarketException {
+
+        if (MarketConfig.USING_DATA) {
+            readDataSourceConfig();
+            readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
+            readInitFile(MarketConfig.DATA_FILE_NAME);
+            return true;
+        }
+        checkSystemInit();
         return this.systemManagerName != null && !this.systemManagerName.equals("");
+    }
+
+    private void readDataSourceConfig() throws MarketException {
+
+        String path = getConfigDir() +MarketConfig.DATA_SOURCE_FILE_NAME;
+        DataSourceConfigReader.getInstance(path);
+    }
+
+
+    private Map<String, String> readFromFile(String fileName) {
+        Map<String,String> ret= new HashMap<>();
+        try {
+
+            File myObj = new File(getConfigDir() +fileName);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] vals = data.split("=");
+                setData(vals[0], vals[1],ret);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return ret;
+    }
+
+
+    private void initPaymentService(String val) throws MarketException {
+
+        if (val.contains(MarketConfig.WSEP_SERVICE)) {
+            paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), false);
+        } else {
+            throw new MarketException("Failed to init payment service");
+        }
+    }
+
+    private void setData(String val, String val1,Map<String,String> data) {
+        if(val.toLowerCase().contains("url")){
+            if(!data.containsKey("url")){
+                data.put("url",val1);
+            }
+        }
+        else if(val.toLowerCase().contains("username")){
+            if(!data.containsKey("username")){
+                data.put("username",val1);
+            }
+        }
+        else if(val.toLowerCase().contains("password")){
+            if(!data.containsKey("password")){
+                data.put("password",val1);
+            }
+        }
+    }
+
+
+    private void setData(String[] vals) throws MarketException {
+
+        DebugLog debugLog = DebugLog.getInstance();
+        String command = vals[0];
+        if (command.contains("Register")) {
+            if (vals.length >= 3) {
+                debugLog.Log("Method register from init file has called. Args are: " + vals[1] + " " + vals[2]);
+                register(vals[1], vals[2]);
+            } else {
+                debugLog.Log("Method register from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+        } else if (command.contains("Login")) {
+            if (vals.length >= 3) {
+                debugLog.Log("Method login from init file has called. Args are: " + vals[1] + " " + vals[2]);
+                Visitor vis = guestLogin();
+                memberLogin(vals[1], vals[2]);
+                validateSecurityQuestions(vals[1], new ArrayList<>(), vis.getName());
+            } else {
+                debugLog.Log("Method login from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+
+        } else if (command.contains("Logout")) {
+
+            if (vals.length >= 2) {
+                debugLog.Log("Method logout from init file has called. Args are: " + vals[1]);
+                memberLogout(vals[1]);
+            } else {
+                debugLog.Log("Method logout from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+
+        } else if (command.contains("Open_Shop")) {
+
+            if (vals.length >= 3) {
+                debugLog.Log("Method open shop from init file has called. Args are: " + vals[1] + " " + vals[2]);
+                openNewShop(vals[1], vals[2]);
+            } else {
+                debugLog.Log("Method open shop from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+
+        } else if (command.contains("Add_Item")) {
+            if (vals.length >= 8) {
+                debugLog.Log("Method add item from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3] + " " + vals[4] + " " + vals[5] + " " + vals[6] + " " + vals[7]);
+                addItemToShop(vals[1], vals[2], Double.parseDouble(vals[3]), Item.Category.valueOf(vals[4]), vals[5], new ArrayList<>(), Integer.parseInt(vals[6]), vals[7]);
+            } else {
+                debugLog.Log("Method add item from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+        } else if (command.contains("Appoint_Manager")) {
+            if (vals.length >= 4) {
+                debugLog.Log("Method appoint manager from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
+                appointShopManager(vals[1], vals[2], vals[3]);
+            } else {
+                debugLog.Log("Method appoint manager from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+        } else if (command.contains("Appoint_Owner")) {
+            if (vals.length >= 4) {
+                debugLog.Log("Method appoint owner from init file has called. Args are: " + vals[1] + " " + vals[2] + " " + vals[3]);
+                appointShopOwner(vals[1], vals[2], vals[3]);
+            } else {
+                debugLog.Log("Method appoint owner from init file has called. \n Not enough args number. Number: " + vals.length);
+            }
+        }
     }
 
     public boolean setPublishService(Publisher o, String memberName) throws MarketException {
@@ -1322,6 +1306,36 @@ public class Market {
         return shop.getDiscountTypes();
     }
 
+    public boolean approveAppointment(String shopName,String appointedName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        return shop.approveAppointment(appointedName,ownerName);
+    }
+    public void rejectAppointment(String shopName,String appointedName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        shop.rejectAppointment(appointedName,ownerName);
+    }
+    public List<String> getMyPendingAppointmentsToApprove(String shopName,String ownerName) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null)
+        {
+            DebugLog.getInstance().Log("No such shop exist in the market.");
+            throw new MarketException("No such shop exist in the market.");
+        }
+        EventLog.getInstance().Log(ownerName+" received his pending appointment.");
+        return shop.getAllPendingForOwner(ownerName);
+    }
+
+
     /**
      * check that all services are initialized from the config file.
      *
@@ -1332,20 +1346,20 @@ public class Market {
         if (paymentServiceProxy == null) {
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("The market did not initialized properly. Missing payment service");
-            initMockService();
+
             ans = 1;
         }
         if (supplyServiceProxy == null) {
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("The market did not initialized properly. Missing supply service");
-            initMockService();
+
             ans = 2;
 
         }
         if (publisher == null | notificationHandler == null) {
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("The market did not initialized properly. Missing notifications service");
-            initMockService();
+
             ans = 3;
 
         }
@@ -1362,59 +1376,18 @@ public class Market {
         }
     }
 
-    public void initMockService() {
-        if (paymentServiceProxy == null) {
-            paymentServiceProxy = new PaymentServiceProxy(new PaymentService() {
-                @Override
-                public int pay(List<NameValuePair> request) throws MarketException, IOException {
-                    return -1;
-                }
-
-                @Override
-                public int cancelPayment(List<NameValuePair> request) throws MarketException, IOException {
-                    return -1;
-                }
-
-                @Override
-                public String handShake(List<NameValuePair> request) {
-                    return "";
-                }
-            }, false);
-        }
-        if (supplyServiceProxy == null) {
-            supplyServiceProxy = new SupplyServiceProxy(new SupplyService() {
-                @Override
-                public int supply(Address address) throws MarketException, IOException {
-                    return -1;
-                }
-
-                @Override
-                public int cancelSupply(int supplyID) throws Exception {
-                    return -1;
-                }
-
-                @Override
-                public List<NameValuePair> addressToString(Address address) {
-                    return null;
-                }
-
-                @Override
-                public List<NameValuePair> transactionToString(int transactionId) {
-                    return null;
-                }
-            }, false);
-        }
-        if (notificationHandler == null) {
-            {
-                notificationHandler = NotificationHandler.getInstance();
-                notificationHandler.setService(TextDispatcher.getInstance());
-            }
-        }
+    //for debug purpose.
+    public static void restartMarket() {
+        instance = null;
     }
 
     private String getConfigDir() {
-        String dir = System.getProperty("user.dir").split("/market_2022")[0];
-        dir += "\\config\\";
+        String dir = System.getProperty("user.dir");
+        String additional_dir = "\\server\\config\\";
+        if (MarketConfig.IS_MAC) {
+            additional_dir = "/config/";
+        }
+        dir += additional_dir;
         return dir;
     }
     private void alertIfNotLoggedIn(String visitorName) throws MarketException {
@@ -1476,6 +1449,83 @@ public class Market {
         itemRep.findAll();
         shopRep.findAll();
         loginCardRep.findAll();
+
+    }
+
+    public void addABid(String visitorName, String shopName, Integer itemId, Double price, Double amount) throws MarketException {
+        alertIfNotLoggedIn(visitorName);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+        }
+        Bid bid = shop.addABid(visitorName, itemId, price, amount);
+        userController.getVisitor(visitorName).getCart().addABid(bid, shop);
+    }
+
+    public void approveABid(String approves, String shopName, String askedBy, Integer itemId) throws MarketException {
+        alertIfNotLoggedIn(approves);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+        }
+        boolean approved = shop.approveABid(approves, askedBy, itemId);
+        if (approved) {
+            ShoppingCart shoppingCart = userController.getVisitor(askedBy).getCart();
+            shoppingCart.approveBid(itemId, shop);
+        }
+
+    }
+
+    public void suggestNewOfferToBid(String suggester, String shopName, String askedBy, int itemId, double newPrice) throws MarketException {
+        alertIfNotLoggedIn(suggester);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Adding a new bid has failed.");
+        }
+        shop.suggestNewOfferToBid(suggester, askedBy, itemId, newPrice);
+
+    }
+
+    public void rejectABid(String opposed, String shopName, String buyer, int itemId) throws MarketException {
+        alertIfNotLoggedIn(opposed);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Rejecting the bid failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Rejecting the bid failed.");
+        }
+        shop.rejectABid(opposed, buyer, itemId);
+    }
+
+    public void cancelABid(String shopName, String buyer, int itemId) throws MarketException {
+        alertIfNotLoggedIn(buyer);
+        Shop shop = shops.get(shopName);
+        if (shop == null) {
+            DebugLog.getInstance().Log("There is no shop named:" + shopName + ". Cancelling the bid failed.");
+            throw new MarketException("There is no shop named:" + shopName + ". Cancelling the bid failed.");
+        }
+        shop.cancelABid(buyer, itemId);
+    }
+
+    public void updateBidInLoggingOut(String visitorName) {
+        for (Shop shop : shops.values()) {
+            shop.updateBidInLoggingOut(visitorName);
+        }
+    }
+
+    public boolean isSystemManager(String name) {
+        return name.equals(this.systemManagerName);
+    }
+
+    public String resetSystemManager() {
+        String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
+        systemManagerName="";
+        return ret;
+    }
+    public void restoreSytemManager(String uName, String password){
+        systemManagerName=uName;
 
     }
 }

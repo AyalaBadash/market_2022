@@ -23,9 +23,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class VisitorTests {
     Market market;
     String userName = "userTest";
-    String password = "passTest";
+    String password = "password";
     String shopManagerName = "shaked";
-    String shopManagerPassword = "shaked1234";
+    String shopManagerPassword = "password";
     String shopName = "kolbo";
     Double productAmount;
     Double productPrice;
@@ -38,7 +38,7 @@ public class VisitorTests {
         try {
             market = Market.getInstance();
             if (market.getPaymentService() == null) {
-                market.firstInitMarket(userName, password,true);
+                market.firstInitMarket(userName, password);
             }
 
             // shop manager register
@@ -206,7 +206,7 @@ public class VisitorTests {
 
     @Test
     @DisplayName("add item to cart, 0 amount")
-    public void addZeroAmount() {
+    public void addZeroAmount(){
         try {
             Visitor visitor = market.guestLogin();
             List<Item> res = market.getItemByName("milk");

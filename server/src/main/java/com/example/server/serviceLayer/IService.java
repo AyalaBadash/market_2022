@@ -160,6 +160,14 @@ public interface IService {
     public Response openNewShop(OpenNewShopRequest request);
 
     /**
+     * an owner can reopen his own closed. employees and items return to what ever had before.
+     * member that had been removed from market will be removed from shop too
+     * @param request first string- owner, 2nd string - shopName
+     * @return valid response if approved, error if not
+     */
+    public Response reOpenClosedShop(TwoStringRequest request);
+
+    /**
      *
      * @param request
      * @return
@@ -354,4 +362,52 @@ public interface IService {
      * @return empty response if true, error message if not
      */
     public Response isServerInit();
+
+    /**
+     *  user sends new bid to shop
+     * @param request
+     * @return
+     */
+    public Response addABid(AddABidRequest request);
+
+    /**
+     *  owner/user approves the bid
+     * @param request
+     * @return
+     */
+    public Response approveABid(ApproveABidRequest request);
+
+
+    /**
+     *  owner suggest new offer - all other owner must approve it
+     * @param request
+     * @return
+     */
+    Response suggestNewOfferToBid(SuggestNewOfferToBidRequest request);
+
+    /**
+     *  owner/user may reject the request
+     * @param request
+     * @return
+     */
+    Response rejectABid(RejectABidRequest request);
+
+    /**
+     *  user revert his bid
+     * @param request
+     * @return
+     */
+    Response cancelABid(CancelABidRequest request);
+
+
+    Response approveAppointment(@RequestBody ApproveAppointmentRequest request);
+
+
+    Response rejectAppointment(@RequestBody ApproveAppointmentRequest request);
+
+
+
+    ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request);
+
+    ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request);
 }

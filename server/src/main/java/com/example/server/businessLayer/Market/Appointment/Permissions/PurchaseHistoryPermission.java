@@ -7,13 +7,13 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue(value = "PurchaseHistoryPermission")
-public class PurchaseHistoryPermission extends IPermission<String> {
+public class PurchaseHistoryPermission extends IPermission<StringBuilder> {
 
     public PurchaseHistoryPermission() { this.name = "PurchaseHistoryPermission"; }
 
     @Override
-    public String apply(Shop relatedShop) {
-        return null;
+    public StringBuilder apply(Shop relatedShop) {
+        return relatedShop.getReview ();
     }
 
     @Override

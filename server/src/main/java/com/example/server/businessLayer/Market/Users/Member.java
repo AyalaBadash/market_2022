@@ -1,4 +1,7 @@
 package com.example.server.businessLayer.Market.Users;
+
+
+import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.AcquisitionHistory;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
@@ -30,8 +33,15 @@ public class Member implements IHistory {
     private static MemberRep memberRep;
 
     public Member(String name) throws MarketException {
-        if(name.charAt ( 0 ) == '@')
-            throw new MarketException ( "cannot create a member with a username starts with @" );
+        if (name.equals("")) {
+            DebugLog.getInstance().Log("Name cannot be an empty String");
+            throw new MarketException("Name cannot be an empty String");
+        }
+        if(name.charAt ( 0 ) == '@') {
+            DebugLog.getInstance().Log("cannot create a member with a username starts with @");
+            throw new MarketException("cannot create a member with a username starts with @");
+        }
+
         this.name = name;
         myCart = new ShoppingCart();
         ShoppingCart.getShoppingCartRep().save(myCart);

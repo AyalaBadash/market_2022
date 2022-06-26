@@ -90,7 +90,7 @@ public class Item implements IHistory {
 
     @Override
     public StringBuilder getReview() {
-        return new StringBuilder(String.format ("%s - %f", name, price));
+        return new StringBuilder(String.format ("%s : %f", name, price));
     }
 
     public void addKeyword(String keyword){

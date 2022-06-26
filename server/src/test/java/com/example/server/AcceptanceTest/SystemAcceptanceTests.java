@@ -3,8 +3,8 @@ package com.example.server.AcceptanceTest;
 import com.example.server.serviceLayer.Requests.InitMarketRequest;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.Service;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,11 +14,11 @@ public class SystemAcceptanceTests extends AcceptanceTests {
 
     @BeforeAll
     public static void setup() {
-        initMarket();
+//        initMarket();
     }
 
 
-    @BeforeEach
+    @Before
     public void reset() {
         try {
             setItemCurrentAmount(shopOwnerName, yogurt, productAmount, shopName);

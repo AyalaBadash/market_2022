@@ -66,7 +66,7 @@ public class PurchaseService {
 
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
         try {
-            ShoppingCartFacade cart =new ShoppingCartFacade(market.calculateShoppingCart(visitorName));
+            ShoppingCartFacade cart = new ShoppingCartFacade(market.calculateShoppingCart(visitorName));
             ResponseT<ShoppingCartFacade> responseT = new ResponseT<>(cart);
             return responseT;
         }
@@ -78,16 +78,12 @@ public class PurchaseService {
 
 
     @Transactional(rollbackOn = MarketException.class)
-    public ResponseT<ShoppingCartFacade> buyShoppingCart(String visitorName, double expectedPrice,
-                                    PaymentMethod paymentMethod, Address address){
+    public Response buyShoppingCart(String visitorName, double expectedPrice,
+                                    PaymentMethod paymentMethod, Address address) {
         try {
-            ShoppingCart shoppingCart = this.market.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
-            //TODO fix condition in if
-            if(shoppingCart != null)
+            this.market.buyShoppingCart(visitorName, expectedPrice, paymentMethod, address);
             // null if items some items didn't found
-            if(shoppingCart != null && !shoppingCart.isEmpty ())
-                return new ResponseT<>("some of the items in the cart are missing. car was updated and the price was changed", new ShoppingCartFacade(shoppingCart));
-            return new ResponseT<>(new ShoppingCartFacade(new ShoppingCart()));
+            return new Response();
         }catch (MarketException e){
             String message =e.getMessage();
             if(e.getMessage().equals("Error0")){
@@ -102,10 +98,10 @@ public class PurchaseService {
             if(e.getMessage().equals("Error3")){
                 message= "There is a problem with setting the payment. Please try again later.";
             }
-            return new ResponseT(message);
+            return new Response(message);
         }catch (Exception e){
             ErrorLog.getInstance().Log(e.getMessage());
-            return new ResponseT(e.getMessage());
+            return new Response(e.getMessage());
         }
     }
 }

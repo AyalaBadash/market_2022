@@ -1,4 +1,4 @@
-package com.example.server.serviceLayer;
+package com.example.server.serviceLayer.Requests;
 
 public class AppointmentShopManagerRequest {
     private String shopOwnerName;

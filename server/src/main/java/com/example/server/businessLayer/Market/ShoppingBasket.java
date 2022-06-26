@@ -7,7 +7,7 @@ import com.example.server.dataLayer.repositories.ShoppingBasketRep;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 @Entity
 @Table(name = "shopping_baskets")
@@ -29,18 +29,23 @@ public class ShoppingBasket implements IHistory , Serializable {
     private double price;
     private static ShoppingBasketRep shoppingBasketRep;
 
+    @Transient //TODO dal
+    private HashMap<Integer, Bid> bids;
+
     public ShoppingBasket(){}
 
     public ShoppingBasket(int i) {
         items = new ConcurrentHashMap<>();
         itemMap = new ConcurrentHashMap<>();
         price = 0;
+        bids = new LinkedHashMap<> (  );
         shoppingBasketRep.save(this);
     }
     public ShoppingBasket(Map<java.lang.Integer,Double> items , Map<java.lang.Integer, Item> itemMap , double price){
         this.items = items;
         this.itemMap = itemMap;
         this.price = price;
+        bids = new LinkedHashMap<> (  );
         shoppingBasketRep.save(this);
     }
 
@@ -63,18 +68,21 @@ public class ShoppingBasket implements IHistory , Serializable {
         shoppingBasketRep.save(this);
     }
 
-    //TODO - needs to stay without checking the discount
     public double getPrice() {
         return calculatePrice();
     }
-
-    //TODO - add calculationOfDiscount
 
     private double calculatePrice() {
         double price = 0;
         for (Map.Entry<java.lang.Integer,Double> currItem:items.entrySet())
         {
             price = price + currItem.getValue()*itemMap.get(currItem.getKey()).getPrice();
+        }
+        if(bids != null && bids.size () > 0) {
+            for ( Bid bid : bids.values ( ) ) {
+                if (bid.getApproved ( ))
+                    price += bid.getPrice ( ) * bid.getAmount ( );
+            }
         }
         DecimalFormat format = new DecimalFormat("#.###");
         price = Double.parseDouble(format.format(price));
@@ -136,6 +144,36 @@ public class ShoppingBasket implements IHistory , Serializable {
 
     public void setItemMap(Map<java.lang.Integer, Item> itemMap) {
         this.itemMap = itemMap;
+    }
+
+    public void updatePrice(Shop shop) throws MarketException {
+        setPrice (shop.calculateDiscount ( this ));
+    }
+
+    public double getCurrentPrice(){
+        return price;
+    }
+
+    public void addABid(Bid bid) {
+        if(bid==null)
+        {
+            DebugLog.getInstance().Log("Bid cant be null");
+            //throw new MarketException("Bid cant be null");
+        }
+        bids.put ( bid.getItemId (), bid );
+    }
+
+    public HashMap<Integer, Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(HashMap<Integer, Bid> bids) {
+        this.bids = bids;
+    }
+
+    public void removeBid(Integer itemId) {
+        bids.remove ( itemId );
+        calculatePrice ();
     }
 
     public static void setShoppingBasketRep(ShoppingBasketRep sbRepositoryToSet){

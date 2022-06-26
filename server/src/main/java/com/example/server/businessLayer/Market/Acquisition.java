@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market;
 
 
+import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Supply.Address;
@@ -16,9 +17,9 @@ import com.example.server.dataLayer.entities.DalShoppingCart;
 import com.example.server.dataLayer.repositories.AcquisitionRep;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import java.util.Map;
 
 import javax.persistence.*;
+import java.util.Map;
 
 @Entity
 public class Acquisition {
@@ -44,27 +45,33 @@ public class Acquisition {
 
     public Acquisition(){}
 
-    public ShoppingCart buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler,boolean test) throws MarketException, Exception {
+    public void buyShoppingCart(NotificationHandler publisher, double expectedPrice,
+                                PaymentMethod paymentMethod, Address address,
+                                PaymentServiceProxy paymentHandler,
+                                SupplyServiceProxy supplyHandler) throws MarketException, Exception {
 
         // checks the price is correct
         //todo: check why there is not an exception here.
-        address.setAddress("address");
-        address.setZip("4336203");
-        address.setCity("beer seva");
-        address.setCountry("israel");
-        address.setName("shaked");
+        isPriceCorrect(publisher, expectedPrice);
 
-        if(!isPriceCorrect(publisher,expectedPrice,test))
-            return shoppingCartToBuy;
-
-        if(address==null){
+        if (address == null) {
+            DebugLog.getInstance().Log("Address not supplied.");
             throw new MarketException("Address not supplied.");
         }
-        if(!address.isLegal()){
+        if (!address.isLegal()) {
+            DebugLog.getInstance().Log("Address details are illegal.");
             throw new MarketException("Address details are illegal.");
         }
+        if (paymentMethod == null) {
+            DebugLog.getInstance().Log("Payment method not supplied.");
+            throw new MarketException("Payment method not supplied.");
+        }
+        if (!paymentMethod.isLegal()) {
+            DebugLog.getInstance().Log("Payment method details are illegal.");
+            throw new MarketException("Payment method details are illegal.");
+        }
+        supplyID = supplyHandler.supply(address);
 //        supplyID=supplyHandler.supply(address);
-        supplyID = 3;
         if(supplyID==-1){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -78,9 +85,8 @@ public class Acquisition {
 //        if(!paymentMethod.isLegal()){
 //            throw new MarketException("Payment method details are illegal.");
 //        }
-//        paymentID = paymentHandler.pay(paymentMethod);
-        paymentID = 4;
-        if(paymentID==-1){
+        paymentID = paymentHandler.pay(paymentMethod);
+        if (paymentID == -1) {
             shoppingCartToBuy.cancelShopSave();
             supplyHandler.cancelSupply(supplyID);
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -89,40 +95,36 @@ public class Acquisition {
         }
         paymentDone = true;
         Visitor visitor = UserController.getInstance().getVisitor(buyerName);
-        Member member = visitor.getMember ();
+        Member member = visitor.getMember();
         double actualPrice = 0;
-        if( member != null) {
+        if (member != null) {
             //todo - add discount calculation
-            for (Map.Entry<Shop,ShoppingBasket> entry:shoppingCartToBuy.getCart().entrySet())
-            {
+            for (Map.Entry<Shop, ShoppingBasket> entry : shoppingCartToBuy.getCart().entrySet()) {
                 Shop currShop = entry.getKey();
-//                if (!currShop.getPurchasePolicy().isPoliciesHeld(entry.getValue())){
-//                    throw new MarketException("One of the baskets does not match its shop policy");
-//                }
-//                actualPrice = actualPrice + currShop.getDiscountPolicy().calculateDiscount(entry.getValue());
+                if (!currShop.getPurchasePolicy().isPoliciesHeld(entry.getValue())) {
+                    throw new MarketException("One of the baskets does not match its shop policy");
+                }
+                actualPrice = actualPrice + currShop.getDiscountPolicy().calculateDiscount(entry.getValue());
             }
             AcquisitionHistory acq = new AcquisitionHistory(shoppingCartToBuy, member.getName(), actualPrice, expectedPrice);
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
         acquisitionRep.save(this);
-        return shoppingCartToBuy;
     }
 
-    private  boolean isPriceCorrect(NotificationHandler publisher, double expectedPrice,boolean test) throws MarketException {
+    private void isPriceCorrect(NotificationHandler publisher, double expectedPrice) throws MarketException {
         double actualPrice;
-        try {
-            actualPrice = shoppingCartToBuy.saveFromShops(publisher,buyerName,test);
-        }catch (MarketException e){
-            return false;
-        }
-        if (Math.abs ( actualPrice - expectedPrice ) > 0.001){
+        actualPrice = shoppingCartToBuy.saveFromShops(publisher, buyerName);
+
+        if (Math.abs(actualPrice - expectedPrice) > 0.001) {
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("Shopping cart price has been changed for a costumer");
-            return false;
+            errorLog.Log("Price for shopping cart has changed.");
+            throw new MarketException("Price for shopping cart has changed.");
+
         }
-        return true;
+
     }
 
 

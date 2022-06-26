@@ -3,7 +3,7 @@ package com.example.server.AcceptanceTest;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.serviceLayer.AppointmentShopManagerRequest;
+import com.example.server.serviceLayer.Requests.AppointmentShopManagerRequest;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
@@ -11,6 +11,7 @@ import com.example.server.serviceLayer.Requests.*;
 import com.example.server.serviceLayer.Response;
 import com.example.server.serviceLayer.ResponseT;
 import com.example.server.serviceLayer.Service;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -20,9 +21,9 @@ import java.util.List;
 public class AcceptanceTests {
 
     static String systemManagerName = "ido";
-    static String systemManagerPassword = "1234Ido";
+    static String systemManagerPassword = "password";
     static String shopOwnerName = "shaked";
-    static String shopOwnerPassword = "shaked1234";
+    static String shopOwnerPassword = "password";
     static String shopName = "Shufersal";
     static Double productAmount;
     static Double productPrice;
@@ -62,7 +63,6 @@ public class AcceptanceTests {
             addItemToShop(shopOwnerName, "yogurt", productPrice, Item.Category.general, "soy", new ArrayList<>(), productAmount, shopName);
             List<ItemFacade> res = searchProductByName("yogurt");
             yogurt = res.get(0);
-
             appleAmount = 4.0;
             appleName = "apple";
             appleCategory = Item.Category.fruit;
@@ -84,7 +84,7 @@ public class AcceptanceTests {
             onePlusInfo = "9-5g";
             addItemToShop(shopOwnerName, onePlusName, onePlusPrice, onePlusCategory, onePlusInfo, onePlusKeywords, onePlusAmount, shopName);
             onePlus = searchProductByName(onePlusName).get(0);
-            creditCard = new CreditCard("1234567890", "5", "24", "555", "Ido livne", "204534839");
+            creditCard = new CreditCard("1234567890", "5", "2024", "555", "Ido livne", "204534839");
             address = new Address("Bar Damri", "Ben Gurion 3", "Tel Aviv", "Israel", "1234");
         } catch (Exception e) {
             String msg = e.getMessage();

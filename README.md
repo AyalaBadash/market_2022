@@ -4,8 +4,12 @@
 
 # config file
 The configuration file contains the initialized data needed for the market loading. The configuration file has two parts:
+- Services configuration.
+- Data configuration.
 
-## Configurations
+Both of the methods, are called from the isInit() method in the market only if the market initializer asks for and not automatically.
+
+## Services Configurations
 The configurations file is a txt file contains the relevand parameters for the initialization of the system external services. The sefvices can include:
 - Payment service
 - Supply service

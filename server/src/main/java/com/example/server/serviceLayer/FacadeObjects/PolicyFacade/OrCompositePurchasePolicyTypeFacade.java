@@ -11,6 +11,8 @@ import java.util.List;
 
 public class OrCompositePurchasePolicyTypeFacade extends CompositePurchasePolicyTypeFacade{
 
+
+    public OrCompositePurchasePolicyTypeFacade(){};
     @Override
     public PurchasePolicyType toBusinessObject() throws MarketException {
         List<PurchasePolicyType> purchasePolicyTypes = new ArrayList<> (  );

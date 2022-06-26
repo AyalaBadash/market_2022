@@ -79,9 +79,9 @@ public class ShoppingCartUnitTest{
 
                 NotificationHandler nh=NotificationHandler.getInstance();
                 nh.setService(TextDispatcher.getInstance());
-                Mockito.when(shop.buyBasket(nh,basket,"some buyer name",true)).thenReturn(25.0);
-                Mockito.when(shop2.buyBasket(nh,basket2, "some buyer name",true)).thenReturn(30.0);
-                double x = shoppingCart.saveFromShops(nh,"some buyer name",true);
+                Mockito.when(shop.buyBasket(nh,basket,"some buyer name")).thenReturn(25.0);
+                Mockito.when(shop2.buyBasket(nh,basket2, "some buyer name")).thenReturn(30.0);
+                double x = shoppingCart.saveFromShops(nh,"some buyer name");
                 Assertions.assertEquals(55.0,x);
             }
             catch (MarketException e){

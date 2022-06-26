@@ -25,7 +25,7 @@ public class MemberAcceptanceTests extends AcceptanceTests {
             try {
                 testMemberName = "managerTest";
                 testMemberNameToSaveTest = "ayalaTest";
-                testMemberPassword = "1234";
+                testMemberPassword = "password";
 
             } catch (Exception ignored) {
 
@@ -200,7 +200,7 @@ public class MemberAcceptanceTests extends AcceptanceTests {
             try {
                 VisitorFacade visitor = guestLogin();
                 String currName = "questionsName";
-                String password = "1234";
+                String password = "password";
                 ResponseT<Boolean> response = register(currName, password);
                 assert !response.isErrorOccurred();
                 List<String> questions = memberLogin(currName, password).getValue();
@@ -228,7 +228,7 @@ public class MemberAcceptanceTests extends AcceptanceTests {
             try {
                 VisitorFacade visitor = guestLogin();
                 String currName = "questionsName2";
-                String password = "1234";
+                String password = "password";
                 ResponseT<Boolean> response = register(currName, password);
                 ResponseT<List<String>> responseQuestions = memberLogin(currName, password);
                 ResponseT<MemberFacade> responseMember = validateSecurityQuestions(currName, new ArrayList<>(), visitor.getName());
