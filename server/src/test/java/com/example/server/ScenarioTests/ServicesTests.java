@@ -45,25 +45,30 @@ public class ServicesTests {
 
     @BeforeAll
     public static void initBefore() throws MarketException {
-        paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
-        supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
-        creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
-        address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
-        market = Market.getInstance();
-        useData=MarketConfig.USING_DATA;
-        MarketConfig.USING_DATA=true;
-        MarketConfig.IS_TEST_MODE=true;
-        market.isInit();
-        Visitor visitor= market.guestLogin();
         try {
-            String[] dets = market.resetSystemManager().split(":");
-            ManName = dets[0];
-            ManPass = dets[1];
-        }catch(Exception e){}
-        try{
-            market.isInit ( );
-        }catch(MarketException e){
-            System.out.println (e.getMessage () );
+            paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
+            supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
+            creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
+            address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
+            market = Market.getInstance();
+            useData = MarketConfig.USING_DATA;
+            MarketConfig.USING_DATA = true;
+            MarketConfig.IS_TEST_MODE = true;
+            market.isInit();
+            Visitor visitor = market.guestLogin();
+            try {
+                String[] dets = market.resetSystemManager().split(":");
+                ManName = dets[0];
+                ManPass = dets[1];
+            } catch (Exception e) {
+            }
+            try {
+                market.isInit();
+            } catch (MarketException e) {
+                System.out.println(e.getMessage());
+            }
+        }catch (Exception e){
+          String str= e.getMessage();
         }
     }
     @AfterAll
@@ -167,6 +172,7 @@ public class ServicesTests {
     @DisplayName("Supply service- check error message without crash when service falls")
     public void SupplyServiceFalls() throws MarketException {
         try {
+            loginMember(systemManagerName,systemManagerPassword);
             market.setSupplyServiceAddress("", systemManagerName);
             supplyServiceProxy.supply(address);
             market.setSupplyServiceAddress(MarketConfig.WSEP_ADDRESS, market.getSystemManagerName());

@@ -148,14 +148,16 @@ public class RobustnessTests {
     @DisplayName("Payment service is good check")
     public void PaymentServiceGood() {
         try {
-            ResponseT<VisitorFacade> visitor = userService.guestLogin();
+            ResponseT<VisitorFacade> visitorResponse = userService.guestLogin();
+            VisitorFacade visitor = visitorResponse.getValue();
             ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
             ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = 10;
-            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
-            ResponseT<ShoppingCartFacade> ret= purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
+            purchaseService.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+            ResponseT<ShoppingCartFacade> ret = purchaseService.showShoppingCart(visitor.getName());
             Assertions.assertTrue(ret.getValue().getCart().isEmpty());
         } catch (Exception e) {
             assert false;
@@ -165,14 +167,16 @@ public class RobustnessTests {
     @DisplayName("Payment service is good check case 2")
     public void PaymentServiceGood2() {
         try {
-            ResponseT<VisitorFacade> visitor = userService.guestLogin();
+            ResponseT<VisitorFacade> visitorResponse = userService.guestLogin();
+            VisitorFacade visitor = visitorResponse.getValue();
             ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
             ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = 20;
-            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
-            ResponseT<ShoppingCartFacade> ret= purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
+            purchaseService.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+            ResponseT<ShoppingCartFacade> ret = purchaseService.showShoppingCart(visitor.getName());
             Assertions.assertTrue(ret.getValue().getCart().isEmpty());
         } catch (Exception e) {
             assert false;
@@ -186,7 +190,7 @@ public class RobustnessTests {
             MarketConfig.SERVICES_FILE_NAME="badSupplyConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(market.getSystemManager());
+            market.memberLogout(managerName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -203,7 +207,7 @@ public class RobustnessTests {
             MarketConfig.SERVICES_FILE_NAME="badPaymentConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(market.getSystemManager());
+            market.memberLogout(managerName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -220,7 +224,7 @@ public class RobustnessTests {
             MarketConfig.SERVICES_FILE_NAME="badPublisherConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(market.getSystemManager());
+            market.memberLogout(managerName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -234,14 +238,16 @@ public class RobustnessTests {
     @DisplayName("Payment service is good check 3 case 3")
     public void PaymentServiceGood3() {
         try {
-            ResponseT<VisitorFacade> visitor = userService.guestLogin();
+            ResponseT<VisitorFacade> visitorResponse = userService.guestLogin();
+            VisitorFacade visitor= visitorResponse.getValue();
             ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
             ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = 30;
-            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
-            ResponseT<ShoppingCartFacade> ret= purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
+            purchaseService.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+            ResponseT<ShoppingCartFacade> ret= purchaseService.showShoppingCart(visitor.getName());
             Assertions.assertTrue(ret.getValue().getCart().isEmpty());
         } catch (Exception e) {
             assert false;
@@ -271,15 +277,17 @@ public class RobustnessTests {
     @DisplayName("Supply service is good check")
     public void SupplyServiceGood() {
         try {
-            ResponseT<VisitorFacade> visitor = userService.guestLogin();
+            ResponseT<VisitorFacade> visitorResponse = userService.guestLogin();
+            VisitorFacade visitor= visitorResponse.getValue();
             ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
             ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = itemAmount;
-            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
-            ResponseT<ShoppingCartFacade> ret= purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
+            purchaseService.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             marketService.updateShopItemAmount(shopManagerName,chocolate,itemAmount,shopName);
+            ResponseT<ShoppingCartFacade> ret= purchaseService.showShoppingCart(visitor.getName());
             Assertions.assertTrue(ret.getValue().getCart().isEmpty());
         } catch (Exception e) {
             assert false;
@@ -330,14 +338,16 @@ public class RobustnessTests {
     @DisplayName("Publish service is good check")
     public void PublishServiceGood() {
         try {
-            ResponseT<VisitorFacade> visitor = userService.guestLogin();
+            ResponseT<VisitorFacade> visitorResponse = userService.guestLogin();
+            VisitorFacade visitor= visitorResponse.getValue();
             ResponseT<ShopFacade> shop = marketService.getShopInfo(shopManagerName, shopName);
             ResponseT<List<ItemFacade>> res = marketService.searchProductByName("chocolate");
             ItemFacade chocolate = res.getValue().get(0);
             Double itemAmount = shop.getValue().getItemsCurrentAmount().get(chocolate.getId());
             double buyingAmount = 10;
-            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getValue().getName());
-            ResponseT<ShoppingCartFacade> ret= purchaseService.buyShoppingCart(visitor.getValue().getName(), productPrice * buyingAmount, creditCard, address);
+            purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
+            purchaseService.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
+            ResponseT<ShoppingCartFacade> ret= purchaseService.showShoppingCart(visitor.getName());
             Assertions.assertTrue(ret.getValue().getCart().isEmpty());
         } catch (Exception e) {
             assert false;

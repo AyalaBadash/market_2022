@@ -1442,9 +1442,8 @@ public class Market {
         systemManagerName="";
         return ret;
     }
-    public void restoreSytemManager(String uName, String password){
+    public void restoreSystemManager(String uName, String password){
         systemManagerName=uName;
-
     }
 
     public void updateStatistics(){
