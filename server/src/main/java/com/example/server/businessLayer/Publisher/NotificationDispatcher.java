@@ -65,12 +65,13 @@ public class NotificationDispatcher extends Publisher {
     @Override
     public List<Notification> remove(String sessionId) {
 
-        if (!messages.containsKey(sessionId)) {
-           return new ArrayList<>();
-        }
-        List<Notification> nots= messages.get(sessionId);
-        messages.remove(sessionId);
-        return nots;
+            if (!messages.containsKey(sessionId)) {
+                return new ArrayList<>();
+            }
+            List<Notification> nots = messages.get(sessionId);
+            messages.remove(sessionId);
+            return nots;
+
     }
 
 
@@ -78,14 +79,15 @@ public class NotificationDispatcher extends Publisher {
     @Override
     public boolean add( String sessionId) {
 
-        if(messages.containsKey(sessionId)){
-            return false;
-        }
-        messages.put(sessionId,new ArrayList<>());
-        RealTimeNotifications not= new RealTimeNotifications();
-        not.createAnotherMessage("welcome to notifications service");
-        messages.get(sessionId).add(not);
-        return true;
+            if (messages.containsKey(sessionId)) {
+                return false;
+            }
+            messages.put(sessionId, new ArrayList<>());
+            RealTimeNotifications not = new RealTimeNotifications();
+            not.createAnotherMessage("welcome to notifications service");
+            messages.get(sessionId).add(not);
+            return true;
+
     }
 
 
@@ -93,10 +95,10 @@ public class NotificationDispatcher extends Publisher {
     @Override
     public boolean addMessgae(String sessionId, Notification notification) {
 
-        if(!messages.containsKey(sessionId)){
-            return false;
-        }
-        messages.get(sessionId).add(notification);
-        return true;
+            if (!messages.containsKey(sessionId)) {
+                return false;
+            }
+            messages.get(sessionId).add(notification);
+            return true;
     }
 }

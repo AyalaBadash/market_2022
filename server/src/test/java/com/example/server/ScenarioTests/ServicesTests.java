@@ -421,7 +421,7 @@ public class ServicesTests {
             nots.addAll(readDelayedMessages(appointedName));
             boolean found = false;
             for(String message : nots){
-                if(message.equals(not.getMessage().split("\n")[0])){
+                if(message.contains(not.getMessage().split("\n")[0])){
                     found=true;
                 }
             }
@@ -445,7 +445,7 @@ public class ServicesTests {
             nots.addAll(readDelayedMessages(appointedName));
             boolean found = false;
             for(String message : nots){
-                if(message.equals(not.getMessage().split("\n")[0])){
+                if(message.contains(not.getMessage().split("\n")[0])){
                     found=true;
                 }
             }
@@ -532,7 +532,6 @@ public class ServicesTests {
 
     public void setUpCloseShop(String owner,String appointedName, RealTimeNotifications not,String testShopName) throws MarketException {
 
-        List<String> nots = new ArrayList<>();
         not.createShopClosedMessage(testShopName);
         // shop manager register
         registerVisitor(owner, shopOwnerPassword);
@@ -548,7 +547,7 @@ public class ServicesTests {
     public void setUpAppointOwner(String appointedName, RealTimeNotifications not) throws MarketException {
         String owner="notificationTestUser3";
         String testShopName="testShopName3";
-        not.createNewOwnerMessage(owner,appointedName,testShopName);
+        not.createAppointmentApprovedMessage(owner,testShopName);
         registerVisitor(owner, shopOwnerPassword);
         registerVisitor(appointedName, shopOwnerPassword);
         loginMember(owner, shopOwnerPassword);
