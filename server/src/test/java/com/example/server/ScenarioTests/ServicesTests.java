@@ -84,14 +84,14 @@ public class ServicesTests {
 
         MarketConfig.USING_DATA=useData;
         MarketConfig.IS_TEST_MODE=false;
-        market.restoreSystemManager(ManName,ManPass);
+        market.restoreSytemManager(ManName,ManPass);
     }
     @BeforeEach
     public void init() {
 
         try{
-            market.memberLogin(systemManagerName, systemManagerPassword);
-            market.validateSecurityQuestions(systemManagerName,new ArrayList<>(), visitor.getName());
+            market.memberLogin(userName, password);
+            market.validateSecurityQuestions(userName,new ArrayList<>(), visitor.getName());
         }catch (Exception e){}
     }
 
@@ -296,7 +296,7 @@ public class ServicesTests {
             MarketConfig.SERVICES_FILE_NAME="noName.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(systemManagerName);
+            market.memberLogout(userName);
             MarketConfig.SERVICES_FILE_NAME="config.txt";
             assert false;
         }
@@ -313,7 +313,7 @@ public class ServicesTests {
             MarketConfig.SERVICES_FILE_NAME="badSupplyConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(systemManagerName);
+            market.memberLogout(userName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -330,7 +330,7 @@ public class ServicesTests {
             MarketConfig.SERVICES_FILE_NAME="badPaymentConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(systemManagerName);
+            market.memberLogout(userName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -347,7 +347,7 @@ public class ServicesTests {
             MarketConfig.SERVICES_FILE_NAME="badPublisherConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(systemManagerName);
+            market.memberLogout(userName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -526,11 +526,11 @@ public class ServicesTests {
             String appointedName = "appointedNameTest4";
             String testShopName = "ShopName4";
             String owner = "ownerNameTest4";
-            loginMember(systemManagerName,systemManagerPassword );
+            loginMember(userName,password );
             List<String> nots= new ArrayList<>();
             RealTimeNotifications not= new RealTimeNotifications();
             setUpCloseShop(owner,appointedName,not,testShopName);
-            nots.addAll(readRealTimeMessages(systemManagerName));
+            nots.addAll(readRealTimeMessages(userName));
             boolean found = false;
             for(String message : nots){
                 if(message.contains("numOfVisitors")){
@@ -538,10 +538,10 @@ public class ServicesTests {
                     break;
                 }
             }
-            logoutMember(systemManagerName);
+            logoutMember(userName);
             Assertions.assertTrue(found);
         } catch (Exception e) {
-            logoutMember(systemManagerName);
+            logoutMember(userName);
             assert false;
         }
     }
@@ -560,7 +560,7 @@ public class ServicesTests {
             RealTimeNotifications not= new RealTimeNotifications();
             setUpCloseShop(owner,appointedName,not,testShopName);
             nots.addAll(readRealTimeMessages(market.getSystemManagerName()));
-            loginMember(systemManagerName, systemManagerPassword);
+            loginMember(userName, password);
             boolean found ;
             found= (nots.size()==prevNots.size());
             Assertions.assertTrue(found);

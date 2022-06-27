@@ -593,6 +593,7 @@ public class Shop implements IHistory {
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) ))
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>());
+        appointment.addAllPermissions();
         appointed.addAppointmentToMe(appointment);
         addEmployee ( appointment );
     }
@@ -770,7 +771,7 @@ public class Shop implements IHistory {
 
     public void rejectABid(String opposed, String buyer, int itemId) throws MarketException {
         Bid bidToReject = findBid ( buyer, itemId );
-        bidToReject.rejectBid ( buyer );
+        bidToReject.rejectBid ( opposed );
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = itemMap.get ( itemId ).getName ();
         if(opposed.equals ( buyer )){
@@ -780,6 +781,7 @@ public class Shop implements IHistory {
             DebugLog.getInstance ().Log ( "visitor does not has the authority to reject a bid." );
             throw new MarketException ( "visitor does not has the authority to reject a bid." );
         }
+        bids.remove(bidToReject);
         handler.sendBidRejectedNotification ( buyer, bidToReject.isMember (), bidToReject.getPrice (), itemName, shopName );
         EventLog.getInstance().Log("The bid for the buyer:"+buyer+" in the shop:"+shopName+" has been rejected");
     }
@@ -919,5 +921,8 @@ public class Shop implements IHistory {
 
     public void setShopOwners(Map<String, Appointment> shopOwners) {
         this.shopOwners = shopOwners;
+    }
+    public void setPendingAppointments(PendingAppointments pendingAppointments) {
+        this.pendingAppointments = pendingAppointments;
     }
 }

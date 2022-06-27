@@ -16,7 +16,7 @@ public class ShopManagerTests {
 
 
     Market market;
-    String userName = "userTest";
+    String userName = "u1";
     String password = "password";
     String shopOwnerName = "bar3";
     String shopOwnerPassword = "password";

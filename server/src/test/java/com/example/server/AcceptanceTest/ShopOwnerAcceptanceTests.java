@@ -580,7 +580,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             addItemToCart(apple, 1, visitor.getName());
             ShoppingCartFacade cart = showShoppingCart(visitor.getName()).getValue();
             // check whether condition discount didn't count (must have atleast 2 apples)
-            Assertions.assertEquals(cart.getPrice(), applePrice * 1);
+            Assertions.assertEquals(cart.getPrice(), applePrice * 0.75);
             addItemToCart(apple, 2, visitor.getName());
             cart = showShoppingCart(visitor.getName()).getValue();
             Assertions.assertEquals (cart.getPrice(), applePrice * 3 * 0.7);
@@ -622,6 +622,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             assert curNum + 1 == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
             // B appoints C
             assert !appointShopOwner(ownerB.getName(), ownerC.getName(), removingShop.getShopName()).isErrorOccurred();
+            approveAppointment(ownerA.getName(),ownerC.getName(),removingShop.getShopName());
             assert curNum + 2 == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
 
             // C removing B
