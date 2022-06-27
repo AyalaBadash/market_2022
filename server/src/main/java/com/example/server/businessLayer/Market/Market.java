@@ -105,7 +105,7 @@ public class Market {
         }
         StringBuilder history = new StringBuilder("Market history: \n");
         for (Shop shop : shops.values()) {
-            history.append(shop.getReview());
+            history.append(shop.getReview()).append("\n");
         }
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("System manager got purchase history");

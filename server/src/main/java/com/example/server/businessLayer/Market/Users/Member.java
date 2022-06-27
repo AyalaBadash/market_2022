@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Users;
 
 
+import com.example.server.businessLayer.Market.Acquisition;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.AcquisitionHistory;
@@ -19,6 +20,7 @@ public class Member implements IHistory {
     private List<Appointment> appointedByMe;
     private List<Appointment> myAppointments;
     private List<AcquisitionHistory> purchaseHistory;
+
 
 
 
