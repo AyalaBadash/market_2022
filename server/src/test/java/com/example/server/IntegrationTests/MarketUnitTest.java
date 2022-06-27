@@ -46,7 +46,7 @@ public class MarketUnitTest {
     @BeforeEach
     public void marketUnitTestInit(){
         try {
-            Market.getInstance().reset("password", null, null, false);
+            Market.getInstance().reset("p1", null, null, false);
         } catch (MarketException e){}
         List<String> keywords = new ArrayList<>();
         keywords.add("dairy");

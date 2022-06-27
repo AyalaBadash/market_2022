@@ -22,12 +22,14 @@ public class Acquisition {
     String buyerName;
     int supplyID;
     int paymentID;
+    private Statistics statistics;
 
     public Acquisition(ShoppingCart shoppingCartToBuy, String buyerName) {
         this.shoppingCartToBuy = shoppingCartToBuy;
         this.buyerName = buyerName;
         paymentDone = false;
         supplyConfirmed = false;
+        statistics= Statistics.getInstance();
     }
 
     @Override

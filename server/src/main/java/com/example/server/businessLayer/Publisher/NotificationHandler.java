@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Publisher;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Statistics;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.serviceLayer.Notifications.DelayedNotifications;
@@ -23,7 +24,7 @@ public class NotificationHandler {
     private Publisher dispatcher;
 
     //Map for sessionId-name pairs.
-    private Map<String, String> sessions;
+    private static Map<String, String> sessions;
 
 
     public static NotificationHandler getInstance(){
@@ -178,6 +179,20 @@ public class NotificationHandler {
         }
         return true;
     }
+    public boolean isConnected(String name){
+        UserController userController = UserController.getInstance();
+        String session;
+        if ((MarketConfig.IS_TEST_MODE && userController.isLoggedIn(name))) {
+            return true;
+        } else if ((MarketConfig.IS_TEST_MODE && !userController.isLoggedIn(name))) {
+            return false;
+        } else if (sessions.containsKey(name)) {
+            return true;
+        } else {
+            //if not logged in. save if member
+            return true;
+        }
+    }
 
     /**
      * Sends to all owner that item is bought from shop.
@@ -196,6 +211,14 @@ public class NotificationHandler {
                 not.createBuyingOfferMessage(buyer, shopName, itemsNames.get(i), prices.get(i));
                 sendNotification(name,not,true);
             }
+        }
+    }
+
+    public void sendReOpenedShopBatch(List<String> works, String founder, String shopName) {
+        RealTimeNotifications not=new RealTimeNotifications();
+        not.createReOpenedShopMessage(shopName,founder);
+        for(String worker: works){
+            sendNotification(worker,not,true);
         }
     }
 
@@ -224,7 +247,24 @@ public class NotificationHandler {
         not.createBidRejectedMessage(buyer, itemName, price, shopName);
         sendNotification(buyer, not, isMember);
     }
+    public void sendAppointmentRejectedNotification(String appointedName, String ownerName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.creadteAppointmentRejectedMessage(appointedName, ownerName, shopName);
+        sendNotification(appointedName, not, true);
+    }
 
+    public void sendAppointmentApproved(String appointedName, String ownerName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.creadteAppointmentApprovedMessage(appointedName, ownerName, shopName);
+        sendNotification(appointedName, not, true);
+    }
+    public void sendNewAppointmentBatch(List<String> owners, Member appointed, Member superVisor, String shopName, String role) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewAppointmentMessage(appointed.getName(), superVisor.getName(), shopName,role);
+        for(String employee : owners){
+            sendNotification(employee,not,true);
+        }
+    }
     public void sendBidRejectedToApprovesNotificationBatch(List<String> approves, String buyer, double price, String itemName, String shopName) {
         RealTimeNotifications not= new RealTimeNotifications();
         not.createBidRejectedToApprovesMessage(buyer, price, itemName, shopName);
@@ -340,4 +380,23 @@ public class NotificationHandler {
         not.createNewOwnerMessage(shopOwner.getName(),appointed.getName(),shopName);
         sendNotification(appointed.getName(),not,true);
     }
+
+    public void sendStatistics(Statistics statistics, String systemManager) {
+        RealTimeNotifications not = new RealTimeNotifications();
+        not.createAnotherMessage(statistics.toString());
+        UserController userController = UserController.getInstance();
+        String session;
+        if ((MarketConfig.IS_TEST_MODE && userController.isLoggedIn(systemManager))) {
+            //if user logged in test.
+            session = systemManager;
+            dispatcher.addMessgae(session, not);
+        } else if (sessions.containsKey(systemManager)) {
+            //if user logged.
+            session = sessions.get(systemManager);
+            dispatcher.addMessgae(session, not);
+        }
+    }
+
+
+
 }
