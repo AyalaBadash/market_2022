@@ -1,6 +1,7 @@
 package com.example.server.serviceLayer;
 
 
+import com.example.server.businessLayer.Market.Acquisition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
@@ -636,5 +637,21 @@ public class MarketService {
         }catch (Exception e){
             return new Response("server error has occurred, please try again later");
         }
+    }
+
+    public ResponseT<List<AcquisitionFacade>> getAcqsForMember(String memberName) {
+        List<Acquisition> acqs= null;
+        try {
+            acqs = market.getAcqsForMember(memberName);
+        } catch (MarketException e) {
+            return new ResponseT(e.getMessage());
+        }
+        List<AcquisitionFacade> acquisitionFacades = new ArrayList<>();
+        for (Acquisition acq:acqs)
+        {
+            AcquisitionFacade acquisitionFacade = new AcquisitionFacade(acq);
+            acquisitionFacades.add(acquisitionFacade);
+        }
+        return new ResponseT<>(acquisitionFacades);
     }
 }

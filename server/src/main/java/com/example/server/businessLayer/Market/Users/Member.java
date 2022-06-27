@@ -21,6 +21,7 @@ public class Member implements IHistory {
     private List<Appointment> myAppointments;
     private List<AcquisitionHistory> purchaseHistory;
 
+    private List<Acquisition> acquisitions;
 
 
 
@@ -39,6 +40,7 @@ public class Member implements IHistory {
         appointedByMe = new CopyOnWriteArrayList<>();
         myAppointments = new CopyOnWriteArrayList<>();
         purchaseHistory = new ArrayList<> (  );
+        acquisitions = new ArrayList<>();
     }
 
     public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<AcquisitionHistory> purchaseHistory ){
@@ -47,6 +49,7 @@ public class Member implements IHistory {
         this.appointedByMe = appointmentedByME;
         this.myAppointments = myAppointments;
         this.purchaseHistory = purchaseHistory;
+        acquisitions = new ArrayList<>();
     }
 
 
@@ -87,6 +90,8 @@ public class Member implements IHistory {
     public void addAppointmentByMe(Appointment app){ this.appointedByMe.add(app);}
 
     public void addAppointmentToMe(Appointment app){ this.myAppointments.add(app);}
+    public void addAcquisition(Acquisition acq){this.acquisitions.add(acq);}
+    public void removeAcquisition(Acquisition acq){this.acquisitions.remove(acq);}
 
     public StringBuilder getPurchaseHistoryString() {
         StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
@@ -119,5 +124,17 @@ public class Member implements IHistory {
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("Pulled "+this.getName()+" history");
         return history;
+    }
+
+    public void setPurchaseHistory(List<AcquisitionHistory> purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+    }
+
+    public List<Acquisition> getAcquisitions() {
+        return acquisitions;
+    }
+
+    public void setAcquisitions(List<Acquisition> acquisitions) {
+        this.acquisitions = acquisitions;
     }
 }

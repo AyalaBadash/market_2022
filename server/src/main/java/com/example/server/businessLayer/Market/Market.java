@@ -734,7 +734,7 @@ public class Market {
         //Import the visitor and try to get it's cart.
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart;
-        Acquisition acquisition;
+        Acquisition acquisition = null;
 
         try {
             shoppingCart = visitor.getCart();
@@ -756,9 +756,13 @@ public class Market {
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
+            visitor.getMember().addAcquisition(acquisition);
             acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
+            visitor.getMember().removeAcquisition(acquisition);
         } catch (Exception e) {
-
+            if (acquisition!= null) {
+                visitor.getMember().removeAcquisition(acquisition);
+            }
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log(e.getMessage());
             throw new MarketException(e.getMessage());
@@ -1388,5 +1392,14 @@ public class Market {
     public void restoreSytemManager(String uName, String password){
         systemManagerName=uName;
 
+    }
+
+    public List<Acquisition> getAcqsForMember(String memberName) throws MarketException {
+        if (!userController.isMember(memberName)){
+            DebugLog.getInstance().Log("There is no member with the name:"+memberName);
+            throw new MarketException("There is no member with the name:"+memberName);
+        }
+        Member member = userController.getMember(memberName);
+        return member.getAcquisitions();
     }
 }
