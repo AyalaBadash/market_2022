@@ -143,8 +143,8 @@ public class ShoppingCart implements IHistory {
         cart.clear();
         if (!MarketConfig.IS_TEST_MODE) {
             shoppingCartRep.save(this);
+            ShoppingBasket.getShoppingBasketRep().deleteAll(baskets);
         }
-        ShoppingBasket.getShoppingBasketRep().deleteAll(baskets);
     }
 
     public void addItem(Shop shop, Item item, double amount) throws MarketException {

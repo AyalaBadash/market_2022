@@ -9,10 +9,7 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.Composite
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.CompositePurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
-import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
-import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.ResourcesObjects.*;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
@@ -687,7 +684,7 @@ public class Shop implements IHistory {
         }
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) ))
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
-        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>());
+        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>(),false);
         appointment.addAllPermissions();
         appointed.addAppointmentToMe(appointment);
         addEmployee ( appointment );
@@ -753,9 +750,6 @@ public class Shop implements IHistory {
         }
     }
 
-
-    }
-
     private void removeFiredOwnerFromPending(String firedAppointed) throws MarketException {
         List<String> completed= pendingAppointments.removeOwner(firedAppointed);
         for (String name:completed){
@@ -776,9 +770,6 @@ public class Shop implements IHistory {
         }
     }
 
-    public boolean hasItem(Item item) {
-        return itemMap.get(item.getID()) != null;
-    }
 
     public static void setShopRep(ShopRep shopRepToSet){
         shopRep = shopRepToSet;
@@ -838,7 +829,9 @@ public class Shop implements IHistory {
         }
         Bid bid = new Bid (visitorName,UserController.getInstance ().isMember ( visitorName ), itemId, price, amount, approvingAppointments);
         bids.add ( bid );
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE){
+            shopRep.save(this);
+        }
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = item.getName ();
         handler.sendNewBidToApprovalOfApprovesNotificationBatch ( approvingAppointments, visitorName, price, itemName, shopName);
@@ -983,7 +976,9 @@ public class Shop implements IHistory {
             ShopOwnerAppointment appointment = pendingAppointments.getAppointments().get(appointedName);
             shopOwners.put(appointedName, appointment);
             pendingAppointments.removeAppointment(appointedName);
-            shopRep.save(this);
+            if (!MarketConfig.IS_TEST_MODE){
+                shopRep.save(this);
+            }
             EventLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
             for (Bid bid : bids) {
                 bid.addApproves(appointedName);
@@ -1038,7 +1033,9 @@ public class Shop implements IHistory {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE){
+            shopRep.save(this);
+        }
     }
 
     public void setShopManagers(Map<String, Appointment> shopManagers) {

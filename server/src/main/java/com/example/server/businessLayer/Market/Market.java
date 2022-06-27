@@ -161,110 +161,12 @@ public class Market {
                     statistics.setSystemManager(userName);
                     userController.getMember(userName).setSystemManager(true);
                 }
+            }
             checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("A market has been initialized successfully");
         } catch (MarketException e) {
             throw e;
-        }
-    }
-
-
-    private void readInitFile(String fileName) throws MarketException {
-        File myObj = new File(getConfigDir() + fileName);
-        if (!myObj.exists()) {
-            throw new MarketException("Data file does not exists.");
-        }
-        Scanner myReader ;
-        try {
-            myReader = new Scanner(myObj);
-        } catch (FileNotFoundException e) {
-            throw new MarketException("Init data file not found.");
-        }
-        while (myReader.hasNextLine()) {
-            String data = myReader.nextLine();
-            String[] vals = data.split("::");
-            setData(vals);
-        }
-
-    }
-
-    private void readConfigurationFile(String name) throws MarketException{
-        File myObj = new File(getConfigDir() + name);
-        if (!myObj.exists()) {
-            throw new MarketException("Services configurations file does not exists.");
-        }
-        try{
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] vals = data.split("::");
-                setService(vals[0], vals[1]);
-            }
-        } catch (FileNotFoundException e){
-            throw new MarketException("file not found while reading configuration file");
-        }
-        if (paymentServiceProxy == null || supplyServiceProxy == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-            throw new MarketException("market needs payment and supply services for initialize");
-        }
-        if (publisher == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of publisher services ");
-            throw new MarketException("market needs publisher services for initialize");
-
-        }
-
-    }
-
-    /**
-     * init service by the line from config file.
-     *
-     * @param val  the service name to initial.
-     * @param val1 the instance type of the service.
-     * @throws MarketException
-     */
-    private void setService(String val, String val1) throws MarketException {
-        if (val.contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
-            initPaymentService(val1);
-        } else if (val.contains(MarketConfig.SUPPLY_SERVICE_NAME)) {
-            initSupplyService(val1);
-        } else if (val.contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
-            initNotificationService(val1);
-        } else {
-            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty()))
-                initManager(val, val1);
-        }
-    }
-
-    private void initManager(String val, String val1) throws MarketException {
-
-        register(val, val1);
-        instance.systemManagerName = val;
-    }
-
-    private void initNotificationService(String val) throws MarketException {
-
-        if (MarketConfig.IS_TEST_MODE) {
-            publisher = TextDispatcher.getInstance();
-        } else if (val.contains(MarketConfig.NOTIFICATIONS_PUBLISHER)) {
-            publisher = NotificationDispatcher.getInstance();
-        } else if (val.contains(MarketConfig.TEXT_PUBLISHER)) {
-            publisher = TextDispatcher.getInstance();
-        } else {
-            throw new MarketException("Failed to init notification service");
-        }
-        notificationHandler = NotificationHandler.getInstance();
-        notificationHandler.setService(publisher);
-    }
-
-    private void initSupplyService(String val) throws MarketException {
-
-        if (val.contains(MarketConfig.WSEP_SERVICE)) {
-            supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), false);
-        } else {
-            throw new MarketException("Failed to init payment service");
         }
     }
 
@@ -1233,7 +1135,7 @@ public class Market {
         }
 
     }
-
+    //need to stay
     private void readConfigurationFile(String name) throws MarketException{
 
 
@@ -1572,6 +1474,9 @@ public class Market {
     }
 
     public void loadData(){
+        if (MarketConfig.IS_TEST_MODE){
+            return;
+        }
         List<Item> items = itemRep.findAll();
         List<Member> members = memberRep.findAll();
         shopOwnerAppointmentRep.findAll();

@@ -20,7 +20,7 @@ public class ConditionalDiscount extends DiscountType{
     private Cond condition;
     private static ConditionalDiscountRep condDiscountRep;
 
-    public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Cond condition) {
+    public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Cond condition) throws MarketException {
         super ( percentageOfDiscount, discountLevelState );
         this.condition = condition;
         if (!MarketConfig.IS_TEST_MODE) {

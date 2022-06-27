@@ -5,3 +5,6 @@ you got appointed as owner to shop removingShop by removerB
 Real Time message: 
 Hello removerC. Your appointment by removerA to the shop removingShop has been approved.
 
+Real Time message: 
+Your appointment by removerA to the shop removingShop has been approved.
+

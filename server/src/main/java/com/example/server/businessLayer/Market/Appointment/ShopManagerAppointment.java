@@ -25,8 +25,7 @@ public class ShopManagerAppointment extends Appointment {
         }
     }
 
-    public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop
-            , List<IPermission> permissions, boolean fromBusiness) {
+    public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions, boolean fromBusiness) {
         super(appointed, superVisor, relatedShop, permissions);
         if (!fromBusiness){
 
