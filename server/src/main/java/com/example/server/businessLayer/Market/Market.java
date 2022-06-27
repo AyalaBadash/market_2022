@@ -1082,8 +1082,8 @@ public class Market {
         if(vals.length==0){
             return;
         }
-        if(vals.length<2 || (vals[0].equals(MarketConfig.SYSTEM_MANAGER_NAME) && vals.length<3)){
-            throw new MarketException(String.format("Missing init values for %s. Could not init the services.",vals[0]));
+        if(vals.length<2){
+            throw new MarketException(String.format("Missing init values for %s. Could not init the system services.",vals[0]));
         }
         if (vals[0].contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
             initPaymentService(vals[1]);
@@ -1091,11 +1091,6 @@ public class Market {
             initSupplyService(vals[1]);
         } else if (vals[0].contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
             initNotificationService(vals[1]);
-        } else if (vals[0].contains(MarketConfig.SYSTEM_MANAGER_NAME)){
-            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty())) {
-                initManager(vals[1], vals[2]);
-                statistics.setSystemManager(vals[1]);
-            }
         }
     }
 
@@ -1176,8 +1171,18 @@ public class Market {
 
     private void setData(String[] vals) throws MarketException {
 
-        DebugLog debugLog = DebugLog.getInstance();
+        EventLog debugLog = EventLog.getInstance();
         String command = vals[0];
+        if (command.contains(MarketConfig.SYSTEM_MANAGER_NAME)){
+            if (systemManagerName == null || systemManagerName.isEmpty()) {
+                if(vals.length!=3){
+                    DebugLog.getInstance().Log("Failed to init system manager from data file.");
+                    throw new MarketException("Failed to init system manager from data file.");
+                }
+                initManager(vals[1], vals[2]);
+                statistics.setSystemManager(vals[1]);
+            }
+        }
         if (command.contains("Register")) {
             if (vals.length >= 3) {
                 debugLog.Log("Method register from init file has called. Args are: " + vals[1] + " " + vals[2]);
