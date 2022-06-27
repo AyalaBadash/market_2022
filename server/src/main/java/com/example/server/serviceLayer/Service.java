@@ -1,30 +1,33 @@
 package com.example.server.serviceLayer;
 
 import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
 import com.example.server.serviceLayer.Requests.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
 public class Service implements IService {
     private static Service service = null;
+    @Autowired
     MarketService marketService;
     PurchaseService purchaseService;
     UserService userService;
-
-
     protected Service() {
-        marketService = MarketService.getInstance();
-        purchaseService = PurchaseService.getInstance();
-        userService = UserService.getInstance();
+        if (MarketConfig.IS_TEST_MODE){
+            marketService = MarketService.getInstance();
+            purchaseService = PurchaseService.getInstance();
+            userService = UserService.getInstance();
+        }
     }
 
     public synchronized static Service getInstance() {
@@ -36,13 +39,17 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
+//    @Transactional(rollbackOn = Exception.class)
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
+        purchaseService = PurchaseService.getInstance();
+        userService = UserService.getInstance();
         return marketService.firstInitMarket(request.getUserName(), request.getPassword());
     }
 
     @Override
     @RequestMapping(value = "/guestLogin")
     @CrossOrigin
+//    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<VisitorFacade> guestLogin() {
         return this.userService.guestLogin();
     }
@@ -51,6 +58,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/exitSystem")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response exitSystem(@RequestBody ExitSystemRequest request) {
         return this.userService.exitSystem(request.getVisitorName());
     }
@@ -58,21 +66,23 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/register")
     @CrossOrigin
-    public ResponseT<Boolean> register(@RequestBody NamePasswordRequest request) {
+    @Transactional(rollbackOn = MarketException.class)
+    public ResponseT<Boolean> register(@RequestBody NamePasswordRequest request){
         return userService.register(request.getName(), request.getPassword());
     }
 
     @Override
     @RequestMapping(value = "/addPersonalQuery")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response addPersonalQuery(@RequestBody AddPersonalQueryRequest request) {
         return userService.addPersonalQuery(request.getUserAdditionalQueries(), request.getUserAdditionalAnswers(), request.getMember());
     }
 
-
     @Override
     @RequestMapping(value = "/searchProductByName")
     @CrossOrigin
+    //    @Transactional(rollbackOn = Exception.class)
     public ResponseT<List<ItemFacade>> searchProductByName(@RequestBody SearchProductByNameRequest request) {
         return marketService.searchProductByName(request.getProductName());
     }
@@ -381,6 +391,8 @@ public class Service implements IService {
     @RequestMapping(value = "/isServerInit")
     @CrossOrigin
     public Response isServerInit() {
+        purchaseService = PurchaseService.getInstance();
+        userService = UserService.getInstance();
         return marketService.isServerInit();
     }
 

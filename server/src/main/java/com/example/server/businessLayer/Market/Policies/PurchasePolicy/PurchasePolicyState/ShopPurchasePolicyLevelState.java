@@ -2,12 +2,17 @@ package com.example.server.businessLayer.Market.Policies.PurchasePolicy.Purchase
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.dataLayer.repositories.ShopPolicyRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "Shop_ls")
 public class ShopPurchasePolicyLevelState extends PurchasePolicyLevelState {
+    private static ShopPolicyRep shopPolicyRep;
     @Override
     public boolean isPolicyHeld(ShoppingBasket shoppingBasket, double amount, boolean greater) throws MarketException {
         double curAmount = getAmount ( shoppingBasket ).get ( 0 );
@@ -91,5 +96,11 @@ public class ShopPurchasePolicyLevelState extends PurchasePolicyLevelState {
         return null;
     }
 
+    public static ShopPolicyRep getShopPolicyRep() {
+        return shopPolicyRep;
+    }
 
+    public static void setShopPolicyRep(ShopPolicyRep shopPolicyRep) {
+        ShopPurchasePolicyLevelState.shopPolicyRep = shopPolicyRep;
+    }
 }

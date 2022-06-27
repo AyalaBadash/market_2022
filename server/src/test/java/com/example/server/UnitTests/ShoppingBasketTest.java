@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 
 
 public class ShoppingBasketTest {
-    ShoppingBasket basket = new ShoppingBasket();
+    ShoppingBasket basket = new ShoppingBasket(1);
     @Mock
     Item item;
     @Mock
@@ -199,7 +199,7 @@ public class ShoppingBasketTest {
         Mockito.when(bid.getItemId()).thenReturn(3212);
         try {
             basket.addABid(bid);
-        } catch (MarketException e) {
+        } catch (Exception e) {
             assert false;
         }
         Assertions.assertEquals(1,basket.getBids().size());
@@ -211,7 +211,7 @@ public class ShoppingBasketTest {
         Mockito.when(bid.getItemId()).thenReturn(3212);
         try {
             basket.addABid(bid);
-        } catch (MarketException e) {
+        } catch (Exception e) {
             assert false;
         }
         basket.removeBid(3212);

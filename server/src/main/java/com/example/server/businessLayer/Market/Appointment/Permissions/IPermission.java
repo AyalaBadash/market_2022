@@ -2,7 +2,18 @@ package com.example.server.businessLayer.Market.Appointment.Permissions;
 
 import com.example.server.businessLayer.Market.Shop;
 
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "permission_type",
+        discriminatorType = DiscriminatorType.STRING
+)
 public abstract class IPermission<T> {
+    @Id
+    @GeneratedValue
+    private long id;
     protected String name;
 
     public String getName() {

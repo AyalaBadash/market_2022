@@ -5,22 +5,33 @@ import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.AcquisitionHistory;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.IHistory;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.dataLayer.repositories.MemberRep;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+@Entity
 public class Member implements IHistory {
+    @Id
     private String name;
+    @OneToOne (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private ShoppingCart myCart;
+    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     private List<Appointment> appointedByMe;
+    @ManyToMany ()
     private List<Appointment> myAppointments;
+//    @OneToMany(targetEntity =  AcquisitionHistory.class, cascade =
+//            {CascadeType.REMOVE})
+//    @JoinColumn(name = "member_name", referencedColumnName = "name")
+    @ManyToMany()
     private List<AcquisitionHistory> purchaseHistory;
-
-
+    private boolean isSystemManager = false;
+    private static MemberRep memberRep;
 
     public Member(String name) throws MarketException {
         if (name.equals("")) {
@@ -34,9 +45,15 @@ public class Member implements IHistory {
 
         this.name = name;
         myCart = new ShoppingCart();
+        if (!MarketConfig.IS_TEST_MODE) {
+            ShoppingCart.getShoppingCartRep().save(myCart);
+        }
         appointedByMe = new CopyOnWriteArrayList<>();
         myAppointments = new CopyOnWriteArrayList<>();
         purchaseHistory = new ArrayList<> (  );
+        if (!MarketConfig.IS_TEST_MODE) {
+            memberRep.save(this);
+        }
     }
 
     public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<AcquisitionHistory> purchaseHistory ){
@@ -45,6 +62,9 @@ public class Member implements IHistory {
         this.appointedByMe = appointmentedByME;
         this.myAppointments = myAppointments;
         this.purchaseHistory = purchaseHistory;
+    }
+
+    public Member(){
     }
 
 
@@ -84,7 +104,12 @@ public class Member implements IHistory {
 
     public void addAppointmentByMe(Appointment app){ this.appointedByMe.add(app);}
 
-    public void addAppointmentToMe(Appointment app){ this.myAppointments.add(app);}
+    public void addAppointmentToMe(Appointment app){
+        this.myAppointments.add(app);
+        if (!MarketConfig.IS_TEST_MODE) {
+            memberRep.save(this);
+        }
+    }
 
     public StringBuilder getPurchaseHistoryString() {
         StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
@@ -104,6 +129,9 @@ public class Member implements IHistory {
 
     public void savePurchase(AcquisitionHistory acquisitionHistory) {
         purchaseHistory.add (acquisitionHistory);
+        if (!MarketConfig.IS_TEST_MODE) {
+            memberRep.save(this);
+        }
     }
 
     @Override
@@ -117,5 +145,26 @@ public class Member implements IHistory {
         EventLog eventLog = EventLog.getInstance();
         eventLog.Log("Pulled "+this.getName()+" history");
         return history;
+    }
+
+
+
+    public static void setMemberRep(MemberRep memberRep) {
+        Member.memberRep = memberRep;
+    }
+
+    public static MemberRep getMemberRep() {
+        return memberRep;
+    }
+
+    public boolean isSystemManager() {
+        return isSystemManager;
+    }
+
+    public void setSystemManager(boolean systemManager) {
+        isSystemManager = systemManager;
+        if (!MarketConfig.IS_TEST_MODE) {
+            memberRep.save(this);
+        }
     }
 }

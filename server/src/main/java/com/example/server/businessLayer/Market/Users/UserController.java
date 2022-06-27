@@ -1,45 +1,48 @@
 package com.example.server.businessLayer.Market.Users;
 
+import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Market;
-import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.SynchronizedCounter;
+import com.example.server.businessLayer.Market.ResourcesObjects.*;
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
+import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.ShoppingCart;
-
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 public class UserController {
     private Map<String, Member> members;
+//    @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+//    @JoinTable(name = "visitors_in_market",
+//            joinColumns = {@JoinColumn(name = "us", referencedColumnName = "id")})
+//    @MapKeyColumn(name = "visitor") // the key column
     private Map<String, Visitor> visitorsInMarket;
-    //TODO synchronized next
     private SynchronizedCounter nextUniqueNumber;
     private static UserController instance;
     private long registeredMembersAvg;
     private LocalDate openingDate;
-
-
+//    private static UserControllerRep userControllerRep;
 
     public synchronized static UserController getInstance() {
         if (instance == null)
-            instance = new UserController();
+            instance = new UserController(1);
         return instance;
     }
 
-    private UserController() {
+    private UserController(int i) {
         members = new ConcurrentHashMap<>();
         visitorsInMarket = new ConcurrentHashMap<>();
         nextUniqueNumber = new SynchronizedCounter();
         this.registeredMembersAvg = 0;
         this.openingDate = LocalDate.now();
     }
+
+    public UserController(){}
+
+
 
     /**
      *
@@ -50,6 +53,9 @@ public class UserController {
         String name = getNextUniqueName();
         Visitor res = new Visitor(name,null,new ShoppingCart());
         this.visitorsInMarket.put(res.getName(),res);
+        if (!MarketConfig.IS_TEST_MODE) {
+//        userControllerRep.save(this);
+        }
         EventLog.getInstance().Log("A new visitor entered the market.");
         return res;
     }
@@ -60,7 +66,18 @@ public class UserController {
 
     public void exitSystem(String visitorName) throws MarketException {
         if (this.visitorsInMarket.containsKey(visitorName)) {
+            Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
             this.visitorsInMarket.remove(visitorName);
+            if (!MarketConfig.IS_TEST_MODE) {
+//            userControllerRep.save(this);
+            }
+            if (!MarketConfig.IS_TEST_MODE) {
+//            Visitor.getVisitorRep().delete(visitorToDelete);
+            }
+            if (!MarketConfig.IS_TEST_MODE) {
+                ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
+            }
+
             Market.getInstance ().updateBidInLoggingOut(visitorName);
             EventLog.getInstance().Log("User left the market.");
         }
@@ -72,7 +89,8 @@ public class UserController {
     }
 
     public boolean register(String userName) throws MarketException {
-        members.put(userName,new Member(userName));
+        Member newMember = new Member(userName);
+        members.put(userName,newMember);
         EventLog.getInstance().Log("Welcome to our new member: "+userName);
         return true;
     }
@@ -114,10 +132,17 @@ public class UserController {
             DebugLog.getInstance().Log("member who is not visiting tried to logout");
             throw new MarketException("not currently visiting the shop");
         }
+        Visitor visitorToDelete = this.visitorsInMarket.get(member);
         visitorsInMarket.remove(member);
         String newVisitorName = getNextUniqueName();
         Visitor newVisitor = new Visitor(newVisitorName);
         visitorsInMarket.put(newVisitorName, newVisitor);
+        if (!MarketConfig.IS_TEST_MODE) {
+//        userControllerRep.save(this);
+        }
+        if (!MarketConfig.IS_TEST_MODE) {
+//        Visitor.getVisitorRep().delete(visitorToDelete);
+        }
         EventLog.getInstance().Log("Our beloved member " + member + " logged out.");
         return newVisitorName;
     }
@@ -126,7 +151,18 @@ public class UserController {
         if(visitorsInMarket.containsKey(userName))
             throw new MarketException("member is already logged in");
         visitorsInMarket.put(userName,newVisitorMember);
-        visitorsInMarket.remove ( visitorName );
+        Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
+        visitorsInMarket.remove(visitorName);
+
+        if (!MarketConfig.IS_TEST_MODE) {
+//        userControllerRep.save(this);
+        }
+        if (!MarketConfig.IS_TEST_MODE) {
+//        Visitor.getVisitorRep().delete(visitorToDelete);
+        }
+        if (!MarketConfig.IS_TEST_MODE) {
+            ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
+        }
 
         EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();
@@ -140,6 +176,10 @@ public class UserController {
         }
         for ( Member member: members.values ()){
             member.getMyCart().removeItem( shop, itemToRemove);
+        }
+
+        if (!MarketConfig.IS_TEST_MODE) {
+//        userControllerRep.save(this);
         }
         EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
     }
@@ -161,6 +201,9 @@ public class UserController {
   
     public void setNextUniqueNumber(int nextUniqueNumber) {
         this.nextUniqueNumber.setValue(nextUniqueNumber);
+        if (!MarketConfig.IS_TEST_MODE) {
+//        userControllerRep.save(this);
+        }
     }
 
     public String getUsersInfo(){
@@ -184,6 +227,9 @@ public class UserController {
         nextUniqueNumber.reset();
     }
 
+//    public static void setUserControllerRep(UserControllerRep userControllerRep) {
+//        UserController.userControllerRep = userControllerRep;
+//    }
     public boolean allInMarket(List<String> list) {
 
         for(String name :list){
@@ -192,5 +238,20 @@ public class UserController {
             }
         }
         return true;
+    }
+
+    public void loadData(List<Member> members){
+        for (Member mem : members) {
+            this.members.put(mem.getName(), mem);
+            List<Appointment> appts = mem.getAppointedByMe();
+            for (Appointment apt : appts)
+                apt.getPermissions().toString();
+            appts.toString();
+            List<Appointment> appts2 = mem.getMyAppointments();
+            for (Appointment apt : appts2)
+                apt.getPermissions().toString();
+            appts2.toString();
+            mem.getPurchaseHistory().toString();
+        }
     }
 }

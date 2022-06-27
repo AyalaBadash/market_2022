@@ -1,27 +1,40 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Cond;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.dataLayer.repositories.ConditionalDiscountRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
 
-public class ConditionalDiscount extends DiscountType{
-    private Condition condition;
+import javax.persistence.*;
 
-    public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Condition condition) throws MarketException {
+@Entity
+@DiscriminatorValue(value = "CondDiscount")
+public class ConditionalDiscount extends DiscountType{
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.PERSIST})
+    private Cond condition;
+    private static ConditionalDiscountRep condDiscountRep;
+
+    public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Cond condition) {
         super ( percentageOfDiscount, discountLevelState );
         this.condition = condition;
+        if (!MarketConfig.IS_TEST_MODE) {
+            condDiscountRep.save(this);
+        }
     }
 
-    public Condition getCondition() {
+    public ConditionalDiscount(){}
+
+    public Cond getCondition() {
         return condition;
     }
 
-    public void setCondition(Condition condition) {
+    public void setCondition(Cond condition) {
         this.condition = condition;
     }
 
@@ -58,5 +71,13 @@ public class ConditionalDiscount extends DiscountType{
     @Override
     public DiscountTypeFacade visitToFacade(MaxCompositeDiscountTypeFacade discountFacade) {
         return null;
+    }
+
+    public static ConditionalDiscountRep getCondDiscountRep() {
+        return condDiscountRep;
+    }
+
+    public static void setCondDiscountRep(ConditionalDiscountRep condDiscountRep) {
+        ConditionalDiscount.condDiscountRep = condDiscountRep;
     }
 }

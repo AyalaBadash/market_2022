@@ -41,8 +41,8 @@ public class ItemFacade implements FacadeObject<Item>{
         this.category = item.getCategory();
         this.keywords = item.getKeywords();
         this.info = item.getInfo();
-        rank= item.getRank();
-        rankers= item.getRankers();
+        rank= item.getRnk();
+        rankers= item.getRnkers();
 
     }
 
@@ -119,4 +119,5 @@ public class ItemFacade implements FacadeObject<Item>{
     public void setRankers(int rankers) {
         this.rankers = rankers;
     }
+
 }

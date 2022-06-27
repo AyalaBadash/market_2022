@@ -4,7 +4,18 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "discout_level_state",
+        discriminatorType = DiscriminatorType.STRING
+)
 public abstract class DiscountLevelState {
+    @Id
+    @GeneratedValue
+    private long id;
 
     public abstract double calculateDiscount(ShoppingBasket shoppingBasket, double percentageOfDiscount) throws MarketException;
     public abstract boolean equals(Object object);

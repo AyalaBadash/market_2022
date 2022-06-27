@@ -1,31 +1,41 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-
-import java.lang.reflect.MalformedParameterizedTypeException;
+import com.example.server.dataLayer.repositories.BidRep;
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+@Entity
 public class Bid {
-
-
+    @Id
+    @GeneratedValue
+    private long id;
     public enum Side{
         buyer,
         seller,
         both;
-
     }
     private String buyerName;
     private boolean isMember;
     private Integer itemId;
     private double amount;
     private double price;
+    @Enumerated(EnumType.STRING)
     private Side sideNeedToApprove;
+    @Enumerated(EnumType.STRING)
     private Side suggester;
     private boolean approved;
-    private HashMap<String, Boolean> shopOwnersStatus;
+    @ElementCollection
+    @CollectionTable(name = "shopOwnersStatus")
+    @Column(name="status")
+    @MapKeyColumn(name="name")
+    private Map<String, Boolean> shopOwnersStatus;
+    private static BidRep bidRep;
     public Bid(String buyerName, boolean isMember, Integer itemId, double price, double amount, List<String> shopOwners) {
         this.buyerName = buyerName;
         this.isMember = isMember;
@@ -39,6 +49,9 @@ public class Bid {
             shopOwnersStatus.put ( shopOwnerName, false );
         }
         this.approved = false;
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
         //todo - notify shop owners
     }
 
@@ -57,6 +70,10 @@ public class Bid {
         shopOwnersStatus.put ( name, false );
         if (approved)
             approved = false;
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+
+        }
     }
 
     public void removeApproves(String firedAppointed) throws MarketException {
@@ -66,6 +83,9 @@ public class Bid {
         shopOwnersStatus.remove ( firedAppointed );
         if(isApproved () && sideNeedToApprove != Side.buyer)
             approved = true;
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
     }
 
     public synchronized boolean approveBid(String name) throws MarketException {
@@ -79,11 +99,17 @@ public class Bid {
         }
         if(sideNeedToApprove.equals ( Side.seller ) || sideNeedToApprove.equals ( Side.both )) {
             shopOwnersStatus.replace ( name, true );
+            if (!MarketConfig.IS_TEST_MODE) {
+                bidRep.save(this);
+            }
             if (isApproved ( )) {
                 if(sideNeedToApprove.equals ( Side.buyer )){
                     return false;
                 }
                 approved = true;
+                if (!MarketConfig.IS_TEST_MODE) {
+                    bidRep.save(this);
+                }
                 return true;
             }
             return false;
@@ -128,6 +154,9 @@ public class Bid {
             sideNeedToApprove = Side.both;
             approveBid ( name );
         }
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
     }
 
     public synchronized void setNewPrice(double newPrice) {
@@ -135,6 +164,9 @@ public class Bid {
             shopOwnersStatus.replace ( shopOwnerName, false );
         }
         this.price = newPrice;
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
     }
 
     public boolean isApproved() {
@@ -143,6 +175,9 @@ public class Bid {
                 return false;
         if(sideNeedToApprove.equals ( Side.both ))
             sideNeedToApprove = Side.buyer;
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
         return true;
     }
 
@@ -185,7 +220,7 @@ public class Bid {
         this.suggester = suggester;
     }
 
-    public HashMap<String, Boolean> getShopOwnersStatus() {
+    public Map<String, Boolean> getShopOwnersStatus() {
         return shopOwnersStatus;
     }
 
@@ -207,5 +242,13 @@ public class Bid {
 
     public void setMember(boolean member) {
         isMember = member;
+    }
+
+    public static BidRep getBidRep() {
+        return bidRep;
+    }
+
+    public static void setBidRep(BidRep bidRep) {
+        Bid.bidRep = bidRep;
     }
 }

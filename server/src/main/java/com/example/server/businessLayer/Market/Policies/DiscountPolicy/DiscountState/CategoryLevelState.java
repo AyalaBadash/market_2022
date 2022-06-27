@@ -6,14 +6,22 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Map;
-
+@Entity
+@DiscriminatorValue(value = "CategoryLevelState")
 public class CategoryLevelState extends DiscountLevelState {
+    @Enumerated(EnumType.STRING)
     private Item.Category category;
 
     public CategoryLevelState(Item.Category category) {
         this.category = category;
     }
+
+    public CategoryLevelState(){}
 
     @Override
     public double calculateDiscount(ShoppingBasket shoppingBasket, double percentageOfDiscount) throws MarketException {

@@ -4,12 +4,19 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
-public class PriceCondition extends Condition {
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue(value = "PriceCondition")
+public class PriceCond extends Cond {
     private double priceNeeded;
 
-    public PriceCondition(double priceNeeded) {
+    public PriceCond(double priceNeeded) {
         this.priceNeeded = priceNeeded;
     }
+
+    public PriceCond(){}
 
     /**
      *
@@ -23,8 +30,8 @@ public class PriceCondition extends Condition {
 
     @Override
     public boolean equals(Object object) {
-        if(object instanceof PriceCondition){
-            PriceCondition toCompare = (PriceCondition) object;
+        if(object instanceof PriceCond){
+            PriceCond toCompare = (PriceCond) object;
             return this.priceNeeded == toCompare.priceNeeded;
         }
         return false;

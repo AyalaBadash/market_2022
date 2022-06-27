@@ -2,13 +2,18 @@ package com.example.server.serviceLayer;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ShoppingCart;
+//import com.example.server.dataLayer.repositories.VisitorRep;
 import com.example.server.serviceLayer.FacadeObjects.ItemFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShoppingCartFacade;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.transaction.Transactional;
 
 public class PurchaseService {
     private Market market;
@@ -24,6 +29,7 @@ public class PurchaseService {
         return purchaseService;
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String visitorName) {
         try {
             Item item = itemToInsert.toBusinessObject();
@@ -46,6 +52,7 @@ public class PurchaseService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response editItemFromShoppingCart(double amount, ItemFacade itemFacade, String shopName, String visitorName) {
         try{
             Item item = new Item(itemFacade.getId(),itemFacade.getName(),itemFacade.getPrice(),itemFacade.getInfo(),itemFacade.getCategory(),itemFacade.getKeywords());
@@ -70,6 +77,7 @@ public class PurchaseService {
     }
 
 
+    @Transactional(rollbackOn = MarketException.class)
     public Response buyShoppingCart(String visitorName, double expectedPrice,
                                     PaymentMethod paymentMethod, Address address) {
         try {

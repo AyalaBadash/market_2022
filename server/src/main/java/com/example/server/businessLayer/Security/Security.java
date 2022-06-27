@@ -64,7 +64,7 @@ public class Security {
             debugLog.Log("Non member visitor tried to log in.");
             throw new MarketException("No such user name in the system - " + userName);
         }
-        if (!namesToLoginInfo.get(userName).getPassword().equals(userPassword)) {
+        if (namesToLoginInfo.get(userName).getPassword()!=(userPassword.hashCode())) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("Member " + userName + " tried to log in but has password mismatch.");
             throw new MarketException("Password mismatch");
@@ -115,8 +115,9 @@ public class Security {
         }
         else {
             LoginCard card = namesToLoginInfo.get(name);
-            Map<String, String> QA = card.getQandA();
-            QA.put(userAdditionalQueries, userAdditionalAnswers);
+//            Map<String, String> QA = card.getQandA();
+//            QA.put(userAdditionalQueries, userAdditionalAnswers);
+            card.addPrivateQuestion(userAdditionalQueries, userAdditionalAnswers);
         }
     }
 
@@ -217,5 +218,10 @@ public class Security {
 
     public void removeMember(String memberToRemove) {
         this.namesToLoginInfo.remove(memberToRemove);
+    }
+
+    public void loadData(List<LoginCard> cards){
+        for (LoginCard card : cards)
+            this.namesToLoginInfo.put(card.getName(), card);
     }
 }

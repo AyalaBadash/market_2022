@@ -5,13 +5,27 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
+import javax.persistence.*;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "PurchasePolicyType",
+        discriminatorType = DiscriminatorType.STRING,
+        length = 3000
+)
 public abstract class PurchasePolicyType {
-    PurchasePolicyLevelState purchasePolicyLevelState;
+    @Id
+    @GeneratedValue
+    private long id;
+    @OneToOne (cascade = CascadeType.ALL)
+    protected PurchasePolicyLevelState purchasePolicyLevelState;
 
     public PurchasePolicyType(PurchasePolicyLevelState purchasePolicyLevelState) {
         this.purchasePolicyLevelState = purchasePolicyLevelState;
     }
+
+    public PurchasePolicyType(){}
 
     public PurchasePolicyLevelState getPurchasePolicyLevelState() {
         return purchasePolicyLevelState;

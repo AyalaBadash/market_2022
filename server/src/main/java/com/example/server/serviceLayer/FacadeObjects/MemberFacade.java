@@ -7,6 +7,7 @@ import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.serviceLayer.MarketService;
 
 
 import java.util.ArrayList;
@@ -85,6 +86,7 @@ public class MemberFacade implements FacadeObject<Member> {
 
     @Override
     public Member toBusinessObject() throws MarketException {
+
         ShoppingCart shoppingCart = myCart.toBusinessObject ();
         List<Appointment> appointedByMe = new ArrayList<> (  );
         for(AppointmentFacade appointment : this.appointedByMe)

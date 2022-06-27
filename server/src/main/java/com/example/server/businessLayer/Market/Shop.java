@@ -2,12 +2,16 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.PendingAppointments;
 import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.CompositeDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CompositeDiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.CompositePurchasePolicyType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.CompositePurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
@@ -19,6 +23,8 @@ import com.example.server.businessLayer.Market.Users.Member;
 import org.springframework.stereotype.Component;
 
 import javax.swing.event.DocumentEvent;
+import com.example.server.dataLayer.repositories.ShopRep;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,25 +32,57 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Entity
 public class Shop implements IHistory {
+    @Id
+    @Column (name = "shop_name")
     private String shopName;
+    @ManyToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinTable (name = "allItemsInShop",
+            joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
+            inverseJoinColumns = {@JoinColumn(name = "item", referencedColumnName = "ID")})
+    @MapKeyColumn (name = "item_id")
     private Map<java.lang.Integer, Item> itemMap;             //<ItemID,main.businessLayer.Item>
+    @ManyToMany(cascade = {CascadeType.REMOVE})
+    @JoinTable (name = "shopManagers",
+            joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
+            inverseJoinColumns = {@JoinColumn(name = "appointment", referencedColumnName = "id")})
+    @MapKeyColumn (name = "member_name")
     private Map<String, Appointment> shopManagers;     //<name, appointment>
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable (name = "shopOwners",
+        joinColumns = {@JoinColumn(name = "shop", referencedColumnName = "shop_name")},
+        inverseJoinColumns = {@JoinColumn(name = "appointment", referencedColumnName = "id")})
+    @MapKeyColumn (name = "member_name")
     private Map<String, Appointment> shopOwners;     //<name, appointment>
+    @ElementCollection
+    @CollectionTable(name = "items_in_shop")
+    @MapKeyColumn(name="item_id")
+    @Column(name="amount")
     private Map<java.lang.Integer, Double> itemsCurrentAmount;
     private boolean closed;
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private PendingAppointments pendingAppointments;
 
+    private static ShopRep shopRep;
+    @OneToOne
     Member shopFounder;//todo
-    private int rank;
-    private int rankers;
+    private int rnk;
+    private int rnkers;
+    @ElementCollection
+    @Column (name = "purchase_history")
+    @CollectionTable (name = "purchase_histories")
     private List<StringBuilder> purchaseHistory;
     //TODO getter,setter,constructor
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private DiscountPolicy discountPolicy;
-
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private PurchasePolicy purchasePolicy;
-
+    @ManyToMany (cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     List<Bid> bids;
+
+    public Shop(){}
+
 
     public Shop(String name,Member founder) {
         this.shopName = name;
@@ -54,16 +92,31 @@ public class Shop implements IHistory {
         itemsCurrentAmount = new ConcurrentHashMap<>( );
         this.closed = false;
         purchaseHistory = new ArrayList<> ( );
-        rank = 1;
-        rankers = 0;
+        rnk = 1;
+        rnkers = 0;
         this.shopFounder = founder;
+        discountPolicy = new DiscountPolicy ();
+        if (!MarketConfig.IS_TEST_MODE) {
+            DiscountPolicy.getDiscountPolicyRep().save(discountPolicy);
+        }
+        purchasePolicy = new PurchasePolicy ();
+        if (!MarketConfig.IS_TEST_MODE) {
+            PurchasePolicy.getPurchasePolicyRep().save(purchasePolicy);
+        }
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
         shopOwners.put(founder.getName(), shopOwnerAppointment);
         founder.addAppointmentToMe(shopOwnerAppointment);
         discountPolicy = new DiscountPolicy ();
         purchasePolicy = new PurchasePolicy ();
         this.pendingAppointments = new PendingAppointments();
+        if (!MarketConfig.IS_TEST_MODE) {
+            PendingAppointments.getPendingAptsRep().save(pendingAppointments);
+        }
         bids = new ArrayList<> (  );
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
+        shopOwnerAppointment.setRelatedShop(this);
     }
 
     public void editManagerPermission(String superVisorName, String managerName, Appointment appointment) throws MarketException {
@@ -83,6 +136,11 @@ public class Shop implements IHistory {
             DebugLog.getInstance ( ).Log ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
             throw new MarketException ( String.format ( "%s is not the supervisor of %s so is not authorized to change the permissions", superVisorName, managerName ) );
         }
+//        this.shopManagers.put ( managerName, appointment );
+        shopManagers.get(managerName).setPermissions(appointment.getPermissions());
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         this.shopManagers.put ( managerName, appointment );
         if(appointment.hasPermission ( "ApproveBidPermission" )){
             for(Bid bid : bids){
@@ -98,8 +156,9 @@ public class Shop implements IHistory {
         int oldItemId = java.lang.Integer.parseInt(id);
         if (newItemId != oldItemId)
             throw new MarketException ( "must not change the item id" );
-        itemMap.put ( newItem.getID ( ), newItem );
+        itemMap.put( newItem.getID ( ), newItem );
     }
+
 
 
     public void deleteItem(Item item, String shopOwnerName) throws MarketException {
@@ -110,6 +169,9 @@ public class Shop implements IHistory {
         }
         itemMap.remove ( item.getID() );
         itemsCurrentAmount.remove ( item.getID () );
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         for(Bid bid : bids){
             if(bid.getItemId () == item.getID ()) {
                 bid.rejectBid ( shopOwnerName );
@@ -146,6 +208,9 @@ public class Shop implements IHistory {
             throw new MarketException("item does not exist in the shop");
         }
         itemsCurrentAmount.replace ( item, amount );
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
     /*
     public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
@@ -179,13 +244,16 @@ public class Shop implements IHistory {
 
 
     public void releaseItems(ShoppingBasket shoppingBasket) throws MarketException {
-        Map<java.lang.Integer, Double> items = shoppingBasket.getItems ( );
+        Map<java.lang.Integer, Double> items = shoppingBasket.getItems( );
         for ( Map.Entry<java.lang.Integer, Double> itemAmount : items.entrySet ( ) ) {
 //            Item currItem = itemAmount.getKey ( );
             if(itemsCurrentAmount.get(itemAmount.getKey()) == null)
                 throw new MarketException("shopping basket holds an item which does not exist in market");
             Double newAmount =this.itemsCurrentAmount.get ( itemAmount.getKey() )+  itemAmount.getValue ( );//
             this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
+        }
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
         }
     }
 
@@ -231,6 +299,10 @@ public class Shop implements IHistory {
             }
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         //send notifications to shop owners:
         try{
             publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
@@ -353,6 +425,9 @@ public class Shop implements IHistory {
                     items.replace(entry.getKey(),curAmount);
             }
         }
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         return basket;
     }
 
@@ -442,6 +517,10 @@ public class Shop implements IHistory {
                     }
             }
         }
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
     private String getRole(Appointment newAppointment){
@@ -524,9 +603,16 @@ public class Shop implements IHistory {
             if (itemNameExists(itemName))
                 throw new MarketException("different item with the same name already exists in this shop");
             addedItem = new Item(id, itemName, price, info, category, keywords);
-            itemMap.put ( id, addedItem );
+            itemMap.put( id, addedItem );
         }
         itemsCurrentAmount.put ( id, amount );
+        if (!MarketConfig.IS_TEST_MODE) {
+//        itemRepository.save(addedItem.toDalObject()); //todo
+        }
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         return addedItem;
     }
 
@@ -539,12 +625,12 @@ public class Shop implements IHistory {
     }
 
     public void addRank(int rankN) {
-        rank = ((rank * rankers) + rankN) / (rankers + 1);
-        rankers++;
+        rnk = ((rnk * rnkers) + rankN) / (rnkers + 1);
+        rnkers++;
     }
 
-    public int getRank() {
-        return rank;
+    public int getRnk() {
+        return rnk;
     }
 
     public void changeShopItemInfo(String shopOwnerName, String info, java.lang.Integer oldItemID) throws MarketException {
@@ -554,6 +640,10 @@ public class Shop implements IHistory {
         if (item == null)
             throw new MarketException ( "item does not exist in shop" );
         item.setInfo(info);
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
 //    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
@@ -582,7 +672,12 @@ public class Shop implements IHistory {
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         }
         ShopOwnerAppointment appointment = new ShopOwnerAppointment ( appointedShopOwner, shopOwner, this, false );
+        appointment.setRelatedShop(this);
         addEmployee ( appointment );
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
     public void appointShopManager(Member shopOwner, Member appointed) throws MarketException {
@@ -596,6 +691,10 @@ public class Shop implements IHistory {
         appointment.addAllPermissions();
         appointed.addAppointmentToMe(appointment);
         addEmployee ( appointment );
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
     private boolean isShopManager(String name) {
@@ -649,6 +748,10 @@ public class Shop implements IHistory {
         }
         shopOwners.remove(firedAppointed);
         removeFiredOwnerFromPending(firedAppointed);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
+    }
 
 
     }
@@ -668,8 +771,18 @@ public class Shop implements IHistory {
         }
         discountPolicy.addNewDiscount ( discountType );
         EventLog.getInstance().Log("Added a new discount to the shop:"+shopName);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
+    public boolean hasItem(Item item) {
+        return itemMap.get(item.getID()) != null;
+    }
+
+    public static void setShopRep(ShopRep shopRepToSet){
+        shopRep = shopRepToSet;
+    }
     public synchronized void removeDiscountFromShop(String visitorName, DiscountType discountType) throws MarketException {
         if (!isShopOwner ( visitorName )) {
             DebugLog.getInstance().Log("member is not the shop owner so not authorized to add a discount to the shop");
@@ -725,6 +838,7 @@ public class Shop implements IHistory {
         }
         Bid bid = new Bid (visitorName,UserController.getInstance ().isMember ( visitorName ), itemId, price, amount, approvingAppointments);
         bids.add ( bid );
+        shopRep.save(this);
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = item.getName ();
         handler.sendNewBidToApprovalOfApprovesNotificationBatch ( approvingAppointments, visitorName, price, itemName, shopName);
@@ -757,7 +871,8 @@ public class Shop implements IHistory {
     }
 
     public void suggestNewOfferToBid(String suggester, String askedBy, int itemId, double newPrice) throws MarketException {
-        if((shopManagers.get ( suggester ) == null || shopManagers.get ( suggester ).hasPermission ( "ApproveBidPermission" )) && (shopOwners.get ( suggester ) == null)){
+        if((shopManagers.get ( suggester ) == null || shopManagers.get ( suggester ).hasPermission
+                ( "ApproveBidPermission" )) && (shopOwners.get ( suggester ) == null)){
             DebugLog.getInstance ().Log ( "visitor does not has the authority to suggest a counter-bid." );
             throw new MarketException ( "visitor does not has the authority to suggest a counter-bid." );
         }
@@ -765,7 +880,8 @@ public class Shop implements IHistory {
         bidToApprove.suggestNewOffer ( suggester, newPrice );
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = itemMap.get ( itemId ).getName ();
-        handler.sendNewOfferOfBidToApprovalOfApprovesNotificationBatch ( bidToApprove.getShopOwnersStatus ().keySet ().stream( ).toList (), bidToApprove.getBuyerName (), newPrice, itemName, shopName );
+        handler.sendNewOfferOfBidToApprovalOfApprovesNotificationBatch ( bidToApprove.getShopOwnersStatus ().
+                keySet ().stream( ).toList (), bidToApprove.getBuyerName (), newPrice, itemName, shopName );
         EventLog.getInstance().Log("The owner: "+suggester+" offered a counter - bid for the buyer:"+askedBy);
     }
 
@@ -825,6 +941,14 @@ public class Shop implements IHistory {
         return purchasePolicy;
     }
 
+    public Map<Integer, Double> getItemsCurrentAmount() {
+        return itemsCurrentAmount;
+    }
+
+    public List<StringBuilder> getPurchaseHistory() {
+        return purchaseHistory;
+    }
+
     public double calculateDiscount(ShoppingBasket shoppingBasket) throws MarketException {
         return discountPolicy.calculateDiscount ( shoppingBasket );
     }
@@ -859,6 +983,7 @@ public class Shop implements IHistory {
             ShopOwnerAppointment appointment = pendingAppointments.getAppointments().get(appointedName);
             shopOwners.put(appointedName, appointment);
             pendingAppointments.removeAppointment(appointedName);
+            shopRep.save(this);
             EventLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
             for (Bid bid : bids) {
                 bid.addApproves(appointedName);
@@ -913,6 +1038,7 @@ public class Shop implements IHistory {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+        shopRep.save(this);
     }
 
     public void setShopManagers(Map<String, Appointment> shopManagers) {
@@ -924,5 +1050,41 @@ public class Shop implements IHistory {
     }
     public void setPendingAppointments(PendingAppointments pendingAppointments) {
         this.pendingAppointments = pendingAppointments;
+    }
+
+    public PendingAppointments getPendingAppointments() {
+        return pendingAppointments;
+    }
+
+    public void loadData(){
+        getItemMap().toString();
+        getItemsCurrentAmount().toString();
+        getPurchaseHistory().toString();
+
+        for (Appointment a : getEmployees().values()) {
+            a.setRelatedShop(this); //set related shop in appointment
+            a.getPermissions().toString();
+        }
+        bids.toString();
+        List<DiscountType> dscnts = getDiscountPolicy().getValidDiscounts();
+        dscnts.toString();
+        for (DiscountType dt : dscnts){
+            if (dt.getDiscountLevelState() instanceof CompositeDiscountLevelState)
+                ((CompositeDiscountLevelState) dt.getDiscountLevelState()).getDiscountLevelStates().toString();
+            if (dt instanceof CompositeDiscount)
+                ((CompositeDiscount) dt).getDiscountTypes().toString();
+        }
+        getDiscountPolicy().toString();
+        getPurchasePolicies().toString();
+        for (PurchasePolicyType p : getPurchasePolicies()) {
+            if (p instanceof CompositePurchasePolicyType)
+                ((CompositePurchasePolicyType) p).getPolicies().toString();
+            if (p.getPurchasePolicyLevelState() instanceof CompositePurchasePolicyLevelState)
+                ((CompositePurchasePolicyLevelState) p.getPurchasePolicyLevelState()).getPurchasePolicyLevelStates().toString();
+        }
+
+        getPurchasePolicy().toString();
+        getPendingAppointments().getAppointments().toString();
+        getPendingAppointments().getAgreements().toString();
     }
 }

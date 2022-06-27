@@ -8,9 +8,20 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDis
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.MaxCompositeDiscountTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscountFacade;
+import javax.persistence.*;
 
-public abstract class  DiscountType {
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "discount_type",
+        discriminatorType = DiscriminatorType.STRING
+)
+public abstract class DiscountType {
+    @Id
+    @GeneratedValue
+    private long id;
     protected double percentageOfDiscount;
+    @OneToOne(cascade = CascadeType.ALL)
     protected DiscountLevelState discountLevelState;
 
     public DiscountType(double percentageOfDiscount, DiscountLevelState discountLevelState) throws MarketException {

@@ -1,16 +1,24 @@
 package com.example.server.businessLayer.Market;
 
-import com.example.server.businessLayer.Market.Appointment.Appointment;
-
-import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
-import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
+import com.example.server.businessLayer.Market.Appointment.*;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.CompositeDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.AndCompositeDiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CompositeDiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.SimpleDiscount;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.CategoryPurchasePolicyLevelState;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.CompositePurchasePolicyLevelState;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
 import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
+import com.example.server.businessLayer.Security.LoginCard;
 import com.example.server.businessLayer.Supply.Address;
 import com.example.server.businessLayer.Payment.PaymentMethod;
 import com.example.server.businessLayer.Supply.SupplyService;
@@ -23,20 +31,26 @@ import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
+import com.example.server.dataLayer.repositories.*;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Transient;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Component
 public class Market {
     private UserController userController;
     private String systemManagerName;
     private Map<String, Shop> shops;                                 // <shopName, shop>
+
     private NotificationHandler notificationHandler;
     private Map<java.lang.Integer, String> allItemsInMarketToShop;             // <itemID,ShopName>
     private Map<String, List<java.lang.Integer>> itemByName;                   // <itemName ,List<itemID>>
@@ -46,6 +60,34 @@ public class Market {
     private Publisher publisher;
     private static Market instance;
     Map<String, Integer> numOfAcqsPerShop;
+    private boolean loadedFromDB = false;
+
+    @Autowired @Transient private ItemRep itemRep;
+    @Autowired @Transient private ShopRep shopRep;
+    @Autowired @Transient private ShoppingCartRep shoppingCartRep;
+    @Autowired @Transient private ShoppingBasketRep shoppingBasketRep;
+    @Autowired @Transient private MemberRep memberRep;
+    @Autowired @Transient private AcquisitionRep acquisitionRep;
+    @Autowired @Transient private AcquisitionHistoryRep acquisitionHistoryRep;
+    @Autowired @Transient private ClosedShopsHistoryRep closedShopsHistoryRep;
+    @Autowired @Transient private LoginCardRep loginCardRep;
+    @Autowired @Transient private ShopManagerAppointmentRep shopManagerAppointmentRep;
+    @Autowired @Transient private ShopOwnerAppointmentRep shopOwnerAppointmentRep;
+    @Autowired @Transient private ItemAckHistRep itemAckHistRep;
+    @Autowired @Transient private AckHisRep ackHisRep;
+    @Autowired @Transient private SimpleDiscountRep simpleDiscountRep;
+    @Autowired @Transient private ConditionalDiscountRep condDiscountRep;
+    @Autowired @Transient private BidRep bidRep;
+    @Autowired @Transient private AgreementRep agreementRep;
+    @Autowired @Transient private PendingAppointmentsRep pendingAptsRep;
+    @Autowired @Transient private DiscountPolicyRep discountPolicyRep;
+    @Autowired @Transient private MaxCompDiscountRep maxCompDiscountRep;
+    @Autowired @Transient private OrTypePolicyRep orTypePolicyRep;
+    @Autowired @Transient private AtMostPolicyRep atMostPolicyRep;
+    @Autowired @Transient private AtLeastPolicyRep atLeastPolicyRep;
+    @Autowired @Transient private PurchasePolicyRep purchasePolicyRep;
+    @Autowired @Transient private CategoryPolicyRep categoryPolicyRep;
+    @Autowired @Transient private AndCompDRep andCompDRep;
 
     private Statistics statistics;
 
@@ -61,43 +103,168 @@ public class Market {
         publisher = null;
         notificationHandler = null;
         statistics=Statistics.getInstance();
+        notificationHandler=null;
+        instance = this;
     }
-
 
     public synchronized static Market getInstance() {
         if (instance == null) {
             instance = new Market();
+            instance.initRepositories();
         }
+        instance.initRepositories();
         return instance;
     }
 
-    /**
-     * init system from default files. With given system manager details.
-     *
-     * @param userName the system manager username
-     * @param password the system manager password.
-     * @throws MarketException
-     */
-    public synchronized void firstInitMarket(String userName, String password) throws MarketException {
 
+    private void initRepositories() {
+        Item.setItemRep(itemRep);
+        Shop.setShopRep(shopRep);
+        ShoppingBasket.setShoppingBasketRep(shoppingBasketRep);
+        ShoppingCart.setShoppingCartRep(shoppingCartRep);
+        Member.setMemberRep(memberRep);
+        Acquisition.setAcquisitionRep(acquisitionRep);
+        AcquisitionHistory.setAcquisitionHistoryRep(acquisitionHistoryRep);
+        ClosedShopsHistory.setClosedShopsHistoryRep(closedShopsHistoryRep);
+        LoginCard.setLoginCardRep(loginCardRep);
+        ShopManagerAppointment.setShopManagerAppointmentRep(shopManagerAppointmentRep);
+        ShopOwnerAppointment.setShopOwnerAppointmentRep(shopOwnerAppointmentRep);
+        ItemAcquisitionHistory.setItemAckHistRep(itemAckHistRep);
+        SimpleDiscount.setSimpleDiscountRep(simpleDiscountRep);
+        ConditionalDiscount.setCondDiscountRep(condDiscountRep);
+        Bid.setBidRep(bidRep);
+        Agreement.setAgreementRep(agreementRep);
+        PendingAppointments.setPendingAptsRep(pendingAptsRep);
+        DiscountPolicy.setDiscountPolicyRep(discountPolicyRep);
+        MaxCompositeDiscount.setMaxCompDiscountRep(maxCompDiscountRep);
+        OrCompositePurchasePolicyType.setOrTypePolicyRep(orTypePolicyRep);
+        AtMostPurchasePolicyType.setAtMostPolicyRep(atMostPolicyRep);
+        AtLeastPurchasePolicyType.setAtLeastPolicyRep(atLeastPolicyRep);
+        PurchasePolicy.setPurchasePolicyRep(purchasePolicyRep);
+        CategoryPurchasePolicyLevelState.setCategoryPolicyRep(categoryPolicyRep);
+        AndCompositeDiscountLevelState.setAndCompDRep(andCompDRep);
+    }
+
+    public synchronized void firstInitMarket(String userName, String password) throws MarketException {
         try {
             if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
                 DebugLog.getInstance().Log("A market initialization failed .already initialized");
                 throw new MarketException("market is already initialized");
             }
+            initRepositories();
+//            loadData();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
                 if(instance.systemManagerName == null) {
                     instance.systemManagerName = userName;
                     statistics.setSystemManager(userName);
+                    userController.getMember(userName).setSystemManager(true);
                 }
-            }
             checkSystemInit();
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("A market has been initialized successfully");
         } catch (MarketException e) {
             throw e;
+        }
+    }
+
+
+    private void readInitFile(String fileName) throws MarketException {
+        File myObj = new File(getConfigDir() + fileName);
+        if (!myObj.exists()) {
+            throw new MarketException("Data file does not exists.");
+        }
+        Scanner myReader ;
+        try {
+            myReader = new Scanner(myObj);
+        } catch (FileNotFoundException e) {
+            throw new MarketException("Init data file not found.");
+        }
+        while (myReader.hasNextLine()) {
+            String data = myReader.nextLine();
+            String[] vals = data.split("::");
+            setData(vals);
+        }
+
+    }
+
+    private void readConfigurationFile(String name) throws MarketException{
+        File myObj = new File(getConfigDir() + name);
+        if (!myObj.exists()) {
+            throw new MarketException("Services configurations file does not exists.");
+        }
+        try{
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] vals = data.split("::");
+                setService(vals[0], vals[1]);
+            }
+        } catch (FileNotFoundException e){
+            throw new MarketException("file not found while reading configuration file");
+        }
+        if (paymentServiceProxy == null || supplyServiceProxy == null) {
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
+            throw new MarketException("market needs payment and supply services for initialize");
+        }
+        if (publisher == null) {
+            DebugLog debugLog = DebugLog.getInstance();
+            debugLog.Log("A market initialization failed . Lack of publisher services ");
+            throw new MarketException("market needs publisher services for initialize");
+
+        }
+
+    }
+
+    /**
+     * init service by the line from config file.
+     *
+     * @param val  the service name to initial.
+     * @param val1 the instance type of the service.
+     * @throws MarketException
+     */
+    private void setService(String val, String val1) throws MarketException {
+        if (val.contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
+            initPaymentService(val1);
+        } else if (val.contains(MarketConfig.SUPPLY_SERVICE_NAME)) {
+            initSupplyService(val1);
+        } else if (val.contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
+            initNotificationService(val1);
+        } else {
+            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty()))
+                initManager(val, val1);
+        }
+    }
+
+    private void initManager(String val, String val1) throws MarketException {
+
+        register(val, val1);
+        instance.systemManagerName = val;
+    }
+
+    private void initNotificationService(String val) throws MarketException {
+
+        if (MarketConfig.IS_TEST_MODE) {
+            publisher = TextDispatcher.getInstance();
+        } else if (val.contains(MarketConfig.NOTIFICATIONS_PUBLISHER)) {
+            publisher = NotificationDispatcher.getInstance();
+        } else if (val.contains(MarketConfig.TEXT_PUBLISHER)) {
+            publisher = TextDispatcher.getInstance();
+        } else {
+            throw new MarketException("Failed to init notification service");
+        }
+        notificationHandler = NotificationHandler.getInstance();
+        notificationHandler.setService(publisher);
+    }
+
+    private void initSupplyService(String val) throws MarketException {
+
+        if (val.contains(MarketConfig.WSEP_SERVICE)) {
+            supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), false);
+        } else {
+            throw new MarketException("Failed to init payment service");
         }
     }
 
@@ -154,7 +321,7 @@ public class Market {
         return history;
     }
 
-
+    @Transactional(rollbackOn = MarketException.class)
     public void register(String name, String password) throws MarketException {
         Security security = Security.getInstance();
         security.validateRegister(name, password);
@@ -419,6 +586,7 @@ public class Market {
         }
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
             //shops.remove(shopName);
+            //todo
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
@@ -446,6 +614,10 @@ public class Market {
         Item itemToDelete = shop.getItemMap().get(itemID);
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         shop.deleteItem(itemToDelete, shopOwnerName);
+        if (!MarketConfig.IS_TEST_MODE) {
+            Item.getItemRep().delete(itemToDelete);
+        }
+        userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
@@ -462,6 +634,9 @@ public class Market {
         try {
             Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment());
             updateMarketOnAddedItem(addedItem, shopName);
+            if (!MarketConfig.IS_TEST_MODE) {
+//            shopRepository.save(shop.getDalObject()); //todo
+            }
             EventLog.getInstance().Log("Item added to shop " + shopName);
             return shop;
         } catch (MarketException e) {
@@ -487,6 +662,9 @@ public class Market {
             throw new MarketException("shop does not exist in system");
         }
         shop.setItemAmount(shopOwnerName, item.getID(), amount);
+        if (!MarketConfig.IS_TEST_MODE) {
+//        shopRepository.save(shop.getDalObject()); //todo
+        }
         EventLog.getInstance().Log("Item " + item.getName() + " amount has been updated.");
     }
 
@@ -597,6 +775,9 @@ public class Market {
             throw new MarketException("Cannot add item that does not exists in the shop.");
         }
         shoppingCart.addItem(curShop, item, amount);
+        if (!MarketConfig.IS_TEST_MODE) {
+//        shoppingCartRepository.save(shoppingCart.toDalObject());
+        }
         EventLog.getInstance().Log(amount + " " + item.getName() + " added to cart.");
     }
 
@@ -753,7 +934,9 @@ public class Market {
         if (shop == null)
             throw new MarketException("shop does not exist in the market");
         shop.editItem(newItem, id);
-
+        if (!MarketConfig.IS_TEST_MODE) {
+//        itemRepository.save(newItem.toDalObject()); //todo
+        }
     }
 
     public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
@@ -889,6 +1072,7 @@ public class Market {
     }
 
 
+    //TODO dal
     public void removeMember(String manager, String memberToRemove) throws MarketException {
         if (manager.equals(memberToRemove)) {
             DebugLog.getInstance().Log("You cant remove yourself.");
@@ -996,13 +1180,17 @@ public class Market {
     }
 
     public boolean isInit() throws MarketException {
-
+        initRepositories();
         if (MarketConfig.USING_DATA) {
             readDataSourceConfig();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             readInitFile(MarketConfig.DATA_FILE_NAME);
             MarketConfig.USING_DATA=false;
             return true;
+        }
+        if (!loadedFromDB) {
+            loadData();
+            loadedFromDB = true;
         }
         checkSystemInit();
         return this.systemManagerName != null && !this.systemManagerName.equals("");
@@ -1380,6 +1568,50 @@ public class Market {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("you must be a visitor in the market in order to make actions");
             throw new MarketException("you must be a visitor in the market in order to make actions");
+        }
+    }
+
+    public void loadData(){
+        List<Item> items = itemRep.findAll();
+        List<Member> members = memberRep.findAll();
+        shopOwnerAppointmentRep.findAll();
+        shopManagerAppointmentRep.findAll();
+        for (ShoppingBasket basket : shoppingBasketRep.findAll()) {
+            basket.getItems().toString();
+            basket.getItemMap().toString();
+        }
+        memberRep.findAll();
+        List<Shop> shops = shopRep.findAll();
+        List<LoginCard> cards = loginCardRep.findAll();
+        itemRep.findAll();
+        bidRep.findAll();
+        shopRep.findAll();
+        loginCardRep.findAll();
+        Security.getInstance().loadData(cards);
+        userController.loadData(members);
+
+        for (Shop shop : shops) {
+            this.shops.put(shop.getShopName(), shop); //init shops
+            for (Integer itemid : shop.getItemMap().keySet())
+                this.allItemsInMarketToShop.put(itemid, shop.getShopName()); //init allItemsInShop
+            shop.loadData();
+        }
+
+        int largestItemId = 1;
+        for (Item item : items){
+            itemByName.computeIfAbsent(item.getName(), k -> new ArrayList<>());
+            itemByName.get(item.getName()).add(item.getID()); //init itemBtName
+
+            if (item.getID() > largestItemId) //find largest item id
+                largestItemId = item.getID();
+        }
+        this.nextItemID.setValue(largestItemId + 1);
+
+        for (Member mem : members){ //find system manager
+            if (mem.isSystemManager()) {
+                this.systemManagerName = mem.getName();
+                break;
+            }
         }
     }
 

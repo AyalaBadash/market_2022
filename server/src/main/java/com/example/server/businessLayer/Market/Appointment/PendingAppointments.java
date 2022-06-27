@@ -2,21 +2,42 @@ package com.example.server.businessLayer.Market.Appointment;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.repositories.PendingAppointmentsRep;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Entity
 public class PendingAppointments {
+    @Id
+    @GeneratedValue
+    private long id;
+    @ManyToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinTable(name = "pending_appointments_agreements",
+            joinColumns = {@JoinColumn(name = "PendingAppointments", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "Agreement", referencedColumnName = "id")})
+    @MapKeyColumn (name = "AppointedName")
     private Map<String ,Agreement> agreements;// <AppointedName , agreement>
+    @ManyToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinTable(name = "pending_appointments_appts",
+            joinColumns = {@JoinColumn(name = "PendingAppointments_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "ShopOwnerAppointment", referencedColumnName = "id")})
+    @MapKeyColumn (name = "AppointedName")
     private Map<String,ShopOwnerAppointment> appointments; // <AppointedName , appointment>
+    private static PendingAppointmentsRep pendingAptsRep;
 
     public PendingAppointments(Map<String ,Agreement> agreements, Map<String, ShopOwnerAppointment> appointments) {
         this.agreements = agreements;
         this.appointments = appointments;
+        if (!MarketConfig.IS_TEST_MODE) {
+            pendingAptsRep.save(this);
+        }
     }
+
     public PendingAppointments(){
         this.appointments = new HashMap<>();
         this.agreements = new HashMap<>();
@@ -30,6 +51,9 @@ public class PendingAppointments {
         }
         appointments.remove(appointedName);
         agreements.remove(appointedName);
+        if (!MarketConfig.IS_TEST_MODE) {
+            pendingAptsRep.save(this);
+        }
         EventLog.getInstance().Log("Appointment for " +appointedName+" has been removed.");
     }
 
@@ -38,6 +62,9 @@ public class PendingAppointments {
         Agreement agreement = new Agreement(owners);
         this.agreements.put(appointedName,agreement);
         this.agreements.get(appointedName).setOwnerApproval(appointment.getSuperVisor().getName(),true);
+        if (!MarketConfig.IS_TEST_MODE) {
+            pendingAptsRep.save(this);
+        }
         EventLog.getInstance().Log("Appointment for " +appointedName+" has been added.");
     }
 
@@ -95,6 +122,17 @@ public class PendingAppointments {
                 completed.add(entry.getKey());
             }
         }
+        if (!MarketConfig.IS_TEST_MODE) {
+            pendingAptsRep.save(this);
+        }
         return completed;
+    }
+
+    public static PendingAppointmentsRep getPendingAptsRep() {
+        return pendingAptsRep;
+    }
+
+    public static void setPendingAptsRep(PendingAppointmentsRep pendingAptsRep) {
+        PendingAppointments.pendingAptsRep = pendingAptsRep;
     }
 }

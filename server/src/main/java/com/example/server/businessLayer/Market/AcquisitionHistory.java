@@ -1,67 +1,30 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
+import com.example.server.dataLayer.entities.DalAcquisitionHistory;
+import com.example.server.dataLayer.entities.DalItemAcquisitionHistory;
+import com.example.server.dataLayer.entities.DalShoppingBasket;
+import com.example.server.dataLayer.repositories.AcquisitionHistoryRep;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-class ItemAcquisitionHistory {
-    String shopName;
-    String itemName;
-    double amount;
-    double totalPriceForItem;
-
-    public ItemAcquisitionHistory(String shopName, String itemName, double amount, double totalPriceForItem) {
-        this.shopName = shopName;
-        this.itemName = itemName;
-        this.amount = amount;
-        this.totalPriceForItem = totalPriceForItem;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public void setTotalPriceForItem(double totalPriceForItem) {
-        this.totalPriceForItem = totalPriceForItem;
-    }
-
-    public String getShopName() {
-        return shopName;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public double getTotalPriceForItem() {
-        return totalPriceForItem;
-    }
-
-    @Override
-    public String toString() {
-        return "You bought : "+amount + " "+ itemName+" in the shop : "+ shopName+". Total price for this item:"+totalPriceForItem+"\n";
-    }
-}
 //--------------------------------------------------------------------------------------------------------------------
-
+@Entity
 public class AcquisitionHistory {
+    @Id
+    @GeneratedValue
+    private long id;
     private String name;
     private double totalPriceBeforeDiscount;
     private double discount;
     private double totalPriceAfterDiscount;
+    @OneToMany(targetEntity =  ItemAcquisitionHistory.class, cascade = {CascadeType.REMOVE})
+    @JoinColumn(name = "AcquisitionHistory_id", referencedColumnName = "id")
     private List<ItemAcquisitionHistory> itemAcquisitionHistories;
+    private static AcquisitionHistoryRep acquisitionHistoryRep;
 
     public AcquisitionHistory(ShoppingCart cart , String name, double totalPriceAfterDiscount, double totalPriceBeforeDiscount)
     {
@@ -81,8 +44,12 @@ public class AcquisitionHistory {
                 itemAcquisitionHistories.add(acq);
             }
         }
-
+        if (!MarketConfig.IS_TEST_MODE) {
+            acquisitionHistoryRep.save(this);
+        }
     }
+
+    public AcquisitionHistory(){}
 
     public List<ItemAcquisitionHistory> getItemAcquisitions() {
         return itemAcquisitionHistories;
@@ -98,6 +65,17 @@ public class AcquisitionHistory {
         for (ItemAcquisitionHistory acq : itemAcquisitionHistories)
             str.append(acq.toString());
         return str.toString();
+    }
+    public DalAcquisitionHistory toDalObject(){
+        List<DalItemAcquisitionHistory> itemAcqLst = new ArrayList<>();
+        for (ItemAcquisitionHistory itemAcq : this.itemAcquisitionHistories)
+        {
+            itemAcqLst.add(itemAcq.ToDalObject());
+        }
+        return new DalAcquisitionHistory(this.name,this.totalPriceBeforeDiscount,this.discount,this.totalPriceAfterDiscount,itemAcqLst);
+    }
 
+    public static void setAcquisitionHistoryRep(AcquisitionHistoryRep acquisitionHistoryRep) {
+        AcquisitionHistory.acquisitionHistoryRep = acquisitionHistoryRep;
     }
 }
