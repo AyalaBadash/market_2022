@@ -16,6 +16,7 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchaseP
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.PurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.ShopPurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.PurchasePolicyTypeWrapper;
@@ -51,7 +52,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
 
 
     @BeforeAll
-    public static void shopSetup() {
+    public static void shopSetup() throws MarketException {
         steakName = "steak";
         steakCategory = Item.Category.meat;
         steakKeywords = new ArrayList<>();

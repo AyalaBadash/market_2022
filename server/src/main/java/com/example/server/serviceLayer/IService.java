@@ -364,14 +364,14 @@ public interface IService {
     public Response isServerInit();
 
     /**
-     *
+     *  user sends new bid to shop
      * @param request
      * @return
      */
     public Response addABid(AddABidRequest request);
 
     /**
-     *
+     *  owner/user approves the bid
      * @param request
      * @return
      */
@@ -379,21 +379,21 @@ public interface IService {
 
 
     /**
-     *
+     *  owner suggest new offer - all other owner must approve it
      * @param request
      * @return
      */
     Response suggestNewOfferToBid(SuggestNewOfferToBidRequest request);
 
     /**
-     *
+     *  owner/user may reject the request
      * @param request
      * @return
      */
     Response rejectABid(RejectABidRequest request);
 
     /**
-     *
+     *  user revert his bid
      * @param request
      * @return
      */

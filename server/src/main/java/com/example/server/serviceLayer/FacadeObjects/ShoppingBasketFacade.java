@@ -1,5 +1,6 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
+import com.example.server.businessLayer.Market.Bid;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
@@ -18,11 +19,14 @@ public class ShoppingBasketFacade implements FacadeObject<ShoppingBasket> {
 
     Map<java.lang.Integer,Double> items;//<Item,quantity>
     Map<java.lang.Integer,ItemFacade> itemMap;
+    private HashMap<Integer, BidFacade> bids;
+
     double price;
 
-    public ShoppingBasketFacade(Map<java.lang.Integer, Double> items, Map<java.lang.Integer, ItemFacade> itemMap, double price) {
+    public ShoppingBasketFacade(Map<Integer, Double> items, Map<Integer, ItemFacade> itemMap, HashMap<Integer, BidFacade> bids, double price) {
         this.items = items;
         this.itemMap = itemMap;
+        this.bids = bids;
         this.price = price;
     }
 
@@ -35,6 +39,10 @@ public class ShoppingBasketFacade implements FacadeObject<ShoppingBasket> {
         for(Map.Entry<java.lang.Integer, Item> item : shoppingBasket.getItemMap().entrySet()){
             itemMap.put(item.getKey(), new ItemFacade((item.getValue())));
         }
+        bids = new HashMap<>();
+        for(Map.Entry<Integer, Bid> bid : shoppingBasket.getBids().entrySet()){
+            bids.put(bid.getKey(), new BidFacade((bid.getValue())));
+        }
     }
 
     public Map<java.lang.Integer, Double> getItems() {
@@ -43,6 +51,23 @@ public class ShoppingBasketFacade implements FacadeObject<ShoppingBasket> {
 
     public void setItems(Map<java.lang.Integer, Double> items) {
         this.items = items;
+    }
+
+
+    public HashMap<Integer, BidFacade> getBids() {
+        return bids;
+    }
+
+    public void setBids(HashMap<Integer, BidFacade> bids) {
+        this.bids = bids;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     @Override

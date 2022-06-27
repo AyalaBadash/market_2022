@@ -12,7 +12,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscount
 public class ConditionalDiscount extends DiscountType{
     private Condition condition;
 
-    public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Condition condition) {
+    public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Condition condition) throws MarketException {
         super ( percentageOfDiscount, discountLevelState );
         this.condition = condition;
     }

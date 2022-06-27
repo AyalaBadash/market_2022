@@ -3,7 +3,6 @@ package com.example.server.serviceLayer.Requests;
 public class SuggestNewOfferToBidRequest {
     private String shopName;
     private String suggester;
-
     private String askedBy;
     private int itemId;
     private double newPrice;

@@ -215,7 +215,7 @@ public class Shop implements IHistory {
             }
         }
         if (failed) {
-            throw new MarketException ( missingMessage );
+            throw new MarketException ( "" + missingMessage );
         }
         for ( Map.Entry<java.lang.Integer, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());

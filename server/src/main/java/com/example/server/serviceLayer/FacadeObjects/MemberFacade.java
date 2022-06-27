@@ -75,6 +75,14 @@ public class MemberFacade implements FacadeObject<Member> {
         this.myAppointments = myAppointments;
     }
 
+    public List<ShoppingCartFacade> getPurchaseHistory() {
+        return purchaseHistory;
+    }
+
+    public void setPurchaseHistory(List<ShoppingCartFacade> purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+    }
+
     @Override
     public Member toBusinessObject() throws MarketException {
         ShoppingCart shoppingCart = myCart.toBusinessObject ();

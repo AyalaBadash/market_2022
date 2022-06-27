@@ -739,11 +739,11 @@ public class Market {
         try {
             shoppingCart = visitor.getCart();
             if (shoppingCart.isEmpty()) {
-                throw new MarketException("Shopping cart is not exists for the user.");
+                throw new MarketException("Shopping cart is not exists for the user " + visitorName);
             }
         } catch (Exception e) {
             ErrorLog errorLog = ErrorLog.getInstance();
-            errorLog.Log("Shopping cart is not exists for the user.");
+            errorLog.Log("Shopping cart is not exists for the user ");
             throw new MarketException("Shopping cart is not exists for the user.");
         }
 
@@ -1003,8 +1003,6 @@ public class Market {
     }
 
     private void readConfigurationFile(String name) throws MarketException{
-
-
         File myObj = new File(getConfigDir() + name);
         if (!myObj.exists()) {
             throw new MarketException("Services configurations file does not exists.");
@@ -1297,7 +1295,7 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir");
-        String additional_dir = "\\config\\";
+        String additional_dir = "\\server\\config\\";
         if (MarketConfig.IS_MAC) {
             additional_dir = "/config/";
         }

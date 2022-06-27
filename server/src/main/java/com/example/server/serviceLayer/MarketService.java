@@ -413,7 +413,11 @@ public class MarketService {
 
     public ResponseT<String> getMarketInfo(String sysManager) {
         try {
-            return new ResponseT<>(market.getMarketInfo(sysManager));
+            String marketInfo = market.getMarketInfo(sysManager);
+            ResponseT<String> res = new ResponseT<>(null);
+            res.setValue(marketInfo);
+            return res;
+
         } catch (Exception e) {
             ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
@@ -620,7 +624,7 @@ public class MarketService {
     public ResponseT<Boolean> isSystemManager(String name) {
         if (market.isSystemManager(name))
             return new ResponseT<>(true);
-        else return new ResponseT<>(false);
+            else return new ResponseT<>(false);
     }
 
     public Response reOpenClosedShop(String shopName, String ownerName) {
