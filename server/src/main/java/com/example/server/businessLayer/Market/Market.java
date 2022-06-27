@@ -1358,6 +1358,10 @@ public class Market {
             throw new MarketException("There is no shop named:" + shopName + ". Rejecting the bid failed.");
         }
         shop.rejectABid(opposed, buyer, itemId);
+        Member member = userController.getMember(buyer);
+        ShoppingCart cart = member.getMyCart();
+        ShoppingBasket basket = cart.getCart().get(shop);
+        basket.removeBid(itemId);
     }
 
     public void cancelABid(String shopName, String buyer, int itemId) throws MarketException {
@@ -1368,6 +1372,10 @@ public class Market {
             throw new MarketException("There is no shop named:" + shopName + ". Cancelling the bid failed.");
         }
         shop.cancelABid(buyer, itemId);
+        Member member = userController.getMember(buyer);
+        ShoppingCart cart = member.getMyCart();
+        ShoppingBasket basket = cart.getCart().get(shop);
+        basket.removeBid(itemId);
     }
 
     public void updateBidInLoggingOut(String visitorName) {

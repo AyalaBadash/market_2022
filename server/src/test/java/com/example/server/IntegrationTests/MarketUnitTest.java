@@ -1101,7 +1101,7 @@ public class MarketUnitTest {
         }
     }
     @Test
-    @DisplayName("Reject bid - goot test")
+    @DisplayName("Reject bid - good test")
     public void rejectBidTest(){
         try {
             market.memberLogin("ayala","password");
@@ -1122,15 +1122,42 @@ public class MarketUnitTest {
         }
     }
     @Test
-    @DisplayName("Reject bid - fail test")
+    @DisplayName("Reject bid - fail test - No such shop")
     public void rejectBidFailTest(){
-      assert false;
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.rejectABid("raz","razrazShop","ayala",item.getID());
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
     }
     @Test
     @DisplayName("Cancel a bid - good test")
     public void cancelBidTest(){
-        assert false;
-        //TODO - where do we remove the rejected bid?
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.cancelABid("razShop","ayala",item.getID());
+            member = userController.getMember("ayala");
+            ShoppingCart ayalaCart = member.getMyCart();
+            ShoppingBasket ayalaShopBasket = ayalaCart.getCart().get(shop);
+            Assertions.assertEquals(0,ayalaShopBasket.getBids().size());
+
+        } catch (MarketException e) {
+            assert false;
+        }
     }
     @Test
     @DisplayName("Approve appointment - good test")

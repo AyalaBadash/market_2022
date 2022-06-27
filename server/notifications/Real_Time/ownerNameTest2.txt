@@ -306,3 +306,7 @@ Real Time message:
 The shopShopName2 was closed
 
 
+Real Time message: 
+The shopShopName2 was closed
+
+
