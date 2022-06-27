@@ -3,6 +3,7 @@ package com.example.server.serviceLayer.FacadeObjects;
 import com.example.server.businessLayer.Market.Bid;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class BidFacade {
     private String buyerName;
@@ -10,7 +11,7 @@ public class BidFacade {
     private double amount;
     private double price;
     private boolean approved;
-    private HashMap<String, Boolean> shopOwnersStatus;
+    private Map<String, Boolean> shopOwnersStatus;
 
     public BidFacade(String buyerName, Integer itemId, double amount, double price, boolean approved, HashMap<String, Boolean> shopOwnersStatus) {
         this.buyerName = buyerName;
@@ -73,7 +74,7 @@ public class BidFacade {
         this.approved = approved;
     }
 
-    public HashMap<String, Boolean> getShopOwnersStatus() {
+    public Map<String, Boolean> getShopOwnersStatus() {
         return shopOwnersStatus;
     }
 

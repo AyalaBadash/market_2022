@@ -1,11 +1,23 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
-public abstract class Condition {
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "Cond",
+        discriminatorType = DiscriminatorType.STRING
+)
+public abstract class Cond {
+    @Id
+    @GeneratedValue
+    private long id;
+
+    public Cond(){}
     public abstract boolean isDiscountHeld(ShoppingBasket shoppingBasket) throws MarketException;
     public abstract boolean equals(Object object);
 
@@ -23,6 +35,14 @@ public abstract class Condition {
 
     public boolean isAnd(){
         return false;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public abstract ConditionFacade visitToFacade(AmountOfItemConditionFacade conditionFacade);

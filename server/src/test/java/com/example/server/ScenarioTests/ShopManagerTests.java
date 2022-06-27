@@ -13,8 +13,6 @@ import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ShopManagerTests {
-
-
     Market market;
     String userName = "u1";
     String password = "password";

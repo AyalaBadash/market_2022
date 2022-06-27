@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market;
 
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Supply.Address;
@@ -12,16 +13,28 @@ import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.dataLayer.entities.DalAcquisition;
+import com.example.server.dataLayer.entities.DalShoppingCart;
+import com.example.server.dataLayer.repositories.AcquisitionRep;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
+
+import javax.persistence.*;
 import java.util.Map;
 
+//@Entity
 public class Acquisition {
+    @Id
+    @GeneratedValue
+    private long id;
     private boolean paymentDone;
     private boolean supplyConfirmed;
+    @OneToOne (cascade = CascadeType.MERGE)
     ShoppingCart shoppingCartToBuy;
     String buyerName;
     int supplyID;
     int paymentID;
+    private static AcquisitionRep acquisitionRep;
     private Statistics statistics;
 
     public Acquisition(ShoppingCart shoppingCartToBuy, String buyerName) {
@@ -30,6 +43,9 @@ public class Acquisition {
         paymentDone = false;
         supplyConfirmed = false;
         statistics= Statistics.getInstance();
+        if (!MarketConfig.IS_TEST_MODE) {
+//        acquisitionRep.save(this);
+        }
     }
 
     @Override
@@ -51,12 +67,16 @@ public class Acquisition {
     }
 
 
-    public void buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
+    public Acquisition(){}
+
+    public void buyShoppingCart(NotificationHandler publisher, double expectedPrice,
+                                PaymentMethod paymentMethod, Address address,
+                                PaymentServiceProxy paymentHandler,
+                                SupplyServiceProxy supplyHandler) throws MarketException, Exception {
 
         // checks the price is correct
         //todo: check why there is not an exception here.
         isPriceCorrect(publisher, expectedPrice);
-
 
         if (address == null) {
             DebugLog.getInstance().Log("Address not supplied.");
@@ -75,14 +95,20 @@ public class Acquisition {
             throw new MarketException("Payment method details are illegal.");
         }
         supplyID = supplyHandler.supply(address);
-        if (supplyID == -1) {
+//        supplyID=supplyHandler.supply(address);
+        if(supplyID==-1){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log("Supply has been failed.");
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
         supplyConfirmed = true;
-
+        if(paymentMethod==null){
+            throw new MarketException("Payment method not supplied.");
+        }
+//        if(!paymentMethod.isLegal()){
+//            throw new MarketException("Payment method details are illegal.");
+//        }
         paymentID = paymentHandler.pay(paymentMethod);
         if (paymentID == -1) {
             shoppingCartToBuy.cancelShopSave();
@@ -108,6 +134,9 @@ public class Acquisition {
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
+        if (!MarketConfig.IS_TEST_MODE) {
+//        acquisitionRep.save(this);
+        }
     }
 
     private void isPriceCorrect(NotificationHandler publisher, double expectedPrice) throws MarketException {
@@ -163,5 +192,17 @@ public class Acquisition {
 
     public void setBuyerName(String buyerName) {
         this.buyerName = buyerName;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static void setAcquisitionRep(AcquisitionRep acquisitionRep) {
+        Acquisition.acquisitionRep = acquisitionRep;
     }
 }

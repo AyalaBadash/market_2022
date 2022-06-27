@@ -30,6 +30,8 @@ public class MarketUnitTest {
     String shopName;
     Security security;
     Item item;
+    int nextCartID;
+    //TODO - approve - no test for validate cart - goes directly to basket.
 
     @BeforeAll
     public static void init(){

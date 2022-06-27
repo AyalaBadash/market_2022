@@ -1,10 +1,10 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCond;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCond;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCond;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Cond;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCond;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 
 import java.util.ArrayList;
@@ -18,39 +18,39 @@ public class OrCompositeConditionFacade extends CompositeConditionFacade{
 
     public OrCompositeConditionFacade(){}
     @Override
-    public Condition toBusinessObject() throws MarketException {
-        List<Condition> conditions = new ArrayList<> (  );
+    public Cond toBusinessObject() throws MarketException {
+        List<Cond> conditions = new ArrayList<> (  );
         for(ConditionFacade conditionFacade: conditionFacadeList)
             conditions.add ( conditionFacade.toBusinessObject () );
-        return new OrCompositeCondition ( conditions );
+        return new OrCompositeCond( conditions );
     }
 
     @Override
-    public ConditionFacade toFacade(PriceCondition condition) {
+    public ConditionFacade toFacade(PriceCond condition) {
         return null;
     }
 
     @Override
-    public ConditionFacade toFacade(AmountOfItemCondition condition) {
+    public ConditionFacade toFacade(AmountOfItemCond condition) {
         return null;
     }
 
     @Override
-    public ConditionFacade toFacade(AndCompositeCondition condition) {
+    public ConditionFacade toFacade(AndCompositeCond condition) {
         return null;
     }
 
     @Override
-    public ConditionFacade toFacade(OrCompositeCondition condition) {
-        List<Condition> conditions = condition.getConditions ();
+    public ConditionFacade toFacade(OrCompositeCond condition) {
+        List<Cond> conditions = condition.getConditions ();
         List<ConditionFacade> conditionFacades = new ArrayList<> (  );
-        for(Condition cur : conditions)
+        for(Cond cur : conditions)
             conditionFacades.add ( getConditionFacade ( cur ) );
         return new OrCompositeConditionFacade ( conditionFacades );
     }
 
     @Override
-    public ConditionFacade toFacade(Condition condition) {
+    public ConditionFacade toFacade(Cond condition) {
         return condition.visitToFacade ( this );
     }
 }

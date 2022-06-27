@@ -1,20 +1,29 @@
 package com.example.server.businessLayer.Security;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.repositories.LoginCardRep;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+@Entity
 public class LoginCard {
+    @Id
     private String name;
-    private String password;
+    private int password;
+    @ElementCollection (fetch = FetchType.EAGER)
+    @CollectionTable(name = "Q_and_A")
+    @Column(name="answer")
+    @MapKeyColumn(name="question")
     private Map<String, String> QandA;
+    private static LoginCardRep loginCardRep;
 
     public LoginCard(String name, String password, List<String> questions, List<String> answers) throws MarketException {
         this.name = name;
-        this.password = password;
+        this.password = password.hashCode();
         this.QandA =  new ConcurrentHashMap<>();
         if(questions == null && answers == null)
             return;
@@ -24,7 +33,12 @@ public class LoginCard {
         for (int i = 0; i< answers.size(); i++){
             this.QandA.put(questions.get(i), answers.get(i));
         }
+        if (!MarketConfig.IS_TEST_MODE) {
+            loginCardRep.save(this);
+        }
     }
+
+    public LoginCard(){}
 
     public List<String> getQuestions(){
         List<String> questions =  new CopyOnWriteArrayList<>();
@@ -37,6 +51,9 @@ public class LoginCard {
 
     public void addPrivateQuestion(String q, String ans){
         QandA.put(q,ans);
+        if (!MarketConfig.IS_TEST_MODE) {
+            loginCardRep.save(this);
+        }
     }
     public void removePrivateQuestion(String q){
         if (QandA.containsKey(q))
@@ -47,7 +64,7 @@ public class LoginCard {
         return name;
     }
 
-    public String getPassword() {
+    public int getPassword() {
         return password;
     }
 
@@ -55,4 +72,7 @@ public class LoginCard {
         return QandA;
     }
 
+    public static void setLoginCardRep(LoginCardRep loginCardRep) {
+        LoginCard.loginCardRep = loginCardRep;
+    }
 }

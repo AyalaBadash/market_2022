@@ -1,23 +1,40 @@
 package com.example.server.businessLayer.Market.Appointment;
 
+import com.example.server.businessLayer.Market.Appointment.Permissions.EmployeesPermission;
 import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.dataLayer.entities.DalAppointment;
+import com.example.server.dataLayer.entities.DalManagerApp;
+import com.example.server.dataLayer.repositories.ShopManagerAppointmentRep;
 import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
+import javax.persistence.*;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "ShopManagerAppointment")
 public class ShopManagerAppointment extends Appointment {
-
-
+    private static ShopManagerAppointmentRep shopManagerAppointmentRep;
     public ShopManagerAppointment(Member appointed, Member appoint, Shop relatedShop) {
         super(appointed, appoint, relatedShop );
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopManagerAppointmentRep.save(this);
+        }
     }
 
-    public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions) {
+    public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop, List<IPermission> permissions, boolean fromBusiness) {
         super(appointed, superVisor, relatedShop, permissions);
+        if (!fromBusiness){
+
+            if (!MarketConfig.IS_TEST_MODE) {
+                shopManagerAppointmentRep.save(this);
+            }
+        }
+    }
+    public ShopManagerAppointment(){
     }
 
     @Override
@@ -50,7 +67,7 @@ public class ShopManagerAppointment extends Appointment {
         permissions.add ( permission );
     }
 
-
-
-
+    public static void setShopManagerAppointmentRep(ShopManagerAppointmentRep shopManagerAppointmentRep) {
+        ShopManagerAppointment.shopManagerAppointmentRep = shopManagerAppointmentRep;
+    }
 }

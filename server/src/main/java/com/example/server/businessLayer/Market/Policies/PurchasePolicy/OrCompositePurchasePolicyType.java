@@ -1,24 +1,30 @@
 package com.example.server.businessLayer.Market.Policies.PurchasePolicy;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
-import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.PurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.ShopPurchasePolicyLevelState;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
-import com.example.server.businessLayer.Market.Users.Visitor;
+import com.example.server.dataLayer.repositories.OrTypePolicyRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.AtLeastPurchasePolicyTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.AtMostPurchasePolicyTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.OrCompositePurchasePolicyTypeFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.PurchasePolicyTypeFacade;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "Or")
 public class OrCompositePurchasePolicyType extends CompositePurchasePolicyType {
-
+    private static OrTypePolicyRep orTypePolicyRep;
     public OrCompositePurchasePolicyType(List<PurchasePolicyType> policies) {
         super ( new ShopPurchasePolicyLevelState (), policies );
+        if (!MarketConfig.IS_TEST_MODE) {
+            orTypePolicyRep.save(this);
+        }
     }
+
+    public OrCompositePurchasePolicyType(){}
 
     @Override
     public boolean equals(Object object) {
@@ -75,5 +81,13 @@ public class OrCompositePurchasePolicyType extends CompositePurchasePolicyType {
     @Override
     public PurchasePolicyTypeFacade visitToFacade(OrCompositePurchasePolicyTypeFacade policyTypeFacade) {
         return null;
+    }
+
+    public static OrTypePolicyRep getOrTypePolicyRep() {
+        return orTypePolicyRep;
+    }
+
+    public static void setOrTypePolicyRep(OrTypePolicyRep orTypePolicyRep) {
+        OrCompositePurchasePolicyType.orTypePolicyRep = orTypePolicyRep;
     }
 }

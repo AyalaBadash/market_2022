@@ -16,6 +16,7 @@ class UserControllerTest {
     @Mock
     Visitor visitor = Mockito.mock(Visitor.class);
     UserController controller;
+    int nextCartID;
 
 
 
@@ -25,12 +26,14 @@ class UserControllerTest {
         Map<String,Visitor> emptyMap = new HashMap<>();
         controller.setVisitorsInMarket(emptyMap);
         controller.setNextUniqueNumber(1);
+        nextCartID = 1;
     }
 
     @Test
     @DisplayName("Guest login test - good test")
     public void GuestLoginTest(){
         controller.guestLogin();
+        nextCartID++;
         Assertions.assertEquals(1,controller.getVisitorsInMarket().size());
         Visitor visit = controller.guestLogin();
         Assertions.assertEquals("@visitor2",visit.getName());
@@ -80,6 +83,7 @@ class UserControllerTest {
     public void MemberLogout(){
         try {
             controller.register("raz");
+            nextCartID++;
             controller.finishLogin("raz","@visitor1");
             controller.memberLogout("raz");
         } catch (Exception e) {

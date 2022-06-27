@@ -11,16 +11,31 @@ import com.example.server.serviceLayer.FacadeObjects.AppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopManagerAppointmentFacade;
 import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "appointment_type",
+        discriminatorType = DiscriminatorType.STRING
+)
+@SequenceGenerator(name="seq", initialValue=1, allocationSize=100)
 public abstract class
 Appointment {
+    @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
+    private Long id;
+    @OneToOne (cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Member appointed;       //  the actual appointed member
+    @OneToOne (cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Member superVisor;      //  member appointedMe
+//    @OneToOne (cascade = {CascadeType.MERGE})
+    @Transient
     private Shop relatedShop;
     //TODO - needs to be not an object? :O
+    @ManyToMany (cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     List<IPermission> permissions;
 
     public Appointment(Member appointed, Member appoint, Shop relatedShop) {
@@ -76,6 +91,7 @@ Appointment {
 
     public abstract boolean isManager();
     public abstract boolean isOwner();
+
 
 
     public Map<String, Appointment> getShopEmployeesInfo() throws MarketException {

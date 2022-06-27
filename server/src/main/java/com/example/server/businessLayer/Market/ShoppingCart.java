@@ -2,20 +2,32 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
+import com.example.server.dataLayer.repositories.ShoppingCartRep;
 
+import javax.persistence.*;
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+@Entity
 public class ShoppingCart implements IHistory {
-
+    @Id
+    @GeneratedValue
+    private long id;
+    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinTable (name = "baskets_in_cart", joinColumns = {@JoinColumn(name = "shopping_cart_id",
+        referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "basket_id", referencedColumnName = "basket_id")})
+    @MapKeyJoinColumn (name = "shop_name")
     private Map<Shop, ShoppingBasket> cart; // <Shop ,basket for the shop>
     private double currentPrice;
 
+    private static ShoppingCartRep shoppingCartRep;
 
     public ShoppingCart() {
         this.currentPrice = 0;
@@ -51,8 +63,10 @@ public class ShoppingCart implements IHistory {
 
     public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
     }
-
 
     @Override
     public StringBuilder getReview() {
@@ -65,7 +79,6 @@ public class ShoppingCart implements IHistory {
             }
             review.append(String.format("Basket for %s:\n%s\n", shop.getShopName(), basket.getReview()));
             review.append(String.format("Overall Cart Price: %f", currentPrice));
-
         }
         return review;
     }
@@ -79,6 +92,9 @@ public class ShoppingCart implements IHistory {
     public void cancelShopSave() throws MarketException {
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             shopToBasket.getKey().releaseItems(shopToBasket.getValue());
+        }
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
         }
     }
 
@@ -111,20 +127,36 @@ public class ShoppingCart implements IHistory {
             }
             throw new MarketException(missing.toString());
         }
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
         return price;
     }
 
     public void clear() {
-        this.cart.clear();
+//        this.cart.clear();
+        Collection<ShoppingBasket> baskets = new ArrayList<>();
+        for (Map.Entry <Shop, ShoppingBasket> entry: cart.entrySet()){
+            ShoppingBasket basket = entry.getValue();
+            baskets.add(basket);
+        }
+        cart.clear();
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+            ShoppingBasket.getShoppingBasketRep().deleteAll(baskets);
+        }
     }
 
     public void addItem(Shop shop, Item item, double amount) throws MarketException {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
-            shoppingBasket = new ShoppingBasket ();
+            shoppingBasket = new ShoppingBasket(1);
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addItem ( item, amount );
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
         shoppingBasket.updatePrice(shop);
     }
 
@@ -134,6 +166,9 @@ public class ShoppingCart implements IHistory {
             return;
         shoppingBasket.removeItem ( item);
         shoppingBasket.updatePrice(shop);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
     }
 
     public void calculate() {
@@ -141,6 +176,9 @@ public class ShoppingCart implements IHistory {
         for(ShoppingBasket shoppingBasket : cart.values ())
             price += shoppingBasket.getCurrentPrice ();
         currentPrice = price;
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
     }
 
     public void editQuantity(double amount, Item item, String shopName) throws MarketException {
@@ -196,7 +234,7 @@ public class ShoppingCart implements IHistory {
     public void addABid(Bid bid, Shop shop) throws MarketException {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
-            shoppingBasket = new ShoppingBasket ();
+            shoppingBasket = new ShoppingBasket (1);
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addABid(bid);
@@ -219,4 +257,21 @@ public class ShoppingCart implements IHistory {
         }
         shoppingBasket.removeBid ( itemId );
     }
+
+    public static void setShoppingCartRep(ShoppingCartRep scRepository){
+        shoppingCartRep = scRepository;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static ShoppingCartRep getShoppingCartRep() {
+        return shoppingCartRep;
+    }
+
 }

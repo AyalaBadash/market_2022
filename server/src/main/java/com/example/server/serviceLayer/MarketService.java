@@ -15,6 +15,7 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Supply.SupplyService;
@@ -23,20 +24,26 @@ import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.serviceLayer.FacadeObjects.*;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.*;
-import org.springframework.boot.ansi.Ansi8BitColor;
 
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class MarketService {
     private static MarketService marketService = null;
+
+    @Autowired
     private Market market;
 
-    private MarketService() {
-        market = Market.getInstance();
+    public MarketService() {
+        if (MarketConfig.IS_TEST_MODE){
+            market = Market.getInstance();
+        }
     }
 
     public synchronized static MarketService getInstance() {
@@ -58,6 +65,7 @@ public class MarketService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public ResponseT<List<ItemFacade>> searchProductByName(String name) {
         ResponseT<List<ItemFacade>> toReturn;
         try {
@@ -157,7 +165,8 @@ public class MarketService {
         return toReturn;
     }
 
-    public Response openNewShop(String visitorName, String shopName) {
+    @Transactional(rollbackOn = Exception.class)
+    public Response openNewShop(String visitorName, String shopName){
         try {
             market.openNewShop(visitorName, shopName);
             return new Response();
@@ -169,6 +178,7 @@ public class MarketService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response updateShopItemAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         try {
             Item itemBL = new Item(item.getId(), item.getName(), item.getPrice(), item.getInfo(), item.getCategory(), item.getKeywords());
@@ -182,7 +192,7 @@ public class MarketService {
         }
     }
 
-
+//    @Transactional(rollbackOn = Exception.class)
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
         try {
             market.removeItemFromShop(shopOwnerName, item.getId(), shopName);
@@ -195,7 +205,7 @@ public class MarketService {
         }
     }
 
-
+    @Transactional(rollbackOn = Exception.class)
     public ResponseT<ShopFacade> addItemToShop(String shopOwnerName, String name, double price, Item.Category category, String info,
                                                List<String> keywords, double amount, String shopName) {
         ResponseT<ShopFacade> response;
@@ -212,6 +222,7 @@ public class MarketService {
 
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response setItemCurrentAmount(String shopOwnerName, ItemFacade item, double amount, String shopName) {
         try {
             Item itemBL = new Item(item.getId(), item.getName(), item.getPrice(), item.getInfo(), item.getCategory(), item.getKeywords());
@@ -225,6 +236,7 @@ public class MarketService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response changeShopItemInfo(String shopOwnerName, String info, ItemFacade oldItem, String shopName) {
         try {
             market.changeShopItemInfo(shopOwnerName, info, oldItem.getId(), shopName);
@@ -237,6 +249,7 @@ public class MarketService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response editItem(ItemFacade newItem, String id) {
         try {
             market.editItem(newItem.toBusinessObject(), id);
@@ -249,6 +262,7 @@ public class MarketService {
         }
     }
 
+//    @Transactional(rollbackOn = Exception.class)
     public Response closeShop(String shopOwnerName, String shopName) {
         Response response;
         try {
@@ -371,6 +385,7 @@ public class MarketService {
         return toReturn;
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response removeShopOwnerAppointment(String boss, String firedAppointed, String shopName) {
         Response response;
         try {
@@ -384,6 +399,7 @@ public class MarketService {
 
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response removeMember(String manager, String memberToRemove) {
         Response response;
         try {
@@ -429,6 +445,7 @@ public class MarketService {
         }
     }
 
+//    @Transactional(rollbackOn = Exception.class)
     public Response addDiscountToShop(String visitorName, String shopName, DiscountTypeWrapper discountTypeWrapper) {
         try {
             DiscountType discountType = discountTypeWrapper.toBusinessObject();
@@ -439,6 +456,7 @@ public class MarketService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response removeDiscountFromShop(String visitorName, String shopName, DiscountTypeWrapper discountTypeWrapper) {
         try {
             DiscountType discountType = discountTypeWrapper.toBusinessObject();
@@ -449,6 +467,7 @@ public class MarketService {
         }
     }
 
+//    @Transactional(rollbackOn = Exception.class)
     public Response addPurchasePolicyToShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
         try {
             PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();
@@ -459,6 +478,7 @@ public class MarketService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response removePurchasePolicyFromShop(String visitorName, String shopName, PurchasePolicyTypeWrapper purchasePolicyTypeWrapper) {
         try {
             PurchasePolicyType purchasePolicyType = purchasePolicyTypeWrapper.toBusinessObject();
@@ -481,6 +501,7 @@ public class MarketService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response setPaymentService(PaymentService o, String managerName) {
         try {
             if (market.setPaymentService(o, managerName)) {
@@ -492,6 +513,8 @@ public class MarketService {
             return new Response(e.getMessage());
         }
     }
+
+    @Transactional(rollbackOn = Exception.class)
     public Response setPaymentServiceAddress(String o, String managerName) {
         try {
             if (market.setPaymentServiceAddress(o, managerName)) {
@@ -515,6 +538,7 @@ public class MarketService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public Response setPublishService(Publisher o, String managerName) {
         try {
             if (market.setPublishService(o, managerName)) {

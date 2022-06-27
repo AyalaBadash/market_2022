@@ -206,7 +206,7 @@ public class VisitorTests {
 
     @Test
     @DisplayName("add item to cart, 0 amount")
-    public void addZeroAmount() {
+    public void addZeroAmount(){
         try {
             Visitor visitor = market.guestLogin();
             List<Item> res = market.getItemByName("milk");

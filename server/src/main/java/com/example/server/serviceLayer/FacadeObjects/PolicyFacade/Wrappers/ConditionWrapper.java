@@ -1,18 +1,17 @@
 package com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers;
 
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCondition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
-import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCond;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCond;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCond;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Cond;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCond;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.FacadeObject;
-import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.AmountOfItemConditionFacade;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConditionWrapper implements FacadeObject<Condition> {
+public class ConditionWrapper implements FacadeObject<Cond> {
 
     public enum ConditionWrapperType {
         AndCompositeConditionFacade,
@@ -40,27 +39,27 @@ public class ConditionWrapper implements FacadeObject<Condition> {
     }
 
     @Override
-    public Condition toBusinessObject() throws MarketException {
+    public Cond toBusinessObject() throws MarketException {
         switch (conditionWrapperType){
             case PriceConditionFacade -> {
-                return new PriceCondition ( price );
+                return new PriceCond( price );
             }
             case AmountOfItemConditionFacade -> {
-                return new AmountOfItemCondition ( amount, itemID );
+                return new AmountOfItemCond( amount, itemID );
             }
             case AndCompositeConditionFacade -> {
-                List<Condition> conditions = new ArrayList<> (  );
+                List<Cond> conditions = new ArrayList<> (  );
                 for(ConditionWrapper conditionWrapper : conditionWrappers){
                     conditions.add ( conditionWrapper.toBusinessObject () );
                 }
-                return new AndCompositeCondition ( conditions );
+                return new AndCompositeCond( conditions );
             }
             case OrCompositeConditionFacade -> {
-                List<Condition> conditions = new ArrayList<> (  );
+                List<Cond> conditions = new ArrayList<> (  );
                 for(ConditionWrapper conditionWrapper : conditionWrappers){
                     conditions.add ( conditionWrapper.toBusinessObject () );
                 }
-                return new OrCompositeCondition ( conditions );
+                return new OrCompositeCond( conditions );
             }
             default -> {
                 return null;
@@ -116,29 +115,29 @@ public class ConditionWrapper implements FacadeObject<Condition> {
         this.conditionWrapperType = conditionWrapperType;
     }
 
-    public static ConditionWrapper createConditionWrapper(Condition condition) {
+    public static ConditionWrapper createConditionWrapper(Cond condition) {
         ConditionWrapper conditionWrapper = new ConditionWrapper (  );
         if(condition.isPrice ()){
-            PriceCondition priceCondition = (PriceCondition) condition;
+            PriceCond priceCondition = (PriceCond) condition;
             conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.PriceConditionFacade );
             conditionWrapper.setPrice ( priceCondition.getPriceNeeded () );
         } else if (condition.isAmountOfItem ()) {
-            AmountOfItemCondition amountOfItemCondition = (AmountOfItemCondition) condition;
+            AmountOfItemCond amountOfItemCondition = (AmountOfItemCond) condition;
             conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.AmountOfItemConditionFacade );
             conditionWrapper.setAmount ( amountOfItemCondition.getAmountNeeded () );
             conditionWrapper.setItemID ( amountOfItemCondition.getItemNeeded () );
         } else if (condition.isAnd ()) {
-            AndCompositeCondition andCompositeCondition = (AndCompositeCondition) condition;
+            AndCompositeCond andCompositeCondition = (AndCompositeCond) condition;
             List<ConditionWrapper> conditionWrappers = new ArrayList<> (  );
-            for(Condition cur : andCompositeCondition.getConditions ()){
+            for(Cond cur : andCompositeCondition.getConditions ()){
                 conditionWrappers.add ( createConditionWrapper ( cur ) );
             }
             conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.AndCompositeConditionFacade );
             conditionWrapper.setConditionWrappers ( conditionWrappers );
         } else{
-            OrCompositeCondition orCompositeCondition = (OrCompositeCondition) condition;
+            OrCompositeCond orCompositeCondition = (OrCompositeCond) condition;
             List<ConditionWrapper> conditionWrappers = new ArrayList<> (  );
-            for(Condition cur : orCompositeCondition.getConditions ()){
+            for(Cond cur : orCompositeCondition.getConditions ()){
                 conditionWrappers.add ( createConditionWrapper ( cur ) );
             }
             conditionWrapper.setCompositeConditionWrapperType ( ConditionWrapper.ConditionWrapperType.OrCompositeConditionFacade );

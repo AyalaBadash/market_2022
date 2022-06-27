@@ -3,6 +3,11 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy.Discount
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue(value = "ShopLevelState")
 public class ShopLevelState extends DiscountLevelState {
     @Override
     public double calculateDiscount(ShoppingBasket shoppingBasket, double percentageOfDiscount) {

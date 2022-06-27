@@ -2,14 +2,21 @@ package com.example.server.businessLayer.Market.Policies.PurchasePolicy.Purchase
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
+import com.example.server.dataLayer.repositories.ItemPolicyRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
+@DiscriminatorValue(value = "Item_ls")
 public class ItemPurchasePolicyLevelState extends PurchasePolicyLevelState {
     Integer itemId;
 
+    private static ItemPolicyRep itemPolicyRep;
+
+    public ItemPurchasePolicyLevelState(){}
     public ItemPurchasePolicyLevelState(Integer itemId) {
         this.itemId = itemId;
     }
@@ -107,5 +114,13 @@ public class ItemPurchasePolicyLevelState extends PurchasePolicyLevelState {
 
     public void setItemId(Integer itemId) {
         this.itemId = itemId;
+    }
+
+    public static ItemPolicyRep getItemPolicyRep() {
+        return itemPolicyRep;
+    }
+
+    public static void setItemPolicyRep(ItemPolicyRep itemPolicyRep) {
+        ItemPurchasePolicyLevelState.itemPolicyRep = itemPolicyRep;
     }
 }

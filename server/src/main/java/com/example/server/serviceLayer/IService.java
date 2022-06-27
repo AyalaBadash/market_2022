@@ -46,7 +46,7 @@ public interface IService {
      * @param request
      * @return
      */
-    public ResponseT<Boolean> register(NamePasswordRequest request);
+    public ResponseT<Boolean> register(NamePasswordRequest request) throws Exception;
 
     /**
      *

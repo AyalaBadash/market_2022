@@ -1,13 +1,18 @@
 package com.example.server.businessLayer.Market;
 
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.entities.DalItem;
+import com.example.server.dataLayer.repositories.ItemRep;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "items")
 public class Item implements IHistory {
-
     public enum Category {
         general,
         snacks,
@@ -17,14 +22,24 @@ public class Item implements IHistory {
         electricity
     }
 
+    @Id
     private java.lang.Integer ID;
     private String name;
     private double price;
     private String info;
-    private int rank;
-    private int rankers;
+    private int rnk;
+    private int rnkers;
+    @Enumerated(EnumType.STRING)
     private Category category;
+
+    private static ItemRep itemRep;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "keyword")
+    @CollectionTable(name = "item_keywords", joinColumns = {@JoinColumn(name = "ID")})
     private List<String> keywords;
+
+    public Item(){}
     public Item(java.lang.Integer ID, String name, double price, String info,
                 Category category, List<String> keywords) throws MarketException {
         if (ID <1)
@@ -37,8 +52,11 @@ public class Item implements IHistory {
         this.keywords = keywords;
         this.info = info;
         this.category = Objects.requireNonNullElse(category, Category.general);
-        rank= 1;
-        rankers=0;
+        rnk = 1;
+        rnkers =0;
+        if (!MarketConfig.IS_TEST_MODE) {
+            itemRep.save(this);
+        }
     }
 
 
@@ -97,17 +115,18 @@ public class Item implements IHistory {
 
 
     public void addRank(int rankN){
-        rank=((rank*rankers)+rankN)/(rankers+1);
-        rankers++;
+        rnk =((rnk * rnkers)+rankN)/(rnkers +1);
+        rnkers++;
     }
-    public int getRank(){return rank;}
-    public int getRankers(){return rankers;}
+    public int getRnk(){return rnk;}
+    public int getRnkers(){return rnkers;}
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
+//        return Double.compare(item.price, price) == 0 && rnk == item.rnk && rnkers == item.rnkers && ID.equals(item.ID) && name.equals(item.name) && info.equals(item.info) && category == item.category && keywords.equals(item.keywords);
         //TODO need to check if it is the right way to compare
         return item.ID.equals(this.ID);
 //        return Double.compare(item.price, price) == 0 && rank == item.rank && rankers == item.rankers && ID.equals(item.ID) && name.equals(item.name) && info.equals(item.info) && category == item.category && keywords.equals(item.keywords);
@@ -115,7 +134,14 @@ public class Item implements IHistory {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, name, price, info, rank, rankers, category, keywords);
+        return Objects.hash(ID, name, price, info, rnk, rnkers, category, keywords);
     }
 
+    public static void setItemRep(ItemRep itemRepToSet){
+        itemRep = itemRepToSet;
+    }
+
+    public static ItemRep getItemRep() {
+        return itemRep;
+    }
 }

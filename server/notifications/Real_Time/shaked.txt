@@ -883,43 +883,19 @@ Real Time message:
 
 
 Real Time message: 
-@visitor19 submitted a buying offer in the shop kolbo, to buy bamba for the amount of 1.2
+@visitor68 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor20 submitted a buying offer in the shop kolbo, to buy bamba for the amount of 1.2
+@visitor68 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor19 submitted a buying offer in the shop kolbo, to buy bamba for the amount of 1.2
+@visitor68 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor20 submitted a buying offer in the shop kolbo, to buy bamba for the amount of 1.2
-
-
-Real Time message: 
-@visitor24 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor24 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor24 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor24 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor3 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor4 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor68 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
@@ -931,67 +907,31 @@ Real Time message:
 
 
 Real Time message: 
-@visitor19 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor7 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor21 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor8 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor22 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor10 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor23 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor24 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor3 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor4 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor5 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor6 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor19 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor21 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor22 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor23 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor24 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor3 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
-
-
-Real Time message: 
-@visitor4 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor15 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
@@ -1003,31 +943,31 @@ Real Time message:
 
 
 Real Time message: 
-@visitor19 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor7 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor21 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor8 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor22 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor10 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor23 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor24 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor3 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor4 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor15 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
@@ -1039,24 +979,207 @@ Real Time message:
 
 
 Real Time message: 
-@visitor19 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor7 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor21 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor8 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor22 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor10 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor23 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
 Real Time message: 
-@visitor24 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
+
+Real Time message: 
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor15 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor5 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor6 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor7 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor8 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor10 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor15 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor5 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor6 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor7 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor8 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor10 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor15 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor5 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor6 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor7 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor8 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor10 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor15 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor5 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor10 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor15 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor10 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor15 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor33 submitted a buying offer in the shop kolbo, to buy bamba for the amount of 1.2
+
+
+Real Time message: 
+@visitor34 submitted a buying offer in the shop kolbo, to buy bamba for the amount of 1.2
+
+
+Real Time message: 
+@visitor82 submitted a buying offer in the shop Shufersal, to buy apple for the amount of 10.0
+
+
+Real Time message: 
+@visitor83 submitted a buying offer in the shop Shufersal, to buy yogurt for the amount of 1.2
+
+
+Real Time message: 
+@visitor83 submitted a buying offer in the shop Shufersal, to buy apple for the amount of 10.0
+
+
+Real Time message: 
+There was a new appointment in shop Shufersal, shaked appointed raz1 for shop owner
 
 Real Time message: 
 @visitor3 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2

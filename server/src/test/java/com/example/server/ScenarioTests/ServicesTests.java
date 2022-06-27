@@ -84,7 +84,7 @@ public class ServicesTests {
     public static void setUseData(){
 
         MarketConfig.USING_DATA=useData;
-        MarketConfig.IS_TEST_MODE=false;
+        MarketConfig.IS_TEST_MODE=true;
         market.restoreSystemManager(ManName,ManPass);
     }
     @BeforeEach

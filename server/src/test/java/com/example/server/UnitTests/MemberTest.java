@@ -26,10 +26,12 @@ class MemberTest {
     List<Appointment> appointedByMe = new ArrayList<>();
     List<Appointment> myAppointments = new ArrayList<>();
     List<ShoppingCart> purchaseHistory = new ArrayList<>();
+    int nextCartID;
 
     @BeforeEach
     public void initMemberTest() throws MarketException {
         member = new Member(name);
+        nextCartID=2;
         member.setMyCart(myCart);
 
     }

@@ -48,6 +48,6 @@ public class ShopManagerAppointmentFacade extends AppointmentFacade {
         Member appointed = UserController.getInstance().getMember(this.appointed);
         Member superVisor = UserController.getInstance().getMember(this.superVisor);
         Shop relatedShop = Market.getInstance().getShopByName(this.relatedShop);
-        return new ShopManagerAppointment(appointed,superVisor,relatedShop,busiPermissions);
+        return new ShopManagerAppointment(appointed,superVisor,relatedShop,busiPermissions, true);
     }
 }
