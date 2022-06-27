@@ -41,6 +41,7 @@ public class PurchaseService {
         }
     }
 
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName) {
         try {
             ShoppingCart shoppingCart = market.showShoppingCart ( visitorName );
@@ -64,6 +65,7 @@ public class PurchaseService {
         }
     }
 
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
         try {
             ShoppingCartFacade cart = new ShoppingCartFacade(market.calculateShoppingCart(visitorName));

@@ -39,7 +39,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
-//    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackOn = Exception.class)
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
         purchaseService = PurchaseService.getInstance();
         userService = UserService.getInstance();
@@ -49,7 +49,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/guestLogin")
     @CrossOrigin
-//    @Transactional(rollbackOn = MarketException.class)
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<VisitorFacade> guestLogin() {
         return this.userService.guestLogin();
     }
@@ -82,7 +82,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/searchProductByName")
     @CrossOrigin
-    //    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<ItemFacade>> searchProductByName(@RequestBody SearchProductByNameRequest request) {
         return marketService.searchProductByName(request.getProductName());
     }
@@ -90,6 +90,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/searchProductByCategory")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<ItemFacade>> searchProductByCategory(@RequestBody Item.Category category) {
         return marketService.searchProductByCategory(category);
     }
@@ -97,6 +98,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/searchProductByKeyword")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<ItemFacade>> searchProductByKeyword(@RequestBody SearchProductByNameRequest request) {
         return marketService.searchProductByKeyword(request.getProductName());
     }
@@ -104,6 +106,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/filterItemByCategory")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<ItemFacade>> filterItemByCategory(@RequestBody FilterItemByCategoryRequest request) {
         return marketService.filterItemByCategory(request.getItems(), request.getCategory());
     }
@@ -111,6 +114,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/filterItemByPrice")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<ItemFacade>> filterItemByPrice(@RequestBody FilterItemByPriceRequest request) {
         return marketService.filterItemByPrice(request.getItems(), request.getMinPrice(), request.getMaxPrice());
     }
@@ -118,12 +122,14 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addItemToShoppingCart")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response addItemToShoppingCart(@RequestBody AddItemToShoppingCartRequest request) {
         return purchaseService.addItemToShoppingCart(request.getItemToInsert(), request.getAmount(), request.getVisitorName());
     }
     @Override
     @RequestMapping(value = "/showShoppingCart")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<ShoppingCartFacade> showShoppingCart(@RequestBody RequestVisitorName request) {
         return purchaseService.showShoppingCart(request.getName());
     }
@@ -131,6 +137,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/editItemFromShoppingCart")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response editItemFromShoppingCart(@RequestBody EditItemFromShoppingCartRequest request) {
         return purchaseService.editItemFromShoppingCart(request.getAmount(), request.getItemFacade(),
                 request.getShopName(), request.getVisitorName());
@@ -140,6 +147,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/calculateShoppingCart")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(@RequestBody RequestVisitorName request) {
         return purchaseService.calculateShoppingCart(request.getName());
     }
@@ -147,6 +155,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/buyShoppingCart")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
         return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
                 request.getPaymentMethod(), request.getAddress());
@@ -155,6 +164,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/memberLogin")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<String>> memberLogin(@RequestBody NamePasswordRequest request) {
         return userService.memberLogin(request.getName(), request.getPassword());
     }
@@ -162,6 +172,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/validateSecurityQuestions")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<MemberFacade> validateSecurityQuestions(@RequestBody ValidateSecurityRequest request) {
         return userService.validateSecurityQuestions(request.getUserName(), request.getAnswers(), request.getVisitorName());
     }//TODO- where are we getting visitorName from
@@ -170,6 +181,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/logout")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<VisitorFacade> logout(@RequestBody RequestVisitorName request) {
         return userService.logout(request.getName());
     }
@@ -177,6 +189,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/openNewShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response openNewShop(@RequestBody OpenNewShopRequest request) {
         return marketService.openNewShop(request.getMemberName(), request.getShopName());
     }
@@ -184,6 +197,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/updateShopItemAmount")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response updateShopItemAmount(@RequestBody UpdateShopItemAmountRequest request) {
 
         return marketService.updateShopItemAmount(request.getShopOwnerName(), request.getItem(),
@@ -194,6 +208,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeItemFromShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response removeItemFromShop(@RequestBody RemoveItemFromShopRequest request) {
         return marketService.removeItemFromShop(request.getShopOwnerName(), request.getItem(), request.getShopName());
     }
@@ -201,6 +216,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addItemToShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<ShopFacade> addItemToShop(@RequestBody AddItemToShopRequest request) {
         return marketService.addItemToShop(request.getShopOwnerName(), request.getName(), request.getPrice(),
                 request.getCategory(), request.getInfo(), request.getKeywords(), request.getAmount(), request.getShopName());
@@ -209,6 +225,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/setItemCurrentAmount")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response setItemCurrentAmount(@RequestBody SetItemCurrentAmountRequest request) {
         return marketService.setItemCurrentAmount(request.getShopOwnerName(), request.getItem(),
                 request.getAmount(), request.getShopName());
@@ -218,6 +235,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/changeShopItemInfo")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response changeShopItemInfo(@RequestBody ChangeShopItemInfoRequest request) {
         return marketService.changeShopItemInfo(request.getShopOwnerName(), request.getUpdatedInfo(),
                 request.getOldItem(), request.getShopName());
@@ -226,6 +244,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/editItemRequest")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response editItem(@RequestBody editItemRequest request) {
         return marketService.editItem(request.getNewItem(), request.getId());
     }
@@ -234,6 +253,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/appointShopOwner")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response appointShopOwner(@RequestBody AppointmentShopOwnerRequest request) {
         return userService.appointShopOwner(request.getShopOwnerName(), request.getAppointedShopOwner(), request.getShopName());
     }
@@ -241,6 +261,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/appointShopManager")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response appointShopManager(@RequestBody AppointmentShopManagerRequest request) {
         return userService.appointShopManager(request.getShopOwnerName(), request.getAppointedShopManager(), request.getShopName());
     }
@@ -248,6 +269,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/editShopManagerPermissions")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response editShopManagerPermissions(@RequestBody EditShopManagerPermissionsRequest request) {
         return this.userService.editShopManagerPermissions(
                 request.getShopOwnerName(), request.getManagerName(), request.getRelatedShop(), request.getUpdatedAppointment());
@@ -256,6 +278,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getManagerPermission")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<AppointmentFacade> getManagerPermission(@RequestBody GetManagerPermissionRequest request) {
         return this.userService.getManagerAppointment(request.getShopOwnerName(),
                 request.getManagerName(), request.getRelatedShop());
@@ -270,12 +293,14 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/reOpenClosedShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response reOpenClosedShop(@RequestBody TwoStringRequest request){
         return this.marketService.reOpenClosedShop(request.getShopName(), request.getName());
     }
     @Override
     @RequestMapping(value = "/getShopEmployeesInfo")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<AppointmentFacade>> getShopEmployeesInfo(@RequestBody GetShopEmployeesRequest request) {
         return marketService.getShopEmployeesInfo(request.getShopManagerName(), request.getShopName());
     }
@@ -283,6 +308,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getShopInfo")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<ShopFacade> getShopInfo(@RequestBody TwoStringRequest request) {
         return marketService.getShopInfo(request.getName(), request.getShopName());
     }
@@ -290,6 +316,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getShopPurchaseHistory")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<String> getShopPurchaseHistory(@RequestBody TwoStringRequest request) {
         return marketService.getShopPurchaseHistory(request.getName(), request.getShopName());
     }
@@ -297,6 +324,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getAllSystemPurchaseHistory")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<String> getAllSystemPurchaseHistory(@RequestBody GetAllSystemPurchaseHistoryRequest request) {
         return marketService.getAllSystemPurchaseHistory(request.getSystemManagerName());
     }
@@ -304,6 +332,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getHistoryByShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<String> getHistoryByShop(@RequestBody TwoStringRequest request) {
         return marketService.getHistoryByShop(request.getName(), request.getShopName());
     }
@@ -311,6 +340,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getHistoryByMember")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<String> getHistoryByMember(@RequestBody GetHistoryByMemberRequest request) {
         return marketService.getHistoryByMember(request.getSystemManagerName(), request.getMemberName());
     }
@@ -318,6 +348,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeShopOwnerAppointment")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response removeShopOwnerAppointment(@RequestBody RemoveAppointmentRequest request) {
         return marketService.removeShopOwnerAppointment(request.getBoss(), request.getFiredAppointed(), request.getShopName());
     }
@@ -325,13 +356,15 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeMember")
     @CrossOrigin
-        public Response removeMember(@RequestBody RemoveMemberRequest request) {
+    @Transactional(rollbackOn = MarketException.class)
+    public Response removeMember(@RequestBody RemoveMemberRequest request) {
         return marketService.removeMember(request.getManager(), request.getMemberToRemove());
     }
 
     @Override
     @RequestMapping(value = "/getItemInfo")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<ItemFacade> getItemInfo(@RequestBody GetItemInfoRequest request) {
         return marketService.getItemInfo(request.getName(), request.getItemId());
     }
@@ -339,6 +372,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getMarketInfo")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<String> getMarketInfo(@RequestBody GetMarketInfoRequest request) {
         return marketService.getMarketInfo(request.getSysManager());
     }
@@ -346,6 +380,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addDiscountToShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response addDiscountToShop(@RequestBody AddDiscountToShopRequest request) {
         return marketService.addDiscountToShop(request.getVisitorName(), request.getShopName(), request.getDiscount());
     }
@@ -353,6 +388,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removeDiscountFromShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response removeDiscountFromShop(@RequestBody RemoveDiscountFromShopRequest request) {
         return marketService.removeDiscountFromShop(request.getVisitorName(), request.getShopName(), request.getDiscount());
     }
@@ -360,6 +396,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addPurchasePolicyToShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response addPurchasePolicyToShop(@RequestBody AddPurchasePolicyToShopRequest request) {
         return marketService.addPurchasePolicyToShop(request.getVisitorName(), request.getShopName(), request.getPolicy());
     }
@@ -367,6 +404,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/removePurchasePolicyFromShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response removePurchasePolicyFromShop(@RequestBody RemovePurchasePolicyFromShopRequest request) {
         return marketService.removePurchasePolicyFromShop(request.getVisitorName(), request.getShopName(), request.getPolicy());
     }
@@ -374,6 +412,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getPurchasePoliciesOfShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<PurchasePolicyTypeWrapper>> getPurchasePoliciesOfShop(@RequestBody GetPoliciesRequest request) {
         return marketService.getPurchasePoliciesOfShop(request.getVisitorName(), request.getShopName());
     }
@@ -382,6 +421,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/getDiscountTypesOfShop")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<DiscountTypeWrapper>> getDiscountTypesOfShop(@RequestBody GetPoliciesRequest request) {
         return marketService.getDiscountTypesOfShop(request.getVisitorName(), request.getShopName());
     }
@@ -390,6 +430,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/isServerInit")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response isServerInit() {
         purchaseService = PurchaseService.getInstance();
         userService = UserService.getInstance();
@@ -399,6 +440,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/addABid")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response addABid(@RequestBody AddABidRequest request) {
         return marketService.addABid(request.getVisitorName (), request.getShopName (), request.getItemId (), request.getPrice (), request.getAmount());
     }
@@ -406,6 +448,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/approveABid")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response approveABid(@RequestBody ApproveABidRequest request) {
         return marketService.approveABid(request.getApproves (), request.getShopName (), request.getAskedBy (), request.getItemId ());
     }
@@ -413,6 +456,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/suggestNewOfferToBid")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response suggestNewOfferToBid(@RequestBody SuggestNewOfferToBidRequest request) {
         return marketService.suggestNewOfferToBid(request.getSuggester (), request.getShopName (), request.getAskedBy (), request.getItemId (), request.getNewPrice ());
     }
@@ -420,6 +464,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/rejectABid")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response rejectABid(@RequestBody RejectABidRequest request) {
         return marketService.rejectABid(request.getOpposed (), request.getShopName (), request.getBuyer (), request.getItemId ());
     }
@@ -427,30 +472,35 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/cancelABid")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response cancelABid(@RequestBody CancelABidRequest request) {
         return marketService.cancelABid(request.getShopName (), request.getBuyer (), request.getItemId ());
     }
     @Override
     @RequestMapping(value = "/approveAppointment")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response approveAppointment(@RequestBody ApproveAppointmentRequest request) {
         return marketService.approveAppointment(request.getOwnerName(), request.getAppointedName(), request.getShopName());
     }
     @Override
     @RequestMapping(value = "/rejectAppointment")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response rejectAppointment(@RequestBody ApproveAppointmentRequest request) {
         return marketService.rejectAppointment(request.getOwnerName(), request.getAppointedName(), request.getShopName());
     }
     @Override
     @RequestMapping(value = "/getMyPendingApps")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request) {
         return marketService.getMyPendingApps(request.getOwnerName(), request.getShopName());
     }
     @Override
     @RequestMapping(value = "/isSystemManager")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request) {
         return marketService.isSystemManager(request.getName());
     }
