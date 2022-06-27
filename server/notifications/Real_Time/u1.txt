@@ -18171,3 +18171,1071 @@ The user @visitor81 identified as member ownerNameTest3 in the market .
 Real Time message: 
 The member ownerNameTest3 logged out and and now identify as user @visitor82.
 
+Real Time message: 
+{"numOfVisitors":1,"numOfRegularMembers":0,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":1,"numOfRegularMembers":1,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":2,"numOfRegularMembers":1,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":3,"numOfRegularMembers":1,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":4,"numOfRegularMembers":1,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":4,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":4,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":1,"numOfRegularMembers":0,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":1,"numOfRegularMembers":1,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":2,"numOfRegularMembers":1,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":3,"numOfRegularMembers":1,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":4,"numOfRegularMembers":1,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":4,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":0,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":4,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":6,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":7,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":7,"numOfRegularMembers":3,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":7,"numOfRegularMembers":3,"numOfShopsManagers":0,"numOfOwners":2,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":12,"numOfRegularMembers":4,"numOfShopsManagers":0,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":13,"numOfRegularMembers":4,"numOfShopsManagers":0,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":14,"numOfRegularMembers":4,"numOfShopsManagers":0,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":14,"numOfRegularMembers":5,"numOfShopsManagers":0,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":14,"numOfRegularMembers":5,"numOfShopsManagers":0,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":15,"numOfRegularMembers":5,"numOfShopsManagers":0,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":16,"numOfRegularMembers":5,"numOfShopsManagers":0,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":17,"numOfRegularMembers":5,"numOfShopsManagers":0,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":17,"numOfRegularMembers":6,"numOfShopsManagers":0,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":17,"numOfRegularMembers":6,"numOfShopsManagers":0,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":18,"numOfRegularMembers":6,"numOfShopsManagers":0,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":19,"numOfRegularMembers":6,"numOfShopsManagers":0,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":20,"numOfRegularMembers":6,"numOfShopsManagers":0,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":20,"numOfRegularMembers":7,"numOfShopsManagers":0,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":20,"numOfRegularMembers":7,"numOfShopsManagers":0,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":64,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":68,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":80,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":81,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":11,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":64,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":68,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":80,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":81,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":11,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":64,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":68,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":80,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":81,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":11,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":64,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":68,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":80,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":81,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":11,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":64,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":68,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":80,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":81,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":11,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":64,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":68,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":80,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":81,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":11,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":64,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":68,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":80,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":81,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":11,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":60,"numOfRegularMembers":7,"numOfShopsManagers":1,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":60,"numOfRegularMembers":8,"numOfShopsManagers":1,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":61,"numOfRegularMembers":8,"numOfShopsManagers":1,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":62,"numOfRegularMembers":8,"numOfShopsManagers":1,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":8,"numOfShopsManagers":1,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":3,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":4,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":71,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":72,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":73,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":73,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":73,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":63,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":64,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":65,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":10,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":5,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":66,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":68,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":11,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":6,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":69,"numOfRegularMembers":12,"numOfShopsManagers":1,"numOfOwners":7,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":74,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":75,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":13,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":8,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":76,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":77,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":78,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":14,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":9,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":79,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":80,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":81,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":15,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":10,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":82,"numOfRegularMembers":16,"numOfShopsManagers":1,"numOfOwners":11,"numOfSystemManager":1}
+
+

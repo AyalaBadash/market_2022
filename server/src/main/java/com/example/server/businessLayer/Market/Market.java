@@ -1051,6 +1051,7 @@ public class Market {
 
         File myObj = new File(getConfigDir() + name);
         if (!myObj.exists()) {
+            DebugLog.getInstance().Log("Services configurations file does not exists. cannot init the market.");
             throw new MarketException("Services configurations file does not exists.");
         }
         try{
@@ -1084,6 +1085,7 @@ public class Market {
             return;
         }
         if(vals.length<2){
+            DebugLog.getInstance().Log(String.format("Missing init values for %s. Could not init the system services.",vals[0]));
             throw new MarketException(String.format("Missing init values for %s. Could not init the system services.",vals[0]));
         }
         if (vals[0].contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
@@ -1127,7 +1129,7 @@ public class Market {
         } else if (val.contains(MarketConfig.TEXT_PUBLISHER)) {
             publisher = TextDispatcher.getInstance();
         } else {
-            DebugLog.getInstance().Log("Faileed to init notification service.");
+            DebugLog.getInstance().Log("Failed to init notification service.");
             throw new MarketException("Failed to init notification service");
         }
         notificationHandler = NotificationHandler.getInstance();
@@ -1139,7 +1141,8 @@ public class Market {
         if (val.contains(MarketConfig.WSEP_SERVICE)) {
             supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), false);
         } else {
-            throw new MarketException("Failed to init payment service");
+            DebugLog.getInstance().Log("Failed to init supply service.");
+            throw new MarketException("Failed to init supply service");
         }
     }
 
@@ -1148,6 +1151,7 @@ public class Market {
         if (val.contains(MarketConfig.WSEP_SERVICE)) {
             paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), false);
         } else {
+            DebugLog.getInstance().Log("Failed to init payment service.");
             throw new MarketException("Failed to init payment service");
         }
     }
@@ -1327,14 +1331,14 @@ public class Market {
 
         }
         if (publisher == null | notificationHandler == null) {
-            EventLog eventLog = EventLog.getInstance();
+            DebugLog eventLog = DebugLog.getInstance();
             eventLog.Log("The market did not initialized properly. Missing notifications service");
 
             ans = 3;
 
         }
         if (systemManagerName == null || systemManagerName.isEmpty()) {
-            EventLog eventLog = EventLog.getInstance();
+            DebugLog eventLog = DebugLog.getInstance();
             eventLog.Log("The market did not initialized properly. Missing system manager");
             ans = 4;
         } else {
@@ -1342,6 +1346,8 @@ public class Market {
             eventLog.Log("The market successfully initialized.");
         }
         if (ans > 0) {
+            DebugLog eventLog = DebugLog.getInstance();
+            eventLog.Log("The market did not initialized properly. Some of the services did not supplied.");
             throw new MarketException("The market did not initialized properly. Some of the services did not supplied.");
         }
     }

@@ -249,13 +249,13 @@ public class NotificationHandler {
     }
     public void sendAppointmentRejectedNotification(String appointedName, String ownerName, String shopName) {
         RealTimeNotifications not= new RealTimeNotifications();
-        not.creadteAppointmentRejectedMessage(appointedName, ownerName, shopName);
+        not.createAppointmentRejectedMessage(appointedName, ownerName, shopName);
         sendNotification(appointedName, not, true);
     }
 
     public void sendAppointmentApproved(String appointedName, String ownerName, String shopName) {
         RealTimeNotifications not= new RealTimeNotifications();
-        not.creadteAppointmentApprovedMessage(appointedName, ownerName, shopName);
+        not.createAppointmentApprovedMessage(ownerName, shopName);
         sendNotification(appointedName, not, true);
     }
     public void sendNewAppointmentBatch(List<String> owners, Member appointed, Member superVisor, String shopName, String role) {
@@ -374,14 +374,7 @@ public class NotificationHandler {
         sendNotification(appointed.getName(),not,true);
     }
 
-    public void sendNewShopOwner(Member shopOwner, Member appointed, String shopName) {
-
-        RealTimeNotifications not= new RealTimeNotifications();
-        not.createNewOwnerMessage(shopOwner.getName(),appointed.getName(),shopName);
-        sendNotification(appointed.getName(),not,true);
-    }
-
-    public void sendStatistics(Statistics statistics, String systemManager) {
+    public synchronized void sendStatistics(Statistics statistics, String systemManager) {
         RealTimeNotifications not = new RealTimeNotifications();
         not.createAnotherMessage(statistics.toString());
         UserController userController = UserController.getInstance();
