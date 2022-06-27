@@ -8,7 +8,7 @@ The configuration file contains the initialized data needed for the market loadi
 - Init data configuration.
 - Data source configurations.
 
-All methods, are called from the isInit() method in the market only if the market initializer asked for data load. In case the market will be initialize by the user without any additional data, only the services file will be used in order to set the services. The services will be authomatically configure into default values unless the user choose otherwise in the config file.
+All configurations, are called  only if the market initializer asked for data load. In case the market will be initialize by the user without any additional data, only the services file will be used in order to set the services. The services will be authomatically configure into default values unless the user choose otherwise in the config file.
 
 ## Services Configurations
 The configurations file is a txt file called config.txt contains the relevand parameters for the initialization of the system external services. The services will include:
@@ -56,6 +56,17 @@ The methods available are:
 
 Important! 
 The methods should be in the correct order, If a method will not appear after all the pre-methods nedded for it to succeed, it will not be executed.
+
+By default, the data will be:
+- System manager: u1
+- Members: u1,u2,u3,u4,u5,u6
+- mpasswords: all of the members passwords are 'password'
+- Logged In: none
+- Shops: s1
+- Items: bamba- in shop s1
+- Owners: s2,u4,u5- owners of s1
+- Managers: s3- manager of s1
+
 
 ## Data source 
 A file contains the data source configurations. The file contains the configurations called DataSourceConfig.txt as part of the configuration files directory.
