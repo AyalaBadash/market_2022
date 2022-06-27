@@ -1484,4 +1484,34 @@ public class Market {
         Member member = userController.getMember(memberName);
         return member.getAcquisitions();
     }
+
+    public List<String> approveOrRejectBatch(String shopName, String ownerName, List<String> appointedNames, boolean approve) throws MarketException {
+        Shop shop = shops.get(shopName);
+        if (shop==null){
+            DebugLog.getInstance().Log("Tried to access appointments of non existing shop.");
+            throw new MarketException("Tried to access appointments of non existing shop.");
+        }
+        List<String> failed = new ArrayList<>();
+        for (String name:appointedNames){
+            if (approve){
+                try {
+                    shop.approveAppointment(name, ownerName);
+                }
+                catch (MarketException ex)
+                {
+                    failed.add(name);
+                }
+            }
+            else {
+                try {
+                    shop.rejectAppointment(name, ownerName);
+                }
+                catch (MarketException ex)
+                {
+                    failed.add(name);
+                }
+            }
+        }
+        return failed;
+    }
 }

@@ -215,8 +215,7 @@ public interface IService {
      */
     public Response changeShopItemInfo(ChangeShopItemInfoRequest request);
 
-    @RequestMapping(value = "/editItemRequest")
-    @CrossOrigin
+
     Response editItem(@RequestBody editItemRequest request);
 
     /**
@@ -413,5 +412,8 @@ public interface IService {
     ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request);
 
 
+    ResponseT<List<String>> approveOrRejectBatch(@RequestBody approveOrRejectBatchRequest request);
+
     ResponseT<List<AcquisitionFacade>> getAcqsForMember(@RequestBody getAcqsForMemberRequest request);
+
 }
