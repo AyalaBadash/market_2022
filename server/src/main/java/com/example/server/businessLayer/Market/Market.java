@@ -25,7 +25,7 @@ import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.NameValuePair;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1057,21 +1057,22 @@ public class Market {
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
+                if(data.isEmpty())
+                    continue;
                 String[] vals = data.split("::");
                 setService(vals);
             }
         } catch (FileNotFoundException e){
-            throw new MarketException("file not found while reading configuration file");
+            DebugLog.getInstance().Log("File not found while reading configuration file in market init");
+            throw new MarketException("File not found while reading configuration file");
         }
         if (paymentServiceProxy == null || supplyServiceProxy == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-            throw new MarketException("market needs payment and supply services for initialize");
+            DebugLog.getInstance().Log("A market initialization failed . Lack of payment / supply services ");
+            throw new MarketException("Market needs payment and supply services for initialize");
         }
         if (publisher == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of publisher services ");
-            throw new MarketException("market needs publisher services for initialize");
+            DebugLog.getInstance().Log("A market initialization failed . Lack of publisher services ");
+            throw new MarketException("Market needs publisher services for initialize");
 
         }
 
@@ -1082,8 +1083,8 @@ public class Market {
         if(vals.length==0){
             return;
         }
-        if(vals.length<2 || (vals[0].equals(MarketConfig.SYSTEM_MANAGER_NAME) && vals.length<3)){
-            throw new MarketException(String.format("Missing init values for %s. Could not init the services.",vals[0]));
+        if(vals.length<2){
+            throw new MarketException(String.format("Missing init values for %s. Could not init the system services.",vals[0]));
         }
         if (vals[0].contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
             initPaymentService(vals[1]);
@@ -1091,11 +1092,6 @@ public class Market {
             initSupplyService(vals[1]);
         } else if (vals[0].contains(MarketConfig.PUBLISHER_SERVICE_NAME)) {
             initNotificationService(vals[1]);
-        } else if (vals[0].contains(MarketConfig.SYSTEM_MANAGER_NAME)){
-            if (MarketConfig.USING_DATA && (systemManagerName == null || systemManagerName.isEmpty())) {
-                initManager(vals[1], vals[2]);
-                statistics.setSystemManager(vals[1]);
-            }
         }
     }
 
@@ -1131,6 +1127,7 @@ public class Market {
         } else if (val.contains(MarketConfig.TEXT_PUBLISHER)) {
             publisher = TextDispatcher.getInstance();
         } else {
+            DebugLog.getInstance().Log("Faileed to init notification service.");
             throw new MarketException("Failed to init notification service");
         }
         notificationHandler = NotificationHandler.getInstance();
@@ -1176,8 +1173,18 @@ public class Market {
 
     private void setData(String[] vals) throws MarketException {
 
-        DebugLog debugLog = DebugLog.getInstance();
+        EventLog debugLog = EventLog.getInstance();
         String command = vals[0];
+        if (command.contains(MarketConfig.SYSTEM_MANAGER_NAME)){
+            if (systemManagerName == null || systemManagerName.isEmpty()) {
+                if(vals.length!=3){
+                    DebugLog.getInstance().Log("Failed to init system manager from data file.");
+                    throw new MarketException("Failed to init system manager from data file.");
+                }
+                initManager(vals[1], vals[2]);
+                statistics.setSystemManager(vals[1]);
+            }
+        }
         if (command.contains("Register")) {
             if (vals.length >= 3) {
                 debugLog.Log("Method register from init file has called. Args are: " + vals[1] + " " + vals[2]);
@@ -1440,6 +1447,10 @@ public class Market {
     public String resetSystemManager() {
         String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
         systemManagerName="";
+        return ret;
+    }
+    public String getSystemManager() {
+        String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
         return ret;
     }
     public void restoreSystemManager(String uName, String password){

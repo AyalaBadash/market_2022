@@ -27,7 +27,7 @@ public class ServicesTests {
     static PaymentServiceProxy paymentServiceProxy;
     static SupplyServiceProxy supplyServiceProxy;
     String systemManagerName = "u1";
-    String systemManagerPassword = "p1";
+    String systemManagerPassword = "password";
     String ItemName= "item1";
     Item itemAdded;
     int productAmount=20;
@@ -248,28 +248,6 @@ public class ServicesTests {
         Assertions.assertTrue(textDispatcher.addMessgae(name,not));
         not.createShopPermissionDeniedMessage("some shop", "some permission");
         Assertions.assertTrue(textDispatcher.addMessgae(name,not));
-    }
-
-    @Test
-    @DisplayName("System init from file, check the file is loaded to the system.")
-    public void initFromFile(){
-        try{
-            UserController userController= UserController.getInstance();
-            List<String> list= new ArrayList<>();
-            try {
-                market.loadDataFromFile();
-            }
-            catch(Exception e){
-
-            }
-            list.add("u2");
-            list.add("u3");
-            list.add("u4");
-            Assertions.assertTrue(userController.allInMarket(list));
-        }
-        catch(Exception e){
-            assert false;
-        }
     }
 
     @Test
