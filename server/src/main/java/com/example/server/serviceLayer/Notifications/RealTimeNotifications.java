@@ -72,24 +72,21 @@ public class RealTimeNotifications extends Notification{
     }
 
     public void createUserLoggedIn(String name, int size) {
-        message= String.format("The visitor %s entered the market.\nCurrently, there are:: %d visitors in the market.",name,size);
+        message= String.format("Visitor %s entered the market.\nCurrently, there are:: %d visitors in the market.",name,size);
     }
     public void createUserLoggedout(String name, int size) {
-        message= String.format("The visitor %s leaved the market.\nCurrently, there are:: %d visitors in the market.",name,size);
-    }
-    public void createMemberLoggedIn(String memberName,String visitorName) {
-        message= String.format("The user %s identified as member %s in the market .",visitorName, memberName);
+        message= String.format("Visitor %s leaved the market.\nCurrently, there are:: %d visitors in the market.",name,size);
     }
     public void createMemberLoggedOut(String memberName,String visitorName) {
-        message= String.format("The member %s logged out and and now identify as user %s.",memberName, visitorName);
+        message= String.format("Member %s logged out and and now identify as user %s.",memberName, visitorName);
     }
 
-    public void creadteAppointmentRejectedMessage(String appointedName, String ownerName, String shopName) {
-        message=String.format("Hello %s. Unfortunately, your appointment by %s to the shop %s has been rejected.",appointedName, ownerName,shopName);
+    public void createAppointmentRejectedMessage(String appointedName, String ownerName, String shopName) {
+        message=String.format("Unfortunately, your appointment by %s to the shop %s has been rejected.",appointedName, ownerName,shopName);
     }
 
-    public void creadteAppointmentApprovedMessage(String appointedName, String ownerName, String shopName) {
-        message=String.format("Hello %s. Your appointment by %s to the shop %s has been approved.",appointedName, ownerName,shopName);
+    public void createAppointmentApprovedMessage(String ownerName, String shopName) {
+        message=String.format("Your appointment by %s to the shop %s has been approved.", ownerName,shopName);
     }
 
     public void createNewAppointmentMessage(String appointed, String owner, String shopName, String role) {
@@ -97,6 +94,6 @@ public class RealTimeNotifications extends Notification{
     }
 
     public void createReOpenedShopMessage(String shopName, String founder) {
-        message=String.format("There shop %s, was re-opened by its founder %s",shopName,founder);
+        message=String.format("The shop %s, was re-opened by its founder %s",shopName,founder);
     }
 }
