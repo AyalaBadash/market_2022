@@ -91,7 +91,7 @@ public class Market {
 
     private Statistics statistics;
 
-    private Market() {
+    public Market() {
         this.shops = new ConcurrentHashMap<>();
         this.allItemsInMarketToShop = new ConcurrentHashMap<>();
         this.itemByName = new ConcurrentHashMap<>();

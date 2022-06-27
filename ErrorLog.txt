@@ -814,3 +814,22 @@ Level Error : Cannot add item that does not exists in the shop.
 Level Error : User tried to register with taken name.
 Level Error : User tried to register with taken name.
 Level Error : User tried to register with taken name.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : User tried to register with taken name.
