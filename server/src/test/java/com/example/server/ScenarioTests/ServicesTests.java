@@ -48,8 +48,8 @@ public class ServicesTests {
     static Market market ;
     Visitor visitor;
     static boolean useData;
-    static String ManName;
-    static String ManPass;
+    static String ManName="u1";
+    static String ManPass = "password";
 
 
     @BeforeAll

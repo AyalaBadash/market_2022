@@ -1454,7 +1454,8 @@ public class Market {
 
     public String resetSystemManager() {
         String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
-        systemManagerName="";
+        //todo ayala
+        instance.systemManagerName="";
         return ret;
     }
     public String getSystemManager() {
@@ -1463,6 +1464,5 @@ public class Market {
     }
     public void restoreSystemManager(String uName, String password){
         systemManagerName=uName;
-
     }
 }
