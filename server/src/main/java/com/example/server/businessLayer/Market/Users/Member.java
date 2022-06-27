@@ -5,12 +5,12 @@ import com.example.server.businessLayer.Market.Acquisition;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.AcquisitionHistory;
-import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.IHistory;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import com.example.server.dataLayer.repositories.MemberRep;
+import com.example.server.businessLayer.Market.Appointment*;
 
 import javax.persistence.*;
 import java.util.ArrayList;

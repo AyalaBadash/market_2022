@@ -1,7 +1,6 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
 import com.example.server.businessLayer.Market.AcquisitionHistory;
-import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
 import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;

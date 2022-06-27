@@ -1,6 +1,5 @@
 package com.example.server.businessLayer.Market.Appointment.Permissions;
 
-import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Shop;
 
 import javax.persistence.DiscriminatorValue;
