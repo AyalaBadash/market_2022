@@ -1,7 +1,5 @@
 package com.example.server.serviceLayer.Notifications;
 
-import com.example.server.businessLayer.Market.Users.Member;
-
 public class RealTimeNotifications extends Notification{
 
     public RealTimeNotifications(){
@@ -84,5 +82,21 @@ public class RealTimeNotifications extends Notification{
     }
     public void createMemberLoggedOut(String memberName,String visitorName) {
         message= String.format("The member %s logged out and and now identify as user %s.",memberName, visitorName);
+    }
+
+    public void creadteAppointmentRejectedMessage(String appointedName, String ownerName, String shopName) {
+        message=String.format("Hello %s. Unfortunately, your appointment by %s to the shop %s has been rejected.",appointedName, ownerName,shopName);
+    }
+
+    public void creadteAppointmentApprovedMessage(String appointedName, String ownerName, String shopName) {
+        message=String.format("Hello %s. Your appointment by %s to the shop %s has been approved.",appointedName, ownerName,shopName);
+    }
+
+    public void createNewAppointmentMessage(String appointed, String owner, String shopName, String role) {
+        message=String.format("There was a new appointment in shop %s, %s appointed %s for %s",shopName,owner,appointed,role);
+    }
+
+    public void createReOpenedShopMessage(String shopName, String founder) {
+        message=String.format("There shop %s, was re-opened by its founder %s",shopName,founder);
     }
 }

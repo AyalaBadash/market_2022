@@ -690,7 +690,14 @@ public class Market {
         ClosedShopsHistory.getInstance().reopenShop(shopName);
         shopToOpen.setClosed(false);
         validateAllEmployees(shopToOpen);
-        //TODO - send notifications for managers and owners.
+        try {
+            List<String> works=  shopToOpen.getShopOwners().values().stream().map(x -> x.getAppointed().getName()).collect(Collectors.toList());
+            works.addAll(shopToOpen.getShopManagers().values().stream().map(x-> x.getAppointed().getName()).collect(Collectors.toList()));
+            NotificationHandler.getInstance().sendReOpenedShopBatch(works, name, shopName);
+            EventLog.getInstance().Log("Message has been sent to shop workers about the re-open.");
+        } catch (Exception e) {
+            ErrorLog.getInstance().Log("Could not send notification to shop workers about the re-open.");
+        }
         EventLog.getInstance().Log(shopName+" has been re-opened.");
     }
 
