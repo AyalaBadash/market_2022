@@ -170,3 +170,19 @@ Real Time message:
 The shoprazShop was closed
 
 
+Real Time message: 
+The shoprazShop was closed
+
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+Hello,
+ A new bid for milk in shop razShop at a price of 3.000000 from ayala has been created.
+
+Real Time message: 
+The shoprazShop was closed
+
+

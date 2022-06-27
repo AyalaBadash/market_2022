@@ -742,10 +742,8 @@ public class Shop implements IHistory {
     }
 
     public void rejectABid(String opposed, String buyer, int itemId) throws MarketException {
-        //TODO review - if with thr should come first?
         Bid bidToReject = findBid ( buyer, itemId );
         bidToReject.rejectBid(opposed);
-        //bidToReject.rejectBid ( buyer ); //TODO Review - sending buyer mistake.
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = itemMap.get ( itemId ).getName ();
         if(opposed.equals ( buyer )){
@@ -755,6 +753,7 @@ public class Shop implements IHistory {
             DebugLog.getInstance ().Log ( "visitor does not has the authority to reject a bid." );
             throw new MarketException ( "visitor does not has the authority to reject a bid." );
         }
+        bids.remove(bidToReject);
         handler.sendBidRejectedNotification ( buyer, bidToReject.isMember (), bidToReject.getPrice (), itemName, shopName );
         EventLog.getInstance().Log("The bid for the buyer:"+buyer+" in the shop:"+shopName+" has been rejected");
     }
@@ -763,6 +762,7 @@ public class Shop implements IHistory {
         Bid bidToCancel = findBid ( buyer, itemId );
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = itemMap.get ( itemId ).getName ();
+        bids.remove(bidToCancel);
         handler.sendBidCanceledToApprovesNotificationBatch ( bidToCancel.getShopOwnersStatus ().keySet ().stream( ).toList (), buyer, bidToCancel.getPrice (), itemName, shopName );
         EventLog.getInstance().Log(buyer+" has canceled his bid in the shop:"+shopName);
     }

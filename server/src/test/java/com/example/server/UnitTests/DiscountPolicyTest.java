@@ -117,13 +117,35 @@ public class DiscountPolicyTest {
         }
         Mockito.when(shoppingBasket.getPrice()).thenReturn(100.0);
         try {
+            Mockito.when(simpleDiscount.calculateDiscount(shoppingBasket)).thenReturn(100.0);
+            Mockito.when(conditionalDiscount.calculateDiscount(shoppingBasket)).thenReturn(100.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            Assertions.assertEquals(100.0, discountPolicy.calculateDiscount(shoppingBasket));
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Calculate Discount - price zero")
+    public void CalculateDiscountPriceZero(){
+        try {
+            discountPolicy.addNewDiscount(simpleDiscount);
+            discountPolicy.addNewDiscount(conditionalDiscount);
+        } catch (MarketException e) {
+            assert false;
+        }
+        Mockito.when(shoppingBasket.getPrice()).thenReturn(100.0);
+        try {
             Mockito.when(simpleDiscount.calculateDiscount(shoppingBasket)).thenReturn(0.0);
             Mockito.when(conditionalDiscount.calculateDiscount(shoppingBasket)).thenReturn(0.0);
         } catch (MarketException e) {
             assert false;
         }
         try {
-            Assertions.assertEquals(100.0, discountPolicy.calculateDiscount(shoppingBasket));
+            Assertions.assertEquals(0.0, discountPolicy.calculateDiscount(shoppingBasket));
         } catch (MarketException e) {
             assert false;
         }
@@ -140,8 +162,8 @@ public class DiscountPolicyTest {
             assert false;
         }
         try {
-            Mockito.when(simpleDiscount.calculateDiscount(shoppingBasket)).thenReturn(10.0);
-            Mockito.when(conditionalDiscount.calculateDiscount(shoppingBasket)).thenReturn(15.0);
+            Mockito.when(simpleDiscount.calculateDiscount(shoppingBasket)).thenReturn(90.0);
+            Mockito.when(conditionalDiscount.calculateDiscount(shoppingBasket)).thenReturn(85.0);
         } catch (MarketException e) {
             assert false;
         }

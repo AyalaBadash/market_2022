@@ -1116,7 +1116,7 @@ public class MarketUnitTest {
             ShoppingCart ayalaCart = member.getMyCart();
             ShoppingBasket ayalaShopBasket = ayalaCart.getCart().get(shop);
             Assertions.assertEquals(0,ayalaShopBasket.getBids().size());
-            //TODO - where do we remove the rejected bid?
+
         } catch (MarketException e) {
             assert false;
         }

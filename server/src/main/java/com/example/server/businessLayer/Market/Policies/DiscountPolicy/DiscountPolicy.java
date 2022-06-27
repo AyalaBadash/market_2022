@@ -23,7 +23,7 @@ public class DiscountPolicy {
             double curPrice = discountType.calculateDiscount(shoppingBasket);
             priceAfterDiscount -= (price - curPrice);//x-= y => x= x-y
         }
-        return priceAfterDiscount;
+        return Math.max(0,priceAfterDiscount);
     }
 
     public void addNewDiscount(DiscountType discountType) throws MarketException {
