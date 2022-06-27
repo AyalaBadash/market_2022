@@ -943,6 +943,7 @@ public class Shop implements IHistory {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+        shopRep.save(this);
     }
 
     public void setShopManagers(Map<String, Appointment> shopManagers) {

@@ -388,6 +388,8 @@ public class Service implements IService {
     @RequestMapping(value = "/isServerInit")
     @CrossOrigin
     public Response isServerInit() {
+        purchaseService = PurchaseService.getInstance();
+        userService = UserService.getInstance();
         return marketService.isServerInit();
     }
 

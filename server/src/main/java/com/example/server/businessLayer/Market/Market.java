@@ -59,6 +59,7 @@ public class Market {
     private Publisher publisher;
     private static Market instance;
     Map<String, Integer> numOfAcqsPerShop;
+    private boolean loadedFromDB = false;
 
     @Autowired @Transient private ItemRep itemRep;
     @Autowired @Transient private ShopRep shopRep;
@@ -149,7 +150,7 @@ public class Market {
                 throw new MarketException("market is already initialized");
             }
             initRepositories();
-            loadData();
+//            loadData();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
@@ -188,8 +189,6 @@ public class Market {
     }
 
     private void readConfigurationFile(String name) throws MarketException{
-
-
         File myObj = new File(getConfigDir() + name);
         if (!myObj.exists()) {
             throw new MarketException("Services configurations file does not exists.");
@@ -226,7 +225,6 @@ public class Market {
      * @throws MarketException
      */
     private void setService(String val, String val1) throws MarketException {
-
         if (val.contains(MarketConfig.PAYMENT_SERVICE_NAME)) {
             initPaymentService(val1);
         } else if (val.contains(MarketConfig.SUPPLY_SERVICE_NAME)) {
@@ -573,7 +571,6 @@ public class Market {
         if (shopToClose.getShopFounder().getName().equals(shopOwnerName)) {
             //shops.remove(shopName);
             //todo
-            shopRep.delete(shopToClose); //todo shaked check
             removeClosedShopItemsFromMarket(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
@@ -1146,12 +1143,16 @@ public class Market {
     }
 
     public boolean isInit() throws MarketException {
-
+        initRepositories();
         if (MarketConfig.USING_DATA) {
             readDataSourceConfig();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             readInitFile(MarketConfig.DATA_FILE_NAME);
             return true;
+        }
+        if (!loadedFromDB) {
+            loadData();
+            loadedFromDB = true;
         }
         checkSystemInit();
         return this.systemManagerName != null && !this.systemManagerName.equals("");
@@ -1213,7 +1214,7 @@ public class Market {
 
     private void setData(String[] vals) throws MarketException {
 
-        DebugLog debugLog = DebugLog.getInstance();
+        EventLog debugLog = EventLog.getInstance();
         String command = vals[0];
         if (command.contains("Register")) {
             if (vals.length >= 3) {
