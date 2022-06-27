@@ -30,6 +30,25 @@ public class Acquisition {
         supplyConfirmed = false;
     }
 
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof Acquisition){
+            Acquisition acquisitionToCompare = (Acquisition) object;
+            if(!acquisitionToCompare.buyerName.equals ( this.buyerName ))
+                return false;
+            if(acquisitionToCompare.supplyID != this.supplyID)
+                return false;
+            if(acquisitionToCompare.paymentID != this.paymentID)
+                return false;
+            if(!acquisitionToCompare.shoppingCartToBuy.equals ( this.shoppingCartToBuy ))
+                return false;
+            if(acquisitionToCompare.supplyConfirmed == this.supplyConfirmed && acquisitionToCompare.paymentDone == this.paymentDone)
+                return true;
+        }
+        return false;
+    }
+
+
     public void buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
 
         // checks the price is correct
