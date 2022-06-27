@@ -8378,3 +8378,31 @@ Level Error : Non member visitor tried to log in.
 Level Error : A market initialization failed .already initialized
 Level Error : User tried to register with taken name.
 Level Error : User tried to register with taken name.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : Non member visitor tried to log in.
+Level Error : A market initialization failed .already initialized
+Level Error : Payment method details are illegal.
+Level Error : Payment method details are illegal.
+Level Error : razShop: cannot complete your purchase because some items are missing:
+milk X 5.000000
+
+Level Error : Payment method details are illegal.
+Level Error : Payment method details are illegal.
+Level Error : User tried to register with taken name.
+Level Error : Payment method details are illegal.
+Level Error : Payment method details are illegal.
+Level Error : The shop razShop is not closed.
+Level Error : user tried to reach a closed shop
+Level Error : the shop has been closed! there for cannot enter it any more
+Level Error : user tried to reach a closed shop
+Level Error : the shop has been closed! there for cannot enter it any more
+Level Error : You are not the shop founder . Only the founder can reopen the shop
+Level Error : You are not the shop founder . Only the founder can reopen the shop
+Level Error : shop does not exist in the market
+Level Error : User tried to register with taken name.
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions

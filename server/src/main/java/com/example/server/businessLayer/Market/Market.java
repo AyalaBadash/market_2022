@@ -764,7 +764,7 @@ public class Market {
         //Import the visitor and try to get it's cart.
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart;
-        Acquisition acquisition;
+        Acquisition acquisition= null;
 
         try {
             shoppingCart = visitor.getCart();
@@ -790,7 +790,9 @@ public class Market {
             acquisition = new Acquisition(shoppingCart, visitorName);
             acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
         } catch (Exception e) {
-
+            if (acquisition!= null) {
+                acquisition.shoppingCartToBuy.cancelShopSave();
+            }
             ErrorLog errorLog = ErrorLog.getInstance();
             errorLog.Log(e.getMessage());
             throw new MarketException(e.getMessage());
@@ -1361,7 +1363,7 @@ public class Market {
                 dir+="\\server";
             }
         }
-        String additional_dir = "\\config\\";
+        String additional_dir = "\\server\\config\\";
         if (MarketConfig.IS_MAC) {
             additional_dir = "/config/";
         }
