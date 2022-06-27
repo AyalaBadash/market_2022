@@ -766,7 +766,8 @@ public class Market {
             errorLog.Log(e.getMessage());
             throw new MarketException(e.getMessage());
         }
-        if(!shoppingCartToReturn.isEmpty()){
+
+        if(!acquisition.shoppingCartToBuy.isEmpty()){
             statistics.incNumOfAcquisitions();
         }
 

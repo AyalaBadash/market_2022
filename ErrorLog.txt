@@ -1029,3 +1029,6 @@ Level Error : Member who is not the system manager tried to access system purcha
 Level Error : member is not a system manager so is not authorized to get th information
 Level Error : Member who is not the system manager tried to access system purchase history
 Level Error : member is not a system manager so is not authorized to get th information
+Level Error : Non member visitor tried to log in.
+Level Error : A market initialization failed .already initialized
+Level Error : User tried to register with taken name.
