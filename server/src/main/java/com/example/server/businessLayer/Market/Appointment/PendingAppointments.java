@@ -34,6 +34,7 @@ public class PendingAppointments {
         this.appointments = appointments;
         pendingAptsRep.save(this);
     }
+
     public PendingAppointments(){
         this.appointments = new HashMap<>();
         this.agreements = new HashMap<>();

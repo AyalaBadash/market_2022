@@ -8,11 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-        name = "composite_discount_level_statee",
-        discriminatorType = DiscriminatorType.STRING
-)
-@DiscriminatorValue(value = "compositeDiscountLevelState")
 public abstract class CompositeDiscountLevelState extends DiscountLevelState {
     @ManyToMany (cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     protected List<DiscountLevelState> discountLevelStates;

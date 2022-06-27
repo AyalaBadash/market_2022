@@ -152,6 +152,7 @@ public class ShoppingBasket implements IHistory , Serializable {
 
     public void updatePrice(Shop shop) throws MarketException {
         setPrice (shop.calculateDiscount ( this ));
+        shoppingBasketRep.save(this);
     }
 
     public double getCurrentPrice(){

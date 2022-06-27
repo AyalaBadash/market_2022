@@ -7,7 +7,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
 @Entity
-@DiscriminatorValue(value = "MaxXorCompositeDiscountLevelState")
+@DiscriminatorValue(value = "MaxXor")
 public class MaxXorCompositeDiscountLevelState extends CompositeDiscountLevelState{
     public MaxXorCompositeDiscountLevelState(List<DiscountLevelState> discountLevelStates) {
         super ( discountLevelStates );

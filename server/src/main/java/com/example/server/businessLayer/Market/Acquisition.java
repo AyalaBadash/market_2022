@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import javax.persistence.*;
 import java.util.Map;
 
-@Entity
+//@Entity
 public class Acquisition {
     @Id
     @GeneratedValue
@@ -40,7 +40,7 @@ public class Acquisition {
         this.buyerName = buyerName;
         paymentDone = false;
         supplyConfirmed = false;
-        acquisitionRep.save(this);
+//        acquisitionRep.save(this);
     }
 
     public Acquisition(){}
@@ -110,7 +110,7 @@ public class Acquisition {
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
-        acquisitionRep.save(this);
+//        acquisitionRep.save(this);
     }
 
     private void isPriceCorrect(NotificationHandler publisher, double expectedPrice) throws MarketException {

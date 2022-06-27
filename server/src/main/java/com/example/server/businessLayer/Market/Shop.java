@@ -2,8 +2,12 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.PendingAppointments;
 import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.CompositeDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CompositeDiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.CompositePurchasePolicyType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicy;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.CompositePurchasePolicyLevelState;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
@@ -147,7 +151,7 @@ public class Shop implements IHistory {
         }
         itemMap.remove ( item.getID() );
         itemsCurrentAmount.remove ( item.getID () );
-            shopRep.save(this);
+        shopRep.save(this);
         for(Bid bid : bids){
             if(bid.getItemId () == item.getID ()) {
                 bid.rejectBid ( shopOwnerName );
@@ -894,6 +898,7 @@ public class Shop implements IHistory {
             ShopOwnerAppointment appointment = pendingAppointments.getAppointments().get(appointedName);
             shopOwners.put(appointedName,appointment);
             pendingAppointments.removeAppointment(appointedName);
+            shopRep.save(this);
             EventLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
             for(Bid bid : bids) {
                 bid.addApproves(appointedName);
@@ -946,6 +951,42 @@ public class Shop implements IHistory {
 
     public void setShopOwners(Map<String, Appointment> shopOwners) {
         this.shopOwners = shopOwners;
+    }
+
+    public PendingAppointments getPendingAppointments() {
+        return pendingAppointments;
+    }
+
+    public void loadData(){
+        getItemMap().toString();
+        getItemsCurrentAmount().toString();
+        getPurchaseHistory().toString();
+
+        for (Appointment a : getEmployees().values()) {
+            a.setRelatedShop(this); //set related shop in appointment
+            a.getPermissions().toString();
+        }
+        bids.toString();
+        List<DiscountType> dscnts = getDiscountPolicy().getValidDiscounts();
+        dscnts.toString();
+        for (DiscountType dt : dscnts){
+            if (dt.getDiscountLevelState() instanceof CompositeDiscountLevelState)
+                ((CompositeDiscountLevelState) dt.getDiscountLevelState()).getDiscountLevelStates().toString();
+            if (dt instanceof CompositeDiscount)
+                ((CompositeDiscount) dt).getDiscountTypes().toString();
+        }
+        getDiscountPolicy().toString();
+        getPurchasePolicies().toString();
+        for (PurchasePolicyType p : getPurchasePolicies()) {
+            if (p instanceof CompositePurchasePolicyType)
+                ((CompositePurchasePolicyType) p).getPolicies().toString();
+            if (p.getPurchasePolicyLevelState() instanceof CompositePurchasePolicyLevelState)
+                ((CompositePurchasePolicyLevelState) p.getPurchasePolicyLevelState()).getPurchasePolicyLevelStates().toString();
+        }
+
+        getPurchasePolicy().toString();
+        getPendingAppointments().getAppointments().toString();
+        getPendingAppointments().getAgreements().toString();
     }
 }
 

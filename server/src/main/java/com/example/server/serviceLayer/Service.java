@@ -36,6 +36,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/firstInitMarket")
     @CrossOrigin
+//    @Transactional(rollbackOn = Exception.class)
     public Response firstInitMarket(@RequestBody InitMarketRequest request) {
         purchaseService = PurchaseService.getInstance();
         userService = UserService.getInstance();
@@ -45,7 +46,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/guestLogin")
     @CrossOrigin
-    @Transactional(rollbackOn = MarketException.class)
+//    @Transactional(rollbackOn = MarketException.class)
     public ResponseT<VisitorFacade> guestLogin() {
         return this.userService.guestLogin();
     }
@@ -75,10 +76,10 @@ public class Service implements IService {
         return userService.addPersonalQuery(request.getUserAdditionalQueries(), request.getUserAdditionalAnswers(), request.getMember());
     }
 
-
     @Override
     @RequestMapping(value = "/searchProductByName")
     @CrossOrigin
+    //    @Transactional(rollbackOn = Exception.class)
     public ResponseT<List<ItemFacade>> searchProductByName(@RequestBody SearchProductByNameRequest request) {
         return marketService.searchProductByName(request.getProductName());
     }

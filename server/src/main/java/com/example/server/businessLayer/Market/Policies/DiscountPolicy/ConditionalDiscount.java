@@ -13,7 +13,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscount
 import javax.persistence.*;
 
 @Entity
-@DiscriminatorValue(value = "ConditionalDiscount")
+@DiscriminatorValue(value = "CondDiscount")
 public class ConditionalDiscount extends DiscountType{
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.PERSIST})
     private Cond condition;

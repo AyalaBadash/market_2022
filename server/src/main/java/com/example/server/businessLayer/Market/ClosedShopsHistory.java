@@ -15,7 +15,7 @@ public class ClosedShopsHistory {
     @Id
     @GeneratedValue
     private long id;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "shop_to_closed_shop_history",
             joinColumns = {@JoinColumn(name = "ClosedShopsHistoryId", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "shop_name", referencedColumnName = "shop_name")})

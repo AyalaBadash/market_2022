@@ -7,7 +7,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.Map;
 @Entity
-@DiscriminatorValue(value = "AmountOfItemCondition")
+@DiscriminatorValue(value = "AmountOfItem")
 public class AmountOfItemCond extends Cond {
     private double amountNeeded;
     private Integer itemNeeded;

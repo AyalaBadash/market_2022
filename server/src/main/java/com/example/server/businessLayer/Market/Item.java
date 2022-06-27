@@ -137,4 +137,8 @@ public class Item implements IHistory {
     public static void setItemRep(ItemRep itemRepToSet){
         itemRep = itemRepToSet;
     }
+
+    public static ItemRep getItemRep() {
+        return itemRep;
+    }
 }

@@ -1,16 +1,19 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
+import com.example.server.dataLayer.repositories.AndCompDRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
 @Entity
-@DiscriminatorValue(value = "AndCompositeDiscountLevelState")
+@DiscriminatorValue(value = "And")
 public class AndCompositeDiscountLevelState extends CompositeDiscountLevelState{
+    private static AndCompDRep andCompDRep;
     public AndCompositeDiscountLevelState(List<DiscountLevelState> discountLevelStates) {
         super ( discountLevelStates );
+        andCompDRep.save(this);
     }
 
     public AndCompositeDiscountLevelState(){
@@ -70,5 +73,13 @@ public class AndCompositeDiscountLevelState extends CompositeDiscountLevelState{
     @Override
     public DiscountLevelStateFacade visitToFacade(MaxXorCompositeDiscountLevelStateFacade levelStateFacade) {
         return null;
+    }
+
+    public static AndCompDRep getAndCompDRep() {
+        return andCompDRep;
+    }
+
+    public static void setAndCompDRep(AndCompDRep andCompDRep) {
+        AndCompositeDiscountLevelState.andCompDRep = andCompDRep;
     }
 }

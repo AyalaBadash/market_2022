@@ -799,3 +799,18 @@ Level Error : User tried to register with taken name.
 Level Error : User tried to register with taken name.
 Level Error : shop does not exist in the market
 Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : You are not a shop owner
+Level Error : User tried to register with taken name.
+Level Error : deleted object would be re-saved by cascade (remove deleted object from associations): [com.example.server.businessLayer.Market.Shop#shop]; nested exception is javax.persistence.EntityNotFoundException: deleted object would be re-saved by cascade (remove deleted object from associations): [com.example.server.businessLayer.Market.Shop#shop]
+Level Error : User tried to register with taken name.
+Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : Cannot invoke "com.example.server.businessLayer.Market.Item.getID()" because "item" is null
+Level Error : User tried to register with taken name.
+Level Error : could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+Level Error : User tried to register with taken name.
+Level Error : Cannot add item that does not exists in the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.

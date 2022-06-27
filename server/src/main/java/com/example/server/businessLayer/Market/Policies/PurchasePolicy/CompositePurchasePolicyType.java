@@ -5,14 +5,9 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchaseP
 import javax.persistence.*;
 import java.util.List;
 @Entity
-@DiscriminatorValue(value = "CompositePurchasePolicyType")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-        name = "PurchasePolicyType",
-        discriminatorType = DiscriminatorType.STRING
-)
 public abstract class CompositePurchasePolicyType extends PurchasePolicyType {
-    @Transient
+    @ManyToMany (cascade = CascadeType.PERSIST)
     List<PurchasePolicyType> policies;
 
     public CompositePurchasePolicyType(PurchasePolicyLevelState purchasePolicyLevelState, List<PurchasePolicyType> policies) {

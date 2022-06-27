@@ -12,7 +12,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
 @Entity
-@DiscriminatorValue(value = "MaxCompositeDiscount")
+@DiscriminatorValue(value = "Max")
 public class MaxCompositeDiscount extends CompositeDiscount{
     private static MaxCompDiscountRep maxCompDiscountRep;
     public MaxCompositeDiscount(List<DiscountType> discountTypes) {

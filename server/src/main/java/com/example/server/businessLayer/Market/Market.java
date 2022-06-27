@@ -1,13 +1,18 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.*;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.CompositeDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.AndCompositeDiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.CompositeDiscountLevelState;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.SimpleDiscount;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.CategoryPurchasePolicyLevelState;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.CompositePurchasePolicyLevelState;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Payment.WSEPPaymentServiceAdapter;
@@ -80,6 +85,7 @@ public class Market {
     @Autowired @Transient private AtLeastPolicyRep atLeastPolicyRep;
     @Autowired @Transient private PurchasePolicyRep purchasePolicyRep;
     @Autowired @Transient private CategoryPolicyRep categoryPolicyRep;
+    @Autowired @Transient private AndCompDRep andCompDRep;
 
 
     //constructor
@@ -133,6 +139,7 @@ public class Market {
         AtLeastPurchasePolicyType.setAtLeastPolicyRep(atLeastPolicyRep);
         PurchasePolicy.setPurchasePolicyRep(purchasePolicyRep);
         CategoryPurchasePolicyLevelState.setCategoryPolicyRep(categoryPolicyRep);
+        AndCompositeDiscountLevelState.setAndCompDRep(andCompDRep);
     }
 
     public synchronized void firstInitMarket(String userName, String password) throws MarketException {
@@ -593,8 +600,9 @@ public class Market {
             throw new MarketException("shop does not exist in the market");
         }
         Item itemToDelete = shop.getItemMap().get(itemID);
-        userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         shop.deleteItem(itemToDelete, shopOwnerName);
+        Item.getItemRep().delete(itemToDelete);
+        userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
     }
@@ -1407,20 +1415,9 @@ public class Market {
 
         for (Shop shop : shops) {
             this.shops.put(shop.getShopName(), shop); //init shops
-            shop.getItemMap().toString();
-            shop.getItemsCurrentAmount().toString();
-            shop.getPurchaseHistory().toString();
             for (Integer itemid : shop.getItemMap().keySet())
                 this.allItemsInMarketToShop.put(itemid, shop.getShopName()); //init allItemsInShop
-            for (Appointment a : shop.getEmployees().values()) {
-                a.setRelatedShop(shop); //set related shop in appointment
-                a.getPermissions().toString();
-            }
-            shop.bids.toString();
-            shop.getDiscountPolicy().getValidDiscounts().toString();
-            shop.getDiscountPolicy().toString();
-            shop.getPurchasePolicies().toString();
-            shop.getPurchasePolicy().toString();
+            shop.loadData();
         }
 
         int largestItemId = 1;
@@ -1439,11 +1436,6 @@ public class Market {
                 break;
             }
         }
-        memberRep.findAll();
-        itemRep.findAll();
-        shopRep.findAll();
-        loginCardRep.findAll();
-
     }
 
     public void addABid(String visitorName, String shopName, Integer itemId, Double price, Double amount) throws MarketException {

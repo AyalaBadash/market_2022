@@ -179,7 +179,7 @@ public class MarketService {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
+//    @Transactional(rollbackOn = Exception.class)
     public Response removeItemFromShop(String shopOwnerName, ItemFacade item, String shopName) {
         try {
             market.removeItemFromShop(shopOwnerName, item.getId(), shopName);
@@ -249,7 +249,7 @@ public class MarketService {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
+//    @Transactional(rollbackOn = Exception.class)
     public Response closeShop(String shopOwnerName, String shopName) {
         Response response;
         try {
