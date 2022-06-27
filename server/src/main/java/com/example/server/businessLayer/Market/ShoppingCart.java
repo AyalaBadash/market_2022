@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.dataLayer.repositories.ShoppingCartRep;
@@ -38,7 +39,9 @@ public class ShoppingCart implements IHistory {
 
     public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
-        shoppingCartRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
     }
 
     @Override
@@ -66,7 +69,9 @@ public class ShoppingCart implements IHistory {
         for (Map.Entry<Shop, ShoppingBasket> shopToBasket : cart.entrySet()) {
             shopToBasket.getKey().releaseItems(shopToBasket.getValue());
         }
-        shoppingCartRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
     }
 
     /**
@@ -98,7 +103,9 @@ public class ShoppingCart implements IHistory {
             }
             throw new MarketException(missing.toString());
         }
-        shoppingCartRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
         return price;
     }
 
@@ -110,7 +117,9 @@ public class ShoppingCart implements IHistory {
             baskets.add(basket);
         }
         cart.clear();
-        shoppingCartRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
         ShoppingBasket.getShoppingBasketRep().deleteAll(baskets);
     }
 
@@ -121,7 +130,9 @@ public class ShoppingCart implements IHistory {
             cart.put ( shop, shoppingBasket );
         }
         shoppingBasket.addItem ( item, amount );
-        shoppingCartRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
         shoppingBasket.updatePrice(shop);
     }
 
@@ -131,7 +142,9 @@ public class ShoppingCart implements IHistory {
             return;
         shoppingBasket.removeItem ( item);
         shoppingBasket.updatePrice(shop);
-        shoppingCartRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
     }
 
     public void calculate() {
@@ -139,7 +152,9 @@ public class ShoppingCart implements IHistory {
         for(ShoppingBasket shoppingBasket : cart.values ())
             price += shoppingBasket.getCurrentPrice ();
         currentPrice = price;
-        shoppingCartRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingCartRep.save(this);
+        }
     }
 
     public void editQuantity(double amount, Item item, String shopName) throws MarketException {

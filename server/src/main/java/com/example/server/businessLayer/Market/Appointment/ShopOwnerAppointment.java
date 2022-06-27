@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Appointment;
 
 import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.dataLayer.entities.DalManagerApp;
@@ -23,7 +24,9 @@ public class ShopOwnerAppointment extends Appointment {
                                 boolean isShopFounder) {
         super(appointed, appoint, relatedShop);
         this.isShopFounder = isShopFounder;
-        shopOwnerAppointmentRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopOwnerAppointmentRep.save(this);
+        }
     }
 
     public ShopOwnerAppointment(){}

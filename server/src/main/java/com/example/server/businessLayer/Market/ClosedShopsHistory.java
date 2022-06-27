@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market;
 
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.ClosedShopsHistoryRep;
 
@@ -50,7 +51,9 @@ public class ClosedShopsHistory {
             throw new MarketException ( String.format ( "shop %s is already closed", closedShop.getShopName () ));
         }
         closedShops.put (closedShop.getShopName (), closedShop);
-        closedShopsHistoryRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            closedShopsHistoryRep.save(this);
+        }
     }
 
     public void addPurchaseHistory(String purchaseReview, Shop shop) throws MarketException {
@@ -59,7 +62,9 @@ public class ClosedShopsHistory {
         if (purchaseReview != null && purchaseReview != ""){
             overallHistory.append("\n").append(purchaseReview);
         }
-        closedShopsHistoryRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            closedShopsHistoryRep.save(this);
+        }
     }
 
     public Map<String, Shop> getClosedShops() {

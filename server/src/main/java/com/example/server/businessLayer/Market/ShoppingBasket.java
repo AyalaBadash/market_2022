@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.ShoppingBasketRep;
 
@@ -43,14 +44,18 @@ public class ShoppingBasket implements IHistory , Serializable {
         itemMap = new ConcurrentHashMap<>();
         price = 0;
         bids = new LinkedHashMap<> (  );
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
     }
     public ShoppingBasket(Map<java.lang.Integer,Double> items , Map<java.lang.Integer, Item> itemMap , double price){
         this.items = items;
         this.itemMap = itemMap;
         this.price = price;
         bids = new LinkedHashMap<> (  );
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
     }
 
     @Override
@@ -69,7 +74,9 @@ public class ShoppingBasket implements IHistory , Serializable {
 
     public void setPrice(double price) {
         this.price = price;
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
     }
 
     public double getPrice() {
@@ -91,7 +98,9 @@ public class ShoppingBasket implements IHistory , Serializable {
         DecimalFormat format = new DecimalFormat("#.###");
         price = Double.parseDouble(format.format(price));
         setPrice(price);
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
         return price;
     }
 
@@ -120,12 +129,16 @@ public class ShoppingBasket implements IHistory , Serializable {
         else
             amount += items.get(item.getID());
         items.put(item.getID(),amount);
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
 }
 
     public void removeItem(Item item) {
         items.remove(item.getID());
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
     }
 
 
@@ -139,7 +152,9 @@ public class ShoppingBasket implements IHistory , Serializable {
             throw new MarketException("Cant put negative amount for item");
         }
         items.replace(item.getID(), amount);
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
     }
 
     public Map<java.lang.Integer, Item> getItemMap() {
@@ -152,7 +167,9 @@ public class ShoppingBasket implements IHistory , Serializable {
 
     public void updatePrice(Shop shop) throws MarketException {
         setPrice (shop.calculateDiscount ( this ));
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
     }
 
     public double getCurrentPrice(){
@@ -166,7 +183,9 @@ public class ShoppingBasket implements IHistory , Serializable {
             //throw new MarketException("Bid cant be null");
         }
         bids.put ( bid.getItemId (), bid );
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
     }
 
     public Map<Integer, Bid> getBids() {
@@ -180,7 +199,9 @@ public class ShoppingBasket implements IHistory , Serializable {
     public void removeBid(Integer itemId) {
         bids.remove ( itemId );
         calculatePrice ();
-        shoppingBasketRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shoppingBasketRep.save(this);
+        }
     }
 
     public static void setShoppingBasketRep(ShoppingBasketRep sbRepositoryToSet){

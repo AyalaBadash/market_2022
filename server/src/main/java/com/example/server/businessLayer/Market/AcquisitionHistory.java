@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.dataLayer.entities.DalAcquisitionHistory;
 import com.example.server.dataLayer.entities.DalItemAcquisitionHistory;
 import com.example.server.dataLayer.entities.DalShoppingBasket;
@@ -43,7 +44,9 @@ public class AcquisitionHistory {
                 itemAcquisitionHistories.add(acq);
             }
         }
-        acquisitionHistoryRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            acquisitionHistoryRep.save(this);
+        }
     }
 
     public AcquisitionHistory(){}

@@ -5,6 +5,7 @@ import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountT
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Payment.PaymentService;
 import com.example.server.businessLayer.Publisher.Publisher;
 import com.example.server.businessLayer.Supply.SupplyService;
@@ -30,7 +31,9 @@ public class MarketService {
     private Market market;
 
     public MarketService() {
-//       market = Market.getInstance();
+        if (MarketConfig.IS_TEST_MODE){
+            market = Market.getInstance();
+        }
     }
 
     public synchronized static MarketService getInstance() {

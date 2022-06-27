@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market.Appointment;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.AgreementRep;
 
@@ -27,7 +28,9 @@ public class Agreement {
     public Agreement(boolean agreed, Map<String, Boolean> ownersAgreementStatus) {
         this.agreed = agreed;
         this.ownersAppointmentApproval = ownersAgreementStatus;
-        agreementRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            agreementRep.save(this);
+        }
     }
 
     public Agreement(List<String> owners){
@@ -36,7 +39,9 @@ public class Agreement {
             ownersAppointmentApproval.put(owner,false);
         }
         this.agreed = false;
-        agreementRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            agreementRep.save(this);
+        }
     }
 
     public void setOwnerApproval(String ownerName , boolean approve) throws MarketException {
@@ -46,7 +51,9 @@ public class Agreement {
         }
         ownersAppointmentApproval.replace(ownerName,approve);
         updateStatus();
-        agreementRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            agreementRep.save(this);
+        }
     }
 
     private void updateStatus() {
@@ -58,7 +65,9 @@ public class Agreement {
             }
         }
         this.agreed =true;
-        agreementRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            agreementRep.save(this);
+        }
     }
 
     public boolean isAgreed() {
@@ -67,7 +76,9 @@ public class Agreement {
 
     public void setAgreed(boolean agreed) {
         this.agreed = agreed;
-        agreementRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            agreementRep.save(this);
+        }
     }
 
     public Map<String, Boolean> getOwnersAppointmentApproval() {
@@ -76,7 +87,9 @@ public class Agreement {
 
     public void setOwnersAppointmentApproval(Map<String, Boolean> ownersAppointmentApproval) {
         this.ownersAppointmentApproval = ownersAppointmentApproval;
-        agreementRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            agreementRep.save(this);
+        }
     }
 
     public boolean getOwnerStatus(String ownerName) {
@@ -87,7 +100,9 @@ public class Agreement {
         if (this.ownersAppointmentApproval.containsKey(firedAppointed))
             ownersAppointmentApproval.remove(firedAppointed);
         updateStatus();
-        agreementRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            agreementRep.save(this);
+        }
     }
 
     public static AgreementRep getAgreementRep() {

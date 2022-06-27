@@ -1,6 +1,7 @@
 package com.example.server.serviceLayer;
 
 import com.example.server.businessLayer.Market.Item;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.DiscountTypeWrapper;
@@ -22,9 +23,11 @@ public class Service implements IService {
     PurchaseService purchaseService;
     UserService userService;
     protected Service() {
-//        marketService = MarketService.getInstance();
-//        purchaseService = PurchaseService.getInstance();
-//        userService = UserService.getInstance();
+        if (MarketConfig.IS_TEST_MODE){
+            marketService = MarketService.getInstance();
+            purchaseService = PurchaseService.getInstance();
+            userService = UserService.getInstance();
+        }
     }
 
     public synchronized static Service getInstance() {

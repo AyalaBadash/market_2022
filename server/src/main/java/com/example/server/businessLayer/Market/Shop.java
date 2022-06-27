@@ -11,6 +11,7 @@ import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchaseP
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
@@ -92,16 +93,24 @@ public class Shop implements IHistory {
         rnkers = 0;
         this.shopFounder = founder;
         discountPolicy = new DiscountPolicy ();
-        DiscountPolicy.getDiscountPolicyRep().save(discountPolicy);
+        if (!MarketConfig.IS_TEST_MODE) {
+            DiscountPolicy.getDiscountPolicyRep().save(discountPolicy);
+        }
         purchasePolicy = new PurchasePolicy ();
-        PurchasePolicy.getPurchasePolicyRep().save(purchasePolicy);
+        if (!MarketConfig.IS_TEST_MODE) {
+            PurchasePolicy.getPurchasePolicyRep().save(purchasePolicy);
+        }
         ShopOwnerAppointment shopOwnerAppointment = new ShopOwnerAppointment(founder, null, this, true);
         shopOwners.put(founder.getName(), shopOwnerAppointment);
         founder.addAppointmentToMe(shopOwnerAppointment);
         this.pendingAppointments = new PendingAppointments();
-        PendingAppointments.getPendingAptsRep().save(pendingAppointments);
+        if (!MarketConfig.IS_TEST_MODE) {
+            PendingAppointments.getPendingAptsRep().save(pendingAppointments);
+        }
         bids = new ArrayList<> (  );
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         shopOwnerAppointment.setRelatedShop(this);
     }
 
@@ -122,7 +131,9 @@ public class Shop implements IHistory {
         }
 //        this.shopManagers.put ( managerName, appointment );
         shopManagers.get(managerName).setPermissions(appointment.getPermissions());
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
 //        this.shopManagers.put ( managerName, appointment );
         if(appointment.hasPermission ( "ApproveBidPermission" )){
             for(Bid bid : bids){
@@ -151,7 +162,9 @@ public class Shop implements IHistory {
         }
         itemMap.remove ( item.getID() );
         itemsCurrentAmount.remove ( item.getID () );
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         for(Bid bid : bids){
             if(bid.getItemId () == item.getID ()) {
                 bid.rejectBid ( shopOwnerName );
@@ -188,7 +201,9 @@ public class Shop implements IHistory {
             throw new MarketException("item does not exist in the shop");
         }
         itemsCurrentAmount.replace ( item, amount );
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
     /*
     public Item receiveInfoAboutItem(String itemId, String userName) throws Exception {
@@ -230,7 +245,9 @@ public class Shop implements IHistory {
             Double newAmount =this.itemsCurrentAmount.get ( itemAmount.getKey() )+  itemAmount.getValue ( );//
             this.itemsCurrentAmount.put ( itemAmount.getKey(), newAmount );
         }
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
     //Bar: adding the parameter buyer name for the notification send.
@@ -275,7 +292,10 @@ public class Shop implements IHistory {
             }
         }
         purchaseHistory.add ( shoppingBasket.getReview ( ) );
-        shopRep.save(this);
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         //send notifications to shop owners:
         try{
             publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
@@ -398,7 +418,9 @@ public class Shop implements IHistory {
                     items.replace(entry.getKey(),curAmount);
             }
         }
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         return basket;
     }
 
@@ -476,7 +498,10 @@ public class Shop implements IHistory {
                     }
             }
         }
-        shopRep.save(this);
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
     public List<Item> getItemsByCategory(Item.Category category) {
@@ -549,8 +574,13 @@ public class Shop implements IHistory {
             itemMap.put( id, addedItem );
         }
         itemsCurrentAmount.put ( id, amount );
+        if (!MarketConfig.IS_TEST_MODE) {
 //        itemRepository.save(addedItem.toDalObject()); //todo
-        shopRep.save(this);
+        }
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
         return addedItem;
     }
 
@@ -578,7 +608,10 @@ public class Shop implements IHistory {
         if (item == null)
             throw new MarketException ( "item does not exist in shop" );
         item.setInfo(info);
-        shopRep.save(this);
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
 //    public void removeItemMissing(ShoppingBasket shoppingBasket) throws MarketException {
@@ -609,7 +642,10 @@ public class Shop implements IHistory {
         ShopOwnerAppointment appointment = new ShopOwnerAppointment ( appointedShopOwner, shopOwner, this, false );
         appointment.setRelatedShop(this);
         addEmployee ( appointment );
-        shopRep.save(this);
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
     public void appointShopManager(Member shopOwner, Member appointed) throws MarketException {
@@ -623,7 +659,10 @@ public class Shop implements IHistory {
                 ( appointed, shopOwner, this ,
                         new ArrayList<>(){{ add(new PurchaseHistoryPermission());}}, false);
         addEmployee ( appointment );
-        shopRep.save(this);
+
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
     private boolean isShopManager(String name) {
@@ -677,7 +716,9 @@ public class Shop implements IHistory {
         }
         shopOwners.remove(firedAppointed);
         removeFiredOwnerFromPending(firedAppointed);
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
 
@@ -697,7 +738,9 @@ public class Shop implements IHistory {
         }
         discountPolicy.addNewDiscount ( discountType );
         EventLog.getInstance().Log("Added a new discount to the shop:"+shopName);
-        shopRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopRep.save(this);
+        }
     }
 
     public boolean hasItem(Item item) {

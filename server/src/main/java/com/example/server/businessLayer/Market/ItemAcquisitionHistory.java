@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.dataLayer.entities.DalItemAcquisitionHistory;
 import com.example.server.dataLayer.repositories.ItemAckHistRep;
 
@@ -24,7 +25,9 @@ public class ItemAcquisitionHistory {
         this.itemName = itemName;
         this.amount = amount;
         this.totalPriceForItem = totalPriceForItem;
-        itemAckHistRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            itemAckHistRep.save(this);
+        }
     }
 
     public ItemAcquisitionHistory() {

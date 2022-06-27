@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market.Appointment;
 
 import com.example.server.businessLayer.Market.Appointment.Permissions.EmployeesPermission;
 import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.Users.Member;
 import com.example.server.dataLayer.entities.DalAppointment;
@@ -19,14 +20,20 @@ public class ShopManagerAppointment extends Appointment {
     private static ShopManagerAppointmentRep shopManagerAppointmentRep;
     public ShopManagerAppointment(Member appointed, Member appoint, Shop relatedShop) {
         super(appointed, appoint, relatedShop );
-        shopManagerAppointmentRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            shopManagerAppointmentRep.save(this);
+        }
     }
 
     public ShopManagerAppointment(Member appointed, Member superVisor, Shop relatedShop
             , List<IPermission> permissions, boolean fromBusiness) {
         super(appointed, superVisor, relatedShop, permissions);
-        if (!fromBusiness)
-            shopManagerAppointmentRep.save(this);
+        if (!fromBusiness){
+
+            if (!MarketConfig.IS_TEST_MODE) {
+                shopManagerAppointmentRep.save(this);
+            }
+        }
     }
     public ShopManagerAppointment(){
     }

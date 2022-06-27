@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market;
 
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.entities.DalItem;
 import com.example.server.dataLayer.repositories.ItemRep;
@@ -53,7 +54,9 @@ public class Item implements IHistory {
         this.category = Objects.requireNonNullElse(category, Category.general);
         rnk = 1;
         rnkers =0;
-        itemRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            itemRep.save(this);
+        }
     }
 
 

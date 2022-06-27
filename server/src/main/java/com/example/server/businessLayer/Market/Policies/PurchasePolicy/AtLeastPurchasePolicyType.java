@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Policies.PurchasePolicy;
 
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.PurchasePolicyLevelState;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Visitor;
@@ -22,7 +23,9 @@ public class AtLeastPurchasePolicyType extends PurchasePolicyType {
     public AtLeastPurchasePolicyType(PurchasePolicyLevelState purchasePolicyLevelState, double amount) {
         super ( purchasePolicyLevelState );
         this.amount = amount;
-        atLeastPolicyRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            atLeastPolicyRep.save(this);
+        }
     }
 
     public AtLeastPurchasePolicyType(){}

@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Policies.PurchasePolicy;
 
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.ShopPurchasePolicyLevelState;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.dataLayer.repositories.OrTypePolicyRep;
@@ -18,7 +19,9 @@ public class OrCompositePurchasePolicyType extends CompositePurchasePolicyType {
     private static OrTypePolicyRep orTypePolicyRep;
     public OrCompositePurchasePolicyType(List<PurchasePolicyType> policies) {
         super ( new ShopPurchasePolicyLevelState (), policies );
-        orTypePolicyRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            orTypePolicyRep.save(this);
+        }
     }
 
     public OrCompositePurchasePolicyType(){}

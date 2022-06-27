@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.MaxCompDiscountRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
@@ -17,7 +18,9 @@ public class MaxCompositeDiscount extends CompositeDiscount{
     private static MaxCompDiscountRep maxCompDiscountRep;
     public MaxCompositeDiscount(List<DiscountType> discountTypes) {
         super (discountTypes);
-        maxCompDiscountRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            maxCompDiscountRep.save(this);
+        }
     }
     public MaxCompositeDiscount(){}
 

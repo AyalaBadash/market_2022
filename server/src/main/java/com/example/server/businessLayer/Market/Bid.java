@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.BidRep;
 import javax.persistence.*;
@@ -48,7 +49,9 @@ public class Bid {
             shopOwnersStatus.put ( shopOwnerName, false );
         }
         this.approved = false;
-        bidRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
         //todo - notify shop owners
     }
 
@@ -67,7 +70,10 @@ public class Bid {
         shopOwnersStatus.put ( name, false );
         if (approved)
             approved = false;
-        bidRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+
+        }
     }
 
     public void removeApproves(String firedAppointed) throws MarketException {
@@ -77,7 +83,9 @@ public class Bid {
         shopOwnersStatus.remove ( firedAppointed );
         if(isApproved () && sideNeedToApprove != Side.buyer)
             approved = true;
-        bidRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
     }
 
     public synchronized boolean approveBid(String name) throws MarketException {
@@ -91,13 +99,17 @@ public class Bid {
         }
         if(sideNeedToApprove.equals ( Side.seller ) || sideNeedToApprove.equals ( Side.both )) {
             shopOwnersStatus.replace ( name, true );
-            bidRep.save(this);
+            if (!MarketConfig.IS_TEST_MODE) {
+                bidRep.save(this);
+            }
             if (isApproved ( )) {
                 if(sideNeedToApprove.equals ( Side.buyer )){
                     return false;
                 }
                 approved = true;
-                bidRep.save(this);
+                if (!MarketConfig.IS_TEST_MODE) {
+                    bidRep.save(this);
+                }
                 return true;
             }
             return false;
@@ -142,7 +154,9 @@ public class Bid {
             sideNeedToApprove = Side.both;
             approveBid ( name );
         }
-        bidRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
     }
 
     public synchronized void setNewPrice(double newPrice) {
@@ -150,7 +164,9 @@ public class Bid {
             shopOwnersStatus.replace ( shopOwnerName, false );
         }
         this.price = newPrice;
-        bidRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
     }
 
     public boolean isApproved() {
@@ -159,7 +175,9 @@ public class Bid {
                 return false;
         if(sideNeedToApprove.equals ( Side.both ))
             sideNeedToApprove = Side.buyer;
-        bidRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            bidRep.save(this);
+        }
         return true;
     }
 

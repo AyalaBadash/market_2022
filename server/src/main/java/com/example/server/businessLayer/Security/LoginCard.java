@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Security;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.LoginCardRep;
 
@@ -32,7 +33,9 @@ public class LoginCard {
         for (int i = 0; i< answers.size(); i++){
             this.QandA.put(questions.get(i), answers.get(i));
         }
-        loginCardRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            loginCardRep.save(this);
+        }
     }
 
     public LoginCard(){}
@@ -48,7 +51,9 @@ public class LoginCard {
 
     public void addPrivateQuestion(String q, String ans){
         QandA.put(q,ans);
-        loginCardRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            loginCardRep.save(this);
+        }
     }
     public void removePrivateQuestion(String q){
         if (QandA.containsKey(q))

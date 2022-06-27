@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market.Policies.DiscountPolicy;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Cond;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.dataLayer.repositories.ConditionalDiscountRep;
@@ -22,7 +23,9 @@ public class ConditionalDiscount extends DiscountType{
     public ConditionalDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState, Cond condition) {
         super ( percentageOfDiscount, discountLevelState );
         this.condition = condition;
-        condDiscountRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            condDiscountRep.save(this);
+        }
     }
 
     public ConditionalDiscount(){}

@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market;
 
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Supply.Address;
@@ -40,7 +41,9 @@ public class Acquisition {
         this.buyerName = buyerName;
         paymentDone = false;
         supplyConfirmed = false;
+        if (!MarketConfig.IS_TEST_MODE) {
 //        acquisitionRep.save(this);
+        }
     }
 
     public Acquisition(){}
@@ -110,7 +113,9 @@ public class Acquisition {
             member.savePurchase(acq);
         }
         shoppingCartToBuy.clear();
+        if (!MarketConfig.IS_TEST_MODE) {
 //        acquisitionRep.save(this);
+        }
     }
 
     private void isPriceCorrect(NotificationHandler publisher, double expectedPrice) throws MarketException {

@@ -17444,3 +17444,167 @@ Real Time message:
 The visitor SystemManagerMember2 leaved the market.
 Currently, there are 59 visitors in the market.
 
+Real Time message: 
+The user @visitor56 identified as member u1 in the market .
+
+Real Time message: 
+The visitor @visitor57 entered the market.
+Currently, there are:: 39 visitors in the market.
+
+Real Time message: 
+The user @visitor57 identified as member u2 in the market .
+
+Real Time message: 
+The visitor @visitor58 entered the market.
+Currently, there are:: 40 visitors in the market.
+
+Real Time message: 
+The user @visitor58 identified as member u3 in the market .
+
+Real Time message: 
+The visitor @visitor59 entered the market.
+Currently, there are:: 41 visitors in the market.
+
+Real Time message: 
+The user @visitor59 identified as member u4 in the market .
+
+Real Time message: 
+The visitor @visitor60 entered the market.
+Currently, there are:: 42 visitors in the market.
+
+Real Time message: 
+The user @visitor60 identified as member u5 in the market .
+
+Real Time message: 
+The visitor @visitor61 entered the market.
+Currently, there are:: 43 visitors in the market.
+
+Real Time message: 
+The user @visitor61 identified as member u6 in the market .
+
+Real Time message: 
+The member u5 logged out and and now identify as user @visitor62.
+
+Real Time message: 
+The user @visitor56 identified as member u1 in the market .
+
+Real Time message: 
+The visitor @visitor57 entered the market.
+Currently, there are:: 39 visitors in the market.
+
+Real Time message: 
+The user @visitor57 identified as member u2 in the market .
+
+Real Time message: 
+The visitor @visitor58 entered the market.
+Currently, there are:: 40 visitors in the market.
+
+Real Time message: 
+The user @visitor58 identified as member u3 in the market .
+
+Real Time message: 
+The visitor @visitor59 entered the market.
+Currently, there are:: 41 visitors in the market.
+
+Real Time message: 
+The user @visitor59 identified as member u4 in the market .
+
+Real Time message: 
+The visitor @visitor60 entered the market.
+Currently, there are:: 42 visitors in the market.
+
+Real Time message: 
+The user @visitor60 identified as member u5 in the market .
+
+Real Time message: 
+The visitor @visitor61 entered the market.
+Currently, there are:: 43 visitors in the market.
+
+Real Time message: 
+The user @visitor61 identified as member u6 in the market .
+
+Real Time message: 
+The member u5 logged out and and now identify as user @visitor62.
+
+Real Time message: 
+The user @visitor56 identified as member u1 in the market .
+
+Real Time message: 
+The visitor @visitor57 entered the market.
+Currently, there are:: 39 visitors in the market.
+
+Real Time message: 
+The user @visitor57 identified as member u2 in the market .
+
+Real Time message: 
+The visitor @visitor58 entered the market.
+Currently, there are:: 40 visitors in the market.
+
+Real Time message: 
+The user @visitor58 identified as member u3 in the market .
+
+Real Time message: 
+The visitor @visitor59 entered the market.
+Currently, there are:: 41 visitors in the market.
+
+Real Time message: 
+The user @visitor59 identified as member u4 in the market .
+
+Real Time message: 
+The visitor @visitor60 entered the market.
+Currently, there are:: 42 visitors in the market.
+
+Real Time message: 
+The user @visitor60 identified as member u5 in the market .
+
+Real Time message: 
+The visitor @visitor61 entered the market.
+Currently, there are:: 43 visitors in the market.
+
+Real Time message: 
+The user @visitor61 identified as member u6 in the market .
+
+Real Time message: 
+The member u5 logged out and and now identify as user @visitor62.
+
+Real Time message: 
+The user @visitor56 identified as member u1 in the market .
+
+Real Time message: 
+The visitor @visitor57 entered the market.
+Currently, there are:: 39 visitors in the market.
+
+Real Time message: 
+The user @visitor57 identified as member u2 in the market .
+
+Real Time message: 
+The visitor @visitor58 entered the market.
+Currently, there are:: 40 visitors in the market.
+
+Real Time message: 
+The user @visitor58 identified as member u3 in the market .
+
+Real Time message: 
+The visitor @visitor59 entered the market.
+Currently, there are:: 41 visitors in the market.
+
+Real Time message: 
+The user @visitor59 identified as member u4 in the market .
+
+Real Time message: 
+The visitor @visitor60 entered the market.
+Currently, there are:: 42 visitors in the market.
+
+Real Time message: 
+The user @visitor60 identified as member u5 in the market .
+
+Real Time message: 
+The visitor @visitor61 entered the market.
+Currently, there are:: 43 visitors in the market.
+
+Real Time message: 
+The user @visitor61 identified as member u6 in the market .
+
+Real Time message: 
+The member u5 logged out and and now identify as user @visitor62.
+

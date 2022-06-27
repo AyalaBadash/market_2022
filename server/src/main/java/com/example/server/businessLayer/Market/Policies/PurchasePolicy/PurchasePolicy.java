@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market.Policies.PurchasePolicy;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.CompositeDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.Users.Visitor;
@@ -52,7 +53,9 @@ public class PurchasePolicy {
             purePolicies ( purchasePolicyType);
         }
         validPurchasePolicies.add ( purchasePolicyType );
-        purchasePolicyRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            purchasePolicyRep.save(this);
+        }
     }
 
     private void purePolicies(PurchasePolicyType purchasePolicyType) {
@@ -67,13 +70,17 @@ public class PurchasePolicy {
             }
         } else if(validPurchasePolicies.contains ( purchasePolicyType ))
             validPurchasePolicies.remove ( purchasePolicyType );
-        purchasePolicyRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            purchasePolicyRep.save(this);
+        }
     }
 
     public void removePurchasePolicy(PurchasePolicyType purchasePolicyType) {
         if(validPurchasePolicies.contains ( purchasePolicyType ))
             validPurchasePolicies.remove ( purchasePolicyType );
-        purchasePolicyRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            purchasePolicyRep.save(this);
+        }
     }
 
     public static PurchasePolicyRep getPurchasePolicyRep() {

@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market.Appointment;
 
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.PendingAppointmentsRep;
 
@@ -32,7 +33,9 @@ public class PendingAppointments {
     public PendingAppointments(Map<String ,Agreement> agreements, Map<String, ShopOwnerAppointment> appointments) {
         this.agreements = agreements;
         this.appointments = appointments;
-        pendingAptsRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            pendingAptsRep.save(this);
+        }
     }
 
     public PendingAppointments(){
@@ -48,7 +51,9 @@ public class PendingAppointments {
         }
         appointments.remove(appointedName);
         agreements.remove(appointedName);
-        pendingAptsRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            pendingAptsRep.save(this);
+        }
         EventLog.getInstance().Log("Appointment for " +appointedName+" has been removed.");
     }
 
@@ -57,7 +62,9 @@ public class PendingAppointments {
         Agreement agreement = new Agreement(owners);
         this.agreements.put(appointedName,agreement);
         this.agreements.get(appointedName).setOwnerApproval(appointment.getSuperVisor().getName(),true);
-        pendingAptsRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            pendingAptsRep.save(this);
+        }
         EventLog.getInstance().Log("Appointment for " +appointedName+" has been added.");
     }
 
@@ -115,7 +122,9 @@ public class PendingAppointments {
                 completed.add(entry.getKey());
             }
         }
-        pendingAptsRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            pendingAptsRep.save(this);
+        }
         return completed;
     }
 

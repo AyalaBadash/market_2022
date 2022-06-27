@@ -598,7 +598,9 @@ public class Market {
         }
         Item itemToDelete = shop.getItemMap().get(itemID);
         shop.deleteItem(itemToDelete, shopOwnerName);
-        Item.getItemRep().delete(itemToDelete);
+        if (!MarketConfig.IS_TEST_MODE) {
+            Item.getItemRep().delete(itemToDelete);
+        }
         userController.updateVisitorsInRemoveOfItem(shop, itemToDelete);
         updateMarketOnDeleteItem(itemToDelete);
         EventLog.getInstance().Log("Item removed from and market.");
@@ -616,7 +618,9 @@ public class Market {
         try {
             Item addedItem = shop.addItem(shopOwnerName, itemName, price, category, info, keywords, amount, nextItemID.increment());
             updateMarketOnAddedItem(addedItem, shopName);
+            if (!MarketConfig.IS_TEST_MODE) {
 //            shopRepository.save(shop.getDalObject()); //todo
+            }
             EventLog.getInstance().Log("Item added to shop " + shopName);
             return shop;
         } catch (MarketException e) {
@@ -642,7 +646,9 @@ public class Market {
             throw new MarketException("shop does not exist in system");
         }
         shop.setItemAmount(shopOwnerName, item.getID(), amount);
+        if (!MarketConfig.IS_TEST_MODE) {
 //        shopRepository.save(shop.getDalObject()); //todo
+        }
         EventLog.getInstance().Log("Item " + item.getName() + " amount has been updated.");
     }
 
@@ -752,7 +758,9 @@ public class Market {
             throw new MarketException("Cannot add item that does not exists in the shop.");
         }
         shoppingCart.addItem(curShop, item, amount);
+        if (!MarketConfig.IS_TEST_MODE) {
 //        shoppingCartRepository.save(shoppingCart.toDalObject());
+        }
         EventLog.getInstance().Log(amount + " " + item.getName() + " added to cart.");
     }
 
@@ -901,7 +909,9 @@ public class Market {
         if (shop == null)
             throw new MarketException("shop does not exist in the market");
         shop.editItem(newItem, id);
+        if (!MarketConfig.IS_TEST_MODE) {
 //        itemRepository.save(newItem.toDalObject()); //todo
+        }
     }
 
     public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
@@ -1380,7 +1390,15 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir");
-        String additional_dir = "\\server\\config\\";
+        if(!MarketConfig.IS_TEST_MODE){
+            if(MarketConfig.IS_MAC){
+                dir+="/server/";
+            }
+            else{
+                dir+="\\server\\";
+            }
+        }
+        String additional_dir = "\\config\\";
         if (MarketConfig.IS_MAC) {
             additional_dir = "/config/";
         }

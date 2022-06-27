@@ -5,6 +5,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.AcquisitionHistory;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.IHistory;
 import com.example.server.businessLayer.Market.ShoppingCart;
@@ -44,11 +45,15 @@ public class Member implements IHistory {
 
         this.name = name;
         myCart = new ShoppingCart();
-        ShoppingCart.getShoppingCartRep().save(myCart);
+        if (!MarketConfig.IS_TEST_MODE) {
+            ShoppingCart.getShoppingCartRep().save(myCart);
+        }
         appointedByMe = new CopyOnWriteArrayList<>();
         myAppointments = new CopyOnWriteArrayList<>();
         purchaseHistory = new ArrayList<> (  );
-        memberRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            memberRep.save(this);
+        }
     }
 
     public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<AcquisitionHistory> purchaseHistory ){
@@ -101,7 +106,9 @@ public class Member implements IHistory {
 
     public void addAppointmentToMe(Appointment app){
         this.myAppointments.add(app);
-        memberRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            memberRep.save(this);
+        }
     }
 
     public StringBuilder getPurchaseHistoryString() {
@@ -122,7 +129,9 @@ public class Member implements IHistory {
 
     public void savePurchase(AcquisitionHistory acquisitionHistory) {
         purchaseHistory.add (acquisitionHistory);
-        memberRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            memberRep.save(this);
+        }
     }
 
     @Override
@@ -154,6 +163,8 @@ public class Member implements IHistory {
 
     public void setSystemManager(boolean systemManager) {
         isSystemManager = systemManager;
-        memberRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            memberRep.save(this);
+        }
     }
 }

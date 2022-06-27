@@ -2,6 +2,7 @@ package com.example.server.businessLayer.Market.Policies.PurchasePolicy.Purchase
 
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Market;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.dataLayer.repositories.CategoryPolicyRep;
@@ -23,7 +24,10 @@ public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
     public CategoryPurchasePolicyLevelState(){}
     public CategoryPurchasePolicyLevelState(Item.Category category) {
         this.category = category;
+
+        if (!MarketConfig.IS_TEST_MODE) {
 //        categoryPolicyRep.save(this);
+        }
     }
 
     @Override

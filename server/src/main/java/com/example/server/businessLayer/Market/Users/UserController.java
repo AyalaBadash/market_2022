@@ -2,11 +2,8 @@ package com.example.server.businessLayer.Market.Users;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.Market;
-import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
-import com.example.server.businessLayer.Market.ResourcesObjects.SynchronizedCounter;
+import com.example.server.businessLayer.Market.ResourcesObjects.*;
 import com.example.server.businessLayer.Market.Item;
-import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.ShoppingCart;
@@ -56,7 +53,9 @@ public class UserController {
         String name = getNextUniqueName();
         Visitor res = new Visitor(name,null,new ShoppingCart());
         this.visitorsInMarket.put(res.getName(),res);
+        if (!MarketConfig.IS_TEST_MODE) {
 //        userControllerRep.save(this);
+        }
         EventLog.getInstance().Log("A new visitor entered the market.");
         return res;
     }
@@ -69,9 +68,16 @@ public class UserController {
         if (this.visitorsInMarket.containsKey(visitorName)) {
             Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
             this.visitorsInMarket.remove(visitorName);
+            if (!MarketConfig.IS_TEST_MODE) {
 //            userControllerRep.save(this);
+            }
+            if (!MarketConfig.IS_TEST_MODE) {
 //            Visitor.getVisitorRep().delete(visitorToDelete);
-            ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
+            }
+            if (!MarketConfig.IS_TEST_MODE) {
+                ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
+            }
+
             Market.getInstance ().updateBidInLoggingOut(visitorName);
             EventLog.getInstance().Log("User left the market.");
         }
@@ -131,8 +137,12 @@ public class UserController {
         String newVisitorName = getNextUniqueName();
         Visitor newVisitor = new Visitor(newVisitorName);
         visitorsInMarket.put(newVisitorName, newVisitor);
+        if (!MarketConfig.IS_TEST_MODE) {
 //        userControllerRep.save(this);
+        }
+        if (!MarketConfig.IS_TEST_MODE) {
 //        Visitor.getVisitorRep().delete(visitorToDelete);
+        }
         EventLog.getInstance().Log("Our beloved member " + member + " logged out.");
         return newVisitorName;
     }
@@ -143,9 +153,17 @@ public class UserController {
         visitorsInMarket.put(userName,newVisitorMember);
         Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
         visitorsInMarket.remove(visitorName);
+
+        if (!MarketConfig.IS_TEST_MODE) {
 //        userControllerRep.save(this);
+        }
+        if (!MarketConfig.IS_TEST_MODE) {
 //        Visitor.getVisitorRep().delete(visitorToDelete);
-        ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
+        }
+        if (!MarketConfig.IS_TEST_MODE) {
+            ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
+        }
+
         EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();
     }
@@ -159,7 +177,10 @@ public class UserController {
         for ( Member member: members.values ()){
             member.getMyCart().removeItem( shop, itemToRemove);
         }
+
+        if (!MarketConfig.IS_TEST_MODE) {
 //        userControllerRep.save(this);
+        }
         EventLog.getInstance().Log("Visitors cart has been updated due to item removal.");
     }
     public synchronized void setRegisteredAvg(){
@@ -180,7 +201,9 @@ public class UserController {
   
     public void setNextUniqueNumber(int nextUniqueNumber) {
         this.nextUniqueNumber.setValue(nextUniqueNumber);
+        if (!MarketConfig.IS_TEST_MODE) {
 //        userControllerRep.save(this);
+        }
     }
 
     public String getUsersInfo(){

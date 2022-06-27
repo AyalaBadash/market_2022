@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.AndCompDRep;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.*;
@@ -13,7 +14,9 @@ public class AndCompositeDiscountLevelState extends CompositeDiscountLevelState{
     private static AndCompDRep andCompDRep;
     public AndCompositeDiscountLevelState(List<DiscountLevelState> discountLevelStates) {
         super ( discountLevelStates );
-        andCompDRep.save(this);
+        if (!MarketConfig.IS_TEST_MODE) {
+            andCompDRep.save(this);
+        }
     }
 
     public AndCompositeDiscountLevelState(){
