@@ -2,6 +2,8 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 
+import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
+import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyType;
 import com.example.server.businessLayer.Payment.PaymentService;
@@ -347,19 +349,41 @@ public class Market {
         List<Appointment> myAppointments = member.getMyAppointments();
         userController.finishLogin(userName, visitorName);
         Member ret=  new Member(member.getName(), member.getMyCart(), appointmentByMe, myAppointments, member.getPurchaseHistory());//,member.getPurchaseHistory()
-        RealTimeNotifications notifications= new RealTimeNotifications();
-        notifications.createMemberLoggedIn(member.getName(),visitorName);
-        statistics.incNumOfMembers();
+        setLoginMemberPermissionStatistics(ret);
         return ret;
     }
 
+    private void setLoginMemberPermissionStatistics(Member ret) {
+        List<Appointment> myAppointments= ret.getMyAppointments();
+        boolean isOwner=false;
+        boolean isManager=false;
+        for(Appointment appointment : myAppointments){
+            if(appointment instanceof ShopOwnerAppointment){
+                isOwner=true;
+            }
+            else if( appointment instanceof ShopManagerAppointment){
+                isManager=true;
+            }
+        }
+        if(ret.getName().equals(systemManagerName)){
+            statistics.incNumOfSystemManagers(ret.getName());
+        }
+        if (isOwner){
+            statistics.incNumOfOwners(ret.getName());
+        }
+        else if(isManager){
+            statistics.incNumOfManagers(ret.getName());
+        }
+        else {
+            statistics.incNumOfMembers(ret.getName());
+        }
+    }
 
     public void visitorExitSystem(String visitorName) throws MarketException {
         alertIfNotLoggedIn(visitorName);
         userController.exitSystem(visitorName);
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedout(visitorName,userController.getVisitorsInMarket().size());
-        statistics.decNumOfVisitors();
         EventLog.getInstance().Log("A visitor exited the market.");
     }
 
@@ -407,8 +431,6 @@ public class Market {
             } catch (Exception e) {
             }
             shopToClose.setClosed(true);
-            statistics.incShopClosed();
-            statistics.decNumOfShops();
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
         }
     }
@@ -473,7 +495,6 @@ public class Market {
         String ret= userController.memberLogout(member);
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createMemberLoggedOut(member,ret);
-        statistics.decNumOfMembers();
         EventLog.getInstance().Log("A member logged out from the system");
         return ret;
     }
@@ -545,7 +566,6 @@ public class Market {
             DebugLog.getInstance().Log("Non member tried to open a shop.");
             throw new MarketException("You are not a member. Only members can open a new shop in the market");
         }
-        statistics.incNumOfShops();
         EventLog.getInstance().Log(visitorName + " opened a new shop named:" + shopName);
         return true;
     }
@@ -669,9 +689,14 @@ public class Market {
         shopToOpen.setClosed(false);
         validateAllEmployees(shopToOpen);
         addItemsFromReopenedShop(shopToOpen);
-        statistics.incNumOfShops();
-        statistics.decShopClosed();
-        //TODO - send notifications for managers and owners.
+        try {
+            List<String> works=  shopToOpen.getShopOwners().values().stream().map(x -> x.getAppointed().getName()).collect(Collectors.toList());
+            works.addAll(shopToOpen.getShopManagers().values().stream().map(x-> x.getAppointed().getName()).collect(Collectors.toList()));
+            NotificationHandler.getInstance().sendReOpenedShopBatch(works, name, shopName);
+            EventLog.getInstance().Log("Message has been sent to shop workers about the re-open.");
+        } catch (Exception e) {
+            ErrorLog.getInstance().Log("Could not send notification to shop workers about the re-open.");
+        }
         EventLog.getInstance().Log(shopName+" has been re-opened.");
     }
 
@@ -729,7 +754,7 @@ public class Market {
 
     }
 
-    public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
+    public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
                                         Address address) throws MarketException, JsonProcessingException {
 
         // If visitor exists under that name.
@@ -738,7 +763,7 @@ public class Market {
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart;
         Acquisition acquisition;
-
+        ShoppingCart shoppingCartToReturn;
         try {
             shoppingCart = visitor.getCart();
             if (shoppingCart.isEmpty()) {
@@ -751,9 +776,11 @@ public class Market {
         }
 
         if (supplyServiceProxy == null) {
+            DebugLog.getInstance().Log("The supply service is not available right now.");
             throw new MarketException("The supply service is not available right now.");
         }
         if (paymentServiceProxy == null) {
+            DebugLog.getInstance().Log("The payment service is not available right now.");
             throw new MarketException("The payment service is not available right now.");
         }
         //After  cart found, try to make the acquisition from each basket in the cart.
@@ -771,6 +798,10 @@ public class Market {
             statistics.incNumOfAcquisitions();
         }
 
+        if (shoppingCartToReturn == null) {
+            throw new MarketException("Could not make the purchase right now for the shopping cart. Please try again later. ");
+        }
+        return shoppingCartToReturn;
     }
 
     private ShoppingCart validateCart(ShoppingCart currentCart) throws MarketException {
@@ -1316,9 +1347,17 @@ public class Market {
 
     private String getConfigDir() {
         String dir = System.getProperty("user.dir");
-        String additional_dir = "\\server\\config\\";
+        if(!MarketConfig.IS_TEST_MODE){
+            if(MarketConfig.IS_MAC){
+                dir+="/server/";
+            }
+            else{
+                dir+="\\server\\";
+            }
+        }
+        String additional_dir = "\\config\\";
         if (MarketConfig.IS_MAC) {
-            additional_dir = "/server/config/";
+            additional_dir = "/config/";
         }
         dir += additional_dir;
         return dir;

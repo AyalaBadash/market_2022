@@ -2,24 +2,58 @@ package com.example.server.businessLayer.Market;
 
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.google.gson.Gson;
-import org.eclipse.jetty.util.ajax.JSON;
+import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
 public class Statistics {
 
-    public class StatisticsData{
+    public static class StatisticsData{
 
-        private int numOfVisitors;
-        private int numOfMembers;
-        private int numOfAcquisitions;
-        private int numOfShops;
-        private int shopClosed;
-        private String systemManager;
+        //daily visitors.
+        //daily members.
+        //daily owners
+        //daily managers who are not owners.
+        // system managers.
+        public int numOfVisitors;
+        public int numOfRegularMembers;
+        public int numOfShopsManagers;
+        public int numOfOwners;
+        public int numOfSystemManager;
+
+
+
+        public StatisticsData(){
+            numOfVisitors=0;
+            numOfRegularMembers=0;
+            numOfShopsManagers =0;
+            numOfOwners=0;
+            numOfSystemManager=0;
+
+        }
+        public void resetStatistics(){
+            numOfVisitors=0;
+            numOfRegularMembers=0;
+            numOfShopsManagers =0;
+            numOfOwners=0;
+            numOfSystemManager=0;
+        }
+
     }
-    private NotificationHandler notificationHandler;
-    private StatisticsData data;
+    private final NotificationHandler notificationHandler;
+    private final StatisticsData data;
+    private String systemManager;
+    public LocalDate currDate;
+    public List<String> numOfRegularMembersID;
+    public List<String> numOfShopsManagersID;
+    public List<String> numOfOwnersID;
+    public List<String> numOfSystemManagerID;
     private static Statistics instance=null;
 
-    public static Statistics getInstance(){
+    public synchronized static Statistics getInstance(){
         if(instance==null){
             instance=new Statistics();
         }
@@ -27,122 +61,107 @@ public class Statistics {
     }
 
     private Statistics( ){
-        data=new StatisticsData();
+        systemManager="";
+        data= new StatisticsData();
+        numOfRegularMembersID=new ArrayList<>();
+        numOfShopsManagersID=new ArrayList<>();
+        numOfOwnersID=new ArrayList<>();
+        numOfSystemManagerID=new ArrayList<>();
         notificationHandler= NotificationHandler.getInstance();
+        currDate= LocalDate.now();
     }
     public static void setInstance(Statistics instance) {
         Statistics.instance = instance;
     }
 
-    public int getNumOfVisitors() {
-        return data.numOfVisitors;
-    }
 
-    public void incNumOfVisitors() {
+    public synchronized void incNumOfVisitors() {
+        checkDate();
         this.data.numOfVisitors ++;
         if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, data.systemManager);
+            notificationHandler.sendStatistics(this, systemManager);
         }
     }
-    public void decNumOfVisitors() {
-        this.data.numOfVisitors --;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, data.systemManager);
+
+    public synchronized void incNumOfMembers(String name) {
+        checkDate();
+        if(!numOfRegularMembersID.contains(name)) {
+            numOfRegularMembersID.add(name);
+            this.data.numOfRegularMembers++;
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this,systemManager);
+            }
         }
     }
-    public int getNumOfMembers() {
-        return data.numOfMembers;
-    }
 
-    public void incNumOfMembers() {
-        this.data.numOfMembers ++;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, data.systemManager);
+    public synchronized void incNumOfManagers(String name) {
+        checkDate();
+        if(!numOfShopsManagersID.contains(name)) {
+            numOfShopsManagersID.add(name);
+            this.data.numOfShopsManagers++;
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
         }
     }
-    public void decNumOfMembers() {
-        this.data.numOfMembers --;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, data.systemManager);
+
+    public synchronized void incNumOfOwners(String name) {
+        checkDate();
+        if(!numOfOwnersID.contains(name)) {
+            numOfOwnersID.add(name);
+            this.data.numOfOwners++;
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
         }
     }
-    public int getNumOfAcquisitions() {
-        return data.numOfAcquisitions;
-    }
 
-    public void incNumOfAcquisitions() {
-        this.data.numOfAcquisitions++;
-        try {
+    public synchronized void incNumOfSystemManagers(String name) {
+        checkDate();
+        if(!numOfSystemManagerID.contains(name)) {
+            numOfSystemManagerID.add(name);
+            this.data.numOfSystemManager++;
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, data.systemManager);
+                notificationHandler.sendStatistics(this, systemManager);
             }
-        }catch (Exception e){}
-    }
-    public void decNumOfAcquisitions() {
-        this.data.numOfAcquisitions--;
-        try {
-            if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, data.systemManager);
-            }
-        }catch (Exception e){}
-    }
-    public int getNumOfShops() {
-        return data.numOfShops;
-    }
-
-    public void incNumOfShops() {
-        this.data.numOfShops++;
-        try {
-            if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, data.systemManager);
-            }
-        }catch (Exception e){}
-    }
-    public void decNumOfShops() {
-        this.data.numOfShops--;
-        try {
-            if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, data.systemManager);
-            }
-        }catch (Exception e){}
-    }
-    public int getShopClosed() {
-        return data.shopClosed;
-    }
-
-    public void incShopClosed() {
-        this.data.shopClosed ++;
-        try {
-            if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, data.systemManager);
-            }
-        }catch (Exception e){}
-    }
-    public void decShopClosed() {
-        this.data.shopClosed --;
-        try {
-            if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, data.systemManager);
-            }
-        }catch (Exception e){}
+        }
     }
 
     private boolean hasManager(){
-        return (data.systemManager!=null && !data.systemManager.isEmpty());
+        return (systemManager!=null && !systemManager.isEmpty());
     }
     private boolean managerLogged(){
-        return notificationHandler.isConnected(data.systemManager);
+        return notificationHandler.isConnected(systemManager);
     }
     public void setSystemManager(String manager){
         if(manager!=null && !manager.isEmpty()){
-            data.systemManager=manager;
+            systemManager=manager;
         }
     }
 
+    private void checkDate() {
+        if(!dayUpdated()){
+            data.resetStatistics();
+            resetList();
+        }
+    }
+    private void incDate(){
+        currDate= currDate.plusDays(1);
+    }
+
+    private void resetList() {
+        numOfOwnersID.clear();
+        numOfRegularMembersID.clear();
+        numOfShopsManagersID.clear();
+        numOfSystemManagerID.clear();
+    }
+    public boolean dayUpdated(){
+        return !(currDate.isBefore(LocalDate.now()));
+    }
     @Override
     public String toString() {
 
         Gson gson =new Gson();
-        return "Statistics "+gson.toJson(data);
+        return gson.toJson(data);
     }
 }

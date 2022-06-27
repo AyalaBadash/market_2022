@@ -23,7 +23,7 @@ public class NotificationDispatcher extends Publisher {
     private static NotificationDispatcher notificationDispatcher=null;
 
     //Set of the sessionis-messages;
-    private Map<String, List<Notification>> messages;
+    private static Map<String, List<Notification>> messages;
 
     public static NotificationDispatcher getInstance(){
         if (notificationDispatcher==null){

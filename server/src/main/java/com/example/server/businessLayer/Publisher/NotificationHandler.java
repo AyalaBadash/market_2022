@@ -24,7 +24,7 @@ public class NotificationHandler {
     private Publisher dispatcher;
 
     //Map for sessionId-name pairs.
-    private Map<String, String> sessions;
+    private static Map<String, String> sessions;
 
 
     public static NotificationHandler getInstance(){
@@ -214,6 +214,14 @@ public class NotificationHandler {
         }
     }
 
+    public void sendReOpenedShopBatch(List<String> works, String founder, String shopName) {
+        RealTimeNotifications not=new RealTimeNotifications();
+        not.createReOpenedShopMessage(shopName,founder);
+        for(String worker: works){
+            sendNotification(worker,not,true);
+        }
+    }
+
     public void sendShopClosedBatchNotificationsBatch(ArrayList<String> strings, String shopName) {
         RealTimeNotifications not=new RealTimeNotifications();
         not.createShopClosedMessage(shopName);
@@ -239,7 +247,24 @@ public class NotificationHandler {
         not.createBidRejectedMessage(buyer, itemName, price, shopName);
         sendNotification(buyer, not, isMember);
     }
+    public void sendAppointmentRejectedNotification(String appointedName, String ownerName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.creadteAppointmentRejectedMessage(appointedName, ownerName, shopName);
+        sendNotification(appointedName, not, true);
+    }
 
+    public void sendAppointmentApproved(String appointedName, String ownerName, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.creadteAppointmentApprovedMessage(appointedName, ownerName, shopName);
+        sendNotification(appointedName, not, true);
+    }
+    public void sendNewAppointmentBatch(List<String> owners, Member appointed, Member superVisor, String shopName, String role) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewAppointmentMessage(appointed.getName(), superVisor.getName(), shopName,role);
+        for(String employee : owners){
+            sendNotification(employee,not,true);
+        }
+    }
     public void sendBidRejectedToApprovesNotificationBatch(List<String> approves, String buyer, double price, String itemName, String shopName) {
         RealTimeNotifications not= new RealTimeNotifications();
         not.createBidRejectedToApprovesMessage(buyer, price, itemName, shopName);
@@ -371,4 +396,7 @@ public class NotificationHandler {
             dispatcher.addMessgae(session, not);
         }
     }
+
+
+
 }
