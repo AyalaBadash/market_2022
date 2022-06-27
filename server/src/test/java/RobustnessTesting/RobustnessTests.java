@@ -35,7 +35,7 @@ public class RobustnessTests {
     CreditCard creditCard;
     Address address;
     String managerName = "u1";
-    String managerPassword = "p1";
+    String managerPassword = "password";
     String shopOwnerName = "bar";
     String shopOwnerPassword = "password";
     String userName = "userTest";
@@ -78,15 +78,15 @@ public class RobustnessTests {
     private void loadAdminName() {
         try {
             String dir = MarketConfig.IS_MAC ? "/config/" : "\\config\\";
-            File myObj = new File(System.getProperty("user.dir") + dir + "config.txt");
+            File myObj = new File(System.getProperty("user.dir") + dir + "Data.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] vals = data.split("::");
-                if (!vals[0].equals("PaymentService") & !vals[0].equals("SupplyService") & !vals[0].equals("Publisher")) {
+                if (vals[0].equals(MarketConfig.SYSTEM_MANAGER_NAME)) {
 
-                    managerName = vals[0];
-                    managerPassword = vals[1];
+                    managerName = vals[1];
+                    managerPassword = vals[2];
                 }
             }
         } catch (FileNotFoundException e) {
@@ -200,7 +200,7 @@ public class RobustnessTests {
         }
     }
     @Test
-    @DisplayName("System init from bas config file, no supply service. should not continue the market init.")
+    @DisplayName("System init from bas config file, no payment service. should not continue the market init.")
     public void initFromBadPaymentFile(){
         String name= MarketConfig.SERVICES_FILE_NAME;
         try{
@@ -217,7 +217,7 @@ public class RobustnessTests {
         }
     }
     @Test
-    @DisplayName("System init from bas config file, no supply service. should not continue the market init.")
+    @DisplayName("System init from bas config file, no publish service. should not continue the market init.")
     public void initFromBadPublisherFile(){
         String name= MarketConfig.SERVICES_FILE_NAME;
         try{

@@ -25,7 +25,7 @@ import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Supply.WSEPSupplyServiceAdapter;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.NameValuePair;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1057,21 +1057,22 @@ public class Market {
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
+                if(data.isEmpty())
+                    continue;
                 String[] vals = data.split("::");
                 setService(vals);
             }
         } catch (FileNotFoundException e){
-            throw new MarketException("file not found while reading configuration file");
+            DebugLog.getInstance().Log("File not found while reading configuration file in market init");
+            throw new MarketException("File not found while reading configuration file");
         }
         if (paymentServiceProxy == null || supplyServiceProxy == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of payment / supply services ");
-            throw new MarketException("market needs payment and supply services for initialize");
+            DebugLog.getInstance().Log("A market initialization failed . Lack of payment / supply services ");
+            throw new MarketException("Market needs payment and supply services for initialize");
         }
         if (publisher == null) {
-            DebugLog debugLog = DebugLog.getInstance();
-            debugLog.Log("A market initialization failed . Lack of publisher services ");
-            throw new MarketException("market needs publisher services for initialize");
+            DebugLog.getInstance().Log("A market initialization failed . Lack of publisher services ");
+            throw new MarketException("Market needs publisher services for initialize");
 
         }
 
@@ -1126,6 +1127,7 @@ public class Market {
         } else if (val.contains(MarketConfig.TEXT_PUBLISHER)) {
             publisher = TextDispatcher.getInstance();
         } else {
+            DebugLog.getInstance().Log("Faileed to init notification service.");
             throw new MarketException("Failed to init notification service");
         }
         notificationHandler = NotificationHandler.getInstance();
@@ -1353,10 +1355,10 @@ public class Market {
         String dir = System.getProperty("user.dir");
         if(!MarketConfig.IS_TEST_MODE){
             if(MarketConfig.IS_MAC){
-                dir+="/server/";
+                dir+="/server";
             }
             else{
-                dir+="\\server\\";
+                dir+="\\server";
             }
         }
         String additional_dir = "\\config\\";
@@ -1445,6 +1447,10 @@ public class Market {
     public String resetSystemManager() {
         String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
         systemManagerName="";
+        return ret;
+    }
+    public String getSystemManager() {
+        String ret= getSystemManagerName()+":"+Security.getInstance().getNamesToLoginInfo().get(getSystemManagerName()).getPassword();
         return ret;
     }
     public void restoreSystemManager(String uName, String password){
