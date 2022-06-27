@@ -566,6 +566,7 @@ public class Market {
             DebugLog.getInstance().Log("Non member tried to open a shop.");
             throw new MarketException("You are not a member. Only members can open a new shop in the market");
         }
+        statistics.incNumOfOwners(visitorName);
         EventLog.getInstance().Log(visitorName + " opened a new shop named:" + shopName);
         return true;
     }
@@ -623,10 +624,7 @@ public class Market {
         }
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopOwner(shopOwner, appointed);
-        try {
-            notificationHandler.sendNewShopOwner(shopOwner, appointed, shopName);
-        } catch (Exception e) {
-        }
+
     }
 
     public void appointShopManager(String shopOwnerName, String appointedShopManager, String shopName) throws MarketException {
@@ -644,8 +642,12 @@ public class Market {
         Member shopOwner = userController.getMember(shopOwnerName);
         shop.appointShopManager(shopOwner, appointed);
         try {
+            if(userController.isLoggedIn(appointedShopManager)) {
+                statistics.incNumOfManagers(appointedShopManager);
+            }
             notificationHandler.sendNewShopManager(shopOwner, appointed, shopName);
         } catch (Exception e) {
+            ErrorLog.getInstance().Log("Failed to notify new shop manager on the appointment.");
         }
     }
 
@@ -754,7 +756,7 @@ public class Market {
 
     }
 
-    public ShoppingCart buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
+    public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
                                         Address address) throws MarketException, JsonProcessingException {
 
         // If visitor exists under that name.
@@ -763,7 +765,7 @@ public class Market {
         Visitor visitor = userController.getVisitor(visitorName);
         ShoppingCart shoppingCart;
         Acquisition acquisition;
-        ShoppingCart shoppingCartToReturn;
+
         try {
             shoppingCart = visitor.getCart();
             if (shoppingCart.isEmpty()) {
@@ -794,14 +796,7 @@ public class Market {
             throw new MarketException(e.getMessage());
         }
 
-        if(!acquisition.shoppingCartToBuy.isEmpty()){
-            statistics.incNumOfAcquisitions();
-        }
 
-        if (shoppingCartToReturn == null) {
-            throw new MarketException("Could not make the purchase right now for the shopping cart. Please try again later. ");
-        }
-        return shoppingCartToReturn;
     }
 
     private ShoppingCart validateCart(ShoppingCart currentCart) throws MarketException {
@@ -1277,7 +1272,11 @@ public class Market {
             DebugLog.getInstance().Log("No such shop exist in the market.");
             throw new MarketException("No such shop exist in the market.");
         }
-        return shop.approveAppointment(appointedName,ownerName);
+        boolean ret= shop.approveAppointment(appointedName,ownerName);
+        if(ret && userController.isLoggedIn(appointedName)){
+            statistics.incNumOfOwners(appointedName);
+        }
+        return ret;
     }
     public void rejectAppointment(String shopName,String appointedName,String ownerName) throws MarketException {
         Shop shop = shops.get(shopName);
@@ -1446,5 +1445,14 @@ public class Market {
     public void restoreSytemManager(String uName, String password){
         systemManagerName=uName;
 
+    }
+
+    public void updateStatistics(){
+        Statistics.StatisticsData data = new Statistics.StatisticsData();
+        data.setNumOfVisitors(this.getTotalVisitor());
+    }
+
+    private int getTotalVisitor() {
+        return this.userController.getVisitorsInMarket().size();
     }
 }

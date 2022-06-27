@@ -34,6 +34,7 @@ public class Statistics {
             numOfSystemManager=0;
 
         }
+
         public void resetStatistics(){
             numOfVisitors=0;
             numOfRegularMembers=0;
@@ -42,6 +43,45 @@ public class Statistics {
             numOfSystemManager=0;
         }
 
+        public int getNumOfVisitors() {
+            return numOfVisitors;
+        }
+
+        public void setNumOfVisitors(int numOfVisitors) {
+            this.numOfVisitors = numOfVisitors;
+        }
+
+        public int getNumOfRegularMembers() {
+            return numOfRegularMembers;
+        }
+
+        public void setNumOfRegularMembers(int numOfRegularMembers) {
+            this.numOfRegularMembers = numOfRegularMembers;
+        }
+
+        public int getNumOfShopsManagers() {
+            return numOfShopsManagers;
+        }
+
+        public void setNumOfShopsManagers(int numOfShopsManagers) {
+            this.numOfShopsManagers = numOfShopsManagers;
+        }
+
+        public int getNumOfOwners() {
+            return numOfOwners;
+        }
+
+        public void setNumOfOwners(int numOfOwners) {
+            this.numOfOwners = numOfOwners;
+        }
+
+        public int getNumOfSystemManager() {
+            return numOfSystemManager;
+        }
+
+        public void setNumOfSystemManager(int numOfSystemManager) {
+            this.numOfSystemManager = numOfSystemManager;
+        }
     }
     private final NotificationHandler notificationHandler;
     private final StatisticsData data;
