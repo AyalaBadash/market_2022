@@ -28,7 +28,7 @@ public class ServicesTests {
     static PaymentServiceProxy paymentServiceProxy;
     static SupplyServiceProxy supplyServiceProxy;
     String userName = "u1";
-    String password = "password";
+    String password = "p1";
     String ItemName= "item1";
     Item itemAdded;
     int productAmount=20;
@@ -47,8 +47,8 @@ public class ServicesTests {
     static Market market ;
     Visitor visitor;
     static boolean useData;
-    static String ManName;
-    static String ManPass;
+    static String ManName = "u1";;
+    static String ManPass = "p1";;
 
 
     @BeforeAll
@@ -63,9 +63,6 @@ public class ServicesTests {
         MarketConfig.IS_TEST_MODE=true;
         Visitor visitor= market.guestLogin();
         try {
-            String[] dets= market.resetSystemManager().split(":");
-            ManName=dets[0];
-            ManPass=dets[1];
             market.isInit ( );
         }catch(MarketException e){
             System.out.println (e.getMessage () );
