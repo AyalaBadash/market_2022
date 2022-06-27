@@ -19,7 +19,6 @@ import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,6 +28,8 @@ public class ServicesTests {
     static SupplyServiceProxy supplyServiceProxy;
     String userName = "u1";
     String password = "password";
+    String systemManagerName = "u1";
+    String systemManagerPassword = "password";
     String ItemName= "item1";
     Item itemAdded;
     int productAmount=20;
@@ -47,8 +48,8 @@ public class ServicesTests {
     static Market market ;
     Visitor visitor;
     static boolean useData;
-    static String ManName;
-    static String ManPass;
+    static String ManName="u1";
+    static String ManPass = "password";
 
 
     @BeforeAll
@@ -62,7 +63,7 @@ public class ServicesTests {
             useData = MarketConfig.USING_DATA;
             MarketConfig.USING_DATA = true;
             MarketConfig.IS_TEST_MODE = true;
-
+            market.isInit();
             Visitor visitor = market.guestLogin();
             try {
                 String[] dets = market.resetSystemManager().split(":");
@@ -84,20 +85,19 @@ public class ServicesTests {
 
         MarketConfig.USING_DATA=useData;
         MarketConfig.IS_TEST_MODE=false;
-        market.restoreSytemManager(ManName,ManPass);
+        market.restoreSystemManager(ManName,ManPass);
     }
     @BeforeEach
     public void init() {
 
         try{
-            market.memberLogin(userName, password);
-            market.validateSecurityQuestions(userName,new ArrayList<>(), visitor.getName());
+            market.memberLogin(systemManagerName, systemManagerPassword);
+            market.validateSecurityQuestions(systemManagerName,new ArrayList<>(), visitor.getName());
         }catch (Exception e){}
     }
 
 
     @Test
-    @Order(0)
     @DisplayName("Payment service- successful payment action")
     public void PaymentHandler() {
         try {
@@ -109,7 +109,6 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Supply service- successful supply action")
     public void SupplyHandler() {
         try {
@@ -122,7 +121,6 @@ public class ServicesTests {
 
 
     @Test
-    @Order(2)
     @DisplayName("Payment service- successful cancel pay action")
     public void PaymentHandlerCancel() {
         try {
@@ -139,7 +137,6 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(3)
     @DisplayName("Supply service- successful cancel supply action")
     public void SupplyHandlerCancel() {
         try {
@@ -157,34 +154,34 @@ public class ServicesTests {
 
 
     @Test
-    @Order(4)
     @DisplayName("Payment service- check error message without crash when service falls")
     public void PaymentServiceFalls() throws MarketException {
         try {
             try {
                 Visitor visitor = market.guestLogin();
-                market.memberLogin(userName, password);
-                market.validateSecurityQuestions(userName, new ArrayList<>(), visitor.getName());
+                market.memberLogin(systemManagerName, systemManagerPassword);
+                market.restoreSystemManager(systemManagerName, systemManagerPassword);
+                market.validateSecurityQuestions(systemManagerName, new ArrayList<>(), visitor.getName());
             }catch (Exception e){
                 String str= e.getMessage();
             }
-            market.setPaymentServiceAddress("", userName);
+            market.setPaymentServiceAddress("", systemManagerName);
             paymentServiceProxy.pay(creditCard);
-            market.setPaymentServiceAddress(MarketConfig.WSEP_ADDRESS, userName);
+            market.setPaymentServiceAddress(MarketConfig.WSEP_ADDRESS, systemManagerName);
             assert false;
         } catch (Exception e) {
-            market.setPaymentServiceAddress(MarketConfig.WSEP_ADDRESS, userName);
+            market.setPaymentServiceAddress(MarketConfig.WSEP_ADDRESS, systemManagerName);
             Assertions.assertEquals("Error2",e.getMessage());
 
         }
     }
 
     @Test
-    @Order(5)
     @DisplayName("Supply service- check error message without crash when service falls")
     public void SupplyServiceFalls() throws MarketException {
         try {
-            market.setSupplyServiceAddress("", userName);
+            loginMember(systemManagerName,systemManagerPassword);
+            market.setSupplyServiceAddress("", systemManagerName);
             supplyServiceProxy.supply(address);
             market.setSupplyServiceAddress(MarketConfig.WSEP_ADDRESS, market.getSystemManagerName());
             assert false;
@@ -195,7 +192,6 @@ public class ServicesTests {
         }
     }
     @Test
-    @Order(6)
     @DisplayName("Dispatcher service- successful add action")
     public void textDispatcherAdd() {
         textDispatcher.clean();
@@ -208,7 +204,6 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(7)
     @DisplayName("Dispatcher service- try add twice a user should not allow.")
     public void textDispatcherAdd2() {
         textDispatcher.clean();
@@ -228,7 +223,6 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(8)
     @DisplayName("Dispatcher service- successful remove action")
     public void textDispatcherRemove(){
         textDispatcher.clean();
@@ -241,7 +235,6 @@ public class ServicesTests {
         Assertions.assertEquals(0, textDispatcher.getSessionNum());
     }
     @Test
-    @Order(9)
     @DisplayName("Dispatcher service- try to remove user without adding him before should not allow.")
     public void textDispatcherRemove2(){
         textDispatcher.clean();
@@ -253,7 +246,6 @@ public class ServicesTests {
         Assertions.assertEquals(0, notifs.size());
     }
     @Test
-    @Order(10)
     @DisplayName("Dispatcher service- successful send new message action")
     public void textDispatcherAddMessage(){
         textDispatcher.clean();
@@ -267,36 +259,13 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(11)
-    @DisplayName("System init from file, check the file is loaded to the system.")
-    public void initFromFile(){
-        try{
-            UserController userController= UserController.getInstance();
-            List<String> list= new ArrayList<>();
-            try {
-                market.loadDataFromFile();
-            }
-            catch(Exception e){
-
-            }
-            list.add("u2");
-            list.add("u3");
-            list.add("u4");
-            Assertions.assertTrue(userController.allInMarket(list));
-        }
-        catch(Exception e){
-            assert false;
-        }
-    }
-
-    @Test
     @DisplayName("System init from no existing file. should not continue the market init.")
     public void initFromNoFile(){
         try{
             MarketConfig.SERVICES_FILE_NAME="noName.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(userName);
+            market.memberLogout(systemManagerName);
             MarketConfig.SERVICES_FILE_NAME="config.txt";
             assert false;
         }
@@ -313,7 +282,7 @@ public class ServicesTests {
             MarketConfig.SERVICES_FILE_NAME="badSupplyConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(userName);
+            market.memberLogout(systemManagerName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -330,7 +299,7 @@ public class ServicesTests {
             MarketConfig.SERVICES_FILE_NAME="badPaymentConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(userName);
+            market.memberLogout(systemManagerName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -347,7 +316,7 @@ public class ServicesTests {
             MarketConfig.SERVICES_FILE_NAME="badPublisherConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
-            market.memberLogout(userName);
+            market.memberLogout(systemManagerName);
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
@@ -526,11 +495,11 @@ public class ServicesTests {
             String appointedName = "appointedNameTest4";
             String testShopName = "ShopName4";
             String owner = "ownerNameTest4";
-            loginMember(userName,password );
+            loginMember(systemManagerName,systemManagerPassword );
             List<String> nots= new ArrayList<>();
             RealTimeNotifications not= new RealTimeNotifications();
             setUpCloseShop(owner,appointedName,not,testShopName);
-            nots.addAll(readRealTimeMessages(userName));
+            nots.addAll(readRealTimeMessages(systemManagerName));
             boolean found = false;
             for(String message : nots){
                 if(message.contains("numOfVisitors")){
@@ -538,10 +507,10 @@ public class ServicesTests {
                     break;
                 }
             }
-            logoutMember(userName);
+            logoutMember(systemManagerName);
             Assertions.assertTrue(found);
         } catch (Exception e) {
-            logoutMember(userName);
+            logoutMember(systemManagerName);
             assert false;
         }
     }
@@ -560,7 +529,7 @@ public class ServicesTests {
             RealTimeNotifications not= new RealTimeNotifications();
             setUpCloseShop(owner,appointedName,not,testShopName);
             nots.addAll(readRealTimeMessages(market.getSystemManagerName()));
-            loginMember(userName, password);
+            loginMember(systemManagerName, systemManagerPassword);
             boolean found ;
             found= (nots.size()==prevNots.size());
             Assertions.assertTrue(found);
