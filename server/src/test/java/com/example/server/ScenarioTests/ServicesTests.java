@@ -52,23 +52,31 @@ public class ServicesTests {
 
 
     @BeforeAll
-    public static void initBefore(){
-        paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
-        supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
-        creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
-        address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
-        market = Market.getInstance();
-        useData=MarketConfig.USING_DATA;
-        MarketConfig.USING_DATA=true;
-        MarketConfig.IS_TEST_MODE=true;
-        Visitor visitor= market.guestLogin();
+    public static void initBefore() throws MarketException {
         try {
-            String[] dets= market.resetSystemManager().split(":");
-            ManName=dets[0];
-            ManPass=dets[1];
-            market.isInit ( );
-        }catch(MarketException e){
-            System.out.println (e.getMessage () );
+            paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
+            supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
+            creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
+            address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
+            market = Market.getInstance();
+            useData = MarketConfig.USING_DATA;
+            MarketConfig.USING_DATA = true;
+            MarketConfig.IS_TEST_MODE = true;
+
+            Visitor visitor = market.guestLogin();
+            try {
+                String[] dets = market.resetSystemManager().split(":");
+                ManName = dets[0];
+                ManPass = dets[1];
+            } catch (Exception e) {
+            }
+            try {
+                market.isInit();
+            } catch (MarketException e) {
+                System.out.println(e.getMessage());
+            }
+        }catch (Exception e){
+          String str= e.getMessage();
         }
     }
     @AfterAll
@@ -80,16 +88,7 @@ public class ServicesTests {
     }
     @BeforeEach
     public void init() {
-//        paymentServiceProxy = new PaymentServiceProxy(WSEPPaymentServiceAdapter.getinstance(), true);
-//        supplyServiceProxy = new SupplyServiceProxy(WSEPSupplyServiceAdapter.getInstance(), true);
-//        creditCard = new CreditCard("1234567890", "07", "2026", "205", "Bar Damri", "208915751");
-//        address = new Address("Bar Damri", "Atad 3", "Beer Shaba", "Israel", "8484403");
-//        market = Market.getInstance();
-//
-//        Visitor visitor= market.guestLogin();
-//        try {
-//            market.isInit ( );
-//        }catch(MarketException e){}
+
         try{
             market.memberLogin(userName, password);
             market.validateSecurityQuestions(userName,new ArrayList<>(), visitor.getName());
@@ -274,6 +273,12 @@ public class ServicesTests {
         try{
             UserController userController= UserController.getInstance();
             List<String> list= new ArrayList<>();
+            try {
+                market.loadDataFromFile();
+            }
+            catch(Exception e){
+
+            }
             list.add("u2");
             list.add("u3");
             list.add("u4");
@@ -285,7 +290,6 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(12)
     @DisplayName("System init from no existing file. should not continue the market init.")
     public void initFromNoFile(){
         try{
@@ -302,45 +306,126 @@ public class ServicesTests {
         }
     }
     @Test
-    @Order(13)
+    @DisplayName("System init from bas config file, no supply service. should not continue the market init.")
+    public void initFromBadSupplyFile(){
+        String name= MarketConfig.SERVICES_FILE_NAME;
+        try{
+            MarketConfig.SERVICES_FILE_NAME="badSupplyConfig.txt";
+            market.isInit();
+            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
+            market.memberLogout(userName);
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("System init from bas config file, no supply service. should not continue the market init.")
+    public void initFromBadPaymentFile(){
+        String name= MarketConfig.SERVICES_FILE_NAME;
+        try{
+            MarketConfig.SERVICES_FILE_NAME="badPaymentConfig.txt";
+            market.isInit();
+            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
+            market.memberLogout(userName);
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            Assertions.assertEquals("Missing init values for PaymentService . Could not init the system services.",e.getMessage());
+        }
+    }
+    @Test
+    @DisplayName("System init from bas config file, no supply service. should not continue the market init.")
+    public void initFromBadPublisherFile(){
+        String name= MarketConfig.SERVICES_FILE_NAME;
+        try{
+            MarketConfig.SERVICES_FILE_NAME="badPublisherConfig.txt";
+            market.isInit();
+            market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
+            market.memberLogout(userName);
+            MarketConfig.SERVICES_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.SERVICES_FILE_NAME=name;
+            Assertions.assertEquals("Missing init values for Publisher . Could not init the system services.",e.getMessage());
+        }
+    }
+    @Test
     @DisplayName("System init from no existing data source file. should not continue the market init.")
-    public void initFromDataSourceNoFile() throws MarketException, FileNotFoundException {
+    public void initFromDataSourceNoFile() {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
         try{
-
+            MarketConfig.USING_DATA=true;
             MarketConfig.DATA_SOURCE_FILE_NAME ="noName.txt";
             DataSourceConfigReader.resetInstance();
+            market.isInit();
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
+            Assertions.assertEquals("Data source config file not found.",e.getMessage());
+        }
+    }
+    @Test
+    @DisplayName("System init from bad config file without supply service. should not continue the market init.")
+    public void initFromBadConfig() {
+        String name=MarketConfig.SERVICES_FILE_NAME;
+        try{
+
+            MarketConfig.SERVICES_FILE_NAME ="BadConfig.txt";
             market.isInit();
             MarketConfig.SERVICES_FILE_NAME=name;
             assert false;
         }
         catch(Exception e){
             MarketConfig.SERVICES_FILE_NAME=name;
-            Assertions.assertEquals("Data source config file not found.",e.getMessage());
+            Assertions.assertEquals("Missing init values for SupplyService . Could not init the system services.",e.getMessage());
         }
     }
 
     @Test
-    @Order(14)
-    @DisplayName("System init from data source file with bad arguments. should not continue the market init.")
-    public void initFromDataSourceBadArgs() throws MarketException, FileNotFoundException {
+    @DisplayName("System init from data source file with no username. should not continue the market init.")
+    public void initFromDataSourceBadArgs() {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
         try{
 
-            MarketConfig.DATA_SOURCE_FILE_NAME =MarketConfig.MISS_DATA_SOURCE_FILE_NAME;
+            MarketConfig.DATA_SOURCE_FILE_NAME =MarketConfig.MISS_NAME_DATA_SOURCE_FILE_NAME;
             DataSourceConfigReader.resetInstance();
             market.isInit();
-            MarketConfig.SERVICES_FILE_NAME=name;
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
             assert false;
         }
         catch(Exception e){
-            MarketConfig.SERVICES_FILE_NAME=name;
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
             Assertions.assertEquals("Missing username in data source config file.",e.getMessage());
         }
     }
+    @Test
+    @DisplayName("System init from data source file with no password. should not continue the market init.")
+    public void initFromDataSourceBadArgsPass() {
+        String name=MarketConfig.DATA_SOURCE_FILE_NAME;
+        try{
 
+            MarketConfig.DATA_SOURCE_FILE_NAME =MarketConfig.MISS_PASSWORD_DATA_SOURCE_FILE_NAME;
+            DataSourceConfigReader.resetInstance();
+            market.isInit();
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
+            assert false;
+        }
+        catch(Exception e){
+            MarketConfig.DATA_SOURCE_FILE_NAME=name;
+            Assertions.assertEquals("Missing password in data source config file.",e.getMessage());
+        }
+    }
    @Test
-   @Order(15)
+   @Order(17)
     @DisplayName("Notification test- successful close shop action")
     public void closeShop() {
        try {
@@ -364,7 +449,6 @@ public class ServicesTests {
 
 
     @Test
-    @Order(16)
     @DisplayName("Notification test- appoint owner with delayed notification, check message exists.")
     public void AppointOwnerNotificationTest() {
         try {
@@ -387,7 +471,6 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(17)
     @DisplayName("Notification test- close shop with delayed notification, check message exists.")
     public void closeShopDelayed() {
         try {
@@ -412,7 +495,6 @@ public class ServicesTests {
     }
 
     @Test
-    @Order(18)
     @DisplayName("Notification test- close shop with real time notification, check message exists.")
     public void closeShopRealTime() {
         try {
@@ -433,6 +515,57 @@ public class ServicesTests {
             Assertions.assertTrue(found);
         } catch (Exception e) {
             assert false;
+        }
+    }
+
+    @Test
+    @DisplayName("Notification test- close shop with real time notification, check message exists.")
+    public void shopManagerStatistics() throws MarketException {
+
+        try {
+            String appointedName = "appointedNameTest4";
+            String testShopName = "ShopName4";
+            String owner = "ownerNameTest4";
+            loginMember(userName,password );
+            List<String> nots= new ArrayList<>();
+            RealTimeNotifications not= new RealTimeNotifications();
+            setUpCloseShop(owner,appointedName,not,testShopName);
+            nots.addAll(readRealTimeMessages(userName));
+            boolean found = false;
+            for(String message : nots){
+                if(message.contains("numOfVisitors")){
+                    found=true;
+                    break;
+                }
+            }
+            logoutMember(userName);
+            Assertions.assertTrue(found);
+        } catch (Exception e) {
+            logoutMember(userName);
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Notification test- close shop with real time notification, not system manager")
+    public void shopManagerStatisticsNoManager() {
+        try {
+
+            String appointedName = "appointedNameTest5";
+            String testShopName = "ShopName5";
+            String owner = "ownerNameTest5";
+            List<String> prevNots= new ArrayList<>();
+            prevNots.addAll(readRealTimeMessages(market.getSystemManagerName()));
+            market.memberLogout(market.getSystemManagerName());
+            List<String> nots= new ArrayList<>();
+            RealTimeNotifications not= new RealTimeNotifications();
+            setUpCloseShop(owner,appointedName,not,testShopName);
+            nots.addAll(readRealTimeMessages(market.getSystemManagerName()));
+            loginMember(userName, password);
+            boolean found ;
+            found= (nots.size()==prevNots.size());
+            Assertions.assertTrue(found);
+        } catch (Exception e) {
+            assert true;
         }
     }
 

@@ -622,6 +622,7 @@ public class ShopOwnerAcceptanceTests extends AcceptanceTests {
             assert curNum + 1 == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
             // B appoints C
             assert !appointShopOwner(ownerB.getName(), ownerC.getName(), removingShop.getShopName()).isErrorOccurred();
+            approveAppointment(ownerA.getName(),ownerC.getName(),removingShop.getShopName());
             assert curNum + 2 == getShopEmployeesInfo(ownerA.getName(), removingShop.getShopName()).size();
 
             // C removing B

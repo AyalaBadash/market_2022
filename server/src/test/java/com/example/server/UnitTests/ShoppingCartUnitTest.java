@@ -5,6 +5,8 @@ import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.ShoppingCart;
+import com.example.server.businessLayer.Market.Users.Member;
+import com.example.server.businessLayer.Market.Users.Visitor;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import org.junit.jupiter.api.Assertions;
@@ -36,8 +38,7 @@ public class ShoppingCartUnitTest{
         basket1Map = new HashMap<>();
         basket2Map = new HashMap<>();
         basket1Map.put(item.getID(),5.0);
-        Map<java.lang.Integer,Double> basket2Map=new HashMap<>();
-        basket1Map.put(item2.getID(),5.0);
+        basket2Map.put(item2.getID(),5.0);
         Mockito.when(basket.getItems()).thenReturn(basket1Map);
         Mockito.when(basket2.getItems()).thenReturn(basket2Map);
         cart = new HashMap<>();
@@ -55,14 +56,9 @@ public class ShoppingCartUnitTest{
         try {
             Mockito.when(shop2.getShopName()).thenReturn("shop2");
             Assertions.assertEquals(5, shoppingCart.getItemQuantity(item));
-//            Mockito.when(basket.updateQuantity(anyDouble(), any()));
             Mockito.when(basket.getItems()).thenReturn(basket1Map);
             Mockito.when(shop.getShopName()).thenReturn("shop");
             shoppingCart.editQuantity(15, item, shop.getShopName());
-//            HashMap<Item, Double> tempHash = new HashMap<>();
-//            tempHash.put(item,15.0);
-//            Mockito.when(basket.getItems()).thenReturn(tempHash);
-//            Assertions.assertEquals(15, shoppingCart.getItemQuantity(item));
             assert true;
         }
         catch (MarketException e){
@@ -97,8 +93,8 @@ public class ShoppingCartUnitTest{
     }
 
     @Test
-    @DisplayName("Add item")
-    public void addItemTest(){
+    @DisplayName("Add item - new basket")
+    public void addItemNewBasketTest(){
         Item testItem = Mockito.mock(Item.class);
         Shop newShop = Mockito.mock(Shop.class);
         try {
@@ -107,5 +103,16 @@ public class ShoppingCartUnitTest{
             assert false;
         }
         Assertions.assertEquals(3,shoppingCart.getCart().size());
+    }
+    @Test
+    @DisplayName("Add item - existing basket")
+    public void addItemExistingBasketTest(){
+        Item testItem = Mockito.mock(Item.class);
+        try {
+            shoppingCart.addItem(shop,testItem,7.0);
+        } catch (Exception e) {
+            assert false;
+        }
+        Assertions.assertEquals(2,shoppingCart.getCart().size());
     }
 }

@@ -193,7 +193,7 @@ public class ShoppingCart implements IHistory {
         return true;
     }
 
-    public void addABid(Bid bid, Shop shop) {
+    public void addABid(Bid bid, Shop shop) throws MarketException {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
             shoppingBasket = new ShoppingBasket ();

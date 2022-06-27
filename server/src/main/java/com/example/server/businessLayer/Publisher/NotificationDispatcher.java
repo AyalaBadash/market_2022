@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Publisher;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.serviceLayer.Notifications.Notification;
 import com.example.server.serviceLayer.Notifications.RealTimeNotifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Flow;
 
 
 @Service
@@ -23,7 +23,7 @@ public class NotificationDispatcher extends Publisher {
     private static NotificationDispatcher notificationDispatcher=null;
 
     //Set of the sessionis-messages;
-    private Map<String, List<Notification>> messages;
+    private static Map<String, List<Notification>> messages;
 
     public static NotificationDispatcher getInstance(){
         if (notificationDispatcher==null){
@@ -36,7 +36,7 @@ public class NotificationDispatcher extends Publisher {
     }
 
     //For each listener, send all real time notifications available.
-    @Scheduled(fixedDelay = 2000)
+    @Scheduled(fixedDelay = MarketConfig.SCHEDULE_MILSEC)
     public void dispatch() {
         for (Map.Entry<String, List<Notification>> messagesSet : messages.entrySet()) {
             try {

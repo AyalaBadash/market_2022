@@ -303,5 +303,11 @@ public class AcceptanceTests {
         return Service.getInstance().removeShopOwnerAppointment(request);
     }
 
+    public Response approveAppointment(String shopOwnerName,String appointed,String shopName)
+    {
+        ApproveAppointmentRequest request = new ApproveAppointmentRequest(shopName,appointed,shopOwnerName);
+        return Service.getInstance().approveAppointment(request);
+    }
+
 
 }

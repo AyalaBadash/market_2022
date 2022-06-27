@@ -18,7 +18,7 @@ public class SystemManagerTests {
 
     static Market market;
     static String managerName = "u1";
-    static String managerpassword = "p1";
+    static String managerpassword = "password";
     static PaymentServiceProxy paymentService2 = new PaymentServiceProxy();
 
 

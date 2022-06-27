@@ -26,9 +26,11 @@ public class CategoryPurchasePolicyLevelState extends PurchasePolicyLevelState {
     public List<Double> getAmount(ShoppingBasket shoppingBasket) throws MarketException {
         List<Double> amount = new ArrayList<> (  );
         double curAmount = 0;
-        for(Integer itemId : shoppingBasket.getItems().keySet ())
-            if(Market.getInstance ().getItemByID ( itemId ).getCategory ().equals ( category ))
-                curAmount += shoppingBasket.getItems ().get ( itemId );
+        for(Integer itemId : shoppingBasket.getItems().keySet ()) {
+            if (Market.getInstance().getItemByID(itemId).getCategory().equals(category)) {
+                curAmount += shoppingBasket.getItems().get(itemId);
+            }
+        }
         amount.add ( curAmount );
         return amount;
     }
