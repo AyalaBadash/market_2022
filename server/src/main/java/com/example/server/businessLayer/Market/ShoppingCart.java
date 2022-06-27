@@ -5,6 +5,7 @@ import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,29 @@ public class ShoppingCart implements IHistory {
     public ShoppingCart(Map<Shop,ShoppingBasket> cart , double currentPrice){
         this.cart = cart;
         this.currentPrice = currentPrice;
+    }
+
+    public boolean equals(Object object){
+        if(object instanceof ShoppingCart){
+            ShoppingCart shoppingCartToCompare = (ShoppingCart) object;
+            if(shoppingCartToCompare.currentPrice != this.currentPrice)
+                return false;
+            for( Map.Entry<Shop, ShoppingBasket> basket : this.cart.entrySet () ){
+                ShoppingBasket shoppingBasket = shoppingCartToCompare.cart.get ( basket.getKey () );
+                if(shoppingBasket == null)
+                    return false;
+                if(!shoppingBasket.equals ( basket.getValue () ))
+                    return false;
+            }
+            for( Map.Entry<Shop, ShoppingBasket> basket : shoppingCartToCompare.cart.entrySet () ){
+                ShoppingBasket shoppingBasket = this.cart.get ( basket.getKey () );
+                if(shoppingBasket == null)
+                    return false;
+                if(!shoppingBasket.equals ( basket.getValue () ))
+                    return false;
+            }
+        }
+        return false;
     }
 
     public void setCurrentPrice(double currentPrice) {
@@ -169,7 +193,7 @@ public class ShoppingCart implements IHistory {
         return true;
     }
 
-    public void addABid(Bid bid, Shop shop) {
+    public void addABid(Bid bid, Shop shop) throws MarketException {
         ShoppingBasket shoppingBasket = cart.get ( shop );
         if (shoppingBasket == null){
             shoppingBasket = new ShoppingBasket ();

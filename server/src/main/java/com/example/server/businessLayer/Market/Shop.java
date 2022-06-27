@@ -16,6 +16,7 @@ import com.example.server.businessLayer.Market.Users.UserController;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 import com.example.server.businessLayer.Market.Users.Member;
+import org.springframework.stereotype.Component;
 
 import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
@@ -215,7 +216,7 @@ public class Shop implements IHistory {
             }
         }
         if (failed) {
-            throw new MarketException ( missingMessage );
+            throw new MarketException ( "" + missingMessage );
         }
         for ( Map.Entry<java.lang.Integer, Double> itemAmount : items.entrySet ( ) ) {
             Item currItem = shoppingBasket.getItemMap().get(itemAmount.getKey());
@@ -409,7 +410,13 @@ public class Shop implements IHistory {
                 }
                 pendingAppointments.addAppointment(employeeName,app,owners);
                 approveAppointment(app.getAppointed().getName(),app.getSuperVisor().getName());
-                //TODO send notification to all shop owners.
+                try {
+                    String role=getRole(newAppointment);
+                    NotificationHandler.getInstance().sendNewAppointmentBatch(owners, newAppointment.getAppointed(),newAppointment.getSuperVisor(), shopName,role);
+                    EventLog.getInstance().Log("Message has been sent to shop workers about the new appointment.");
+                } catch (Exception e) {
+                    ErrorLog.getInstance().Log("Could not send notification to  shop workers about the new appointment.");
+                }
             } else if (newAppointment.isOwner ( )) {
                 ShopOwnerAppointment app = (ShopOwnerAppointment) newAppointment;
                 List<String> owners = new ArrayList<>();
@@ -419,7 +426,13 @@ public class Shop implements IHistory {
                 }
                 pendingAppointments.addAppointment(employeeName,app,owners);
                 approveAppointment(app.getAppointed().getName(),app.getSuperVisor().getName());
-                //TODO send notification to all shop owners.
+                try {
+                    String role=getRole(newAppointment);
+                    NotificationHandler.getInstance().sendNewAppointmentBatch(owners, newAppointment.getAppointed(),newAppointment.getSuperVisor(), shopName,role);
+                    EventLog.getInstance().Log("Message has been sent to shop workers about the new appointment.");
+                } catch (Exception e) {
+                    ErrorLog.getInstance().Log("Could not send notification to  shop workers about the new appointment.");
+                }
             }
             else {
                 shopManagers.put(employeeName, newAppointment);
@@ -429,6 +442,19 @@ public class Shop implements IHistory {
                     }
             }
         }
+    }
+
+    private String getRole(Appointment newAppointment){
+        String role="";
+        if(newAppointment.isOwner()){
+            role="shop owner";
+        }
+        else if(newAppointment.isManager()){
+            role="shop manager";
+        } else if (((ShopOwnerAppointment) newAppointment).isShopFounder()) {
+            role= "shop founder";
+        }
+        return role;
     }
 
     public List<Item> getItemsByCategory(Item.Category category) {
@@ -566,7 +592,9 @@ public class Shop implements IHistory {
         }
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) ))
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
-        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>(){{ add(new PurchaseHistoryPermission());}});
+        ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>());
+        appointment.addAllPermissions();
+        appointed.addAppointmentToMe(appointment);
         addEmployee ( appointment );
     }
 
@@ -743,7 +771,7 @@ public class Shop implements IHistory {
 
     public void rejectABid(String opposed, String buyer, int itemId) throws MarketException {
         Bid bidToReject = findBid ( buyer, itemId );
-        bidToReject.rejectBid ( buyer );
+        bidToReject.rejectBid ( opposed );
         NotificationHandler handler = NotificationHandler.getInstance ();
         String itemName = itemMap.get ( itemId ).getName ();
         if(opposed.equals ( buyer )){
@@ -753,6 +781,7 @@ public class Shop implements IHistory {
             DebugLog.getInstance ().Log ( "visitor does not has the authority to reject a bid." );
             throw new MarketException ( "visitor does not has the authority to reject a bid." );
         }
+        bids.remove(bidToReject);
         handler.sendBidRejectedNotification ( buyer, bidToReject.isMember (), bidToReject.getPrice (), itemName, shopName );
         EventLog.getInstance().Log("The bid for the buyer:"+buyer+" in the shop:"+shopName+" has been rejected");
     }
@@ -826,19 +855,24 @@ public class Shop implements IHistory {
             throw new MarketException(ownerName+" is not an owner in this shop. Therefore he cannot approve any appointment.");
         }
         boolean approved = pendingAppointments.approve(appointedName,ownerName);
-        if (approved){
+        if (approved) {
             ShopOwnerAppointment appointment = pendingAppointments.getAppointments().get(appointedName);
-            shopOwners.put(appointedName,appointment);
+            shopOwners.put(appointedName, appointment);
             pendingAppointments.removeAppointment(appointedName);
             EventLog.getInstance().Log("Finally " + appointedName+" appointment has been approved. Now he is a shop owner");
-            for(Bid bid : bids) {
+            for (Bid bid : bids) {
                 bid.addApproves(appointedName);
             }
-            //TODO send notification the the appointed.
+            try {
+                NotificationHandler.getInstance().sendAppointmentApproved(appointedName, ownerName, shopName);
+                EventLog.getInstance().Log("Message has been sent to user about the appointment approval.");
+            } catch (Exception e) {
+                ErrorLog.getInstance().Log("Could not send notification to the user for appointment approve.");
+            }
             return true;
         }
         else {
-            EventLog.getInstance().Log(ownerName +"approved "+appointedName+"appointment. Waiting for other owners approval.");
+            EventLog.getInstance().Log(ownerName +" approved "+appointedName+" appointment. Waiting for other owners approval.");
             return false;
         }
     }
@@ -859,7 +893,12 @@ public class Shop implements IHistory {
             DebugLog.getInstance().Log(ownerName+ " tried to reject appointment which he does not take part in.");
             throw new MarketException("You dont have the authority to reject this appointment.");
         }
-        //TODO send notification
+        try {
+            NotificationHandler.getInstance().sendAppointmentRejectedNotification(appointedName, ownerName, shopName);
+            EventLog.getInstance().Log("Message has been sent to user about the appointment rejection.");
+        } catch (Exception e){
+            ErrorLog.getInstance().Log("Could not send notification to the user about appointment approval.");
+        }
         EventLog.getInstance().Log("The appointment for:"+appointedName+" has been rejected.");
 
     }
@@ -882,5 +921,8 @@ public class Shop implements IHistory {
 
     public void setShopOwners(Map<String, Appointment> shopOwners) {
         this.shopOwners = shopOwners;
+    }
+    public void setPendingAppointments(PendingAppointments pendingAppointments) {
+        this.pendingAppointments = pendingAppointments;
     }
 }

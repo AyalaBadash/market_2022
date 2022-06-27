@@ -1,6 +1,7 @@
 package com.example.server.serviceLayer;
 
 
+import com.example.server.businessLayer.Market.Acquisition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
@@ -336,7 +337,9 @@ public class MarketService {
     public ResponseT<String> getHistoryByShop(String systemManagerName, String shopName) {
         try {
             String history = market.getHistoryByShop(systemManagerName, shopName).toString();
-            return new ResponseT<>(history);
+            ResponseT<String> res =  new ResponseT<>(null);
+            res.setValue(history);
+            return res;
         } catch (Exception e) {
             ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
@@ -347,7 +350,9 @@ public class MarketService {
     public ResponseT<String> getHistoryByMember(String systemManagerName, String memberName) {
         try {
             String history = market.getHistoryByMember(systemManagerName, memberName).toString();
-            return new ResponseT<>(history);
+            ResponseT<String> res =  new ResponseT<>(null);
+            res.setValue(history);
+            return res;
         } catch (Exception e) {
             ErrorLog.getInstance().Log(e.getMessage());
             return new ResponseT<>(e.getMessage());
@@ -647,5 +652,20 @@ public class MarketService {
             return new ResponseT<>(e.getMessage());
         }
         return res;
+
+    public ResponseT<List<AcquisitionFacade>> getAcqsForMember(String memberName) {
+        List<Acquisition> acqs= null;
+        try {
+            acqs = market.getAcqsForMember(memberName);
+        } catch (MarketException e) {
+            return new ResponseT(e.getMessage());
+        }
+        List<AcquisitionFacade> acquisitionFacades = new ArrayList<>();
+        for (Acquisition acq:acqs)
+        {
+            AcquisitionFacade acquisitionFacade = new AcquisitionFacade(acq);
+            acquisitionFacades.add(acquisitionFacade);
+        }
+        return new ResponseT<>(acquisitionFacades);
     }
 }

@@ -22,13 +22,34 @@ public class Acquisition {
     String buyerName;
     int supplyID;
     int paymentID;
+    private Statistics statistics;
 
     public Acquisition(ShoppingCart shoppingCartToBuy, String buyerName) {
         this.shoppingCartToBuy = shoppingCartToBuy;
         this.buyerName = buyerName;
         paymentDone = false;
         supplyConfirmed = false;
+        statistics= Statistics.getInstance();
     }
+
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof Acquisition){
+            Acquisition acquisitionToCompare = (Acquisition) object;
+            if(!acquisitionToCompare.buyerName.equals ( this.buyerName ))
+                return false;
+            if(acquisitionToCompare.supplyID != this.supplyID)
+                return false;
+            if(acquisitionToCompare.paymentID != this.paymentID)
+                return false;
+            if(!acquisitionToCompare.shoppingCartToBuy.equals ( this.shoppingCartToBuy ))
+                return false;
+            if(acquisitionToCompare.supplyConfirmed == this.supplyConfirmed && acquisitionToCompare.paymentDone == this.paymentDone)
+                return true;
+        }
+        return false;
+    }
+
 
     public void buyShoppingCart(NotificationHandler publisher, double expectedPrice, PaymentMethod paymentMethod, Address address, PaymentServiceProxy paymentHandler, SupplyServiceProxy supplyHandler) throws MarketException, Exception {
 
@@ -130,6 +151,14 @@ public class Acquisition {
 
     public String getBuyerName() {
         return buyerName;
+    }
+
+    public int getSupplyID() {
+        return supplyID;
+    }
+
+    public int getPaymentID() {
+        return paymentID;
     }
 
     public void setBuyerName(String buyerName) {

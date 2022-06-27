@@ -2,7 +2,7 @@ package com.example.server.serviceLayer.Requests;
 
 public class GetMarketInfoRequest {
     String sysManager;
-
+    public GetMarketInfoRequest(){};
     public GetMarketInfoRequest(String sysManager) {
         this.sysManager = sysManager;
     }
@@ -14,4 +14,5 @@ public class GetMarketInfoRequest {
     public void setSysManager(String sysManager) {
         this.sysManager = sysManager;
     }
+
 }

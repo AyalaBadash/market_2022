@@ -30,7 +30,6 @@ public class MarketUnitTest {
     String shopName;
     Security security;
     Item item;
-    //TODO - approve - no test for validate cart - goes directly to basket.
 
     @BeforeAll
     public static void init(){
@@ -900,7 +899,7 @@ public class MarketUnitTest {
     }
     @Test
     @DisplayName("Reopen closed shop - valid case")
-    public void reopenShop(){ // TODO review - problem is : shops.remove in closeShop ()
+    public void reopenShop(){
         try {
             market.closeShop("raz","razShop");
         } catch (MarketException e) {
@@ -970,6 +969,392 @@ public class MarketUnitTest {
             assert false;
         }
     }
+    @Test
+    @DisplayName("Add a bid - good test.")
+    public void addBidTest(){
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        member = userController.getMember("ayala");
+        ShoppingCart ayalaCart = member.getMyCart();
+        ShoppingBasket ayalaShopBasket = ayalaCart.getCart().get(shop);
+        Assertions.assertEquals(1,ayalaShopBasket.getBids().size());
+        Assertions.assertEquals(1,shop.getBids().size());
+    }
+    @Test
+    @DisplayName("Add a bid - fail test - No such shop.")
+    public void addBidFailNoSuchShopTest(){
+        try {
+            market.addABid("raz","razrazShop",item.getID(),3.0,1.0);
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Add a bid - fail test - NULL item.")
+    public void addBidFailNullItemTest(){
+        try {
+            market.addABid("raz","razrazShop",null,3.0,1.0);
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Approve a bid - good test")
+    public void approveBidTest(){
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveABid("raz","razShop","ayala",item.getID());
+            member = userController.getMember("ayala");
+            ShoppingCart ayalaCart = member.getMyCart();
+            ShoppingBasket ayalaShopBasket = ayalaCart.getCart().get(shop);
+            Bid bid = ayalaShopBasket.getBids().get(1);
+            Assertions.assertTrue(bid.isApproved());
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Approve bid no such shop in market")
+    public void approveBidNoSuchShop(){
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveABid("raz","razrazShop","ayala",item.getID());
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Approve bid no such bid in the shop")
+    public void approveBidNoSuchBidInTheShop(){
+        try {
+            market.openNewShop("raz","razShop2");
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveABid("raz","razShop2","ayala",item.getID());
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Suggest new offer to bid - good test")
+    public void suggestNewOfferTest(){
+        try {
+            market.openNewShop("raz","razShop2");
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.suggestNewOfferToBid("raz","razShop","ayala",item.getID(),4.0);
+            member = userController.getMember("ayala");
+            ShoppingCart ayalaCart = member.getMyCart();
+            ShoppingBasket ayalaShopBasket = ayalaCart.getCart().get(shop);
+            Bid bid = ayalaShopBasket.getBids().get(1);
+            Assertions.assertEquals(4.0,bid.getPrice());
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Suggest new offer to bid - fail test - No such shop")
+    public void suggestNewOfferFailTestNoShop(){
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.suggestNewOfferToBid("raz","razShop2","ayala",item.getID(),4.0);
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject bid - good test")
+    public void rejectBidTest(){
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.rejectABid("raz","razShop","ayala",item.getID());
+            member = userController.getMember("ayala");
+            ShoppingCart ayalaCart = member.getMyCart();
+            ShoppingBasket ayalaShopBasket = ayalaCart.getCart().get(shop);
+            Assertions.assertEquals(0,ayalaShopBasket.getBids().size());
 
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Reject bid - fail test - No such shop")
+    public void rejectBidFailTest(){
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.rejectABid("raz","razrazShop","ayala",item.getID());
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Cancel a bid - good test")
+    public void cancelBidTest(){
+        try {
+            market.memberLogin("ayala","password");
+            userController.finishLogin("ayala","@visitor1");
+            market.addABid("ayala","razShop",item.getID(),3.0,1.0);
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.cancelABid("razShop","ayala",item.getID());
+            member = userController.getMember("ayala");
+            ShoppingCart ayalaCart = member.getMyCart();
+            ShoppingBasket ayalaShopBasket = ayalaCart.getCart().get(shop);
+            Assertions.assertEquals(0,ayalaShopBasket.getBids().size());
+
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - good test")
+    public void approveAppointment(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop","ido","raz");
+            Assertions.assertEquals(2,shop.getShopOwners().size());//waiting for ayala's approval
+            market.approveAppointment("razShop","ido","ayala");
+            Assertions.assertEquals(3,shop.getShopOwners().size());
+
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - No such shop")
+    public void approveAppointmentFailTestNoShop(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop2","ido","raz");
+            assert false;
+
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - Not shop owner")
+    public void approveAppointmentFailTestNotOwner(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop","ido","razraz");
+            assert false;
+
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - No such appointment for member")
+    public void approveAppointmentFailTestNotAppointed(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop","idoo","raz");
+            assert false;
+
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - Non existing member")
+    public void approveAppointmentFailTestNonMember(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.approveAppointment("razShop2","idooo","raz");
+            assert false;
+
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - good test")
+    public void rejectAppointment(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+
+            Assertions.assertEquals(1,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            market.rejectAppointment("razShop","ido","raz");
+            Assertions.assertEquals(0,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            Assertions.assertEquals(0,market.getMyPendingAppointmentsToApprove("razShop","raz").size());
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - no such shop ")
+    public void rejectAppointmentFailTestNoShop(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            Assertions.assertEquals(1,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            market.rejectAppointment("razShop","ido","raz");
+            Assertions.assertEquals(0,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            Assertions.assertEquals(0,market.getMyPendingAppointmentsToApprove("razShop","raz").size());
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - not an owner ")
+    public void rejectAppointmentFailTestNotOnwer(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            Assertions.assertEquals(1,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            market.rejectAppointment("razShop","ido","razraz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - no such appointment ")
+    public void rejectAppointmentFailTestNoSuchAppointment(){
+        try {
+            market.register("ido","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            Assertions.assertEquals(1,market.getMyPendingAppointmentsToApprove("razShop","ayala").size());
+            market.rejectAppointment("razShop","idoo","raz");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - owner does not take part in agreement ")
+    public void rejectAppointmentFailTestOwnerNotInAgreement(){
+        try {
+            market.register("ido","password");
+            market.register("shaked","password");
+            market.appointShopOwner("raz","ayala","razShop");
+            //automatically approved because raz is the only owner.
+            market.appointShopOwner("raz","ido","razShop");
+            market.appointShopOwner("raz","shaked","razShop");
+            market.approveAppointment("razShop","ido","ayala");
+        } catch (MarketException e) {
+            assert false;
+        }
+        try {
+            market.rejectAppointment("razShop","shaked","ido");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
 
 }

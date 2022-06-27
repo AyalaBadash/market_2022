@@ -13,8 +13,8 @@ public abstract class  DiscountType {
     protected double percentageOfDiscount;
     protected DiscountLevelState discountLevelState;
 
-    public DiscountType(double percentageOfDiscount, DiscountLevelState discountLevelState) {
-        this.percentageOfDiscount = percentageOfDiscount;
+    public DiscountType(double percentageOfDiscount, DiscountLevelState discountLevelState) throws MarketException {
+        setPercentageOfDiscount (percentageOfDiscount);
         this.discountLevelState = discountLevelState;
     }
 
@@ -27,7 +27,9 @@ public abstract class  DiscountType {
         return percentageOfDiscount;
     }
 
-    public void setPercentageOfDiscount(double percentageOfDiscount) {
+    public void setPercentageOfDiscount(double percentageOfDiscount) throws MarketException {
+        if(percentageOfDiscount < 0 || percentageOfDiscount > 100)
+            throw new MarketException ( "percentage of discount must be in the range of 0 to 100" );
         this.percentageOfDiscount = percentageOfDiscount;
     }
 

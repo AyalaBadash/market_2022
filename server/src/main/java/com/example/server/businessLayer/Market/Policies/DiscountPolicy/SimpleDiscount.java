@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Policies.DiscountPolicy;
 
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.DiscountLevelState;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.ConditionalDiscountFacade;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.DiscountTypeFacade;
@@ -9,7 +10,7 @@ import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.SimpleDiscount
 
 public class SimpleDiscount extends DiscountType{
 
-    public SimpleDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState) {
+    public SimpleDiscount(double percentageOfDiscount, DiscountLevelState discountLevelState) throws MarketException {
         super(percentageOfDiscount, discountLevelState);
     }
 

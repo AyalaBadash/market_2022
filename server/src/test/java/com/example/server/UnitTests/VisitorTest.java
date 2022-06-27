@@ -27,19 +27,24 @@ class VisitorTest {
     }
 
     @Test
-    @DisplayName("Constructor test - invalid")
-    public void testConstructorInvalid(){
+    @DisplayName("Constructor test - invalid - empty String name")
+    public void testConstructorEmptyString(){
         try{
             new Visitor("");
             assert false;
         }catch (Exception e){
-            try {
-                new Visitor(null);
-                assert false;
-            }
-            catch (Exception ex){
-                assert true;
-            }
+           assert true;
+        }
+    }
+    @Test
+    @DisplayName("Constructor test - invalid - empty String name")
+    public void testConstructorNullName(){
+        try {
+            new Visitor(null);
+            assert false;
+        }
+        catch (Exception ex){
+            assert true;
         }
     }
 

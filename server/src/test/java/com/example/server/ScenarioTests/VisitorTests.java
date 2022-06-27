@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class VisitorTests {
     Market market;
-    String userName = "userTest";
+    String userName = "u1";
     String password = "password";
     String shopManagerName = "shaked";
     String shopManagerPassword = "password";

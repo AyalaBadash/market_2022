@@ -62,7 +62,7 @@ public class Security {
         if (userName == null || !namesToLoginInfo.containsKey(userName)) {
             DebugLog debugLog = DebugLog.getInstance();
             debugLog.Log("Non member visitor tried to log in.");
-            throw new MarketException("No such user name in the system");
+            throw new MarketException("No such user name in the system - " + userName);
         }
         if (!namesToLoginInfo.get(userName).getPassword().equals(userPassword)) {
             DebugLog debugLog = DebugLog.getInstance();

@@ -1,5 +1,6 @@
 package com.example.server.serviceLayer;
 
+import com.example.server.businessLayer.Market.Acquisition;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.serviceLayer.FacadeObjects.*;
 import com.example.server.serviceLayer.Requests.*;
@@ -412,4 +413,7 @@ public interface IService {
 
 
     ResponseT<List<String>> approveOrRejectBatch(@RequestBody approveOrRejectBatchRequest request);
+
+    ResponseT<List<AcquisitionFacade>> getAcqsForMember(@RequestBody getAcqsForMemberRequest request);
+
 }

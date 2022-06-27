@@ -1,17 +1,9 @@
 Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
 Unfortunately, your membership has been denied.
 
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
@@ -20,35 +12,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
 
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -56,23 +30,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -83,16 +51,14 @@ Unfortunately, your appointment as some permission in shop some shop has been ca
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -100,35 +66,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
 
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
 
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -136,23 +84,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -163,20 +105,14 @@ Unfortunately, your appointment as some permission in shop some shop has been ca
 
 
 Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -184,23 +120,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -208,23 +138,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -232,23 +156,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -259,20 +177,14 @@ Unfortunately, your appointment as some permission in shop some shop has been ca
 
 
 Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -280,23 +192,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -304,23 +210,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
 
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your membership has been denied.
+The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -339,16 +239,14 @@ Unfortunately, your appointment as some permission in shop some shop has been ca
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -356,23 +254,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -380,23 +272,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -407,20 +293,14 @@ Unfortunately, your appointment as some permission in shop some shop has been ca
 
 
 Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -428,23 +308,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -452,23 +326,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -476,23 +344,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -503,20 +365,14 @@ Unfortunately, your appointment as some permission in shop some shop has been ca
 
 
 Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -524,23 +380,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -548,23 +398,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -572,23 +416,17 @@ Unfortunately, your membership has been denied.
 
 Real Time message: 
 Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your membership has been denied.
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
+The shopnew shop name was closed
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.
@@ -599,10 +437,6 @@ Unfortunately, your appointment as some permission in shop some shop has been ca
 
 
 Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
 Unfortunately, your membership has been denied.
 
 
@@ -611,392 +445,14 @@ Unfortunately, your appointment as some permission in shop some shop has been ca
 
 
 Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
-Unfortunately, your membership has been denied.
+The shopnew shop name was closed
 
 
 Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
-
-Real Time message: 
-Unfortunately, your membership has been denied.
-
-
-Real Time message: 
-Unfortunately, your appointment as some permission in shop some shop has been canceled.
-
-
-Real Time message: 
-The shopnew shop name was closed
-
+There was a new appointment in shop store, bar appointed bar1 for shop owner
 
 Real Time message: 
 Unfortunately, your membership has been denied.

@@ -1,13 +1,14 @@
 package com.example.server.serviceLayer.Requests;
 
+import com.example.server.businessLayer.Market.Bid;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountPolicy;
 
 public class AddABidRequest {
-    String visitorName;
-    String shopName;
-    Integer itemId;
-    Double price;
-    Double amount;
+    private String visitorName;
+    private String shopName;
+    private Integer itemId;
+    private Double price;
+    private Double amount;
 
     public AddABidRequest(String visitorName, String shopName, Integer itemId, Double price, Double amount) {
         this.visitorName = visitorName;
@@ -19,7 +20,6 @@ public class AddABidRequest {
 
     public AddABidRequest() {
     }
-
     public String getVisitorName() {
         return visitorName;
     }

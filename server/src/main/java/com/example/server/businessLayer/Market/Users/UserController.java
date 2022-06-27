@@ -187,7 +187,7 @@ public class UserController {
     public boolean allInMarket(List<String> list) {
 
         for(String name :list){
-            if(!visitorsInMarket.containsKey(name)){
+            if(!members.containsKey(name)){
                 return false;
             }
         }

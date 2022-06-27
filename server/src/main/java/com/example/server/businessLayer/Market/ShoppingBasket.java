@@ -27,6 +27,33 @@ public class ShoppingBasket implements IHistory {
         bids = new LinkedHashMap<> (  );
     }
 
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof ShoppingBasket){
+            ShoppingBasket shoppingBasketToCompare = (ShoppingBasket) object;
+            if(shoppingBasketToCompare.price != this.price)
+                return false;
+            for( Map.Entry<Integer, Bid> bid: this.bids.entrySet ()){
+                if(shoppingBasketToCompare.bids.get ( bid.getKey () ) == null)
+                    return false;
+            }
+            for( Map.Entry<Integer, Bid> bid: shoppingBasketToCompare.bids.entrySet ()){
+                if(this.bids.get ( bid.getKey () ) == null)
+                    return false;
+            }
+            for( Map.Entry<Integer, Double> item: this.items.entrySet ()){
+                Double amount = shoppingBasketToCompare.items.get ( item.getKey () );
+                if(amount == null || amount != item.getValue ())
+                    return false;
+            }
+            for( Map.Entry<Integer, Double> item: shoppingBasketToCompare.items.entrySet ()){
+                Double amount = this.items.get ( item.getKey () );
+                if(amount == null || amount != item.getValue ())
+                    return false;
+            }
+        }
+        return false;
+    }
 
     @Override
     public StringBuilder getReview() {
@@ -128,11 +155,11 @@ public class ShoppingBasket implements IHistory {
         return price;
     }
 
-    public void addABid(Bid bid) {
+    public void addABid(Bid bid) throws MarketException {
         if(bid==null)
         {
             DebugLog.getInstance().Log("Bid cant be null");
-            //throw new MarketException("Bid cant be null");
+            throw new MarketException("Bid cant be null");
         }
         bids.put ( bid.getItemId (), bid );
     }

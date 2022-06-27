@@ -1,9 +1,8 @@
 package com.example.server.UnitTests;
 
+import com.example.server.businessLayer.Market.Appointment.*;
+import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
-import com.example.server.businessLayer.Market.Appointment.Appointment;
-import com.example.server.businessLayer.Market.Appointment.ShopManagerAppointment;
-import com.example.server.businessLayer.Market.Appointment.ShopOwnerAppointment;
 import com.example.server.businessLayer.Market.Item;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.ShoppingBasket;
@@ -199,6 +198,7 @@ public class ShopTest {
             Mockito.when(testOwnerApp.getAppointed()).thenReturn(testMember);
             Mockito.when(testOwnerApp.getAppointed().getName()).thenReturn("raz");
             Mockito.when(testOwnerApp.isOwner()).thenReturn(true);
+            Mockito.when(testOwnerApp.getSuperVisor()).thenReturn(memberFounder);
             Mockito.when(testManagerApp.getAppointed()).thenReturn(testMember);
             Mockito.when(testManagerApp.getSuperVisor()).thenReturn(memberFounder);
             shop.addEmployee(testOwnerApp);
@@ -337,7 +337,7 @@ public class ShopTest {
     }
 
     @Test
-    @DisplayName("Validate basket - good test.")
+    @DisplayName("Validate basket.")
     public void validateBasketTest() {
         Map<java.lang.Integer, Double> items = new HashMap<>();
         Item item1 = Mockito.mock(Item.class);
@@ -417,6 +417,171 @@ public class ShopTest {
             assert false;
         }
     }
+    @Test
+    @DisplayName("Get pending apps for owner - valid name")
+    public void GetPendingAppsForOwner(){
+        Assertions.assertDoesNotThrow(()->shop.getAllPendingForOwner(memberFounder.getName()));
+    }
+    @Test
+    @DisplayName("Get pending apps for owner - Invalid name")
+    public void GetPendingAppsForNotOwner(){
+        Assertions.assertThrows(MarketException.class,()->shop.getAllPendingForOwner("not owner"));
+    }
+    @Test
+    @DisplayName("Approve appointment - good test")
+    public void approveAppointmentTest(){
+        ShopOwnerAppointment app1 = Mockito.mock(ShopOwnerAppointment.class);
+        Member otherOwner = Mockito.mock(Member.class);
+        Mockito.when(otherOwner.getName()).thenReturn("ido");
+        ShopOwnerAppointment ownerApp = Mockito.mock(ShopOwnerAppointment.class);
+        Map<String,Appointment> owners = new HashMap<>();
+        owners.put(memberFounder.getName(),ownerApp);
+        owners.put("ido",ownerApp);
+        shop.setShopOwners(owners);
+        PendingAppointments pending = Mockito.mock(PendingAppointments.class);
+        Map<String, ShopOwnerAppointment> pendingMap=new HashMap<>();
+        pendingMap.put("ayala",app1);
+        shop.setPendingAppointments(pending);
+        Mockito.when(pending.getAppointments()).thenReturn(pendingMap);
+        try {
+            Mockito.when(pending.approve("ayala","ido")).thenReturn(true);
+        } catch (MarketException e) {
+            assert false;
+        }
+
+        try {
+            shop.approveAppointment("ayala","ido");
+            Assertions.assertTrue(shop.getShopOwners().containsKey("ayala"));
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Approve appointment - fail test - not an owner")
+    public void approveAppointmentFailTestNotOwner(){
+        ShopOwnerAppointment app1 = Mockito.mock(ShopOwnerAppointment.class);
+        Member otherOwner = Mockito.mock(Member.class);
+        Mockito.when(otherOwner.getName()).thenReturn("ido");
+        ShopOwnerAppointment ownerApp = Mockito.mock(ShopOwnerAppointment.class);
+        Map<String,Appointment> owners = new HashMap<>();
+        owners.put(memberFounder.getName(),ownerApp);
+        owners.put("ido",ownerApp);
+        shop.setShopOwners(owners);
+        PendingAppointments pending = Mockito.mock(PendingAppointments.class);
+        Map<String, ShopOwnerAppointment> pendingMap=new HashMap<>();
+        pendingMap.put("ayala",app1);
+        shop.setPendingAppointments(pending);
+        Mockito.when(pending.getAppointments()).thenReturn(pendingMap);
+        try {
+            Mockito.when(pending.approve("raz","ido")).thenReturn(true);
+        } catch (MarketException e) {
+            assert false;
+        }
+
+        try {
+            shop.approveAppointment("ayala","idoo");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - good test")
+    public void rejectAppointmentTest(){
+        ShopOwnerAppointment app1 = Mockito.mock(ShopOwnerAppointment.class);
+        Member otherOwner = Mockito.mock(Member.class);
+        Mockito.when(otherOwner.getName()).thenReturn("ido");
+        ShopOwnerAppointment ownerApp = Mockito.mock(ShopOwnerAppointment.class);
+        Map<String,Appointment> owners = new HashMap<>();
+        owners.put(memberFounder.getName(),ownerApp);
+        owners.put("ido",ownerApp);
+        shop.setShopOwners(owners);
+        PendingAppointments pending = Mockito.mock(PendingAppointments.class);
+        Map<String, ShopOwnerAppointment> pendingMap=new HashMap<>();
+        pendingMap.put("ayala",app1);
+        shop.setPendingAppointments(pending);
+        Mockito.when(pending.getAppointments()).thenReturn(pendingMap);
+        Agreement agreement = Mockito.mock(Agreement.class);
+        Map<String,Agreement> agreementMap = new HashMap<>();
+        agreementMap.put("ayala",agreement);
+        Mockito.when(pending.getAgreements()).thenReturn(agreementMap);
+        Map<String,Boolean> ownersApproval = new HashMap<>();
+        ownersApproval.put("ido",false);
+        ownersApproval.put(memberFounder.getName(),true);
+        Mockito.when(pending.getAgreements().get("ayala").getOwnersAppointmentApproval()).thenReturn(ownersApproval);
+
+        try {
+            shop.rejectAppointment("ayala","ido");
+            Assertions.assertFalse(shop.getShopOwners().containsKey("ayala"));
+        } catch (MarketException e) {
+            assert false;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment -fail test - no such owner")
+    public void rejectAppointmentFailTestNoSuchOwner(){
+        ShopOwnerAppointment app1 = Mockito.mock(ShopOwnerAppointment.class);
+        Member otherOwner = Mockito.mock(Member.class);
+        Mockito.when(otherOwner.getName()).thenReturn("ido");
+        ShopOwnerAppointment ownerApp = Mockito.mock(ShopOwnerAppointment.class);
+        Map<String,Appointment> owners = new HashMap<>();
+        owners.put(memberFounder.getName(),ownerApp);
+        owners.put("ido",ownerApp);
+        shop.setShopOwners(owners);
+        PendingAppointments pending = Mockito.mock(PendingAppointments.class);
+        Map<String, ShopOwnerAppointment> pendingMap=new HashMap<>();
+        pendingMap.put("ayala",app1);
+        shop.setPendingAppointments(pending);
+        Mockito.when(pending.getAppointments()).thenReturn(pendingMap);
+        Agreement agreement = Mockito.mock(Agreement.class);
+        Map<String,Agreement> agreementMap = new HashMap<>();
+        agreementMap.put("ayala",agreement);
+        Mockito.when(pending.getAgreements()).thenReturn(agreementMap);
+        Map<String,Boolean> ownersApproval = new HashMap<>();
+        ownersApproval.put("ido",false);
+        ownersApproval.put(memberFounder.getName(),true);
+        Mockito.when(pending.getAgreements().get("ayala").getOwnersAppointmentApproval()).thenReturn(ownersApproval);
+
+        try {
+            shop.rejectAppointment("ayala","idoo");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+    @Test
+    @DisplayName("Reject appointment - fail test - No such appointed")
+    public void rejectAppointmentFailTestNoSuchAppointed(){
+        ShopOwnerAppointment app1 = Mockito.mock(ShopOwnerAppointment.class);
+        Member otherOwner = Mockito.mock(Member.class);
+        Mockito.when(otherOwner.getName()).thenReturn("ido");
+        ShopOwnerAppointment ownerApp = Mockito.mock(ShopOwnerAppointment.class);
+        Map<String,Appointment> owners = new HashMap<>();
+        owners.put(memberFounder.getName(),ownerApp);
+        owners.put("ido",ownerApp);
+        shop.setShopOwners(owners);
+        PendingAppointments pending = Mockito.mock(PendingAppointments.class);
+        Map<String, ShopOwnerAppointment> pendingMap=new HashMap<>();
+        pendingMap.put("ayala",app1);
+        shop.setPendingAppointments(pending);
+        Mockito.when(pending.getAppointments()).thenReturn(pendingMap);
+        Agreement agreement = Mockito.mock(Agreement.class);
+        Map<String,Agreement> agreementMap = new HashMap<>();
+        agreementMap.put("ayala",agreement);
+        Mockito.when(pending.getAgreements()).thenReturn(agreementMap);
+        Map<String,Boolean> ownersApproval = new HashMap<>();
+        ownersApproval.put("ido",false);
+        ownersApproval.put(memberFounder.getName(),true);
+        Mockito.when(pending.getAgreements().get("ayala").getOwnersAppointmentApproval()).thenReturn(ownersApproval);
+
+        try {
+            shop.rejectAppointment("ayalaaaa","ido");
+            assert false;
+        } catch (MarketException e) {
+            assert true;
+        }
+    }
+
 
 
 }
