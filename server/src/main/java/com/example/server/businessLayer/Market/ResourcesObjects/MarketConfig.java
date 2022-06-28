@@ -4,6 +4,7 @@ public class MarketConfig {
     public static final long SCHEDULE_MILSEC =1000 ;
     public static boolean IS_TEST_MODE=false;
     public static boolean USING_DATA=false;
+    public static boolean FIRST_INIT=true;
     public static String PAYMENT_SERVICE_NAME="PaymentService";
     public static String SUPPLY_SERVICE_NAME="SupplyService";
     public static String PUBLISHER_SERVICE_NAME="Publisher";

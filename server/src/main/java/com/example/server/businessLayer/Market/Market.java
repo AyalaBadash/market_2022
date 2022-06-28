@@ -152,7 +152,6 @@ public class Market {
                 throw new MarketException("market is already initialized");
             }
             initRepositories();
-//            loadData();
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
@@ -1083,9 +1082,12 @@ public class Market {
 
     public boolean isInit() throws MarketException {
         initRepositories();
-        if (MarketConfig.USING_DATA) {
-            readDataSourceConfig();
+        if(MarketConfig.FIRST_INIT & !checkServicesInit()){
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
+            readDataSourceConfig();
+            MarketConfig.FIRST_INIT=false;
+        }
+        if (MarketConfig.USING_DATA) {
             readInitFile(MarketConfig.DATA_FILE_NAME);
             MarketConfig.USING_DATA=false;
             return true;
@@ -1096,6 +1098,10 @@ public class Market {
         }
         checkSystemInit();
         return this.systemManagerName != null && !this.systemManagerName.equals("");
+    }
+
+    private boolean checkServicesInit() {
+        return (supplyServiceProxy==null | paymentServiceProxy==null | publisher==null);
     }
 
     private void readDataSourceConfig() throws MarketException {
