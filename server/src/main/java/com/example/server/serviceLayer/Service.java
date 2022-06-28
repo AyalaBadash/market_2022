@@ -508,8 +508,8 @@ public class Service implements IService {
     @RequestMapping(value = "/approveOrRejectBatch")
     @CrossOrigin
     public ResponseT<List<String>> approveOrRejectBatch(@RequestBody approveOrRejectBatchRequest request) {
-        return marketService.approveOrRejectBatch(request.getShopName(),request.getOwnerName(),request.getAppointedNames(),request.isApprove());
-
+        return marketService.approveOrRejectBatch ( request.getShopName ( ), request.getOwnerName ( ), request.getAppointedNames ( ), request.isApprove ( ) );
+    }
     @RequestMapping(value = "/getAcqsForMember")
     @CrossOrigin
     public ResponseT<List<AcquisitionFacade>> getAcqsForMember(@RequestBody getAcqsForMemberRequest request) {

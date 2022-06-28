@@ -1628,14 +1628,7 @@ public class Market {
         systemManagerName=uName;
     }
 
-    public List<Acquisition> getAcqsForMember(String memberName) throws MarketException {
-        if (!userController.isMember(memberName)){
-            DebugLog.getInstance().Log("There is no member with the name:"+memberName);
-            throw new MarketException("There is no member with the name:"+memberName);
-        }
-        Member member = userController.getMember(memberName);
-        return member.getAcquisitions();
-    }
+
 
     public List<String> approveOrRejectBatch(String shopName, String ownerName, List<String> appointedNames, boolean approve) throws MarketException {
         Shop shop = shops.get(shopName);
