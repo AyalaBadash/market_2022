@@ -13,6 +13,7 @@ import com.example.server.serviceLayer.FacadeObjects.ShopOwnerAppointmentFacade;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue(value = "ShopOwnerAppointment")
@@ -57,6 +58,11 @@ public class ShopOwnerAppointment extends Appointment {
 
     public static void setShopOwnerAppointmentRep(ShopOwnerAppointmentRep shopOwnerAppointmentRep) {
         ShopOwnerAppointment.shopOwnerAppointmentRep = shopOwnerAppointmentRep;
+    }
+    @Override
+    public void setPermissions(List<IPermission> permissions) {
+        this.permissions = permissions;
+        shopOwnerAppointmentRep.save ( this );
     }
 
     public static ShopOwnerAppointmentRep getShopOwnerAppointmentRep() {

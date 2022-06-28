@@ -1639,3 +1639,13 @@ Level Error : Non member visitor tried to log in.
 Level Error : A market initialization failed .already initialized
 Level Error : A market initialization failed .already initialized
 Level Error : A market initialization failed .already initialized
+Level Error : You are not a shop owner
+Level Error : shop does not exist in the market
+Level Error : shop does not exist in the market
+Level Error : shop does not exist in the market
+Level Error : User tried to register with taken name.
+Level Error : shop does not exist in the market
+Level Error : appointed shop manager is already a shop manager of the shop.
+Level Error : shop does not exist in the market
+Level Error : / by zero
+Level Error : shop does not exist in the market

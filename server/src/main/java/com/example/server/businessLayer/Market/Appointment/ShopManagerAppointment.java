@@ -70,4 +70,10 @@ public class ShopManagerAppointment extends Appointment {
     public static void setShopManagerAppointmentRep(ShopManagerAppointmentRep shopManagerAppointmentRep) {
         ShopManagerAppointment.shopManagerAppointmentRep = shopManagerAppointmentRep;
     }
+
+    @Override
+    public void setPermissions(List<IPermission> permissions) {
+        this.permissions = permissions;
+        shopManagerAppointmentRep.save ( this );
+    }
 }

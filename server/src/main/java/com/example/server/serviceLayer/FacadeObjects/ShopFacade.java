@@ -50,7 +50,12 @@ public class ShopFacade implements FacadeObject<Shop> {
     private void updateEmployees(Map<String, Appointment> appointmentMap){
         this.employees = new HashMap<> ();
         for( Map.Entry<String, Appointment> entry : appointmentMap.entrySet ()) {
-            this.employees.put (entry.getKey (), new ShopOwnerAppointmentFacade (  ).toFacade (entry.getValue ()) );
+            if (entry.getValue ().isOwner ()){
+                this.employees.put (entry.getKey (), new ShopOwnerAppointmentFacade (  ).toFacade (entry.getValue ()) );
+            }
+            else{
+                this.employees.put (entry.getKey (), new ShopManagerAppointmentFacade (  ).toFacade (entry.getValue ()) );
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import com.example.server.businessLayer.Market.Appointment.Permissions.ApproveBi
 import com.example.server.businessLayer.Market.Appointment.Permissions.EmployeesPermission;
 import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
 import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
 import com.example.server.businessLayer.Market.Users.Member;
@@ -117,10 +118,7 @@ Appointment {
 
 
 
-    public void setPermissions(List<IPermission> permissions) {
-        this.permissions = permissions;
-    }
-
+    public abstract void setPermissions(List<IPermission> permissions) ;
     public abstract AppointmentFacade visitToFacade(ShopOwnerAppointmentFacade shopOwnerAppointmentFacade);
     public abstract  AppointmentFacade visitToFacade(ShopManagerAppointmentFacade shopManagerAppointmentFacade);
 }

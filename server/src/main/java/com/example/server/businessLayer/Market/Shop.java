@@ -685,7 +685,7 @@ public class Shop implements IHistory {
         if (shopOwner == null || !isShopOwner ( shopOwner.getName ( ) ))
             throw new MarketException ( "member is not a shop owner so is not authorized to appoint shop owner" );
         ShopManagerAppointment appointment = new ShopManagerAppointment ( appointed, shopOwner, this ,new ArrayList<>(),false);
-        appointment.addAllPermissions();
+//        appointment.addAllPermissions();
         appointed.addAppointmentToMe(appointment);
         addEmployee ( appointment );
 
