@@ -1507,6 +1507,7 @@ public class Market {
         for (ShoppingBasket basket : shoppingBasketRep.findAll()) {
             basket.getItems().toString();
             basket.getItemMap().toString();
+            basket.getBids().toString();
         }
         memberRep.findAll();
         List<Shop> shops = shopRep.findAll();

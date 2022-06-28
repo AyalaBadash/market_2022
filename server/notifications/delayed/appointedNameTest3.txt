@@ -178,3 +178,6 @@ Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.The s
 Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.The shopShopName3 was closed
 Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.The shopShopName3 was closed
 Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.The shopShopName3 was closed
+Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.The shopShopName3 was closed
+Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.The shopShopName3 was closed
+Your appointment by ownerNameTest3 to the shop ShopName3 has been approved.The shopShopName3 was closed

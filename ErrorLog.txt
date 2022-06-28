@@ -1654,3 +1654,5 @@ Level Error : The market did not initialized properly. Missing notifications ser
 Level Error : The market did not initialized properly. Some of the services did not supplied.
 Level Error : User tried to register with taken name.
 Level Error : s tried to open a shop with taken name.
+Level Error : Services configurations file does not exists. cannot init the market.
+Level Error : Services configurations file does not exists. cannot init the market.
