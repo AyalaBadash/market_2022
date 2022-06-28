@@ -1632,3 +1632,19 @@ Level Error : The market did not initialized properly. Some of the services did 
 Level Error : The market did not initialized properly. Missing notifications service
 Level Error : The market did not initialized properly. Missing system manager
 Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : Item is not in cart. cannot update amount
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : shop does not exist in the market
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.

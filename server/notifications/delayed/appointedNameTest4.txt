@@ -89,3 +89,4 @@ Your appointment by ownerNameTest4 to the shop ShopName4 has been approved.The s
 Your appointment by ownerNameTest4 to the shop ShopName4 has been approved.The shopShopName4 was closed
 Your appointment by ownerNameTest4 to the shop ShopName4 has been approved.The shopShopName4 was closed
 Your appointment by ownerNameTest4 to the shop ShopName4 has been approved.Your appointment by ownerNameTest4 to the shop ShopName4 has been approved.The shopShopName4 was closed
+Your appointment by ownerNameTest4 to the shop ShopName4 has been approved.Your appointment by ownerNameTest4 to the shop ShopName4 has been approved.

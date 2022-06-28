@@ -195,7 +195,16 @@ public class ShoppingCart implements IHistory {
             throw new MarketException("The basket does not exist in the cart.");
         }
         basket.updateQuantity(amount, item);
-        basket.updatePrice(shop);
+        if (basket.isEmpty ( )){
+            ShoppingBasket sb = cart.get ( shop );
+            cart.remove ( shop );
+            if (!MarketConfig.IS_TEST_MODE){
+                ShoppingBasket.getShoppingBasketRep ().delete ( sb );
+            }
+        }
+        else{
+            basket.updatePrice(shop);
+        }
     }
 
 

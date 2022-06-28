@@ -209,3 +209,4 @@ Your appointment by ownerNameTest2 to the shop ShopName2 has been approved.The s
 Your appointment by ownerNameTest2 to the shop ShopName2 has been approved.The shopShopName2 was closed
 Your appointment by ownerNameTest2 to the shop ShopName2 has been approved.The shopShopName2 was closed
 Your appointment by ownerNameTest2 to the shop ShopName2 has been approved.Your appointment by ownerNameTest2 to the shop ShopName2 has been approved.The shopShopName2 was closed
+Your appointment by ownerNameTest2 to the shop ShopName2 has been approved.Your appointment by ownerNameTest2 to the shop ShopName2 has been approved.
