@@ -887,6 +887,15 @@ public class Market {
 
     }
 
+    public List<Acquisition> getAcqsForMember(String memberName) throws MarketException {
+        if (!userController.isMember(memberName)){
+            DebugLog.getInstance().Log("There is no member with the name:"+memberName);
+            throw new MarketException("There is no member with the name:"+memberName);
+        }
+        Member member = userController.getMember(memberName);
+        return member.getAcquisitions();
+    }
+
     private ShoppingCart validateCart(ShoppingCart currentCart) throws MarketException {
         ShoppingCart res = new ShoppingCart();
         double cartPrice = 0;
