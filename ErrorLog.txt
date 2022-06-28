@@ -840,3 +840,795 @@ Level Error : The market did not initialized properly. Missing notifications ser
 Level Error : The market did not initialized properly. Some of the services did not supplied.
 Level Error : User tried to register with taken name.
 Level Error : s tried to open a shop with taken name.
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner97 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner88 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : MemberNAmeOpenShop91 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner80 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner71 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner63 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop57 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner37 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop32 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop24 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop16 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount12 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner88 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop82 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount78 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : MemberNameAppointShopOwner80 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner71 tried to open a shop with taken name.
+Level Error : MemberNameAddDiscount69 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount61 tried to open a shop with taken name.
+Level Error : MemberNameAppointShopOwner63 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop48 tried to open a shop with taken name.
+Level Error : MemberNameAppointShopOwner46 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount34 tried to open a shop with taken name.
+Level Error : MemberNAmeOpenShop32 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner29 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount27 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop24 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount18 tried to open a shop with taken name.
+Level Error : MemberNameAppointShopOwner22 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop16 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount12 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner96 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop90 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop82 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount73 tried to open a shop with taken name.
+Level Error : MemberNAmeOpenShop74 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop58 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount56 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner55 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop48 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner47 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop41 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : unable to obtain isolated JDBC connection; nested exception is org.hibernate.exception.JDBCConnectionException: unable to obtain isolated JDBC connection
+Level Error : MemberNAmeOpenShop17 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop24 tried to open a shop with taken name.
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : User tried to register with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Tried to add item to a non existing shop.
+Level Error : MemberNameAppointShopOwner5 tried to open a shop with taken name.
+Level Error : MemberNAmeOpenShop7 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop16 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop8 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner4 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop99 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner95 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop91 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount76 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop57 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop48 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner45 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount26 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner12 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner95 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount92 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner87 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount83 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner79 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount60 tried to open a shop with taken name.
+Level Error : MemberNameAppointShopOwner62 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop57 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner53 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop48 tried to open a shop with taken name.
+Level Error : MemberNameAppointShopOwner45 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner37 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner28 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner21 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner3 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop98 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount92 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop91 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount83 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : MemberNameAppointShopOwner88 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop82 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner80 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount76 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop73 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner71 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount67 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop65 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner63 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount59 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount50 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop41 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop32 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount26 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner21 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : MemberNAmeOpenShop24 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount17 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner12 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : unable to obtain isolated JDBC connection; nested exception is org.hibernate.exception.JDBCConnectionException: unable to obtain isolated JDBC connection
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Shopping cart is not exists for the user.
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : unable to obtain isolated JDBC connection; nested exception is org.hibernate.exception.JDBCConnectionException: unable to obtain isolated JDBC connection
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Shopping cart is not exists for the user.
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop89 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner62 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop56 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop36 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner43 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount31 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : MemberNameAppointShopOwner23 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop17 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner94 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop86 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount72 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner54 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount41 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner34 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop27 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop7 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount2 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount93 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner85 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount82 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop78 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner75 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount64 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount54 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner46 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop38 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount23 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner5 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAppointShopOwner99 tried to open a shop with taken name.
+Level Error : MemberNameAddDiscount97 tried to open a shop with taken name.
+Level Error : appointed shop owner is already a shop owner of the shop.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop84 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount77 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount67 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop45 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount28 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop65 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop87 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount67 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop53 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount47 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : MemberNameAddDiscount36 tried to open a shop with taken name.
+Level Error : Tried to add a discount that already exist
+Level Error : User tried to register with taken name.
+Level Error : MemberNAmeOpenShop34 tried to open a shop with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
