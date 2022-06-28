@@ -151,19 +151,7 @@ public class UserController {
         if(visitorsInMarket.containsKey(userName))
             throw new MarketException("member is already logged in");
         visitorsInMarket.put(userName,newVisitorMember);
-        Visitor visitorToDelete = this.visitorsInMarket.get(visitorName);
         visitorsInMarket.remove(visitorName);
-
-        if (!MarketConfig.IS_TEST_MODE) {
-//        userControllerRep.save(this);
-        }
-        if (!MarketConfig.IS_TEST_MODE) {
-//        Visitor.getVisitorRep().delete(visitorToDelete);
-        }
-        if (!MarketConfig.IS_TEST_MODE) {
-            ShoppingCart.getShoppingCartRep().delete(visitorToDelete.getCart());
-        }
-
         EventLog.getInstance().Log(userName+" logged in successfully.");
         return newVisitorMember.getMember();
     }
