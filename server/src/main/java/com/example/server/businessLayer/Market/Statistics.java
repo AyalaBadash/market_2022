@@ -87,6 +87,7 @@ public class Statistics {
     private final StatisticsData data;
     private String systemManager;
     public LocalDate currDate;
+    public List<String> numOfVisitorsID;
     public List<String> numOfRegularMembersID;
     public List<String> numOfShopsManagersID;
     public List<String> numOfOwnersID;
@@ -103,6 +104,7 @@ public class Statistics {
     private Statistics( ){
         systemManager="";
         data= new StatisticsData();
+        numOfVisitorsID=new ArrayList<>();
         numOfRegularMembersID=new ArrayList<>();
         numOfShopsManagersID=new ArrayList<>();
         numOfOwnersID=new ArrayList<>();
@@ -114,12 +116,16 @@ public class Statistics {
         Statistics.instance = instance;
     }
 
+    public StatisticsData getData() {return data;}
 
-    public synchronized void incNumOfVisitors() {
+    public synchronized void incNumOfVisitors(String name) {
         checkDate();
-        this.data.numOfVisitors ++;
-        if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
+        if (!numOfVisitorsID.contains(name)) {
+            numOfVisitorsID.add(name);
+            this.data.numOfVisitors++;
+            if (hasManager() && managerLogged()) {
+                notificationHandler.sendStatistics(this, systemManager);
+            }
         }
     }
 
@@ -190,6 +196,7 @@ public class Statistics {
     }
 
     private void resetList() {
+        numOfVisitorsID.clear();
         numOfOwnersID.clear();
         numOfRegularMembersID.clear();
         numOfShopsManagersID.clear();
