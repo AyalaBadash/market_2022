@@ -2,8 +2,18 @@ package com.example.server.serviceLayer;
 
 
 import com.example.server.businessLayer.Market.Acquisition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.CompositeDiscount.MaxCompositeDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.AmountOfItemCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.AndCompositeCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.CompositionCondition.OrCompositeCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.Condition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.Condition.PriceCondition;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.ConditionalDiscount;
+import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountState.*;
+import com.example.server.businessLayer.Market.Acquisition;
 import com.example.server.businessLayer.Market.Policies.DiscountPolicy.DiscountType;
 import com.example.server.businessLayer.Market.Policies.PurchasePolicy.*;
+import com.example.server.businessLayer.Market.Policies.PurchasePolicy.PurchasePolicyState.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.ErrorLog;
 import com.example.server.businessLayer.Market.Appointment.Appointment;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
@@ -18,6 +28,7 @@ import com.example.server.serviceLayer.FacadeObjects.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.server.serviceLayer.FacadeObjects.PolicyFacade.Wrappers.*;
+import org.springframework.boot.ansi.Ansi8BitColor;
 
 
 import javax.transaction.Transactional;
@@ -669,6 +680,17 @@ public class MarketService {
         }catch (Exception e){
             return new Response("server error has occurred, please try again later");
         }
+    }
+
+    public ResponseT<List<String>> approveOrRejectBatch(String shopName, String ownerName, List<String> appointedNames, boolean approve) {
+        ResponseT<List<String>> res;
+        try {
+            List<String> failed = market.approveOrRejectBatch(shopName, ownerName, appointedNames, approve);
+            res = new ResponseT<>(failed);
+        } catch (MarketException e) {
+            return new ResponseT<>(e.getMessage());
+        }
+        return res;
     }
 
     public ResponseT<List<AcquisitionFacade>> getAcqsForMember(String memberName) {

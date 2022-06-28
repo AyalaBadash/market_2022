@@ -32,6 +32,7 @@ public class Member implements IHistory {
 //    @JoinColumn(name = "member_name", referencedColumnName = "name")
     @ManyToMany()
     private List<AcquisitionHistory> purchaseHistory;
+
     private List<Acquisition> acquisitions;
     private boolean isSystemManager = false;
     private static MemberRep memberRep;
@@ -118,6 +119,7 @@ public class Member implements IHistory {
         }
     }
 
+
     public void addAcquisition(Acquisition acq) {
         this.acquisitions.add(acq);
     }
@@ -125,7 +127,6 @@ public class Member implements IHistory {
     public void removeAcquisition(Acquisition acq) {
         this.acquisitions.remove(acq);
     }
-
     public StringBuilder getPurchaseHistoryString() {
         StringBuilder history = new StringBuilder(String.format("%s:\n", name));
         int i = 1;
