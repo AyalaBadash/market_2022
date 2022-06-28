@@ -1,11 +1,9 @@
 package com.example.server.businessLayer.Market;
 
-
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.dataLayer.repositories.ClosedShopsHistoryRep;
-
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;

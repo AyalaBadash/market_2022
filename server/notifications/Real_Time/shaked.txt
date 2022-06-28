@@ -1240,3 +1240,6 @@ Real Time message:
 Real Time message: 
 There was a new appointment in shop Shufersal, shaked appointed raz1 for shop owner
 
+Real Time message: 
+There was a new appointment in shop Shufersal, shaked appointed raz1 for shop owner
+

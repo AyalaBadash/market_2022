@@ -9,6 +9,7 @@ import com.example.server.businessLayer.Market.ShoppingBasket;
 import com.example.server.businessLayer.Market.ShoppingCart;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -243,6 +244,7 @@ public class UserController {
     public void loadData(List<Member> members){
         for (Member mem : members) {
             this.members.put(mem.getName(), mem);
+            mem.setAcquisitions(new ArrayList<>());
             List<Appointment> appts = mem.getAppointedByMe();
             for (Appointment apt : appts)
                 apt.getPermissions().toString();

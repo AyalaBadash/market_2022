@@ -2,7 +2,7 @@ package com.example.server.businessLayer.Market.ResourcesObjects;
 
 public class MarketConfig {
     public static final long SCHEDULE_MILSEC =1000 ;
-    public static boolean IS_TEST_MODE=false;
+    public static boolean IS_TEST_MODE=true;
     public static boolean USING_DATA=false;
     public static boolean FIRST_INIT=true;
     public static String PAYMENT_SERVICE_NAME="PaymentService";
