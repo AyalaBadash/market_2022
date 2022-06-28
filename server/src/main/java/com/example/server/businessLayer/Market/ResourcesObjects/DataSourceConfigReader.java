@@ -22,13 +22,13 @@ public class DataSourceConfigReader {
             throw new MarketException("Data source config file not found.");
         }
         try {
-            this.prop = new Properties();
-            prop.load(propsInput);
-            File f = new File(getProperiesDir());
-            OutputStream out = new FileOutputStream(f);
-            // write into it
-            DefaultPropertiesPersister p = new DefaultPropertiesPersister();
-            p.store(prop, out, "Header Comment");
+//            this.prop = new Properties();
+//            prop.load(propsInput);
+//            File f = new File(getProperiesDir());
+//            OutputStream out = new FileOutputStream(f);
+//            // write into it
+//            DefaultPropertiesPersister p = new DefaultPropertiesPersister();
+//            p.store(prop, out, "Header Comment");
         } catch (Exception e) {
             throw new MarketException("Failed to init properties out of Data source config file.");
         }

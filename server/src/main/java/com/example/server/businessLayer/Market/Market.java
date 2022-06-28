@@ -147,12 +147,12 @@ public class Market {
 
     public synchronized void firstInitMarket(String userName, String password) throws MarketException {
         try {
-            if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
-                DebugLog.getInstance().Log("A market initialization failed .already initialized");
-                throw new MarketException("market is already initialized");
-            }
+//            if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
+//                DebugLog.getInstance().Log("A market initialization failed .already initialized");
+//                throw new MarketException("market is already initialized");
+//            }
             initRepositories();
-            readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
+//            readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
                 if(instance.systemManagerName == null) {
@@ -1112,6 +1112,8 @@ public class Market {
         if (!loadedFromDB) {
             loadData();
             loadedFromDB = true;
+            String managerName = systemManagerName != null ? systemManagerName : "undefined";
+            EventLog.getInstance ().Log ( "Loaded from DB - with system manager: " + managerName );
         }
         checkSystemInit();
         return this.systemManagerName != null && !this.systemManagerName.equals("");
@@ -1450,11 +1452,7 @@ public class Market {
             ans = 3;
 
         }
-        if (systemManagerName == null || systemManagerName.isEmpty()) {
-            DebugLog eventLog = DebugLog.getInstance();
-            eventLog.Log("The market did not initialized properly. Missing system manager");
-            ans = 4;
-        } else {
+         else {
             EventLog eventLog = EventLog.getInstance();
             eventLog.Log("The market successfully initialized.");
         }

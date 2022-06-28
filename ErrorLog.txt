@@ -1632,3 +1632,10 @@ Level Error : The market did not initialized properly. Some of the services did 
 Level Error : The market did not initialized properly. Missing notifications service
 Level Error : The market did not initialized properly. Missing system manager
 Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing system manager
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : A market initialization failed .already initialized
+Level Error : Non member visitor tried to log in.
+Level Error : A market initialization failed .already initialized
+Level Error : A market initialization failed .already initialized
+Level Error : A market initialization failed .already initialized
