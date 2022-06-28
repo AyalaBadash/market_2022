@@ -147,12 +147,12 @@ public class Market {
 
     public synchronized void firstInitMarket(String userName, String password) throws MarketException {
         try {
-            if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
-                DebugLog.getInstance().Log("A market initialization failed .already initialized");
-                throw new MarketException("market is already initialized");
-            }
+//            if (this.paymentServiceProxy != null || this.supplyServiceProxy != null) {
+//                DebugLog.getInstance().Log("A market initialization failed .already initialized");
+//                throw new MarketException("market is already initialized");
+//            }
             initRepositories();
-            readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
+//            readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             if (userName != null && !userName.isEmpty() & password != null && !password.isEmpty()) {
                 register(userName, password);
                 if(instance.systemManagerName == null) {

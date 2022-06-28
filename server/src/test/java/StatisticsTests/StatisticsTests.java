@@ -1,4 +1,4 @@
-package com.example.server.ScenarioTests;
+package StatisticsTests;
 
 import com.example.server.businessLayer.Market.Market;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.MethodName.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StatisticsTests {
 
     static Market market;
@@ -64,7 +64,8 @@ public class StatisticsTests {
     @DisplayName("check init market statistics system manager")
     public void initMarketSystemManager() {
         try {
-            market.memberLogin(systemManager, password);
+            systemManagerVisitor=market.guestLogin();
+            loginMember(systemManagerVisitor,systemManager, password);
             int systemManagers = statistics.getData().numOfSystemManager;
             Assertions.assertEquals(1, systemManagers);
         }
@@ -93,6 +94,7 @@ public class StatisticsTests {
     @DisplayName("check num of members after member register and log in")
     public void numOfMembers() {
         try {
+            market.register(ownerName,password);
             loginMember(ownerVisitor,ownerName,password);
             int visitors= statistics.getData().numOfVisitors;
             int members=statistics.getData().getNumOfRegularMembers();
@@ -107,6 +109,7 @@ public class StatisticsTests {
     @DisplayName("check num of members after members register and login")
     public void numOfMembersNewLogin() {
         try {
+            market.register(manager,password);
             loginMember(managerVisitor,manager,password);
             int visitors= statistics.getData().numOfVisitors;
             int members=statistics.getData().getNumOfRegularMembers();
@@ -144,7 +147,6 @@ public class StatisticsTests {
     public void loginMember(Visitor visitor,String name, String password) throws MarketException {
         if(UserController.getInstance().isLoggedIn(name))
             return;
-        visitor = market.guestLogin();
         market.memberLogin(name, password);
         market.validateSecurityQuestions(name, new ArrayList<>(), visitor.getName());
     }
