@@ -1082,7 +1082,7 @@ public class Market {
 
     public boolean isInit() throws MarketException {
         initRepositories();
-        if(MarketConfig.FIRST_INIT & !checkServicesInit()){
+        if(MarketConfig.FIRST_INIT ){
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             readDataSourceConfig();
             MarketConfig.FIRST_INIT=false;
@@ -1100,9 +1100,6 @@ public class Market {
         return this.systemManagerName != null && !this.systemManagerName.equals("");
     }
 
-    private boolean checkServicesInit() {
-        return (supplyServiceProxy==null | paymentServiceProxy==null | publisher==null);
-    }
 
     private void readDataSourceConfig() throws MarketException {
 
