@@ -29,7 +29,7 @@ public class PurchaseService {
         return purchaseService;
     }
 
-    @Transactional(rollbackOn = Exception.class)
+      
     public Response addItemToShoppingCart(ItemFacade itemToInsert, double amount, String visitorName) {
         try {
             Item item = itemToInsert.toBusinessObject();
@@ -41,7 +41,7 @@ public class PurchaseService {
         }
     }
 
-    @Transactional(rollbackOn = MarketException.class)
+     
     public ResponseT<ShoppingCartFacade> showShoppingCart(String visitorName) {
         try {
             ShoppingCart shoppingCart = market.showShoppingCart ( visitorName );
@@ -53,7 +53,7 @@ public class PurchaseService {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
+      
     public Response editItemFromShoppingCart(double amount, ItemFacade itemFacade, String shopName, String visitorName) {
         try{
             Item item = new Item(itemFacade.getId(),itemFacade.getName(),itemFacade.getPrice(),itemFacade.getInfo(),itemFacade.getCategory(),itemFacade.getKeywords());
@@ -65,7 +65,7 @@ public class PurchaseService {
         }
     }
 
-    @Transactional(rollbackOn = MarketException.class)
+     
     public ResponseT<ShoppingCartFacade> calculateShoppingCart(String visitorName) {
         try {
             ShoppingCartFacade cart = new ShoppingCartFacade(market.calculateShoppingCart(visitorName));
@@ -79,7 +79,7 @@ public class PurchaseService {
     }
 
 
-    @Transactional(rollbackOn = MarketException.class)
+    @Transactional(rollbackOn = Exception.class)
     public Response buyShoppingCart(String visitorName, double expectedPrice,
                                     PaymentMethod paymentMethod, Address address) {
         try {

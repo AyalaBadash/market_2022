@@ -1649,3 +1649,48 @@ Level Error : appointed shop manager is already a shop manager of the shop.
 Level Error : shop does not exist in the market
 Level Error : / by zero
 Level Error : shop does not exist in the market
+Level Error : User tried to register with taken name.
+Level Error : Member u2 tried to log in but has password mismatch.
+Level Error : Failed to init notification service.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : Non member visitor tried to log in.
+Level Error : Failed to init notification service.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : User tried to register with taken name.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : User tried to register with taken name.
+Level Error : shopping basket does not held the purchase policy
+
+Level Error : shopping basket does not held the purchase policy
+
+Level Error : shopping basket does not held the purchase policy
+
+Level Error : shopping basket does not held the purchase policy
+
+Level Error : Member u1 tried to log in but has password mismatch.
+Level Error : Member u2 tried to log in but has password mismatch.
+Level Error : Error1
+Level Error : shopping basket does not held the purchase policy
+
+Level Error : shopping basket does not held the purchase policy
+
+Level Error : shopping basket does not held the purchase policy
+
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : you must be a visitor in the market in order to make actions
+Level Error : Member u2 tried to log in but has password mismatch.
+Level Error : Error1
+Level Error : Error1
+Level Error : Error1
+Level Error : Error1
+Level Error : User tried to register with taken name.

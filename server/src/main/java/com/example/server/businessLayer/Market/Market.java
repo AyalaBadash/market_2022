@@ -222,7 +222,6 @@ public class Market {
         return history;
     }
 
-    @Transactional(rollbackOn = MarketException.class)
     public void register(String name, String password) throws MarketException {
         Security security = Security.getInstance();
         security.validateRegister(name, password);
@@ -839,7 +838,7 @@ public class Market {
 //        itemRepository.save(newItem.toDalObject()); //todo
         }
     }
-
+    @Transactional(rollbackOn = Exception.class)
     public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
                                         Address address) throws MarketException, JsonProcessingException {
 
@@ -1498,6 +1497,7 @@ public class Market {
         if (MarketConfig.IS_TEST_MODE){
             return;
         }
+        List<Bid> bids = bidRep.findAll();
         List<Item> items = itemRep.findAll();
         List<Member> members = memberRep.findAll();
         shopOwnerAppointmentRep.findAll();
@@ -1505,6 +1505,7 @@ public class Market {
         for (ShoppingBasket basket : shoppingBasketRep.findAll()) {
             basket.getItems().toString();
             basket.getItemMap().toString();
+            basket.getBids().toString();
         }
         memberRep.findAll();
         List<Shop> shops = shopRep.findAll();

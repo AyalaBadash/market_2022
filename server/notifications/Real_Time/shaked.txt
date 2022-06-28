@@ -1240,3 +1240,27 @@ Real Time message:
 Real Time message: 
 There was a new appointment in shop Shufersal, shaked appointed raz1 for shop owner
 
+Real Time message: 
+@visitor6 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor9 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor11 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor12 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor13 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+
+Real Time message: 
+@visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
+
+

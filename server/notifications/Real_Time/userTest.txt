@@ -802,3 +802,55 @@ Real Time message:
 {"numOfVisitors":21,"numOfRegularMembers":9,"numOfShopsManagers":1,"numOfOwners":3,"numOfSystemManager":1}
 
 
+Real Time message: 
+{"numOfVisitors":6,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":7,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":8,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":9,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":10,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":11,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":12,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":13,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":14,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":15,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":16,"numOfRegularMembers":2,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":16,"numOfRegularMembers":3,"numOfShopsManagers":0,"numOfOwners":1,"numOfSystemManager":1}
+
+
+Real Time message: 
+{"numOfVisitors":16,"numOfRegularMembers":3,"numOfShopsManagers":0,"numOfOwners":2,"numOfSystemManager":1}
+
+
