@@ -204,6 +204,7 @@ public class RobustnessTests {
     public void initFromBadPaymentFile(){
         String name= MarketConfig.SERVICES_FILE_NAME;
         try{
+            MarketConfig.FIRST_INIT=true;
             MarketConfig.SERVICES_FILE_NAME="badPaymentConfig.txt";
             market.isInit();
             market.setPublishService(TextDispatcher.getInstance(), market.getSystemManagerName());
@@ -421,6 +422,7 @@ public class RobustnessTests {
     @DisplayName("System init from data source good scenario.")
     public void initFromDataSource() {
         try{
+            MarketConfig.FIRST_INIT=true;
             Market market= Market.getInstance();
             DataSourceConfigReader.resetInstance();
             market.isInit();
