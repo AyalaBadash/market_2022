@@ -1,6 +1,7 @@
 package com.example.server.businessLayer.Market.Users;
 
 
+import com.example.server.businessLayer.Market.Acquisition;
 import com.example.server.businessLayer.Market.ResourcesObjects.DebugLog;
 import com.example.server.businessLayer.Market.ResourcesObjects.EventLog;
 import com.example.server.businessLayer.Market.AcquisitionHistory;
@@ -15,21 +16,23 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 @Entity
 public class Member implements IHistory {
     @Id
     private String name;
-    @OneToOne (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private ShoppingCart myCart;
-    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     private List<Appointment> appointedByMe;
-    @ManyToMany ()
+    @ManyToMany()
     private List<Appointment> myAppointments;
-//    @OneToMany(targetEntity =  AcquisitionHistory.class, cascade =
+    //    @OneToMany(targetEntity =  AcquisitionHistory.class, cascade =
 //            {CascadeType.REMOVE})
 //    @JoinColumn(name = "member_name", referencedColumnName = "name")
     @ManyToMany()
     private List<AcquisitionHistory> purchaseHistory;
+    private List<Acquisition> acquisitions;
     private boolean isSystemManager = false;
     private static MemberRep memberRep;
 
@@ -38,7 +41,7 @@ public class Member implements IHistory {
             DebugLog.getInstance().Log("Name cannot be an empty String");
             throw new MarketException("Name cannot be an empty String");
         }
-        if(name.charAt ( 0 ) == '@') {
+        if (name.charAt(0) == '@') {
             DebugLog.getInstance().Log("cannot create a member with a username starts with @");
             throw new MarketException("cannot create a member with a username starts with @");
         }
@@ -50,21 +53,23 @@ public class Member implements IHistory {
         }
         appointedByMe = new CopyOnWriteArrayList<>();
         myAppointments = new CopyOnWriteArrayList<>();
-        purchaseHistory = new ArrayList<> (  );
+        purchaseHistory = new ArrayList<>();
+        acquisitions = new ArrayList<>();
         if (!MarketConfig.IS_TEST_MODE) {
             memberRep.save(this);
         }
     }
 
-    public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<AcquisitionHistory> purchaseHistory ){
+    public Member(String name, ShoppingCart shoppingCart, List<Appointment> appointmentedByME, List<Appointment> myAppointments, List<AcquisitionHistory> purchaseHistory) {
         this.name = name;
         myCart = shoppingCart;
         this.appointedByMe = appointmentedByME;
         this.myAppointments = myAppointments;
         this.purchaseHistory = purchaseHistory;
+        acquisitions = new ArrayList<>();
     }
 
-    public Member(){
+    public Member() {
     }
 
 
@@ -73,8 +78,8 @@ public class Member implements IHistory {
     }
 
     public void setName(String name) throws MarketException {
-        if(name.charAt ( 0 ) == '@')
-            throw new MarketException ( "cannot create a member with a username starts with @" );
+        if (name.charAt(0) == '@')
+            throw new MarketException("cannot create a member with a username starts with @");
         this.name = name;
     }
 
@@ -102,24 +107,34 @@ public class Member implements IHistory {
         this.myAppointments = myAppointments;
     }
 
-    public void addAppointmentByMe(Appointment app){ this.appointedByMe.add(app);}
+    public void addAppointmentByMe(Appointment app) {
+        this.appointedByMe.add(app);
+    }
 
-    public void addAppointmentToMe(Appointment app){
+    public void addAppointmentToMe(Appointment app) {
         this.myAppointments.add(app);
         if (!MarketConfig.IS_TEST_MODE) {
             memberRep.save(this);
         }
     }
 
+    public void addAcquisition(Acquisition acq) {
+        this.acquisitions.add(acq);
+    }
+
+    public void removeAcquisition(Acquisition acq) {
+        this.acquisitions.remove(acq);
+    }
+
     public StringBuilder getPurchaseHistoryString() {
-        StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
+        StringBuilder history = new StringBuilder(String.format("%s:\n", name));
         int i = 1;
-        for(AcquisitionHistory acquisitionHistory : purchaseHistory){
-            history.append ( String.format ( "purchase %d:\n%s", i, acquisitionHistory.toString () ));//TODO - Check if shoppingCart.getReview is same as acq.tostring
+        for (AcquisitionHistory acquisitionHistory : purchaseHistory) {
+            history.append(String.format("purchase %d:\n%s", i, acquisitionHistory.toString()));//TODO - Check if shoppingCart.getReview is same as acq.tostring
             i++;
         }
         EventLog eventLog = EventLog.getInstance();
-        eventLog.Log("Pulled "+this.getName()+" history");
+        eventLog.Log("Pulled " + this.getName() + " history");
         return history;
     }
 
@@ -128,7 +143,7 @@ public class Member implements IHistory {
     }
 
     public void savePurchase(AcquisitionHistory acquisitionHistory) {
-        purchaseHistory.add (acquisitionHistory);
+        purchaseHistory.add(acquisitionHistory);
         if (!MarketConfig.IS_TEST_MODE) {
             memberRep.save(this);
         }
@@ -136,17 +151,28 @@ public class Member implements IHistory {
 
     @Override
     public StringBuilder getReview() {
-        StringBuilder history = new StringBuilder ( String.format ( "%s:\n", name ) );
+        StringBuilder history = new StringBuilder(String.format("%s:\n", name));
         int i = 1;
-        for(AcquisitionHistory acquisitionHistory : purchaseHistory){
-            history.append ( String.format ( "purchase %d:\n%s", i, acquisitionHistory.toString () ));//TODO - Check if shoppingCart.getReview is same as acq.tostring
+        for (AcquisitionHistory acquisitionHistory : purchaseHistory) {
+            history.append(String.format("purchase %d:\n%s", i, acquisitionHistory.toString()));//TODO - Check if shoppingCart.getReview is same as acq.tostring
             i++;
         }
         EventLog eventLog = EventLog.getInstance();
-        eventLog.Log("Pulled "+this.getName()+" history");
+        eventLog.Log("Pulled " + this.getName() + " history");
         return history;
     }
 
+    public void setPurchaseHistory(List<AcquisitionHistory> purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+    }
+
+    public List<Acquisition> getAcquisitions() {
+        return acquisitions;
+    }
+
+    public void setAcquisitions(List<Acquisition> acquisitions) {
+        this.acquisitions = acquisitions;
+    }
 
 
     public static void setMemberRep(MemberRep memberRep) {

@@ -410,4 +410,5 @@ public interface IService {
     ResponseT<List<String>> getMyPendingApps(@RequestBody MyPendingAppsRequest request);
 
     ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request);
+    ResponseT<List<AcquisitionFacade>> getAcqsForMember(getAcqsForMemberRequest request);
 }

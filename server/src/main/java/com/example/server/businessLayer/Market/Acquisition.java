@@ -181,6 +181,13 @@ public class Acquisition {
     public String getBuyerName() {
         return buyerName;
     }
+    public int getSupplyID() {
+        return supplyID;
+    }
+
+    public int getPaymentID() {
+        return paymentID;
+    }
 
     public void setBuyerName(String buyerName) {
         this.buyerName = buyerName;

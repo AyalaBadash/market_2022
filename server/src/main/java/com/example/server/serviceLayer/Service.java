@@ -504,6 +504,12 @@ public class Service implements IService {
     public ResponseT<Boolean> isSystemManager(@RequestBody IsSystemManagerRequest request) {
         return marketService.isSystemManager(request.getName());
     }
+    @Override
+    @RequestMapping(value = "/getAcqsForMember")
+    @CrossOrigin
+    public ResponseT<List<AcquisitionFacade>> getAcqsForMember(@RequestBody getAcqsForMemberRequest request) {
+        return marketService.getAcqsForMember(request.getMemberName());
+    }
 
     public ResponseT<MemberFacade> getMember(String memberName) {
         return userService.getMember(memberName);
