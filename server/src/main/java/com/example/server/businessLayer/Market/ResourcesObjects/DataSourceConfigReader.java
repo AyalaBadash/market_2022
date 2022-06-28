@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Market.ResourcesObjects;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.util.DefaultPropertiesPersister;
 
 import java.io.*;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
+
 
 public class DataSourceConfigReader {
 

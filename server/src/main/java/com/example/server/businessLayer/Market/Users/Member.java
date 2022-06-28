@@ -32,6 +32,7 @@ public class Member implements IHistory {
 //    @JoinColumn(name = "member_name", referencedColumnName = "name")
     @ManyToMany()
     private List<AcquisitionHistory> purchaseHistory;
+    @Transient
     private List<Acquisition> acquisitions;
     private boolean isSystemManager = false;
     private static MemberRep memberRep;
