@@ -3,7 +3,6 @@ package com.example.server.businessLayer.Market;
 import com.example.server.businessLayer.Publisher.NotificationHandler;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +82,6 @@ public class Statistics {
             this.numOfSystemManager = numOfSystemManager;
         }
     }
-    private final NotificationHandler notificationHandler;
     private final StatisticsData data;
     private String systemManager;
     public LocalDate currDate;
@@ -107,7 +105,6 @@ public class Statistics {
         numOfShopsManagersID=new ArrayList<>();
         numOfOwnersID=new ArrayList<>();
         numOfSystemManagerID=new ArrayList<>();
-        notificationHandler= NotificationHandler.getInstance();
         currDate= LocalDate.now();
     }
     public static void setInstance(Statistics instance) {
@@ -119,7 +116,7 @@ public class Statistics {
         checkDate();
         this.data.numOfVisitors ++;
         if(hasManager() && managerLogged()) {
-            notificationHandler.sendStatistics(this, systemManager);
+            NotificationHandler.getInstance().sendStatistics(this, systemManager);
         }
     }
 
@@ -129,7 +126,7 @@ public class Statistics {
             numOfRegularMembersID.add(name);
             this.data.numOfRegularMembers++;
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this,systemManager);
+                NotificationHandler.getInstance().sendStatistics(this,systemManager);
             }
         }
     }
@@ -140,7 +137,7 @@ public class Statistics {
             numOfShopsManagersID.add(name);
             this.data.numOfShopsManagers++;
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                NotificationHandler.getInstance().sendStatistics(this, systemManager);
             }
         }
     }
@@ -151,7 +148,7 @@ public class Statistics {
             numOfOwnersID.add(name);
             this.data.numOfOwners++;
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                NotificationHandler.getInstance().sendStatistics(this, systemManager);
             }
         }
     }
@@ -162,7 +159,7 @@ public class Statistics {
             numOfSystemManagerID.add(name);
             this.data.numOfSystemManager++;
             if (hasManager() && managerLogged()) {
-                notificationHandler.sendStatistics(this, systemManager);
+                NotificationHandler.getInstance().sendStatistics(this, systemManager);
             }
         }
     }
@@ -171,7 +168,7 @@ public class Statistics {
         return (systemManager!=null && !systemManager.isEmpty());
     }
     private boolean managerLogged(){
-        return notificationHandler.isConnected(systemManager);
+        return NotificationHandler.getInstance().isConnected(systemManager);
     }
     public void setSystemManager(String manager){
         if(manager!=null && !manager.isEmpty()){
