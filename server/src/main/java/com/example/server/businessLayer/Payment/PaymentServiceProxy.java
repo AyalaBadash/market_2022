@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Payment;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.NameValuePair;
@@ -40,6 +41,9 @@ public class PaymentServiceProxy implements PaymentService{
      */
     public int pay(PaymentMethod method) throws  Exception {
 
+        if(MarketConfig.IS_TEST_MODE){
+            return 10000;
+        }
         try {
             int ret=0;
         if(handshake().equals(okayMessage)){
@@ -71,6 +75,9 @@ public class PaymentServiceProxy implements PaymentService{
      */
     public int cancelPay(int transactionId) throws Exception {
 
+        if(MarketConfig.IS_TEST_MODE){
+            return 1;
+        }
         try{
             if(transactionId==-1){
                 return -1;

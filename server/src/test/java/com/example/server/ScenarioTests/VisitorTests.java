@@ -39,6 +39,7 @@ public class VisitorTests {
         try {
             market = Market.getInstance();
             MarketConfig.USING_DATA=true;
+            MarketConfig.FIRST_INIT=true;
             market.isInit();
             if (market.getPaymentService() == null) {
                 market.firstInitMarket(userName, password);

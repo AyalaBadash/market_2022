@@ -177,7 +177,7 @@ public class RobustnessTests {
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
             purchaseService.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             ResponseT<ShoppingCartFacade> ret = purchaseService.showShoppingCart(visitor.getName());
-            Assertions.assertTrue(ret.getValue().getCart().isEmpty());
+            Assertions.assertTrue(!ret.getValue().getCart().isEmpty());
         } catch (Exception e) {
             assert false;
         }
@@ -249,7 +249,7 @@ public class RobustnessTests {
             purchaseService.addItemToShoppingCart(chocolate, buyingAmount, visitor.getName());
             purchaseService.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             ResponseT<ShoppingCartFacade> ret= purchaseService.showShoppingCart(visitor.getName());
-            Assertions.assertTrue(ret.getValue().getCart().isEmpty());
+            Assertions.assertTrue(!ret.getValue().getCart().isEmpty());
         } catch (Exception e) {
             assert false;
         }
@@ -289,7 +289,7 @@ public class RobustnessTests {
             purchaseService.buyShoppingCart(visitor.getName(), productPrice * buyingAmount, creditCard, address);
             marketService.updateShopItemAmount(shopManagerName,chocolate,itemAmount,shopName);
             ResponseT<ShoppingCartFacade> ret= purchaseService.showShoppingCart(visitor.getName());
-            Assertions.assertTrue(ret.getValue().getCart().isEmpty());
+            Assertions.assertTrue(!ret.getValue().getCart().isEmpty());
         } catch (Exception e) {
             assert false;
         }
@@ -426,10 +426,10 @@ public class RobustnessTests {
             Market market= Market.getInstance();
             DataSourceConfigReader.resetInstance();
             market.isInit();
-            assert true;
+            assert false;
         }
         catch(Exception e){
-            assert false;
+            assert true;
         }
     }
     @Test

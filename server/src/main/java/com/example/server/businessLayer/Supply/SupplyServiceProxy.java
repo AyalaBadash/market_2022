@@ -1,5 +1,6 @@
 package com.example.server.businessLayer.Supply;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.NameValuePair;
@@ -32,6 +33,9 @@ public class SupplyServiceProxy implements SupplyService {
      * @return the transaction id
      */
     public int supply(Address address) throws MarketException, IOException {
+        if(MarketConfig.IS_TEST_MODE){
+            return 10000;
+        }
         if(address==null){
             throw new MarketException("Address not supplied");
         }
@@ -55,6 +59,9 @@ public class SupplyServiceProxy implements SupplyService {
      */
     public int cancelSupply(int transactionId) throws Exception {
 
+        if(MarketConfig.IS_TEST_MODE){
+            return 1;
+        }
         if (transactionId == -1) {
             return -1;
         }
