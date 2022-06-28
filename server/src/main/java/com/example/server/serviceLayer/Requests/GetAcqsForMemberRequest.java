@@ -1,11 +1,11 @@
 package com.example.server.serviceLayer.Requests;
 
-public class getAcqsForMemberRequest {
+public class GetAcqsForMemberRequest {
     private  String memberName;
 
-    public void getAcqsForMemberRequest(){}
+    public void GetAcqsForMemberRequest(){}
 
-    public getAcqsForMemberRequest(String memberName) {
+    public GetAcqsForMemberRequest(String memberName) {
         this.memberName = memberName;
     }
 

@@ -2,19 +2,19 @@ package com.example.server.serviceLayer.Requests;
 
 import java.util.List;
 
-public class approveOrRejectBatchRequest {
+public class ApproveOrRejectBatchRequest {
     private String shopName;
     private String ownerName;
     private List<String> appointedNames;
     private boolean approve;
 
-    public approveOrRejectBatchRequest(String shopName, String ownerName, List<String> appointedNames, boolean approve) {
+    public ApproveOrRejectBatchRequest(String shopName, String ownerName, List<String> appointedNames, boolean approve) {
         this.shopName = shopName;
         this.ownerName = ownerName;
         this.appointedNames = appointedNames;
         this.approve = approve;
     }
-    public approveOrRejectBatchRequest(){}
+    public ApproveOrRejectBatchRequest(){}
 
     public String getShopName() {
         return shopName;

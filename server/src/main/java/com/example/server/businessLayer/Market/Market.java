@@ -1556,15 +1556,6 @@ public class Market {
 
     }
 
-    public List<Acquisition> getAcqsForMember(String memberName) throws MarketException {
-        if (!userController.isMember(memberName)){
-            DebugLog.getInstance().Log("There is no member with the name:"+memberName);
-            throw new MarketException("There is no member with the name:"+memberName);
-        }
-        Member member = userController.getMember(memberName);
-        return member.getAcquisitions();
-    }
-
     public void suggestNewOfferToBid(String suggester, String shopName, String askedBy, int itemId, double newPrice) throws MarketException {
         alertIfNotLoggedIn(suggester);
         Shop shop = shops.get(shopName);

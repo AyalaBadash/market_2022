@@ -507,12 +507,12 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/approveOrRejectBatch")
     @CrossOrigin
-    public ResponseT<List<String>> approveOrRejectBatch(@RequestBody approveOrRejectBatchRequest request) {
-        return marketService.approveOrRejectBatch(request.getShopName(),request.getOwnerName(),request.getAppointedNames(),request.isApprove());
-
+    public ResponseT<List<String>> approveOrRejectBatch(@RequestBody ApproveOrRejectBatchRequest request) {
+        return marketService.approveOrRejectBatch(request.getShopName(), request.getOwnerName(), request.getAppointedNames(), request.isApprove());
+    }
     @RequestMapping(value = "/getAcqsForMember")
     @CrossOrigin
-    public ResponseT<List<AcquisitionFacade>> getAcqsForMember(@RequestBody getAcqsForMemberRequest request) {
+    public ResponseT<List<AcquisitionFacade>> getAcqsForMember(@RequestBody GetAcqsForMemberRequest request) {
         return marketService.getAcqsForMember(request.getMemberName());
     }
 
