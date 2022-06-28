@@ -1,5 +1,6 @@
 package com.example.server.ScenarioTests;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Payment.CreditCard;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
@@ -37,6 +38,8 @@ public class VisitorTests {
     public void setUp() {
         try {
             market = Market.getInstance();
+            MarketConfig.USING_DATA=true;
+            market.isInit();
             if (market.getPaymentService() == null) {
                 market.firstInitMarket(userName, password);
             }
