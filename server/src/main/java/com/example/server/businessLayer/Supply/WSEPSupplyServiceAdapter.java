@@ -35,6 +35,9 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
 
     @Override
     public int supply(List<NameValuePair> request) throws MarketException, IOException {
+        if(MarketConfig.IS_TEST_MODE){
+            return 10000;
+        }
         try {
             return sendRequest(request);
         }
@@ -45,6 +48,9 @@ public class WSEPSupplyServiceAdapter implements SupplyService {
 
     @Override
     public int cancelSupply(List<NameValuePair> request) throws MarketException, IOException {
+        if(MarketConfig.IS_TEST_MODE){
+            return 1;
+        }
         try {
             return sendRequest(request);
         }

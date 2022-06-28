@@ -33,7 +33,9 @@ public class WSEPPaymentServiceAdapter implements PaymentService {
 
     @Override
     public int pay(List<NameValuePair> requestBody) throws MarketException, IOException {
-
+        if(MarketConfig.IS_TEST_MODE){
+            return 10000;
+        }
         try {
             int result;
             result = sendRequest(requestBody);
@@ -45,6 +47,9 @@ public class WSEPPaymentServiceAdapter implements PaymentService {
 
     @Override
     public int cancelPayment(List<NameValuePair> request) throws MarketException, IOException {
+        if(MarketConfig.IS_TEST_MODE){
+            return 1;
+        }
         try {
             int result;
             result = sendRequest(request);

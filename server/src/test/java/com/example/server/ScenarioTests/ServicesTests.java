@@ -180,12 +180,15 @@ public class ServicesTests {
     @DisplayName("Supply service- check error message without crash when service falls")
     public void SupplyServiceFalls() throws MarketException {
         try {
+            MarketConfig.IS_TEST_MODE=false;
             loginMember(systemManagerName,systemManagerPassword);
             market.setSupplyServiceAddress("", systemManagerName);
             supplyServiceProxy.supply(address);
             market.setSupplyServiceAddress(MarketConfig.WSEP_ADDRESS, market.getSystemManagerName());
+            MarketConfig.IS_TEST_MODE=true;
             assert false;
          } catch (Exception e) {
+            MarketConfig.IS_TEST_MODE=true;
             Assertions.assertEquals(e.getMessage(),"Error1");
             market.setSupplyServiceAddress(MarketConfig.WSEP_ADDRESS, market.getSystemManagerName());
 
