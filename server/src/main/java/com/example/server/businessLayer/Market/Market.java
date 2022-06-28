@@ -872,11 +872,15 @@ public class Market {
         //After  cart found, try to make the acquisition from each basket in the cart.
         try {
             acquisition = new Acquisition(shoppingCart, visitorName);
-            visitor.getMember().addAcquisition(acquisition);
+            if (visitor.getMember() != null) {
+                visitor.getMember().addAcquisition(acquisition);
+            }
             acquisition.buyShoppingCart(notificationHandler, expectedPrice, paymentMethod, address, paymentServiceProxy, supplyServiceProxy);
-            visitor.getMember().removeAcquisition(acquisition);
+            if (visitor.getMember() != null) {
+                visitor.getMember().removeAcquisition(acquisition);
+            }
         } catch (Exception e) {
-            if (acquisition!= null) {
+            if (visitor.getMember()!=null &&acquisition!= null) {
                 visitor.getMember().removeAcquisition(acquisition);
             }
             ErrorLog errorLog = ErrorLog.getInstance();
@@ -1095,7 +1099,7 @@ public class Market {
 
     public boolean isInit() throws MarketException {
         initRepositories();
-        if(MarketConfig.FIRST_INIT & !checkServicesInit()){
+        if(MarketConfig.FIRST_INIT ){
             readConfigurationFile(MarketConfig.SERVICES_FILE_NAME);
             readDataSourceConfig();
             MarketConfig.FIRST_INIT=false;

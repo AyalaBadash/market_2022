@@ -331,6 +331,7 @@ public class ServicesTests {
         String name=MarketConfig.DATA_SOURCE_FILE_NAME;
         try{
             MarketConfig.USING_DATA=true;
+            MarketConfig.FIRST_INIT=true;
             MarketConfig.DATA_SOURCE_FILE_NAME ="noName.txt";
             DataSourceConfigReader.resetInstance();
             market.isInit();
