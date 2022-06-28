@@ -1,5 +1,6 @@
 package com.example.server.ScenarioTests;
 
+import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Payment.PaymentServiceProxy;
 import com.example.server.businessLayer.Publisher.TextDispatcher;
 import com.example.server.businessLayer.Supply.SupplyServiceProxy;
@@ -24,10 +25,12 @@ public class SystemTests {
     @Test
     public void initTwice() {
         try {
+            MarketConfig.FIRST_INIT=true;
+            market.isInit();
             market.firstInitMarket (userName, password );
-            assert false;
-        } catch (Exception e) {
             assert true;
+        } catch (Exception e) {
+            assert false;
         }
     }
 

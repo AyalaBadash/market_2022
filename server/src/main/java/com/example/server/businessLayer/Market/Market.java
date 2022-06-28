@@ -159,6 +159,9 @@ public class Market {
                     instance.systemManagerName = userName;
                     statistics.setSystemManager(userName);
                     userController.getMember(userName).setSystemManager(true);
+                    statistics.setSystemManager(systemManagerName);
+                    statistics.incNumOfSystemManagers(systemManagerName);
+
                 }
             }
             checkSystemInit();
@@ -242,7 +245,7 @@ public class Market {
         Visitor visitor= userController.guestLogin();
         RealTimeNotifications notifications= new RealTimeNotifications();
         notifications.createUserLoggedIn(visitor.getName(),userController.getVisitorsInMarket().size());
-        statistics.incNumOfVisitors();
+        statistics.incNumOfVisitors(visitor.getName());
         return visitor;
     }
 
@@ -1660,5 +1663,13 @@ public class Market {
             }
         }
         return failed;
+    }
+
+    public boolean getLoadedData() {
+        return loadedFromDB;
+    }
+
+    public void setLoadedData(boolean loadedData) {
+        loadedFromDB=loadedData;
     }
 }
