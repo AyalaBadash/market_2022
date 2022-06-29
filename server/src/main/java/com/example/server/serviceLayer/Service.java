@@ -155,6 +155,7 @@ public class Service implements IService {
     @Override
     @RequestMapping(value = "/buyShoppingCart")
     @CrossOrigin
+    @Transactional(rollbackOn = MarketException.class)
     public Response buyShoppingCart(@RequestBody BuyShoppingCartRequest request) {
         return this.purchaseService.buyShoppingCart(request.getVisitorName(), request.getExpectedPrice(),
                 request.getPaymentMethod(), request.getAddress());

@@ -1712,3 +1712,6 @@ Level Error : You are not a shop owner
 Level Error : You are not a shop owner
 Level Error : The market did not initialized properly. Missing notifications service
 Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : Member u1 tried to log in but has password mismatch.
+Level Error : shopping basket does not held the purchase policy
+
