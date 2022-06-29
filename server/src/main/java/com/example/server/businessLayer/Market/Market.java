@@ -841,7 +841,7 @@ public class Market {
 //        itemRepository.save(newItem.toDalObject()); //todo
         }
     }
-    @Transactional(rollbackOn = Exception.class)
+
     public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
                                         Address address) throws MarketException, JsonProcessingException {
 
@@ -1108,6 +1108,7 @@ public class Market {
         }
         if (MarketConfig.USING_DATA) {
             readInitFile(MarketConfig.DATA_FILE_NAME);
+            userController.getMember(systemManagerName).setSystemManager(true);
             MarketConfig.USING_DATA=false;
             return true;
         }

@@ -2,14 +2,10 @@ SystemManager::u1::password
 Register::u2::password
 Register::u3::password
 Register::u4::password
-Register::u5::password
-Register::u6::password
 Login::u1::password
 Login::u2::password
 Login::u3::password
 Login::u4::password
-Login::u5::password
-Login::u6::password
 Open_Shop::u2::s
 Add_Item::u2::Bamba::30::general::::20::s
 Appoint_Manager::u2::u3::s
@@ -17,5 +13,5 @@ Logout::u1
 Logout::u2
 Logout::u3
 Logout::u4
-Logout::u5
+
 

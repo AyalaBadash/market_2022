@@ -19,7 +19,7 @@ public class RealTimeNotifications extends Notification{
     }
 
     public void createBuyingOfferMessage(String offer , String shopName ,String product, double price){
-        message= offer+ " submitted a buying offer in the shop "+ shopName+", to buy "+ product+ " for the amount of "+price+"\n";
+        message= offer+ " bought from the shop "+ shopName+" "+ product+ " for the amount of "+price+"\n";
     }
     public void createMembershipDeniedMessage(){
         message= "Unfortunately, your membership has been denied."+"\n";
