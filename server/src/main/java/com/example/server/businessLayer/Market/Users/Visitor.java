@@ -61,7 +61,7 @@ public class Visitor {
         this.member = member;
     }
 
-    public ShoppingCart getCart() {
+    public ShoppingCart getCart() throws MarketException {
         cart.calculate();
         return cart;
     }

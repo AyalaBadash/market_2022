@@ -18,13 +18,13 @@ public class RealTimeNotifications extends Notification{
         message= "The shop" + shopName+ " was reopened"+"\n";
     }
 
-    public void createBuyingOfferMessage(String offer , String shopName ,String product, double price){
-        message= offer+ " submitted a buying offer in the shop "+ shopName+", to buy "+ product+ " for the amount of "+price+"\n";
+    public void createBuyingMessage(String buyer , String shopName){
+        message= buyer + " made a purchase in the shop "+ shopName;
     }
     public void createMembershipDeniedMessage(){
         message= "Unfortunately, your membership has been denied."+"\n";
     }
-    public void createShopPermissionDeniedMessage(String shop,String permission){
+    public void createAppointmentRemovedMessage(String shop,String permission){
         message= "Unfortunately, your appointment as "+ permission+" in shop "+shop +" has been canceled."+"\n";
     }
     public void createNewMessageMessage(){
@@ -95,5 +95,9 @@ public class RealTimeNotifications extends Notification{
 
     public void createReOpenedShopMessage(String shopName, String founder) {
         message=String.format("The shop %s, was re-opened by its founder %s",shopName,founder);
+    }
+
+    public void createNewAppointmetToApprovalMessage(String appoint, String appointed, String shopName) {
+        message=String.format("there is a new appointment of %s by %s in the shop %s waiting for your approval", appointed, appoint, shopName);
     }
 }

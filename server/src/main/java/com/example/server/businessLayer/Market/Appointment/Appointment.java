@@ -1,9 +1,6 @@
 package com.example.server.businessLayer.Market.Appointment;
 
-import com.example.server.businessLayer.Market.Appointment.Permissions.ApproveBidPermission;
-import com.example.server.businessLayer.Market.Appointment.Permissions.EmployeesPermission;
-import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
-import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
+import com.example.server.businessLayer.Market.Appointment.Permissions.*;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketConfig;
 import com.example.server.businessLayer.Market.ResourcesObjects.MarketException;
 import com.example.server.businessLayer.Market.Shop;
@@ -59,6 +56,7 @@ Appointment {
         permissions.add(new PurchaseHistoryPermission());
         permissions.add(new EmployeesPermission());
         permissions.add ( new ApproveBidPermission() );
+        permissions.add ( new EditInventoryPermission () );
     }
 
     public List<IPermission> getPermissions() {

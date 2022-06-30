@@ -54,7 +54,7 @@ public class PendingAppointments {
         if (!MarketConfig.IS_TEST_MODE) {
             pendingAptsRep.save(this);
         }
-        EventLog.getInstance().Log("Appointment for " +appointedName+" has been removed.");
+        EventLog.getInstance().Log("Appointment for " +appointedName+" has been removed from pending appointments.");
     }
 
     public void addAppointment(String appointedName, ShopOwnerAppointment appointment, List<String> owners) throws MarketException {

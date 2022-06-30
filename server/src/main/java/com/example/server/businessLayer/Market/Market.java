@@ -488,6 +488,7 @@ public class Market {
             //shops.remove(shopName);
             //todo
             removeClosedShopItemsFromMarket(shopToClose);
+            removeBidFromClosedShop(shopToClose);
             //send Notification V2
             ClosedShopsHistory history = ClosedShopsHistory.getInstance();
             history.closeShop(shopToClose);
@@ -500,6 +501,15 @@ public class Market {
             }
             shopToClose.setClosed(true);
             EventLog.getInstance().Log("The shop " + shopName + " has been closed.");
+        }
+    }
+
+    private void removeBidFromClosedShop(Shop shopToClose) {
+        for(Bid bid : shopToClose.getBids ()){
+            Member member = userController.getMember(bid.getBuyerName ());
+            ShoppingCart cart = member.getMyCart();
+            ShoppingBasket basket = cart.getCart().get(shopToClose.getShopName ());
+            basket.removeBid(bid.getItemId ());
         }
     }
 
@@ -838,7 +848,7 @@ public class Market {
 //        itemRepository.save(newItem.toDalObject()); //todo
         }
     }
-    @Transactional(rollbackOn = Exception.class)
+//    @Transactional(rollbackOn = Exception.class)
     public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
                                         Address address) throws MarketException, JsonProcessingException {
 
@@ -1398,8 +1408,10 @@ public class Market {
             throw new MarketException("No such shop exist in the market.");
         }
         boolean ret= shop.approveAppointment(appointedName,ownerName);
-        if(ret && userController.isLoggedIn(appointedName)){
-            statistics.incNumOfOwners(appointedName);
+        if(ret){
+            if(userController.isLoggedIn(appointedName)){
+                statistics.incNumOfOwners ( appointedName );
+            }
         }
         return ret;
     }

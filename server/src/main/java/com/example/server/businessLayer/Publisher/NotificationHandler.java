@@ -199,18 +199,13 @@ public class NotificationHandler {
      * @param buyer the man buyed the items.
      * @param names the names of the owners to send to.
      * @param shopName the shop name
-     * @param itemsNames the baught items list.
-     * @param prices the bought items prices.
      */
-    public void sendItemBaughtNotificationsBatch(String buyer, ArrayList<String> names, String shopName, ArrayList<String> itemsNames, ArrayList<Double> prices ) {
-
+    public void sendItemBaughtNotificationsBatch(String buyer, ArrayList<String> names, String shopName ) {
         RealTimeNotifications not;
         for (String name : names) {
-            for (int i = 0; i < itemsNames.size(); i++) {
-                not = new RealTimeNotifications();
-                not.createBuyingOfferMessage(buyer, shopName, itemsNames.get(i), prices.get(i));
-                sendNotification(name,not,true);
-            }
+            not = new RealTimeNotifications();
+            not.createBuyingMessage (buyer, shopName);
+            sendNotification(name,not,true);
         }
     }
 
@@ -227,6 +222,14 @@ public class NotificationHandler {
         not.createShopClosedMessage(shopName);
         for(String name: strings){
             sendNotification(name,not,true);
+        }
+    }
+
+    public void sendNewAppointmetToApprovalNotificationBatch(List<String> approvingAppointments, String appoint, String appointed, String shopName) {
+        RealTimeNotifications not= new RealTimeNotifications();
+        not.createNewAppointmetToApprovalMessage(appoint, appointed, shopName);
+        for(String approves: approvingAppointments){
+            sendNotification(approves,not,true);
         }
     }
 
@@ -298,7 +301,7 @@ public class NotificationHandler {
 
     public void sendAppointmentRemovedNotification(String firedAppointed, String shopName) {
         RealTimeNotifications not= new RealTimeNotifications();
-        not.createShopPermissionDeniedMessage(shopName,firedAppointed);
+        not.createAppointmentRemovedMessage(shopName,firedAppointed);
         sendNotification(firedAppointed,not,true);
     }
 
@@ -314,7 +317,6 @@ public class NotificationHandler {
         sessions.put(name,sessionId);
         sendAllDelayedNotifications(nots,name);
     }
-
     private boolean writeToText(String message, String name){
         try {
             File parentDir = new File(getConfigDir());
@@ -331,6 +333,7 @@ public class NotificationHandler {
         }
         return true;
     }
+
     private List<Notification> readDelayedMessages(String name) {
 
         try {
@@ -389,7 +392,5 @@ public class NotificationHandler {
             dispatcher.addMessgae(session, not);
         }
     }
-
-
 
 }

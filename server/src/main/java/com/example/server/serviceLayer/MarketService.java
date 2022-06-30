@@ -698,7 +698,12 @@ public class MarketService {
         List<AcquisitionFacade> acquisitionFacades = new ArrayList<>();
         for (Acquisition acq:acqs)
         {
-            AcquisitionFacade acquisitionFacade = new AcquisitionFacade(acq);
+            AcquisitionFacade acquisitionFacade = null;
+            try {
+                acquisitionFacade = new AcquisitionFacade (acq);
+            } catch (MarketException e) {
+                return new ResponseT(e.getMessage());
+            }
             acquisitionFacades.add(acquisitionFacade);
         }
         return new ResponseT<>(acquisitionFacades);

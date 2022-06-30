@@ -101,7 +101,12 @@ class MemberTest {
     public void getPurchaseHistory() {
         String test = member.getReview().toString();
         Assertions.assertEquals(test,String.format ("%s:\n", member.getName ()));
-        AcquisitionHistory acq = new AcquisitionHistory(myCart, name, myCart.getCurrentPrice(), myCart.getCurrentPrice());
+        AcquisitionHistory acq = null;
+        try {
+            acq = new AcquisitionHistory (myCart, name, myCart.getCurrentPrice(), myCart.getCurrentPrice());
+        } catch (MarketException e) {
+            assert false;
+        }
         member.savePurchase(acq);
         assertEquals(1, member.getPurchaseHistory().size());
         Assertions.assertTrue(member.getReview().toString().contains(name));

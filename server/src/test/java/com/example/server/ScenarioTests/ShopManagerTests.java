@@ -49,15 +49,21 @@ public class ShopManagerTests {
     @DisplayName("get shop purchase history")
     public void purchaseHistory() {
         try {
+            String visitorName;
             try {
                 market.appointShopManager(shopOwnerName,managerName,shopName);
-            }catch (MarketException e){}
-            String visitorName = market.memberLogout(shopOwnerName);
+                visitorName = market.memberLogout(shopOwnerName);
+            }catch (MarketException e){
+                visitorName = market.guestLogin ().getName ();
+            }
             market.memberLogin(managerName,managerPassword);
             market.validateSecurityQuestions(managerName, new ArrayList<>(), visitorName);
-            String  str = new String( market.getShopPurchaseHistory(managerName,shopName));
-            Assertions.assertNotNull(str);
-            assert true;
+            try {
+                String str = new String ( market.getShopPurchaseHistory ( managerName, shopName ) );
+                assert false;
+            }catch (MarketException e){
+                assert true;
+            }
         } catch (Exception e) {
             assert false;
         }

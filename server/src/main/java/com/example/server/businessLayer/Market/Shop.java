@@ -76,7 +76,7 @@ public class Shop implements IHistory {
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private PurchasePolicy purchasePolicy;
     @ManyToMany (cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    List<Bid> bids;
+    private List<Bid> bids;
 
     public Shop(){}
 
@@ -158,11 +158,11 @@ public class Shop implements IHistory {
 
 
 
-    public void deleteItem(Item item, String shopOwnerName) throws MarketException {
+    public void deleteItem(Item item, String visitorName) throws MarketException {
         //Check if user indeed is the shop owner
-        if (!isShopOwner(shopOwnerName)) {
-            DebugLog.getInstance().Log(shopOwnerName + " tried to remove item from the shop " + shopName + " but he is not a owner.");
-            throw new MarketException(shopOwnerName + " is not " + shopName + " owner . Removing item from shop has failed.");
+        if (!isShopOwner ( visitorName ) && (!isShopManager ( visitorName ) || !hasPermission ( visitorName, "EditInventoryPermission" ))) {
+            DebugLog.getInstance().Log(visitorName + " tried to remove item from the shop " + shopName + " but he is not authorized.");
+            throw new MarketException(visitorName + " is not " + shopName + " authorized . Removing item from shop has failed.");
         }
         itemMap.remove ( item.getID() );
         itemsCurrentAmount.remove ( item.getID () );
@@ -171,7 +171,7 @@ public class Shop implements IHistory {
         }
         for(Bid bid : bids){
             if(bid.getItemId () == item.getID ()) {
-                bid.rejectBid ( shopOwnerName );
+                bid.rejectBid ( visitorName );
                 UserController.getInstance ().getVisitor ( bid.getBuyerName () ).getCart ().rejectBid(bid.getItemId (), this);
             }
         }
@@ -195,9 +195,9 @@ public class Shop implements IHistory {
     }
 
 
-    public void setItemAmount(String shopOwnerName, java.lang.Integer item, double amount) throws MarketException {
-        if (!isShopOwner ( shopOwnerName )) {
-            throw new MarketException ( "member is not the shop owner and is not authorized to effect the inventory." );
+    public void setItemAmount(String visitorName, java.lang.Integer item, double amount) throws MarketException {
+        if (!isShopOwner ( visitorName ) && (!isShopManager ( visitorName ) || !hasPermission ( visitorName, "EditInventoryPermission" ))) {
+            throw new MarketException ( "member is not authorized to effect the inventory." );
         }
         if (amount < 0)
             throw new MarketException ( "amount cannot be negative" );
@@ -302,7 +302,7 @@ public class Shop implements IHistory {
         }
         //send notifications to shop owners:
         try{
-            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName,itemsNames,prices);
+            publisher.sendItemBaughtNotificationsBatch(buyer,names,shopName);
         }
         //todo - need to be handled
         catch (Exception e){}
@@ -585,10 +585,9 @@ public class Shop implements IHistory {
         return review;
     }
 
-    //TODO why do we need this.
-    public synchronized Item addItem(String shopOwnerName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
-        if (!isShopOwner ( shopOwnerName ))
-            throw new MarketException ( "member is not the shop owner so not authorized to add an item to the shop" );
+    public synchronized Item addItem(String visitorName, String itemName, double price, Item.Category category, String info, List<String> keywords, double amount, int id) throws MarketException {
+        if (!isShopOwner ( visitorName ) && (!isShopManager ( visitorName ) || !hasPermission ( visitorName, "EditInventoryPermission" )))
+            throw new MarketException ( "member is not authorized to add an item to the shop" );
         if (amount < 0)
             throw new MarketException ( "amount has to be positive" );
         if (itemMap.containsKey(id))
@@ -630,9 +629,9 @@ public class Shop implements IHistory {
         return rnk;
     }
 
-    public void changeShopItemInfo(String shopOwnerName, String info, java.lang.Integer oldItemID) throws MarketException {
-        if (!isShopOwner ( shopOwnerName ))
-            throw new MarketException ( "member is not shop owner so is not authorized to change item info" );
+    public void changeShopItemInfo(String visitorName, String info, java.lang.Integer oldItemID) throws MarketException {
+        if (!isShopOwner ( visitorName ) && (!isShopManager ( visitorName ) || !hasPermission ( visitorName, "EditInventoryPermission" )))
+            throw new MarketException ( "member is not authorized to change item info" );
         Item item = itemMap.get(oldItemID);
         if (item == null)
             throw new MarketException ( "item does not exist in shop" );
@@ -671,7 +670,13 @@ public class Shop implements IHistory {
         ShopOwnerAppointment appointment = new ShopOwnerAppointment ( appointedShopOwner, shopOwner, this, false );
         appointment.setRelatedShop(this);
         addEmployee ( appointment );
-
+        List<String> approvingAppointments = new ArrayList<> (  );
+        for(String name : shopOwners.keySet ()) {
+            if(name != shopOwner.getName ())
+                approvingAppointments.add ( name );
+        }
+        NotificationHandler handler = NotificationHandler.getInstance ();
+        handler.sendNewAppointmetToApprovalNotificationBatch ( approvingAppointments, shopOwner.getName (),appointedShopOwner.getName (), shopName);
         if (!MarketConfig.IS_TEST_MODE) {
             shopRep.save(this);
         }

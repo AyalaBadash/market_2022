@@ -8,7 +8,7 @@ public class SystemManagerFacade implements FacadeObject<SystemManager> {
 
     private MemberFacade member;
 
-    public SystemManagerFacade(Member member) {
+    public SystemManagerFacade(Member member) throws MarketException {
         this.member = new MemberFacade (member);
     }
 

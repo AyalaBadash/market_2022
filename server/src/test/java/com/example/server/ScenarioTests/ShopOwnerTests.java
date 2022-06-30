@@ -207,7 +207,7 @@ public class ShopOwnerTests {
                 System.out.println(ex.getMessage());
             }
         } catch (Exception e) {
-            Assertions.assertEquals("member is not the shop owner and is not authorized to effect the inventory.",e.getMessage());
+            Assertions.assertEquals("member is not authorized to effect the inventory.",e.getMessage());
             try {
                 logoutMember(shopOwnerName);
             } catch (MarketException ex) {

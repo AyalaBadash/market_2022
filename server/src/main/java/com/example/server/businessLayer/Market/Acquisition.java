@@ -95,7 +95,6 @@ public class Acquisition {
             throw new MarketException("Payment method details are illegal.");
         }
         supplyID = supplyHandler.supply(address);
-//        supplyID=supplyHandler.supply(address);
         if(supplyID==-1){
             shoppingCartToBuy.cancelShopSave();
             ErrorLog errorLog = ErrorLog.getInstance();

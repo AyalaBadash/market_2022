@@ -19,7 +19,7 @@ public class ShoppingCartFacade implements FacadeObject<ShoppingCart> {
         this.price = price;
     }
 
-    public ShoppingCartFacade(ShoppingCart cart) {
+    public ShoppingCartFacade(ShoppingCart cart) throws MarketException {
         this.cart = new HashMap<>();
         price = cart.getCurrentPrice();
         if(cart.getCart() == null || cart.getCart().size() == 0)

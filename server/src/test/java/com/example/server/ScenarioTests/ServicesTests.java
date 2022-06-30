@@ -254,7 +254,7 @@ public class ServicesTests {
         not.createMembershipDeniedMessage();
         textDispatcher.add(name);
         Assertions.assertTrue(textDispatcher.addMessgae(name,not));
-        not.createShopPermissionDeniedMessage("some shop", "some permission");
+        not.createAppointmentRemovedMessage("some shop", "some permission");
         Assertions.assertTrue(textDispatcher.addMessgae(name,not));
     }
 

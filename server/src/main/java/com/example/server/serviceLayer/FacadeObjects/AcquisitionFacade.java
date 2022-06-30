@@ -12,8 +12,7 @@ public class AcquisitionFacade  implements FacadeObject<Acquisition> {
     private String buyerName;
     private int supplyID;
     private int paymentID;
-    public AcquisitionFacade(Acquisition acquisition)
-    {
+    public AcquisitionFacade(Acquisition acquisition) throws MarketException {
         this.buyerName = acquisition.getBuyerName();
         this.paymentDone=acquisition.isPaymentDone();
         this.paymentID = acquisition.getPaymentID();

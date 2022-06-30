@@ -22,14 +22,14 @@ public class MemberFacade implements FacadeObject<Member> {
 
     public MemberFacade(String name, ShoppingCart myCart,
                         List<AppointmentFacade> appointedByMe,
-                        List<AppointmentFacade> myAppointments) {
+                        List<AppointmentFacade> myAppointments) throws MarketException {
         this.name = name;
         this.myCart = new ShoppingCartFacade (myCart);
         this.appointedByMe = appointedByMe;
         this.myAppointments = myAppointments;
     }
 
-    public MemberFacade(Member member) {
+    public MemberFacade(Member member) throws MarketException {
         if(member == null)
             return;
         this.name = member.getName();

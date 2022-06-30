@@ -1,10 +1,7 @@
 package com.example.server.serviceLayer.FacadeObjects;
 
 
-import com.example.server.businessLayer.Market.Appointment.Permissions.ApproveBidPermission;
-import com.example.server.businessLayer.Market.Appointment.Permissions.EmployeesPermission;
-import com.example.server.businessLayer.Market.Appointment.Permissions.IPermission;
-import com.example.server.businessLayer.Market.Appointment.Permissions.PurchaseHistoryPermission;
+import com.example.server.businessLayer.Market.Appointment.Permissions.*;
 
 public class PermissionFacade implements FacadeObject{
 
@@ -28,10 +25,12 @@ public class PermissionFacade implements FacadeObject{
 
     @Override
     public IPermission toBusinessObject() {
-        if(name.equals ( new EmployeesPermission().getName() ))
-            return new EmployeesPermission ();
-        else if (name.equals ( new  PurchaseHistoryPermission ().getName ())){
+        if(name.equals ( new EmployeesPermission().getName() )) {
+            return new EmployeesPermission ( );
+        }else if (name.equals ( new  PurchaseHistoryPermission ().getName ())){
             return new PurchaseHistoryPermission ();
+        }else if (name.equals ( new EditInventoryPermission ().getName ())){
+            return new EditInventoryPermission ();
         }
         else{
             return new ApproveBidPermission ();

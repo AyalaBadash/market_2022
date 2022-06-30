@@ -16,7 +16,7 @@ public class VisitorFacade implements FacadeObject<Visitor>{
         this.cart = cart;
     }
 
-    public VisitorFacade(Visitor visitor) {
+    public VisitorFacade(Visitor visitor) throws MarketException {
         this.name = visitor.getName();
         this.member = null;
         if (visitor.getMember() != null){

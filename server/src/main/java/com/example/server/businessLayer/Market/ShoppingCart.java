@@ -84,7 +84,7 @@ public class ShoppingCart implements IHistory {
     }
 
 
-    public double getCurrentPrice() {
+    public double getCurrentPrice() throws MarketException {
         this.calculate();
         return this.currentPrice;
     }
@@ -171,10 +171,12 @@ public class ShoppingCart implements IHistory {
         }
     }
 
-    public void calculate() {
+    public void calculate() throws MarketException {
         double price = 0;
-        for(ShoppingBasket shoppingBasket : cart.values ())
-            price += shoppingBasket.getCurrentPrice ();
+        for( Map.Entry<Shop, ShoppingBasket> shopShoppingBasketEntry : cart.entrySet ()) {
+            shopShoppingBasketEntry.getValue ().updatePrice ( shopShoppingBasketEntry.getKey () );
+            price += shopShoppingBasketEntry.getValue ().getCurrentPrice ( );
+        }
         currentPrice = price;
         if (!MarketConfig.IS_TEST_MODE) {
             shoppingCartRep.save(this);
@@ -224,7 +226,7 @@ public class ShoppingCart implements IHistory {
         }
         // if baskets are empty
         for(Map.Entry<Shop, ShoppingBasket> basket : cart.entrySet()){
-            if(!basket.getValue().isEmpty()){
+            if(!basket.getValue().isEmpty() || !basket.getValue ().getBids ().isEmpty ()){
                 return false;
             }
         }

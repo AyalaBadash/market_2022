@@ -14,13 +14,21 @@ public class RemovePurchasePolicyFromShopRequest {
         this.visitorName = visitorName;
     }
 
-    RemovePurchasePolicyFromShopRequest(){}
+    public RemovePurchasePolicyFromShopRequest(){}
 
     public PurchasePolicyTypeWrapper getPolicy() {
         return purchasePolicyTypeFacade;
     }
 
     public void setPolicy(PurchasePolicyTypeWrapper purchasePolicyTypeFacade) {
+        this.purchasePolicyTypeFacade = purchasePolicyTypeFacade;
+    }
+
+    public PurchasePolicyTypeWrapper getPurchasePolicyTypeFacade() {
+        return purchasePolicyTypeFacade;
+    }
+
+    public void setPurchasePolicyTypeFacade(PurchasePolicyTypeWrapper purchasePolicyTypeFacade) {
         this.purchasePolicyTypeFacade = purchasePolicyTypeFacade;
     }
 
