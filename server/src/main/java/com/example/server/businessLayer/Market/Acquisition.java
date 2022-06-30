@@ -80,18 +80,22 @@ public class Acquisition {
 
         if (address == null) {
             DebugLog.getInstance().Log("Address not supplied.");
+            shoppingCartToBuy.cancelShopSave();
             throw new MarketException("Address not supplied.");
         }
         if (!address.isLegal()) {
             DebugLog.getInstance().Log("Address details are illegal.");
+            shoppingCartToBuy.cancelShopSave();
             throw new MarketException("Address details are illegal.");
         }
         if (paymentMethod == null) {
             DebugLog.getInstance().Log("Payment method not supplied.");
+            shoppingCartToBuy.cancelShopSave();
             throw new MarketException("Payment method not supplied.");
         }
         if (!paymentMethod.isLegal()) {
             DebugLog.getInstance().Log("Payment method details are illegal.");
+            shoppingCartToBuy.cancelShopSave();
             throw new MarketException("Payment method details are illegal.");
         }
         supplyID = supplyHandler.supply(address);
@@ -103,12 +107,7 @@ public class Acquisition {
             throw new MarketException("supply has been failed. shopping cart did not change");
         }
         supplyConfirmed = true;
-        if(paymentMethod==null){
-            throw new MarketException("Payment method not supplied.");
-        }
-//        if(!paymentMethod.isLegal()){
-//            throw new MarketException("Payment method details are illegal.");
-//        }
+
         paymentID = paymentHandler.pay(paymentMethod);
         if (paymentID == -1) {
             shoppingCartToBuy.cancelShopSave();

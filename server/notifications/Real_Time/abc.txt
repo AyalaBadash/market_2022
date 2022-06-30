@@ -10,3 +10,11 @@ Real Time message:
 jkl submitted a buying offer in the shop shopName5, to buy itemToBuy for the amount of 10.0
 
 
+Real Time message: 
+def bought from the shop shopName5 itemToBuy for the amount of 10.0
+
+
+Real Time message: 
+mno bought from the shop shopName5 itemToBuy for the amount of 10.0
+
+

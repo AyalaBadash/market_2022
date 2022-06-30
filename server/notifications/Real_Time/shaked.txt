@@ -1264,3 +1264,26 @@ Real Time message:
 @visitor14 submitted a buying offer in the shop kolbo, to buy chocolate for the amount of 1.2
 
 
+Real Time message: 
+@visitor32 bought from the shop kolbo bamba for the amount of 1.2
+
+
+Real Time message: 
+@visitor33 bought from the shop kolbo bamba for the amount of 1.2
+
+
+Real Time message: 
+@visitor81 bought from the shop Shufersal apple for the amount of 10.0
+
+
+Real Time message: 
+@visitor82 bought from the shop Shufersal yogurt for the amount of 1.2
+
+
+Real Time message: 
+@visitor82 bought from the shop Shufersal apple for the amount of 10.0
+
+
+Real Time message: 
+There was a new appointment in shop Shufersal, shaked appointed raz1 for shop owner
+
