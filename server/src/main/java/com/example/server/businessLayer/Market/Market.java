@@ -1117,6 +1117,7 @@ public class Market {
             readInitFile(MarketConfig.DATA_FILE_NAME);
             userController.getMember(systemManagerName).setSystemManager(true);
             MarketConfig.USING_DATA=false;
+            loadedFromDB = true;
             return true;
         }
         if (!loadedFromDB) {
@@ -1533,6 +1534,13 @@ public class Market {
             for (Integer itemid : shop.getItemMap().keySet())
                 this.allItemsInMarketToShop.put(itemid, shop.getShopName()); //init allItemsInShop
             shop.loadData();
+        }
+
+        for (Bid bid : bids){
+            int itemId = bid.getItemId();
+            String s = allItemsInMarketToShop.get(itemId);
+            Shop shop = this.shops.get(s);
+//            shop.getBids().add(bid);
         }
 
         int largestItemId = 1;

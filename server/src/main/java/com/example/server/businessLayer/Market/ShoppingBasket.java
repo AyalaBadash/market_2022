@@ -30,7 +30,7 @@ public class ShoppingBasket implements IHistory , Serializable {
     private double price;
     private static ShoppingBasketRep shoppingBasketRep;
 
-    @ManyToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @ManyToMany()
     @JoinTable (name = "bids_in_basket",
             joinColumns = {@JoinColumn(name = "basket", referencedColumnName = "basket_id")},
             inverseJoinColumns = {@JoinColumn(name = "item", referencedColumnName = "ID")})
