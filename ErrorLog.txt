@@ -1715,3 +1715,4 @@ Level Error : The market did not initialized properly. Some of the services did 
 Level Error : Member u1 tried to log in but has password mismatch.
 Level Error : shopping basket does not held the purchase policy
 
+Level Error : shop does not exist in the market
