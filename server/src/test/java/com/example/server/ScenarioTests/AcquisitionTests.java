@@ -297,7 +297,7 @@ public class AcquisitionTests {
             assert false;
         } catch (Exception e) {
             if(visitor!=null) {
-                Assertions.assertEquals("Shopping cart is not exists for the user. " , e.getMessage());
+                Assertions.assertEquals("Shopping cart is not exists for the user." , e.getMessage());
             }
             else{
                 assert false;
