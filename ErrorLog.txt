@@ -1694,3 +1694,24 @@ Level Error : Error1
 Level Error : Error1
 Level Error : Error1
 Level Error : User tried to register with taken name.
+Level Error : Member u2 tried to log in but has password mismatch.
+Level Error : user tried to reach a closed shop
+Level Error : user tried to reach a closed shop
+Level Error : the shop has been closed! there for cannot enter it any more
+Level Error : the shop has been closed! there for cannot enter it any more
+Level Error : user tried to reach a closed shop
+Level Error : user tried to reach a closed shop
+Level Error : user tried to reach a closed shop
+Level Error : user tried to reach a closed shop
+Level Error : the shop has been closed! there for cannot enter it any more
+Level Error : the shop has been closed! there for cannot enter it any more
+Level Error : the shop has been closed! there for cannot enter it any more
+Level Error : the shop has been closed! there for cannot enter it any more
+Level Error : u2 tried to open a shop with taken name.
+Level Error : You are not a shop owner
+Level Error : You are not a shop owner
+Level Error : The market did not initialized properly. Missing notifications service
+Level Error : The market did not initialized properly. Some of the services did not supplied.
+Level Error : Member u1 tried to log in but has password mismatch.
+Level Error : shopping basket does not held the purchase policy
+
