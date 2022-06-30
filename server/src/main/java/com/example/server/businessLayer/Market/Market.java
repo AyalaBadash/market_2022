@@ -848,7 +848,7 @@ public class Market {
 //        itemRepository.save(newItem.toDalObject()); //todo
         }
     }
-//    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackOn = MarketException.class)
     public void buyShoppingCart(String visitorName, double expectedPrice, PaymentMethod paymentMethod,
                                         Address address) throws MarketException, JsonProcessingException {
 
@@ -1115,6 +1115,7 @@ public class Market {
         }
         if (MarketConfig.USING_DATA) {
             readInitFile(MarketConfig.DATA_FILE_NAME);
+            userController.getMember(systemManagerName).setSystemManager(true);
             MarketConfig.USING_DATA=false;
             return true;
         }
@@ -1408,10 +1409,8 @@ public class Market {
             throw new MarketException("No such shop exist in the market.");
         }
         boolean ret= shop.approveAppointment(appointedName,ownerName);
-        if(ret){
-            if(userController.isLoggedIn(appointedName)){
-                statistics.incNumOfOwners ( appointedName );
-            }
+        if(ret && userController.isLoggedIn(appointedName)){
+            statistics.incNumOfOwners(appointedName);
         }
         return ret;
     }
